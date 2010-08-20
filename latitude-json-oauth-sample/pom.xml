@@ -7,11 +7,11 @@
     <version>5</version>
   </parent>
   <groupId>com.google.api.client</groupId>
-  <artifactId>bigquery-json-clientlogin-sample</artifactId>
-  <version>1.0.2</version>
-  <name>bigquery-json-clientlogin-sample</name>
+  <artifactId>latitude-json-oauth-sample</artifactId>
+  <version>1.0.3</version>
+  <name>latitude-json-oauth-sample</name>
   <description>
-    Example for BigQuery using JSON and Client Login.
+    Example for the Google Latitude API using JSON and OAuth.
   </description>
 
   <url>http://code.google.com/p/google-api-java-client/</url>
@@ -68,7 +68,7 @@
           </execution>
         </executions>
         <configuration>
-          <mainClass>com.google.api.client.sample.bigquery.BigQuerySample</mainClass>
+          <mainClass>com.google.api.client.sample.latitude.LatitudeSample</mainClass>
         </configuration>
       </plugin>
     </plugins>
@@ -86,6 +86,12 @@
       <groupId>org.codehaus.jackson</groupId>
       <artifactId>jackson-core-asl</artifactId>
       <version>1.5.3</version>
+    </dependency>
+    <dependency>
+      <groupId>org.mortbay.jetty</groupId>
+      <artifactId>jetty-embedded</artifactId>
+      <version>6.1.24</version>
+      <scope>compile</scope>
     </dependency>
   </dependencies>
   <properties>

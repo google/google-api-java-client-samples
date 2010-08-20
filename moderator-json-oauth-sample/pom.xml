@@ -11,7 +11,7 @@
   <version>1.0.2</version>
   <name>moderator-json-oauth-sample</name>
   <description>
-    Example for the Google Moderator API.
+    Example for the Google Moderator API using JSON and OAuth.
   </description>
 
   <url>http://code.google.com/p/google-api-java-client/</url>

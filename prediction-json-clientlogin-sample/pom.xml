@@ -11,7 +11,7 @@
   <version>1.0.2</version>
   <name>prediction-json-clientlogin-sample</name>
   <description>
-    Example for the Google Prediction API.
+    Example for the Google Prediction API using JSON and Client Login.
   </description>
 
   <url>http://code.google.com/p/google-api-java-client/</url>
