@@ -7,7 +7,7 @@
     <version>5</version>
   </parent>
   <groupId>com.google.api.client</groupId>
-  <artifactId>bigquery-sample</artifactId>
+  <artifactId>bigquery-json-clientlogin-sample</artifactId>
   <version>1.0.2</version>
   <name>bigquery-json-clientlogin-sample</name>
   <description>
@@ -28,9 +28,9 @@
   </prerequisites>
 
   <scm>
-    <connection>scm:hg:https://bigquerycljsonsample.google-api-java-client.googlecode.com/hg/</connection>
-    <developerConnection>scm:hg:https://bigquerycljsonsample.google-api-java-client.googlecode.com/hg/</developerConnection>
-    <url>http://code.google.com/p/google-api-java-client/source/browse/?repo=bigquerycljsonsample</url>
+    <connection>scm:hg:https://samples.google-api-java-client.googlecode.com/hg/</connection>
+    <developerConnection>scm:hg:https://samples.google-api-java-client.googlecode.com/hg/</developerConnection>
+    <url>http://code.google.com/p/google-api-java-client/source/browse/?repo=samples</url>
   </scm>
 
   <developers>
@@ -80,7 +80,7 @@
     <dependency>
       <groupId>com.google.api.client</groupId>
       <artifactId>google-api-client</artifactId>
-      <version>1.0.9-alpha</version>
+      <version>1.0.10-alpha</version>
     </dependency>
     <dependency>
       <groupId>org.codehaus.jackson</groupId>

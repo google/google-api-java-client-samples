@@ -7,11 +7,11 @@
     <version>5</version>
   </parent>
   <groupId>com.google.api.client</groupId>
-  <artifactId>prediction-json-clientlogin-sample</artifactId>
-  <version>1.0.2</version>
-  <name>prediction-json-clientlogin-sample</name>
+  <artifactId>diacritization-json-sample</artifactId>
+  <version>1.0.6</version>
+  <name>diacritization-json-sample</name>
   <description>
-    Example for the Google Prediction API.
+    Example for the Google Language API for Diacritization.
   </description>
 
   <url>http://code.google.com/p/google-api-java-client/</url>
@@ -68,7 +68,7 @@
           </execution>
         </executions>
         <configuration>
-          <mainClass>com.google.api.client.sample.prediction.PredictionSample</mainClass>
+          <mainClass>com.google.api.client.sample.diacritization.DiacritizationSample</mainClass>
         </configuration>
       </plugin>
     </plugins>
