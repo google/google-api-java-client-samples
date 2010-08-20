@@ -20,7 +20,8 @@
 your <code>JAVA_HOME</code>.</p>
 
 <p><b>Important:</b> after checking out the project, and before compiling
-and running it, you need to edit <code>src/com/google/api/client/sample/latitude/ClientCredentials.java</code>
+and running it, you need to edit <a
+  href="http://code.google.com/p/google-api-java-client/source/browse/latitude-json-oauth-sample/src/com/google/api/client/sample/latitude/ClientCredentials.java?repo=samples">ClientCredentials.java</a>
 to enter a domain and client shared secret for a registered domain that you own.
 Otherwise, you will get a <code>400 Bad Request</code> exception with the
 message <code>Consumer is not registered: enter_domain</code>.</p>
@@ -28,6 +29,7 @@ message <code>Consumer is not registered: enter_domain</code>.</p>
 <pre><code>cd <i>[someDirectory]</i>
 hg clone https://samples.google-api-java-client.googlecode.com/hg/ google-api-java-client-samples
 cd google-api-java-client-samples/latitude-json-oauth-sample
+<i>[editor]</i> src/com/google/api/client/sample/latitude/ClientCredentials.java
 mvn compile
 mvn -q exec:java</code></pre>
 
