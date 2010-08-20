@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="gen"/>
+	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
+	<classpathentry kind="lib" path="lib/google-api-client-apache-1.0.10-alpha.jar"/>
+	<classpathentry kind="lib" path="lib/google-api-client-escape-1.0.10-alpha.jar"/>
+	<classpathentry kind="lib" path="lib/google-api-client-googleapis-1.0.10-alpha.jar"/>
+	<classpathentry kind="lib" path="lib/google-api-client-googleapis-xml-atom-1.0.10-alpha.jar"/>
+	<classpathentry kind="lib" path="lib/google-api-client-http-1.0.10-alpha.jar"/>
+	<classpathentry kind="lib" path="lib/google-api-client-util-1.0.10-alpha.jar"/>
+	<classpathentry kind="lib" path="lib/google-api-client-xml-1.0.10-alpha.jar"/>
+	<classpathentry kind="lib" path="lib/google-api-client-xml-atom-1.0.10-alpha.jar"/>
+	<classpathentry kind="output" path="target/classes"/>
+</classpath>
