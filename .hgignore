@@ -1,2 +1,5 @@
 syntax: regexp
-^(.*/)?target$
+^([^/]+/)?target$
+
+syntax: regexp
+^[^/]+/gen$
