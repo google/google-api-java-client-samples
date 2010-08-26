@@ -20,6 +20,7 @@ import com.google.api.client.googleapis.GoogleHeaders;
 import com.google.api.client.googleapis.GoogleTransport;
 import com.google.api.client.http.HttpResponseException;
 import com.google.api.client.http.HttpTransport;
+import com.google.api.client.http.InputStreamContent;
 import com.google.api.client.sample.picasa.model.AlbumEntry;
 import com.google.api.client.sample.picasa.model.AlbumFeed;
 import com.google.api.client.sample.picasa.model.PhotoEntry;
@@ -28,6 +29,7 @@ import com.google.api.client.sample.picasa.model.UserFeed;
 import com.google.api.client.sample.picasa.model.Util;
 import com.google.api.client.xml.atom.AtomParser;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
@@ -45,6 +47,7 @@ public class PicasaSample {
         UserFeed feed = showAlbums(transport);
         AlbumEntry album = postAlbum(transport, feed);
         postPhoto(transport, album);
+        // postVideo(transport, album);
         album = getUpdatedAlbum(transport, album);
         album = updateTitle(transport, album);
         deleteAlbum(transport, album);
@@ -129,11 +132,29 @@ public class PicasaSample {
       throws IOException {
     String fileName = "picasaweblogo-en_US.gif";
     String photoUrlString = "http://www.google.com/accounts/lh2/" + fileName;
-    URL photoUrl = new URL(photoUrlString);
+    InputStreamContent content = new InputStreamContent();
+    content.inputStream = new URL(photoUrlString).openStream();
+    content.type = "image/jpeg";
     PhotoEntry photo = PhotoEntry.executeInsert(
-        transport, album.getFeedLink(), photoUrl, fileName);
+        transport, album.getFeedLink(), content, fileName);
     System.out.println("Posted photo: " + photo.title);
     return photo;
+  }
+
+  private static PhotoEntry postVideo(HttpTransport transport, AlbumEntry album)
+      throws IOException {
+    InputStreamContent imageContent = new InputStreamContent();
+    // NOTE: this video is not included in the sample
+    File file = new File("myvideo.3gp");
+    imageContent.setFileInput(file);
+    imageContent.type = "video/3gpp";
+    PhotoEntry video = new PhotoEntry();
+    video.title = file.getName();
+    video.summary = "My video";
+    PhotoEntry result = video.executeInsertWithMetadata(
+        transport, album.getFeedLink(), imageContent);
+    System.out.println("Posted video (pending processing): " + result.title);
+    return result;
   }
 
   private static AlbumEntry getUpdatedAlbum(
