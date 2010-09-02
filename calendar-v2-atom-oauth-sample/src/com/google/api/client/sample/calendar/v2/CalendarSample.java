@@ -14,17 +14,17 @@
  * the License.
  */
 
-package com.google.api.client.sample.docs.v3;
+package com.google.api.client.sample.calendar.v2;
 
 import com.google.api.client.googleapis.GoogleHeaders;
 import com.google.api.client.googleapis.GoogleTransport;
 import com.google.api.client.http.HttpResponseException;
 import com.google.api.client.http.HttpTransport;
-import com.google.api.client.sample.docs.v3.model.Debug;
-import com.google.api.client.sample.docs.v3.model.DocsUrl;
-import com.google.api.client.sample.docs.v3.model.DocumentListEntry;
-import com.google.api.client.sample.docs.v3.model.DocumentListFeed;
-import com.google.api.client.sample.docs.v3.model.Namespace;
+import com.google.api.client.sample.calendar.v2.model.CalendarEntry;
+import com.google.api.client.sample.calendar.v2.model.CalendarFeed;
+import com.google.api.client.sample.calendar.v2.model.CalendarUrl;
+import com.google.api.client.sample.calendar.v2.model.Debug;
+import com.google.api.client.sample.calendar.v2.model.Namespace;
 import com.google.api.client.xml.atom.AtomParser;
 
 import java.io.IOException;
@@ -32,11 +32,11 @@ import java.io.IOException;
 /**
  * @author Yaniv Inbar
  */
-public class DocsSample {
+public class CalendarSample {
 
   private final HttpTransport transport;
 
-  public DocsSample(HttpTransport transport) {
+  public CalendarSample(HttpTransport transport) {
     super();
     this.transport = transport;
   }
@@ -46,9 +46,9 @@ public class DocsSample {
     try {
       try {
         HttpTransport transport = setUpTransport();
-        DocsSample sample = new DocsSample(transport);
+        CalendarSample sample = new CalendarSample(transport);
         sample.authorize();
-        sample.showDocs();
+        sample.showCalendars();
         Auth.revoke();
       } catch (HttpResponseException e) {
         System.err.println(e.response.parseAsString());
@@ -64,18 +64,18 @@ public class DocsSample {
   private static HttpTransport setUpTransport() {
     HttpTransport transport = GoogleTransport.create();
     GoogleHeaders headers = (GoogleHeaders) transport.defaultHeaders;
-    headers.setApplicationName("google-docsaatomsample-1.0");
-    headers.gdataVersion = "3";
+    headers.setApplicationName("google-calendarsample-1.0");
+    headers.gdataVersion = "2";
     AtomParser parser = new AtomParser();
     parser.namespaceDictionary = Namespace.DICTIONARY;
     transport.addParser(parser);
     return transport;
   }
 
-  private void showDocs() throws IOException {
-    header("Show Documents List");
-    DocumentListFeed feed =
-        DocumentListFeed.executeGet(transport, DocsUrl.forDefaultPrivateFull());
+  private void showCalendars() throws IOException {
+    header("Show Calendars");
+    CalendarUrl url = CalendarUrl.forDefaultAllCalendarsFull();
+    CalendarFeed feed = CalendarFeed.executeGet(transport, url);
     display(feed);
   }
 
@@ -89,13 +89,19 @@ public class DocsSample {
     System.out.println();
   }
 
-  private void display(DocumentListFeed feed) {
-    for (DocumentListEntry doc : feed.docs) {
-      display(doc);
+  private static void display(CalendarFeed feed) {
+    for (CalendarEntry cal : feed.calendars) {
+      display(cal);
     }
   }
 
-  private void display(DocumentListEntry entry) {
-    System.out.println(entry.title);
+  private static void display(CalendarEntry entry) {
+    System.out.println();
+    System.out.println("-----------------------------------------------");
+    System.out.println("Title: " + entry.title);
+    System.out.println("Updated: " + entry.updated);
+    if (entry.summary != null) {
+      System.out.println("Summary: " + entry.summary);
+    }
   }
 }

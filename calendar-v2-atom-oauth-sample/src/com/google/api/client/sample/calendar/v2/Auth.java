@@ -14,7 +14,7 @@
  * the License.
  */
 
-package com.google.api.client.sample.docs.v3;
+package com.google.api.client.sample.calendar.v2;
 
 import com.google.api.client.auth.oauth.OAuthCredentialsResponse;
 import com.google.api.client.auth.oauth.OAuthHmacSigner;
@@ -23,7 +23,7 @@ import com.google.api.client.googleapis.auth.oauth.GoogleOAuthAuthorizeTemporary
 import com.google.api.client.googleapis.auth.oauth.GoogleOAuthGetAccessToken;
 import com.google.api.client.googleapis.auth.oauth.GoogleOAuthGetTemporaryToken;
 import com.google.api.client.http.HttpTransport;
-import com.google.api.client.sample.docs.v3.model.DocsUrl;
+import com.google.api.client.sample.calendar.v2.model.CalendarUrl;
 
 import java.awt.Desktop;
 import java.awt.Desktop.Action;
@@ -37,7 +37,7 @@ import java.net.URI;
 public class Auth {
 
   private static final String APP_NAME =
-      "Google Documents List Data API Java Client Sample";
+      "Google Calendar Data API Java Client Sample";
 
   private static OAuthHmacSigner signer;
 
@@ -58,7 +58,7 @@ public class Auth {
       signer.clientSharedSecret = "anonymous";
       temporaryToken.signer = signer;
       temporaryToken.consumerKey = "anonymous";
-      temporaryToken.scope = DocsUrl.ROOT_URL;
+      temporaryToken.scope = CalendarUrl.ROOT_URL;
       temporaryToken.displayName = APP_NAME;
       temporaryToken.callback = callbackServer.getCallbackUrl();
       OAuthCredentialsResponse tempCredentials = temporaryToken.execute();
