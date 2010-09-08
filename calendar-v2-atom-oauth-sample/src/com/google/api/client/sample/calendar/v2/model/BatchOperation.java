@@ -16,32 +16,27 @@
 
 package com.google.api.client.sample.calendar.v2.model;
 
-import com.google.api.client.googleapis.xml.atom.GData;
-import com.google.api.client.http.HttpRequest;
-import com.google.api.client.http.HttpTransport;
 import com.google.api.client.util.Key;
-
-import java.io.IOException;
-import java.util.List;
 
 /**
  * @author Yaniv Inbar
  */
-public class Feed {
+public class BatchOperation {
 
-  @Key("link")
-  public List<Link> links;
+  public static final BatchOperation INSERT = BatchOperation.of("insert");
+  public static final BatchOperation QUERY = BatchOperation.of("query");
+  public static final BatchOperation UPDATE = BatchOperation.of("update");
+  public static final BatchOperation DELETE = BatchOperation.of("delete");
 
-  public String getBatchLink() {
-    return Link.find(links, "http://schemas.google.com/g/2005#batch");
+  @Key("@type")
+  public String type;
+
+  public BatchOperation() {
   }
 
-  static Feed executeGet(
-      HttpTransport transport, CalendarUrl url, Class<? extends Feed> feedClass)
-      throws IOException {
-    url.fields = GData.getFieldsFor(feedClass);
-    HttpRequest request = transport.buildGetRequest();
-    request.url = url;
-    return RedirectHandler.execute(request).parseAs(feedClass);
+  public static BatchOperation of(String type) {
+    BatchOperation result = new BatchOperation();
+    result.type = type;
+    return result;
   }
 }

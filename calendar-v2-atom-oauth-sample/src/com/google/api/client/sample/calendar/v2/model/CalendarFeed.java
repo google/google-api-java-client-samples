@@ -20,6 +20,7 @@ import com.google.api.client.http.HttpTransport;
 import com.google.api.client.util.Key;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -29,11 +30,10 @@ import java.util.List;
 public class CalendarFeed extends Feed {
 
   @Key("entry")
-  public List<CalendarEntry> calendars;
+  public List<CalendarEntry> calendars = new ArrayList<CalendarEntry>();
 
   public static CalendarFeed executeGet(
       HttpTransport transport, CalendarUrl url) throws IOException {
-    return (CalendarFeed) Feed.executeGet(
-        transport, url, CalendarFeed.class);
+    return (CalendarFeed) Feed.executeGet(transport, url, CalendarFeed.class);
   }
 }
