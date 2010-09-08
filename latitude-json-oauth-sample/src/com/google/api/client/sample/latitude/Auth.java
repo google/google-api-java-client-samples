@@ -42,7 +42,8 @@ public class Auth {
   private static OAuthCredentialsResponse credentials;
 
   /**
-   * For details regarding authentication and authorization for GoogleLatitude,see<ahref="http://code.google.com/apis/latitude/v1/using_rest.html#auth">Authentication
+   * For details regarding authentication and authorization for Google Latitude,
+   * see <a href="http://code.google.com/apis/latitude/v1/using_rest.html#auth">Authentication
    * and authorization</a>.
    */
   static void authorize(HttpTransport transport) throws Exception {

@@ -55,9 +55,9 @@ public class Auth {
       GoogleOAuthGetTemporaryToken temporaryToken =
           new GoogleOAuthGetTemporaryToken();
       signer = new OAuthHmacSigner();
-      signer.clientSharedSecret = "anonymous";
+      signer.clientSharedSecret = ClientCredentials.ENTER_CLIENT_SHARED_SECRET;
       temporaryToken.signer = signer;
-      temporaryToken.consumerKey = "anonymous";
+      temporaryToken.consumerKey = ClientCredentials.ENTER_DOMAIN;
       temporaryToken.scope = CalendarUrl.ROOT_URL;
       temporaryToken.displayName = APP_NAME;
       temporaryToken.callback = callbackServer.getCallbackUrl();
