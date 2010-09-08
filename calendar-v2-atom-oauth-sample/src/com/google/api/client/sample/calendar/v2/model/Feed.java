@@ -41,6 +41,7 @@ public class Feed {
     } catch (HttpResponseException e) {
       if (e.response.statusCode == 302) {
         request.setUrl(e.response.headers.location);
+        e.response.ignore(); // force the connection to close
         response = request.execute();
       } else {
         throw e;
