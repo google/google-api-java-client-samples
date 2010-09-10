@@ -1,12 +1,12 @@
 /*
  * Copyright (c) 2010 Google Inc.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -20,10 +20,11 @@ import com.google.api.client.googleapis.GoogleHeaders;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.InputStreamContent;
+import com.google.api.client.http.MultipartRelatedContent;
 import com.google.api.client.util.Key;
+import com.google.api.client.xml.atom.AtomContent;
 
 import java.io.IOException;
-import java.net.URL;
 
 /**
  * @author Yaniv Inbar
@@ -37,15 +38,29 @@ public class PhotoEntry extends Entry {
   public MediaGroup mediaGroup;
 
   public static PhotoEntry executeInsert(HttpTransport transport,
-      String feedLink, URL photoUrl, String fileName) throws IOException {
+      String albumFeedLink, InputStreamContent content, String fileName)
+      throws IOException {
     HttpRequest request = transport.buildPostRequest();
-    request.setUrl(feedLink);
+    request.setUrl(albumFeedLink);
     GoogleHeaders headers = (GoogleHeaders) request.headers;
     headers.setSlugFromFileName(fileName);
-    InputStreamContent content = new InputStreamContent();
-    content.inputStream = photoUrl.openStream();
-    content.type = "image/jpeg";
     request.content = content;
+    return request.execute().parseAs(PhotoEntry.class);
+  }
+
+  public PhotoEntry executeInsertWithMetadata(
+      HttpTransport transport, String albumFeedLink, InputStreamContent content)
+      throws IOException {
+    HttpRequest request = transport.buildPostRequest();
+    request.setUrl(albumFeedLink);
+    AtomContent atomContent = new AtomContent();
+    atomContent.namespaceDictionary = Util.NAMESPACE_DICTIONARY;
+    atomContent.entry = this;
+    MultipartRelatedContent multiPartContent =
+        MultipartRelatedContent.forRequest(request);
+    multiPartContent.parts.add(atomContent);
+    multiPartContent.parts.add(content);
+    request.content = multiPartContent;
     return request.execute().parseAs(PhotoEntry.class);
   }
 }
