@@ -8,7 +8,7 @@
   </parent>
   <groupId>com.google.api.client</groupId>
   <artifactId>picasa-atom-oauth-sample</artifactId>
-  <version>1.0.0</version>
+  <version>1.0.1</version>
   <name>picasa-atom-oauth-sample</name>
   <description>
     Example for the Picasa Web Albums Data API using Atom and OAuth.
