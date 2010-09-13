@@ -27,7 +27,7 @@ import java.util.List;
 /**
  * @author Yaniv Inbar
  */
-public class Feed {
+public abstract class Feed {
 
   @Key("link")
   public List<Link> links;
@@ -35,6 +35,8 @@ public class Feed {
   public String getBatchLink() {
     return Link.find(links, "http://schemas.google.com/g/2005#batch");
   }
+
+  public abstract List<? extends Entry> getEntries();
 
   static Feed executeGet(
       HttpTransport transport, CalendarUrl url, Class<? extends Feed> feedClass)

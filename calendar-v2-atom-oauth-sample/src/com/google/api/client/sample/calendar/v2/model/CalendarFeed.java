@@ -36,4 +36,9 @@ public class CalendarFeed extends Feed {
       HttpTransport transport, CalendarUrl url) throws IOException {
     return (CalendarFeed) Feed.executeGet(transport, url, CalendarFeed.class);
   }
+
+  @Override
+  public List<CalendarEntry> getEntries() {
+    return calendars;
+  }  
 }

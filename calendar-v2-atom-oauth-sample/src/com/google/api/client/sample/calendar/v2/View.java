@@ -16,13 +16,9 @@
 
 package com.google.api.client.sample.calendar.v2;
 
-import com.google.api.client.sample.calendar.v2.model.CalendarFeed;
 import com.google.api.client.sample.calendar.v2.model.Entry;
 import com.google.api.client.sample.calendar.v2.model.EventEntry;
-import com.google.api.client.sample.calendar.v2.model.EventFeed;
 import com.google.api.client.sample.calendar.v2.model.Feed;
-
-import java.util.List;
 
 /**
  * @author Yaniv Inbar
@@ -35,21 +31,8 @@ public class View {
     System.out.println();
   }
 
-  static void display(CalendarFeed feed) {
-    display((Feed) feed);
-    display(feed.calendars);
-  }
-
-  static void display(EventFeed feed) {
-    display((Feed) feed);
-    display(feed.events);
-  }
-
-  private static void display(Feed feed) {
-  }
-
-  private static void display(List<? extends Entry> entries) {
-    for (Entry entry : entries) {
+  static void display(Feed feed) {
+    for (Entry entry : feed.getEntries()) {
       System.out.println();
       System.out.println("-----------------------------------------------");
       display(entry);

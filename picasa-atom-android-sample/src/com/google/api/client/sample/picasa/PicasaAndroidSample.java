@@ -42,6 +42,7 @@ import com.google.api.client.apache.ApacheHttpTransport;
 import com.google.api.client.googleapis.GoogleHeaders;
 import com.google.api.client.googleapis.GoogleTransport;
 import com.google.api.client.http.HttpRequest;
+import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpResponseException;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.InputStreamContent;
@@ -176,28 +177,44 @@ public final class PicasaAndroidSample extends ListActivity {
     showDialog(DIALOG_ACCOUNTS);
   }
 
-  private void gotAccount(AccountManager manager, Account account) {
+  private void gotAccount(final AccountManager manager, final Account account) {
     SharedPreferences settings = getSharedPreferences(PREF, 0);
     SharedPreferences.Editor editor = settings.edit();
     editor.putString("accountName", account.name);
     editor.commit();
-    try {
-      Bundle bundle = manager
-          .getAuthToken(account, AUTH_TOKEN_TYPE, true, null, null).getResult();
-      if (bundle.containsKey(AccountManager.KEY_INTENT)) {
-        Intent intent = bundle.getParcelable(AccountManager.KEY_INTENT);
-        int flags = intent.getFlags();
-        flags &= ~Intent.FLAG_ACTIVITY_NEW_TASK;
-        intent.setFlags(flags);
-        startActivityForResult(intent, REQUEST_AUTHENTICATE);
-      } else if (bundle.containsKey(AccountManager.KEY_AUTHTOKEN)) {
-        authenticatedClientLogin(
-            bundle.getString(AccountManager.KEY_AUTHTOKEN));
+    new Thread() {
+
+      @Override
+      public void run() {
+        try {
+          final Bundle bundle =
+              manager.getAuthToken(account, AUTH_TOKEN_TYPE, true, null, null)
+                  .getResult();
+          runOnUiThread(new Runnable() {
+
+            public void run() {
+              try {
+                if (bundle.containsKey(AccountManager.KEY_INTENT)) {
+                  Intent intent =
+                      bundle.getParcelable(AccountManager.KEY_INTENT);
+                  int flags = intent.getFlags();
+                  flags &= ~Intent.FLAG_ACTIVITY_NEW_TASK;
+                  intent.setFlags(flags);
+                  startActivityForResult(intent, REQUEST_AUTHENTICATE);
+                } else if (bundle.containsKey(AccountManager.KEY_AUTHTOKEN)) {
+                  authenticatedClientLogin(
+                      bundle.getString(AccountManager.KEY_AUTHTOKEN));
+                }
+              } catch (Exception e) {
+                handleException(e);
+              }
+            }
+          });
+        } catch (Exception e) {
+          handleException(e);
+        }
       }
-    } catch (Exception e) {
-      handleException(e);
-      return;
-    }
+    }.start();
   }
 
   @Override
@@ -398,22 +415,29 @@ public final class PicasaAndroidSample extends ListActivity {
 
   private void handleException(Exception e) {
     e.printStackTrace();
+    SharedPreferences settings = getSharedPreferences(PREF, 0);
+    boolean log = settings.getBoolean("logging", false);
     if (e instanceof HttpResponseException) {
-      int statusCode = ((HttpResponseException) e).response.statusCode;
+      HttpResponse response = ((HttpResponseException) e).response;
+      int statusCode = response.statusCode;
+      try {
+        response.ignore();
+      } catch (IOException e1) {
+        e1.printStackTrace();
+      }
       if (statusCode == 401 || statusCode == 403) {
         gotAccount(true);
+        return;
       }
-      return;
-    }
-    SharedPreferences settings = getSharedPreferences(PREF, 0);
-    if (settings.getBoolean("logging", false)) {
-      if (e instanceof HttpResponseException) {
+      if (log) {
         try {
-          Log.e(TAG, ((HttpResponseException) e).response.parseAsString());
+          Log.e(TAG, response.parseAsString());
         } catch (IOException parseException) {
           parseException.printStackTrace();
         }
       }
+    }
+    if (log) {
       Log.e(TAG, e.getMessage(), e);
     }
   }

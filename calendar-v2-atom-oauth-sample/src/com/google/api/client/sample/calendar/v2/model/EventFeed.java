@@ -55,4 +55,9 @@ public class EventFeed extends Feed {
     request.content = content;
     return RedirectHandler.execute(request).parseAs(getClass());
   }
+
+  @Override
+  public List<EventEntry> getEntries() {
+    return events;
+  }  
 }
