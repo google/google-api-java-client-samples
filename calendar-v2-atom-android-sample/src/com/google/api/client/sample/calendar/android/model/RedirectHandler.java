@@ -45,7 +45,6 @@ public class RedirectHandler {
       transport.intercepters.add(0, this); // must be first
     }
 
-    @Override
     public void intercept(HttpRequest request) {
       request.url.set("gsessionid", this.gsessionid);
     }
