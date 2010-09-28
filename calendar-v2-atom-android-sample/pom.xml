@@ -15,7 +15,7 @@
   </description>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <libVersion>1.1.1-alpha</libVersion>
+    <libVersion>1.2.0-alpha-SNAPSHOT</libVersion>
   </properties>
 
   <url>http://code.google.com/p/google-api-java-client/</url>

@@ -16,7 +16,6 @@
 
 package com.google.api.client.sample.calendar.android;
 
-import com.google.api.client.apache.ApacheHttpTransport;
 import com.google.api.client.googleapis.GoogleHeaders;
 import com.google.api.client.googleapis.GoogleTransport;
 import com.google.api.client.http.HttpResponse;
@@ -94,7 +93,6 @@ public final class CalendarAndroidSample extends ListActivity {
   private final List<CalendarEntry> calendars = new ArrayList<CalendarEntry>();
 
   public CalendarAndroidSample() {
-    HttpTransport.setLowLevelHttpTransport(ApacheHttpTransport.INSTANCE);
     transport = GoogleTransport.create();
     GoogleHeaders headers = (GoogleHeaders) transport.defaultHeaders;
     headers.setApplicationName("google-calendarandroidsample-1.0");
