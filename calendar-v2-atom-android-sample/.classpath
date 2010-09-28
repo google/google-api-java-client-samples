@@ -3,15 +3,15 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="gen"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
-	<classpathentry kind="var" path="M2_REPO/com/google/api/client/google-api-client-apache/1.1.0-alpha/google-api-client-apache-1.1.0-alpha.jar" sourcepath="/M2_REPO/com/google/api/client/google-api-client/1.1.0-alpha/google-api-client-1.1.0-alpha-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/com/google/api/client/google-api-client-escape/1.1.0-alpha/google-api-client-escape-1.1.0-alpha.jar" sourcepath="/M2_REPO/com/google/api/client/google-api-client/1.1.0-alpha/google-api-client-1.1.0-alpha-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/com/google/api/client/google-api-client-googleapis/1.1.0-alpha/google-api-client-googleapis-1.1.0-alpha.jar" sourcepath="/M2_REPO/com/google/api/client/google-api-client/1.1.0-alpha/google-api-client-1.1.0-alpha-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/com/google/api/client/google-api-client-googleapis-xml-atom/1.1.0-alpha/google-api-client-googleapis-xml-atom-1.1.0-alpha.jar" sourcepath="/M2_REPO/com/google/api/client/google-api-client/1.1.0-alpha/google-api-client-1.1.0-alpha-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/com/google/api/client/google-api-client-http/1.1.0-alpha/google-api-client-http-1.1.0-alpha.jar" sourcepath="/M2_REPO/com/google/api/client/google-api-client/1.1.0-alpha/google-api-client-1.1.0-alpha-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/com/google/api/client/google-api-client-util/1.1.0-alpha/google-api-client-util-1.1.0-alpha.jar" sourcepath="/M2_REPO/com/google/api/client/google-api-client/1.1.0-alpha/google-api-client-1.1.0-alpha-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/com/google/api/client/google-api-client-xml/1.1.0-alpha/google-api-client-xml-1.1.0-alpha.jar" sourcepath="/M2_REPO/com/google/api/client/google-api-client/1.1.0-alpha/google-api-client-1.1.0-alpha-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/com/google/api/client/google-api-client-xml-atom/1.1.0-alpha/google-api-client-xml-atom-1.1.0-alpha.jar" sourcepath="/M2_REPO/com/google/api/client/google-api-client/1.1.0-alpha/google-api-client-1.1.0-alpha-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/com/google/api/client/google-api-client-repackaged-com-google-common-base/1.1.0-alpha/google-api-client-repackaged-com-google-common-base-1.1.0-alpha.jar"/>
+	<classpathentry kind="var" path="M2_REPO/com/google/api/client/google-api-client-apache/1.1.1-alpha/google-api-client-apache-1.1.1-alpha.jar" sourcepath="/M2_REPO/com/google/api/client/google-api-client/1.1.1-alpha/google-api-client-1.1.1-alpha-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/com/google/api/client/google-api-client-escape/1.1.1-alpha/google-api-client-escape-1.1.1-alpha.jar" sourcepath="/M2_REPO/com/google/api/client/google-api-client/1.1.1-alpha/google-api-client-1.1.1-alpha-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/com/google/api/client/google-api-client-googleapis/1.1.1-alpha/google-api-client-googleapis-1.1.1-alpha.jar" sourcepath="/M2_REPO/com/google/api/client/google-api-client/1.1.1-alpha/google-api-client-1.1.1-alpha-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/com/google/api/client/google-api-client-googleapis-xml-atom/1.1.1-alpha/google-api-client-googleapis-xml-atom-1.1.1-alpha.jar" sourcepath="/M2_REPO/com/google/api/client/google-api-client/1.1.1-alpha/google-api-client-1.1.1-alpha-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/com/google/api/client/google-api-client-http/1.1.1-alpha/google-api-client-http-1.1.1-alpha.jar" sourcepath="/M2_REPO/com/google/api/client/google-api-client/1.1.1-alpha/google-api-client-1.1.1-alpha-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/com/google/api/client/google-api-client-util/1.1.1-alpha/google-api-client-util-1.1.1-alpha.jar" sourcepath="/M2_REPO/com/google/api/client/google-api-client/1.1.1-alpha/google-api-client-1.1.1-alpha-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/com/google/api/client/google-api-client-xml/1.1.1-alpha/google-api-client-xml-1.1.1-alpha.jar" sourcepath="/M2_REPO/com/google/api/client/google-api-client/1.1.1-alpha/google-api-client-1.1.1-alpha-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/com/google/api/client/google-api-client-xml-atom/1.1.1-alpha/google-api-client-xml-atom-1.1.1-alpha.jar" sourcepath="/M2_REPO/com/google/api/client/google-api-client/1.1.1-alpha/google-api-client-1.1.1-alpha-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/com/google/api/client/google-api-client-repackaged-com-google-common-base/1.1.1-alpha/google-api-client-repackaged-com-google-common-base-1.1.1-alpha.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
   <classpathentry kind="con" path="org.maven.ide.eclipse.MAVEN2_CLASSPATH_CONTAINER"/>
 </classpath>
