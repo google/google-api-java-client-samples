@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE web-app
+    PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+    "http://java.sun.com/dtd/web-app_2_3.dtd">
+
+<web-app>
+
+  <servlet>
+    <servlet-name>calendarServiceServlet</servlet-name>
+    <servlet-class>com.google.api.client.sample.calendar.v2.appengine.server.CalendarGwtRpcSample</servlet-class>
+  </servlet>
+
+  <servlet>
+    <servlet-name>sample</servlet-name>
+    <servlet-class>com.google.api.client.sample.calendar.v2.appengine.server.CalendarAppEngineSample</servlet-class>
+  </servlet>
+
+  <servlet>
+    <servlet-name>access_granted</servlet-name>
+    <servlet-class>com.google.api.client.sample.calendar.v2.appengine.server.AccessGrantedServlet</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>calendarServiceServlet</servlet-name>
+    <url-pattern>/calendar/calendarService</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>sample</servlet-name>
+    <url-pattern>/</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>access_granted</servlet-name>
+    <url-pattern>/access_granted</url-pattern>
+  </servlet-mapping>
+
+  <security-constraint>
+    <web-resource-collection>
+      <web-resource-name>any</web-resource-name>
+      <url-pattern>/*</url-pattern>
+    </web-resource-collection>
+    <auth-constraint>
+      <role-name>*</role-name>
+    </auth-constraint>
+  </security-constraint>
+
+</web-app>

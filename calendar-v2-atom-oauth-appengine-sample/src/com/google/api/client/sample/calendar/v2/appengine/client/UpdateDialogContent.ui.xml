@@ -1,0 +1,9 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder' xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+
+  <g:HorizontalPanel>
+    <g:TextBox ui:field='textBox'></g:TextBox>
+    <g:Button ui:field='updateButton'>Update</g:Button>
+    <g:Button ui:field='cancelButton'>Cancel</g:Button>
+  </g:HorizontalPanel>
+
+</ui:UiBinder>

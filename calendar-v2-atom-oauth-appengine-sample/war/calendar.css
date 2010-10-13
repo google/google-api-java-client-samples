@@ -1,0 +1,16 @@
+.header {
+  padding: 8px;
+  border-bottom: 1px solid grey;
+}
+
+.title {
+  font-size: 2em;
+  font-weight: bold;
+  margin: 0px 0px 10px;
+  color: grey;
+}
+  
+.methodsHeaderRow {
+  background-color: #2062B8;
+  color: white;
+}
