@@ -1,0 +1,16 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder' xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+
+  <g:VerticalPanel spacing='5'>
+    <g:Label styleName='title'>Google Calendar API Web Sample</g:Label>
+    <g:HorizontalPanel>
+      <g:Label>New Calendar:</g:Label>
+      <g:TextBox ui:field='addTextBox'></g:TextBox>
+      <g:Button ui:field='addButton' enabled="false">Add</g:Button>
+    </g:HorizontalPanel>
+    <g:DecoratorPanel>
+      <g:FlexTable ui:field='calendarsTable' cellPadding='3'
+        styleName='calendarsTable'></g:FlexTable>
+    </g:DecoratorPanel>
+  </g:VerticalPanel>
+
+</ui:UiBinder>

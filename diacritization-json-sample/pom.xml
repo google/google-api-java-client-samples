@@ -80,12 +80,7 @@
     <dependency>
       <groupId>com.google.api.client</groupId>
       <artifactId>google-api-client</artifactId>
-      <version>1.0.10-alpha</version>
-    </dependency>
-    <dependency>
-      <groupId>org.codehaus.jackson</groupId>
-      <artifactId>jackson-core-asl</artifactId>
-      <version>1.5.3</version>
+      <version>1.2.0-alpha-SNAPSHOT</version>
     </dependency>
   </dependencies>
   <properties>
