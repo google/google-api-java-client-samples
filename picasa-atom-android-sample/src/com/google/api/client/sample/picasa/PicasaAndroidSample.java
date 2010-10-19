@@ -16,6 +16,20 @@
 
 package com.google.api.client.sample.picasa;
 
+import com.google.api.client.googleapis.GoogleHeaders;
+import com.google.api.client.googleapis.GoogleTransport;
+import com.google.api.client.http.HttpRequest;
+import com.google.api.client.http.HttpResponse;
+import com.google.api.client.http.HttpResponseException;
+import com.google.api.client.http.HttpTransport;
+import com.google.api.client.http.InputStreamContent;
+import com.google.api.client.sample.picasa.model.AlbumEntry;
+import com.google.api.client.sample.picasa.model.PicasaUrl;
+import com.google.api.client.sample.picasa.model.UserFeed;
+import com.google.api.client.sample.picasa.model.Util;
+import com.google.api.client.util.DateTime;
+import com.google.api.client.xml.atom.AtomParser;
+
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.AlertDialog;
@@ -37,21 +51,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ArrayAdapter;
-
-import com.google.api.client.apache.ApacheHttpTransport;
-import com.google.api.client.googleapis.GoogleHeaders;
-import com.google.api.client.googleapis.GoogleTransport;
-import com.google.api.client.http.HttpRequest;
-import com.google.api.client.http.HttpResponse;
-import com.google.api.client.http.HttpResponseException;
-import com.google.api.client.http.HttpTransport;
-import com.google.api.client.http.InputStreamContent;
-import com.google.api.client.sample.picasa.model.AlbumEntry;
-import com.google.api.client.sample.picasa.model.PicasaUrl;
-import com.google.api.client.sample.picasa.model.UserFeed;
-import com.google.api.client.sample.picasa.model.Util;
-import com.google.api.client.util.DateTime;
-import com.google.api.client.xml.atom.AtomParser;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -107,7 +106,6 @@ public final class PicasaAndroidSample extends ListActivity {
   private final List<AlbumEntry> albums = new ArrayList<AlbumEntry>();
 
   public PicasaAndroidSample() {
-    HttpTransport.setLowLevelHttpTransport(ApacheHttpTransport.INSTANCE);
     transport = GoogleTransport.create();
     GoogleHeaders headers = (GoogleHeaders) transport.defaultHeaders;
     headers.setApplicationName("google-picasaandroidsample-1.0");

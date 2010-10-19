@@ -39,7 +39,7 @@ public final class PredictionUrl extends GoogleUrl {
 
   private static PredictionUrl root() {
     return new PredictionUrl(
-        "https://www.googleapis.com/prediction/v1/training");
+        "https://www.googleapis.com/prediction/v1.1/training");
   }
 
   /**

@@ -78,25 +78,25 @@ public class PredictionSample {
     System.out.print("Waiting for training to complete");
     System.out.flush();
     while (true) {
-      try {
-        Thread.sleep(1000);
-      } catch (InterruptedException e) {
-        break;
-      }
       request = transport.buildGetRequest();
       request.url =
           PredictionUrl.forCheckingTraining(ClientLoginCredentials.OBJECT_PATH);
       CheckTraining checkTraining =
           request.execute().parseAs(CheckTraining.class);
-      if ("Training hasn't completed.".equals(checkTraining.modelinfo)) {
-        System.out.print(".");
-        System.out.flush();
-      } else {
+      if (checkTraining.modelinfo.toLowerCase().startsWith(
+          "estimated accuracy")) {
         System.out.println();
         System.out.println("Training completed.");
         System.out.println(checkTraining.modelinfo);
         break;
       }
+      try {
+        Thread.sleep(1000);
+      } catch (InterruptedException e) {
+        break;
+      }
+      System.out.print(".");
+      System.out.flush();
     }
   }
 
@@ -112,6 +112,6 @@ public class PredictionSample {
     request.content = content;
     OutputData outputData = request.execute().parseAs(OutputData.class);
     System.out.println("Text: " + text);
-    System.out.println("Predicted language: " + outputData.output.outputLabel);
+    System.out.println("Predicted language: " + outputData.outputLabel);
   }
 }

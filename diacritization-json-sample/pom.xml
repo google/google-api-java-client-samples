@@ -80,7 +80,7 @@
     <dependency>
       <groupId>com.google.api.client</groupId>
       <artifactId>google-api-client</artifactId>
-      <version>1.2.0-alpha-SNAPSHOT</version>
+      <version>1.2.0-alpha</version>
     </dependency>
   </dependencies>
   <properties>

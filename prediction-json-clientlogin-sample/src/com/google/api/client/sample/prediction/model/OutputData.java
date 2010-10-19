@@ -24,5 +24,5 @@ import com.google.api.client.util.Key;
 public class OutputData {
 
   @Key
-  public Output output;
+  public String outputLabel;
 }
