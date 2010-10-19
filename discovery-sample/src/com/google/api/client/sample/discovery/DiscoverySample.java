@@ -16,14 +16,12 @@
 
 package com.google.api.client.sample.discovery;
 
-import com.google.api.client.apache.ApacheHttpTransport;
 import com.google.api.client.googleapis.json.DiscoveryDocument.ServiceMethod;
 import com.google.api.client.googleapis.json.DiscoveryDocument.ServiceParameter;
 import com.google.api.client.googleapis.json.DiscoveryDocument.ServiceResource;
 import com.google.api.client.googleapis.json.GoogleApi;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpResponseException;
-import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.InputStreamContent;
 
 import java.io.File;
@@ -50,8 +48,6 @@ public class DiscoverySample {
       Pattern.compile("(\\w+)\\.(\\w+)");
 
   public static void main(String[] args) throws Exception {
-    // initialize HTTP transport
-    HttpTransport.setLowLevelHttpTransport(ApacheHttpTransport.INSTANCE);
     Debug.enableLogging();
     // parse command argument
     if (args.length == 0) {
@@ -80,12 +76,9 @@ public class DiscoverySample {
             "Usage: google call apiName apiVersion methodName [parameters]");
         System.out.println();
         System.out.println("Examples:");
-        System.out
-            .println(
-                "  google call discovery 0.1 apis.get --api buzz --prettyprint true");
-        System.out
-            .println(
-                "  google call buzz v1 activities.list --scope @self --userId @me --alt json --prettyprint true");
+        System.out.println("  google call discovery 0.1 apis.get --api buzz");
+        System.out.println(
+            "  google call buzz v1 activities.list --scope @self --userId @me");
         System.out.println(
             "  echo {\\\"data\\\":{\\\"object\\\":{\\\"content\\\":"
                 + "\\\"Posting using Google command-line tool based on "
@@ -196,6 +189,12 @@ public class DiscoverySample {
     HttpRequest request =
         api.buildRequest(resourceName + "." + methodName, parameters);
     request.url.putAll(queryParameters);
+    if (!request.url.containsKey("alt")) {
+      request.url.put("alt", "json");
+    }
+    if (!request.url.containsKey("prettyprint")) {
+      request.url.put("prettyprint", "true");
+    }
     if (requestBodyFile != null) {
       InputStreamContent fileContent = new InputStreamContent();
       // TODO: support other content types?

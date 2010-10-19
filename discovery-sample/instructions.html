@@ -13,8 +13,8 @@ google discover moderator v1</code></pre>
 
 Examples using <b><code>google call</code></b>:
 
-<pre><code>  google call discovery 0.1 apis.get --api buzz --prettyprint true
-  google call buzz v1 activities.list --scope @self --userId @me --alt json --prettyprint true
+<pre><code>  google call discovery 0.1 apis.get --api buzz
+  google call buzz v1 activities.list --scope @self --userId @me
   echo {\"data\":{\"object\":{\"content\":\"Posting using Google command-line tool based on Discovery \(http://bit.ly/avYMh1\)\"}}} > buzzpost.json && google call buzz v1 activities.insert --userId @me buzzpost.json</code></pre>
 
 <h3>Browse Online</h3>

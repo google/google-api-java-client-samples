@@ -25,7 +25,7 @@ import java.util.logging.Logger;
  * @author Yaniv Inbar
  */
 public class Debug {
-  public static final boolean ENABLED = false;
+  static final boolean ENABLED = false;
 
   public static void enableLogging() {
     if (ENABLED) {
