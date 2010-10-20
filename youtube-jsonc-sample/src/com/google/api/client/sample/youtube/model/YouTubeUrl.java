@@ -24,7 +24,7 @@ import com.google.api.client.util.Key;
  */
 public class YouTubeUrl extends GoogleUrl {
 
-  public static final String ROOT_URL = "http://gdata.youtube.com/feeds/api/";
+  public static final String ROOT_URL = "https://gdata.youtube.com/feeds/api/";
 
   @Key
   public String author;

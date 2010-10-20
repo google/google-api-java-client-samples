@@ -37,7 +37,7 @@ public final class DiacritizationUrl extends GoogleUrl {
 
   /** Constructs a new Diacritization URL. */
   public DiacritizationUrl() {
-    super("http://www.googleapis.com/language/diacritize/v1");
+    super("https://www.googleapis.com/language/diacritize/v1");
     if (Debug.ENABLED) {
       prettyprint = true;
     }

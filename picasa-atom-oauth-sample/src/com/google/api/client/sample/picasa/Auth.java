@@ -23,6 +23,7 @@ import com.google.api.client.googleapis.auth.oauth.GoogleOAuthAuthorizeTemporary
 import com.google.api.client.googleapis.auth.oauth.GoogleOAuthGetAccessToken;
 import com.google.api.client.googleapis.auth.oauth.GoogleOAuthGetTemporaryToken;
 import com.google.api.client.http.HttpTransport;
+import com.google.api.client.sample.picasa.model.PicasaUrl;
 
 import java.awt.Desktop;
 import java.awt.Desktop.Action;
@@ -38,7 +39,7 @@ public class Auth {
   private static final String APP_NAME =
       "Picasa Web Albums Data API Java Client";
 
-  private static final String SCOPE = "http://picasaweb.google.com/data";
+  private static final String SCOPE = PicasaUrl.ROOT_URL;
 
   private static OAuthHmacSigner signer;
 

@@ -24,7 +24,7 @@ import com.google.api.client.util.Key;
  */
 public class PicasaUrl extends GoogleUrl {
   
-  public static final String ROOT_URL = "http://picasaweb.google.com/data/";
+  public static final String ROOT_URL = "https://picasaweb.google.com/data/";
 
   @Key("max-results")
   public Integer maxResults;
