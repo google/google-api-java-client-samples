@@ -108,7 +108,7 @@ public final class PicasaAndroidSample extends ListActivity {
   public PicasaAndroidSample() {
     transport = GoogleTransport.create();
     GoogleHeaders headers = (GoogleHeaders) transport.defaultHeaders;
-    headers.setApplicationName("google-picasaandroidsample-1.0");
+    headers.setApplicationName("Google-PicasaAndroidAample/1.0");
     headers.gdataVersion = "2";
     AtomParser parser = new AtomParser();
     parser.namespaceDictionary = Util.NAMESPACE_DICTIONARY;

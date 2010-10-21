@@ -70,7 +70,7 @@ public class CalendarSample {
   private static HttpTransport setUpTransport() {
     HttpTransport transport = GoogleTransport.create();
     GoogleHeaders headers = (GoogleHeaders) transport.defaultHeaders;
-    headers.setApplicationName("google-calendarsample-1.0");
+    headers.setApplicationName("Google-CalendarSample/1.0");
     headers.gdataVersion = "2";
     AtomParser parser = new AtomParser();
     parser.namespaceDictionary = Namespace.DICTIONARY;

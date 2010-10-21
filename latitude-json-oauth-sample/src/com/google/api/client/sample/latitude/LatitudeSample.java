@@ -16,6 +16,7 @@
 
 package com.google.api.client.sample.latitude;
 
+import com.google.api.client.googleapis.GoogleHeaders;
 import com.google.api.client.googleapis.GoogleTransport;
 import com.google.api.client.googleapis.json.JsonCParser;
 import com.google.api.client.http.HttpResponseException;
@@ -34,8 +35,7 @@ public class LatitudeSample {
 
   public static void main(String[] args) {
     Debug.enableLogging();
-    HttpTransport transport = GoogleTransport.create();
-    transport.addParser(new JsonCParser());
+    HttpTransport transport = setUpTransport();
     try {
       try {
         Auth.authorize(transport);
@@ -53,6 +53,14 @@ public class LatitudeSample {
     }
   }
 
+  private static HttpTransport setUpTransport() {
+    HttpTransport transport = GoogleTransport.create();
+    GoogleHeaders headers = (GoogleHeaders) transport.defaultHeaders;
+    headers.setApplicationName("Google-LatitudeSample/1.0");
+    transport.addParser(new JsonCParser());
+    return transport;
+  }
+
   private static void showCurrentLocation(HttpTransport transport)
       throws IOException {
     System.out.println("Current location:");
@@ -65,8 +73,7 @@ public class LatitudeSample {
       throws IOException {
     System.out.println();
     System.out.println("Location History:");
-    List<LocationResource> locations =
-        LocationResource.executeList(transport);
+    List<LocationResource> locations = LocationResource.executeList(transport);
     for (LocationResource location : locations) {
       System.out.println(Json.toString(location));
     }

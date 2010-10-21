@@ -16,6 +16,7 @@
 
 package com.google.api.client.sample.bigquery;
 
+import com.google.api.client.googleapis.GoogleHeaders;
 import com.google.api.client.googleapis.GoogleTransport;
 import com.google.api.client.googleapis.auth.clientlogin.ClientLogin;
 import com.google.api.client.googleapis.json.JsonCParser;
@@ -39,8 +40,7 @@ public class BigQuerySample {
 
   public static void main(String[] args) {
     Debug.enableLogging();
-    HttpTransport transport = GoogleTransport.create();
-    transport.addParser(new JsonCParser());
+    HttpTransport transport = setUpTransport();
     try {
       try {
         authenticateWithClientLogin(transport);
@@ -58,6 +58,14 @@ public class BigQuerySample {
       t.printStackTrace();
       System.exit(1);
     }
+  }
+
+  private static HttpTransport setUpTransport() {
+    HttpTransport transport = GoogleTransport.create();
+    GoogleHeaders headers = (GoogleHeaders) transport.defaultHeaders;
+    headers.setApplicationName("Google-BigQuerySample/1.0");
+    transport.addParser(new JsonCParser());
+    return transport;
   }
 
   public static void authenticateWithClientLogin(HttpTransport transport)

@@ -16,6 +16,7 @@
 
 package com.google.api.client.sample.buzz;
 
+import com.google.api.client.googleapis.GoogleHeaders;
 import com.google.api.client.googleapis.GoogleTransport;
 import com.google.api.client.googleapis.json.JsonCParser;
 import com.google.api.client.http.HttpResponseException;
@@ -32,25 +33,16 @@ import java.io.IOException;
  */
 public class BuzzSample {
 
-  private final HttpTransport transport;
-
-  public BuzzSample(HttpTransport transport) {
-    super();
-    this.transport = transport;
-  }
-
   public static void main(String[] args) {
     Debug.enableLogging();
-    HttpTransport transport = GoogleTransport.create();
-    transport.addParser(new JsonCParser());
-    BuzzSample sample = new BuzzSample(transport);
+    HttpTransport transport = setUpTransport();
     try {
       try {
-        sample.authorize();
-        sample.showActivities();
-        BuzzActivity activity = sample.insertActivity();
-        activity = sample.updateActivity(activity);
-        sample.deleteActivity(activity);
+        authorize(transport);
+        showActivities(transport);
+        BuzzActivity activity = insertActivity(transport);
+        activity = updateActivity(transport, activity);
+        deleteActivity(transport, activity);
         Auth.revoke();
       } catch (HttpResponseException e) {
         System.err.println(e.response.parseAsString());
@@ -63,11 +55,20 @@ public class BuzzSample {
     }
   }
 
-  private void authorize() throws Exception {
+  private static HttpTransport setUpTransport() {
+    HttpTransport transport = GoogleTransport.create();
+    GoogleHeaders headers = (GoogleHeaders) transport.defaultHeaders;
+    headers.setApplicationName("Google-BuzzSample/1.0");
+    transport.addParser(new JsonCParser());
+    return transport;
+  }
+
+  private static void authorize(HttpTransport transport) throws Exception {
     Auth.authorize(transport);
   }
 
-  private void showActivities() throws IOException {
+  private static void showActivities(HttpTransport transport)
+      throws IOException {
     header("Show Buzz Activities");
     BuzzActivityFeed feed = BuzzActivityFeed.list(transport);
     if (feed.activities != null) {
@@ -79,7 +80,8 @@ public class BuzzSample {
     }
   }
 
-  private BuzzActivity insertActivity() throws IOException {
+  private static BuzzActivity insertActivity(HttpTransport transport)
+      throws IOException {
     header("Insert Buzz Activity");
     BuzzActivity activity = new BuzzActivity();
     activity.object = new BuzzObject();
@@ -89,8 +91,8 @@ public class BuzzSample {
     return result;
   }
 
-  private BuzzActivity updateActivity(BuzzActivity activity)
-      throws IOException {
+  private static BuzzActivity updateActivity(
+      HttpTransport transport, BuzzActivity activity) throws IOException {
     header("Update Buzz Activity");
     activity.object.content += " (http://bit.ly/9WbLmb)";
     BuzzActivity result = activity.update(transport);
@@ -98,7 +100,8 @@ public class BuzzSample {
     return result;
   }
 
-  private void deleteActivity(BuzzActivity activity) throws IOException {
+  private static void deleteActivity(
+      HttpTransport transport, BuzzActivity activity) throws IOException {
     header("Delete Buzz Activity");
     activity.delete(transport);
     System.out.println("Deleted.");

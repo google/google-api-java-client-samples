@@ -57,7 +57,7 @@ public class ChromeLicensingSample {
   private static HttpTransport setUpTransport() {
     HttpTransport transport = GoogleTransport.create();
     GoogleHeaders headers = (GoogleHeaders) transport.defaultHeaders;
-    headers.setApplicationName("google-chromelicensingsample-1.0");
+    headers.setApplicationName("Google-ChromeLicensingSample/1.0");
     transport.addParser(new JsonHttpParser());
     return transport;
   }

@@ -54,7 +54,7 @@ public class YouTubeSample {
   private static HttpTransport setUpTransport() {
     HttpTransport transport = GoogleTransport.create();
     GoogleHeaders headers = (GoogleHeaders) transport.defaultHeaders;
-    headers.setApplicationName("google-youtubejsoncsample-1.0");
+    headers.setApplicationName("Google-YouTubeSample/1.0");
     headers.gdataVersion = "2";
     transport.addParser(new JsonCParser());
     return transport;

@@ -16,6 +16,7 @@
 
 package com.google.api.client.sample.moderator;
 
+import com.google.api.client.googleapis.GoogleHeaders;
 import com.google.api.client.googleapis.GoogleTransport;
 import com.google.api.client.googleapis.json.JsonCParser;
 import com.google.api.client.http.HttpResponseException;
@@ -36,8 +37,7 @@ public class ModeratorSample {
 
   public static void main(String[] args) {
     Debug.enableLogging();
-    HttpTransport transport = GoogleTransport.create();
-    transport.addParser(new JsonCParser());
+    HttpTransport transport = setUpTransport();
     try {
       try {
         Auth.authorize(transport);
@@ -56,6 +56,14 @@ public class ModeratorSample {
       Auth.revoke();
       System.exit(1);
     }
+  }
+
+  private static HttpTransport setUpTransport() {
+    HttpTransport transport = GoogleTransport.create();
+    GoogleHeaders headers = (GoogleHeaders) transport.defaultHeaders;
+    headers.setApplicationName("Google-ModeratorSample/1.0");
+    transport.addParser(new JsonCParser());
+    return transport;
   }
 
   private static SeriesResource createSeries(HttpTransport transport)
@@ -104,10 +112,9 @@ public class ModeratorSample {
     System.out.println(result);
     return result;
   }
-  
+
   private static VoteResource updateVote(
-      HttpTransport transport, VoteResource vote)
-      throws IOException {
+      HttpTransport transport, VoteResource vote) throws IOException {
     vote.vote = "MINUS";
     VoteResource result = vote.executeUpdate(transport);
     System.out.println(result);

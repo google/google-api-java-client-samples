@@ -64,7 +64,7 @@ public class DocsSample {
   private static HttpTransport setUpTransport() {
     HttpTransport transport = GoogleTransport.create();
     GoogleHeaders headers = (GoogleHeaders) transport.defaultHeaders;
-    headers.setApplicationName("google-docsaatomsample-1.0");
+    headers.setApplicationName("Google-DocsSample/1.0");
     headers.gdataVersion = "3";
     AtomParser parser = new AtomParser();
     parser.namespaceDictionary = Namespace.DICTIONARY;

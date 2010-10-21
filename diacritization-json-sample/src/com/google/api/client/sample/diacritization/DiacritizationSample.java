@@ -16,6 +16,7 @@
 
 package com.google.api.client.sample.diacritization;
 
+import com.google.api.client.googleapis.GoogleHeaders;
 import com.google.api.client.googleapis.GoogleTransport;
 import com.google.api.client.googleapis.json.JsonCParser;
 import com.google.api.client.http.HttpRequest;
@@ -31,10 +32,8 @@ import java.io.IOException;
 public class DiacritizationSample {
 
   public static void main(String[] args) {
-    // initialize HTTP transport
     Debug.enableLogging();
-    HttpTransport transport = GoogleTransport.create();
-    transport.addParser(new JsonCParser());
+    HttpTransport transport = setUpTransport();
     try {
       try {
         diacritize(transport, "مرحبا العالم");
@@ -46,6 +45,14 @@ public class DiacritizationSample {
       t.printStackTrace();
       System.exit(1);
     }
+  }
+
+  private static HttpTransport setUpTransport() {
+    HttpTransport transport = GoogleTransport.create();
+    GoogleHeaders headers = (GoogleHeaders) transport.defaultHeaders;
+    headers.setApplicationName("Google-DiacritizationSample/1.0");
+    transport.addParser(new JsonCParser());
+    return transport;
   }
 
   private static void diacritize(HttpTransport transport, String message)

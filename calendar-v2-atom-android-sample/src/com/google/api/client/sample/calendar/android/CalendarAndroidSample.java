@@ -95,7 +95,7 @@ public final class CalendarAndroidSample extends ListActivity {
   public CalendarAndroidSample() {
     transport = GoogleTransport.create();
     GoogleHeaders headers = (GoogleHeaders) transport.defaultHeaders;
-    headers.setApplicationName("google-calendarandroidsample-1.0");
+    headers.setApplicationName("Google-CalendarAndroidSample/1.0");
     headers.gdataVersion = "2";
     AtomParser parser = new AtomParser();
     parser.namespaceDictionary = Namespace.DICTIONARY;

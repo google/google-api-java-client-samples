@@ -16,6 +16,7 @@
 
 package com.google.api.client.sample.prediction;
 
+import com.google.api.client.googleapis.GoogleHeaders;
 import com.google.api.client.googleapis.GoogleTransport;
 import com.google.api.client.googleapis.auth.clientlogin.ClientLogin;
 import com.google.api.client.googleapis.json.JsonCContent;
@@ -39,8 +40,7 @@ public class PredictionSample {
 
   public static void main(String[] args) {
     Debug.enableLogging();
-    HttpTransport transport = GoogleTransport.create();
-    transport.addParser(new JsonCParser());
+    HttpTransport transport = setUpTransport();
     try {
       try {
         authenticateWithClientLogin(transport);
@@ -56,6 +56,14 @@ public class PredictionSample {
       t.printStackTrace();
       System.exit(1);
     }
+  }
+
+  private static HttpTransport setUpTransport() {
+    HttpTransport transport = GoogleTransport.create();
+    GoogleHeaders headers = (GoogleHeaders) transport.defaultHeaders;
+    headers.setApplicationName("Google-PredictionSample/1.0");
+    transport.addParser(new JsonCParser());
+    return transport;
   }
 
   private static void authenticateWithClientLogin(HttpTransport transport)

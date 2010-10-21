@@ -65,7 +65,7 @@ public class PicasaSample {
   private static HttpTransport setUpTransport() {
     HttpTransport transport = GoogleTransport.create();
     GoogleHeaders headers = (GoogleHeaders) transport.defaultHeaders;
-    headers.setApplicationName("google-picasaatomsample-1.0");
+    headers.setApplicationName("Google-PicasaSample/1.0");
     headers.gdataVersion = "2";
     AtomParser parser = new AtomParser();
     parser.namespaceDictionary = Util.NAMESPACE_DICTIONARY;
