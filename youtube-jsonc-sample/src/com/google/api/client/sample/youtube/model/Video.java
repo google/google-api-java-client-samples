@@ -18,16 +18,20 @@ package com.google.api.client.sample.youtube.model;
 
 import com.google.api.client.util.Key;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author Yaniv Inbar
  */
 public class Video extends Item {
+
   @Key
   public String description;
+
   @Key
-  public List<String> tags;
+  public List<String> tags = new ArrayList<String>();
+
   @Key
   public Player player;
 }
