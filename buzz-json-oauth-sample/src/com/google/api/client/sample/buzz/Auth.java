@@ -35,8 +35,6 @@ import java.net.URI;
  */
 public class Auth {
 
-  static final String APP_NAME = "Buzz API Java Client Sample";
-
   private static OAuthHmacSigner signer;
 
   private static OAuthCredentialsResponse credentials;
@@ -57,7 +55,7 @@ public class Auth {
       temporaryToken.signer = signer;
       temporaryToken.consumerKey = "anonymous";
       temporaryToken.scope = "https://www.googleapis.com/auth/buzz";
-      temporaryToken.displayName = APP_NAME;
+      temporaryToken.displayName = BuzzSample.APP_DESCRIPTION;
       temporaryToken.callback = callbackServer.getCallbackUrl();
       OAuthCredentialsResponse tempCredentials = temporaryToken.execute();
       signer.tokenSharedSecret = tempCredentials.tokenSecret;
@@ -67,7 +65,7 @@ public class Auth {
               "https://www.google.com/buzz/api/auth/OAuthAuthorizeToken");
       authorizeUrl.set("scope", temporaryToken.scope);
       authorizeUrl.set("domain", "anonymous");
-      authorizeUrl.set("xoauth_displayname", APP_NAME);
+      authorizeUrl.set("xoauth_displayname", BuzzSample.APP_DESCRIPTION);
       authorizeUrl.temporaryToken = tempToken = tempCredentials.token;
       String authorizationUrl = authorizeUrl.build();
       // launch in browser

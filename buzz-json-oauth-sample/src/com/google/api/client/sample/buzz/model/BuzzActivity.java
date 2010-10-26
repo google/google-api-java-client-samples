@@ -20,6 +20,7 @@ import com.google.api.client.googleapis.json.JsonCContent;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.GenericJson;
+import com.google.api.client.util.DateTime;
 import com.google.api.client.util.Key;
 
 import java.io.IOException;
@@ -32,9 +33,10 @@ import java.io.IOException;
  * 
  * <pre>
  * <code>{
- *  id: "tag:google.com,2010:buzz:z12puk22ajfyzsz",
- *  object: {
- *   content: "Hey, this is my first Buzz Post!",
+ *  "id": "tag:google.com,2010:buzz:z12puk22ajfyzsz",
+ *  "updated": "2010-10-04T16:27:15.169Z",
+ *  "object": {
+ *   "content": "Hey, this is my first Buzz Post!",
  *   ...
  *  },
  *  ...
@@ -43,15 +45,19 @@ import java.io.IOException;
  * 
  * @author Yaniv Inbar
  */
-public final class BuzzActivity extends GenericJson {
+public class BuzzActivity extends GenericJson {
 
   /** Activity identifier. */
   @Key
   public String id;
 
-  /** Buzz Object. */
+  /** Buzz details containing the content of the activity. */
   @Key
   public BuzzObject object;
+
+  /** Last time the activity was updated. */
+  @Key
+  public DateTime updated;
 
   /**
    * Post this Buzz Activity.

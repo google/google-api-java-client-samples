@@ -27,7 +27,7 @@ import com.google.api.client.util.Key;
  * 
  * <pre>
  * <code>{
- *  content: "Hey, this is my first Buzz Post!",
+ *  "content": "Hey, this is my first Buzz Post!",
  *  ...
  * }</code>
  * </pre>

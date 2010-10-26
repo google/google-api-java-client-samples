@@ -17,15 +17,19 @@
 package com.google.api.client.sample.buzz.model;
 
 import com.google.api.client.googleapis.GoogleUrl;
+import com.google.api.client.util.Key;
 
 /**
  * Buzz URL builder.
  *
  * @author Yaniv Inbar
  */
-public final class BuzzUrl extends GoogleUrl {
+public class BuzzUrl extends GoogleUrl {
 
-  /** Constructs a new Buzz URL from the given encoded URI. */
+  @Key("max-results")
+  public Integer maxResults = 5;
+
+  /** Constructs a new Buzz URL from the given encoded URL. */
   public BuzzUrl(String encodedUrl) {
     super(encodedUrl);
     alt = "json";

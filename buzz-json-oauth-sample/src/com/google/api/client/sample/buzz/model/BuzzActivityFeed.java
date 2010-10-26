@@ -21,6 +21,7 @@ import com.google.api.client.http.HttpTransport;
 import com.google.api.client.util.Key;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -32,11 +33,11 @@ import java.util.List;
  * <pre>
  * <code>{
  * "data": {
- *   items: [
+ *   "items": [
  *    {
- *     id: "tag:google.com,2010:buzz:z12puk22ajfyzsz",
- *     object: {
- *      content: "Hey, this is my first Buzz Post!",
+ *     "id": "tag:google.com,2010:buzz:z12puk22ajfyzsz",
+ *     "object": {
+ *      "content": "Hey, this is my first Buzz Post!",
  *      ...
  *     },
  *     ...
@@ -49,12 +50,11 @@ import java.util.List;
  * 
  * @author Yaniv Inbar
  */
-public final class BuzzActivityFeed {
+public class BuzzActivityFeed {
 
   /** List of activities. */
-  // specify the field name because it doesn't match the name used in the JSON
-  @Key("items")
-  public List<BuzzActivity> activities;
+  @Key
+  public List<BuzzActivity> items = new ArrayList<BuzzActivity>();
 
   /**
    * List the user's Buzz activities.

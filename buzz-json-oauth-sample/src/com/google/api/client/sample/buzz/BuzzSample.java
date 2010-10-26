@@ -33,11 +33,13 @@ import java.io.IOException;
  */
 public class BuzzSample {
 
+  static final String APP_DESCRIPTION = "Buzz API Java Client Sample";
+
   public static void main(String[] args) {
     Debug.enableLogging();
-    HttpTransport transport = setUpTransport();
     try {
       try {
+        HttpTransport transport = setUpTransport();
         authorize(transport);
         showActivities(transport);
         BuzzActivity activity = insertActivity(transport);
@@ -69,51 +71,35 @@ public class BuzzSample {
 
   private static void showActivities(HttpTransport transport)
       throws IOException {
-    header("Show Buzz Activities");
+    View.header("Show Buzz Activities");
     BuzzActivityFeed feed = BuzzActivityFeed.list(transport);
-    if (feed.activities != null) {
-      int size = feed.activities.size();
-      for (int i = 0; i < size; i++) {
-        BuzzActivity activity = feed.activities.get(i);
-        show(activity);
-      }
-    }
+    View.display(feed);
   }
 
   private static BuzzActivity insertActivity(HttpTransport transport)
       throws IOException {
-    header("Insert Buzz Activity");
+    View.header("Insert Buzz Activity");
     BuzzActivity activity = new BuzzActivity();
     activity.object = new BuzzObject();
-    activity.object.content = "Posting using " + Auth.APP_NAME;
+    activity.object.content = "Posting using " + BuzzSample.APP_DESCRIPTION;
     BuzzActivity result = activity.post(transport);
-    show(result);
+    View.display(result);
     return result;
   }
 
   private static BuzzActivity updateActivity(
       HttpTransport transport, BuzzActivity activity) throws IOException {
-    header("Update Buzz Activity");
-    activity.object.content += " (http://bit.ly/9WbLmb)";
+    View.header("Update Buzz Activity");
+    activity.object.content += " (http://goo.gl/rOyC)";
     BuzzActivity result = activity.update(transport);
-    show(result);
+    View.display(result);
     return result;
   }
 
   private static void deleteActivity(
       HttpTransport transport, BuzzActivity activity) throws IOException {
-    header("Delete Buzz Activity");
+    View.header("Delete Buzz Activity");
     activity.delete(transport);
     System.out.println("Deleted.");
-  }
-
-  private static void header(String name) {
-    System.out.println();
-    System.out.println("============== " + name + " ==============");
-    System.out.println();
-  }
-
-  private static void show(BuzzActivity activity) {
-    System.out.println(activity.object.content);
   }
 }
