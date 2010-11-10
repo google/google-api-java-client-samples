@@ -69,7 +69,7 @@ public class DiscoveryAppEngineSample implements EntryPoint {
         .add(
             new Anchor(
                 "See Source Code",
-                "http://code.google.com/p/google-api-java-client/source/browse?repo=samples#hg/discovery-appengine-sample"));
+                "http://samples.google-api-java-client.googlecode.com/hg/discovery-appengine-sample/instructions.html?r=default"));
     RootPanel.get("main").add(mainPanel);
 
     apiListBox.setFocus(true);

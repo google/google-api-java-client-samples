@@ -4,7 +4,7 @@
 	<classpathentry kind="con" path="com.google.appengine.eclipse.core.GAE_CONTAINER"/>
 	<classpathentry kind="con" path="com.google.gwt.eclipse.core.GWT_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="war/WEB-INF/lib/google-api-client-1.1.1-alpha.jar" sourcepath="google-api-client-1.1.1-alpha-sources.jar"/>
-	<classpathentry kind="lib" path="war/WEB-INF/lib/jackson-core-asl-1.5.3.jar" sourcepath="jackson-core-asl-1.5.3-sources.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/google-api-client-1.2.1-alpha.jar" sourcepath="google-api-client-1.2.1-alpha-sources.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/jackson-core-asl-1.5.7.jar" sourcepath="jackson-core-asl-1.5.7-sources.jar"/>
 	<classpathentry kind="output" path="war/WEB-INF/classes"/>
 </classpath>

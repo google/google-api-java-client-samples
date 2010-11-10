@@ -62,4 +62,4 @@ fi
 # run command
 args=($@);
 
-$JAVACMD -jar $DISCOVERY_HOME/target/discovery-sample-1.0.1-jar-with-dependencies.jar $@
+$JAVACMD -jar $DISCOVERY_HOME/target/discovery-sample-1.0.2-jar-with-dependencies.jar $@
