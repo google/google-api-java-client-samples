@@ -8,7 +8,7 @@
   </parent>
   <groupId>com.google.api.client</groupId>
   <artifactId>picasa-atom-android-sample</artifactId>
-  <version>1.0.0</version>
+  <version>1.0.1</version>
   <name>picasa-atom-android-sample</name>
   <description>
     Example for the Picasa Web Albums Data API Atom XML for Android
@@ -65,20 +65,21 @@
     <dependency>
       <groupId>com.google.api.client</groupId>
       <artifactId>google-api-client-apache</artifactId>
-      <version>1.2.0-alpha</version>
+      <version>${libVersion}</version>
     </dependency>
     <dependency>
       <groupId>com.google.api.client</groupId>
       <artifactId>google-api-client-googleapis</artifactId>
-      <version>1.2.0-alpha</version>
+      <version>${libVersion}</version>
     </dependency>
     <dependency>
       <groupId>com.google.api.client</groupId>
       <artifactId>google-api-client-googleapis-xml-atom</artifactId>
-      <version>1.2.0-alpha</version>
+      <version>${libVersion}</version>
     </dependency>
   </dependencies>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <libVersion>1.2.1-alpha</libVersion>
   </properties>
 </project>

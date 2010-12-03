@@ -8,14 +8,14 @@
   </parent>
   <groupId>com.google.api.client</groupId>
   <artifactId>calendar-v2-atom-android-sample</artifactId>
-  <version>1.0.0</version>
+  <version>1.0.1</version>
   <name>calendar-v2-atom-android-sample</name>
   <description>
     Example for the Google Calendar Data API Atom XML for Android
   </description>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <libVersion>1.2.0-alpha</libVersion>
+    <libVersion>1.2.1-alpha</libVersion>
   </properties>
 
   <url>http://code.google.com/p/google-api-java-client/</url>
