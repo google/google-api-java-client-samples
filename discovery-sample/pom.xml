@@ -8,7 +8,7 @@
   </parent>
   <groupId>com.google.api.client</groupId>
   <artifactId>discovery-sample</artifactId>
-  <version>1.0.2</version>
+  <version>1.1.0</version>
   <name>discovery-sample</name>
   <description>
     Example that uses the new experimental Google Discovery API version 0.1.
@@ -88,6 +88,11 @@
       <groupId>org.mortbay.jetty</groupId>
       <artifactId>jetty-embedded</artifactId>
       <version>6.1.24</version>
+    </dependency>
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+      <version>r07</version>
     </dependency>
   </dependencies>
   <properties>

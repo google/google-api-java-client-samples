@@ -2,7 +2,7 @@
 <title>Google Discovery API Sample</title>
 <body>
 <h2>Instructions for the Google Discovery API Sample (<a
-  href="http://bit.ly/avYMh1">http://bit.ly/avYMh1</a>)</h2>
+  href="http://goo.gl/ojuXq">http://goo.gl/ojuXq</a>)</h2>
 
 <h3>Usage</h3>
 
@@ -13,9 +13,9 @@ google discover moderator v1</code></pre>
 
 Examples using <b><code>google call</code></b>:
 
-<pre><code>  google call discovery 0.1 apis.get --api buzz
-  google call buzz v1 activities.list --scope @self --userId @me
-  echo {\"data\":{\"object\":{\"content\":\"Posting using Google command-line tool based on Discovery \(http://bit.ly/avYMh1\)\"}}} > buzzpost.json && google call buzz v1 activities.insert --userId @me buzzpost.json</code></pre>
+<pre><code>  google call discovery v0.2beta1 apis.get buzz v1
+  google call buzz v1 activities.list @me @self --max-results 3 --alt json --prettyprint true
+  echo {\"data\":{\"object\":{\"content\":\"Posting using Google command-line tool based on Discovery \(http://goo.gl/ojuXq\)\"}}} &gt; buzzpost.json && google call buzz v1 activities.insert @me buzzpost.json</code></pre>
 
 <h3>Browse Online</h3>
 

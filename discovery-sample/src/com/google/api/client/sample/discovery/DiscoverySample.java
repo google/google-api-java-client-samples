@@ -1,16 +1,14 @@
 /*
  * Copyright (c) 2010 Google Inc.
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
 
@@ -23,13 +21,18 @@ import com.google.api.client.googleapis.json.GoogleApi;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpResponseException;
 import com.google.api.client.http.InputStreamContent;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.SortedSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -38,14 +41,13 @@ import java.util.regex.Pattern;
  */
 public class DiscoverySample {
 
-  private static final String APP_NAME = "Google Discovery API Client 1.0.1";
+  private static final String APP_NAME = "Google Discovery API Client 1.1.0";
 
   private static final Pattern API_NAME_PATTERN = Pattern.compile("\\w+");
 
   private static final Pattern API_VERSION_PATTERN = Pattern.compile("[\\w.]+");
 
-  private static final Pattern METHOD_PATTERN =
-      Pattern.compile("(\\w+)\\.(\\w+)");
+  private static final Pattern METHOD_PATTERN = Pattern.compile("(\\w+)\\.(\\w+)");
 
   public static void main(String[] args) throws Exception {
     Debug.enableLogging();
@@ -72,19 +74,16 @@ public class DiscoverySample {
     } else {
       String helpCommand = args[1];
       if (helpCommand.equals("call")) {
-        System.out.println(
-            "Usage: google call apiName apiVersion methodName [parameters]");
+        System.out.println("Usage: google call apiName apiVersion methodName [parameters]");
         System.out.println();
         System.out.println("Examples:");
-        System.out.println("  google call discovery 0.1 apis.get --api buzz");
-        System.out.println(
-            "  google call buzz v1 activities.list --scope @self --userId @me");
-        System.out.println(
-            "  echo {\\\"data\\\":{\\\"object\\\":{\\\"content\\\":"
-                + "\\\"Posting using Google command-line tool based on "
-                + "Discovery \\(http://bit.ly/avYMh1\\)\\\"}}} > "
-                + "buzzpost.json && google call buzz v1 activities.insert "
-                + "--userId @me buzzpost.json");
+        System.out.println("  google call discovery v0.2beta1 apis.get buzz v1");
+        System.out.println("  google call buzz v1 activities.list @me @self "
+            + "--max-results 3 --alt json --prettyprint true");
+        System.out.println("  echo {\\\"data\\\":{\\\"object\\\":{\\\"content\\\":"
+            + "\\\"Posting using Google command-line tool based on "
+            + "Discovery \\(http://goo.gl/ojuXq\\)\\\"}}} > "
+            + "buzzpost.json && google call buzz v1 activities.insert @me buzzpost.json");
       } else if (helpCommand.equals("discover")) {
         System.out.println("Usage: google discover apiName apiVersion");
         System.out.println();
@@ -108,8 +107,7 @@ public class DiscoverySample {
 
   private static void error(String command, String detail) {
     System.err.println("ERROR: " + detail);
-    System.err.println(
-        "For help, type: google" + (command == null ? "" : " help " + command));
+    System.err.println("For help, type: google" + (command == null ? "" : " help " + command));
     System.exit(1);
   }
 
@@ -146,59 +144,56 @@ public class DiscoverySample {
     if (method == null) {
       error("call", "method not found: " + fullMethodName);
     }
-    HashMap<String, String> parameters = new HashMap<String, String>();
-    HashMap<String, String> queryParameters = new HashMap<String, String>();
+    HashMap<String, String> parameters = Maps.newHashMap();
+    HashMap<String, String> queryParameters = Maps.newHashMap();
     File requestBodyFile = null;
+    String contentType = "application/json";
     int i = 4;
+    // required parameters
+    for (String reqParam : getRequiredParameters(method).keySet()) {
+      if (i == args.length) {
+        error("call", "missing required parameter: " + reqParam);
+      } else {
+        parameters.put(reqParam, args[i++]);
+      }
+    }
+    // possibly required content
+    if (!method.httpMethod.equals("GET") && !method.httpMethod.equals("DELETE")) {
+      String fileName = args[i++];
+      requestBodyFile = new File(fileName);
+      if (!requestBodyFile.canRead()) {
+        error("call", "unable to read file: " + fileName);
+      }
+    }
     while (i < args.length) {
       String argName = args[i++];
-      if (argName.startsWith("--")) {
-        String parameterName = argName.substring(2);
-        if (i == args.length) {
-          error("call", "missing parameter value for: " + argName);
+      if (!argName.startsWith("--")) {
+        error("call", "optional parameters must start with \"--\": " + argName);
+      }
+      String parameterName = argName.substring(2);
+      if (i == args.length) {
+        error("call", "missing parameter value for: " + argName);
+      }
+      String parameterValue = args[i++];
+      if (parameterName.equals("contentType")) {
+        contentType = parameterValue;
+        if (method.httpMethod.equals("GET") || method.httpMethod.equals("DELETE")) {
+          error("call", "HTTP content type cannot be specified for this method: " + argName);
         }
-        String parameterValue = args[i++];
-        if (method.parameters == null
-            || !method.parameters.containsKey(parameterName)) {
-          queryParameters.put(parameterName, parameterValue);
-        } else {
-          String oldValue = parameters.put(parameterName, parameterValue);
-          if (oldValue != null) {
-            error("call", "duplicate parameter: " + argName);
-          }
-        }
+      } else if (method.parameters == null || !method.parameters.containsKey(parameterName)) {
+        queryParameters.put(parameterName, parameterValue);
       } else {
-        if (requestBodyFile != null) {
-          error(
-              "call", "multiple HTTP request body files specified: " + argName);
-        }
-        String fileName = argName;
-        requestBodyFile = new File(fileName);
-        if (!requestBodyFile.canRead()) {
-          error("call", "unable to read file: " + argName);
+        String oldValue = parameters.put(parameterName, parameterValue);
+        if (oldValue != null) {
+          error("call", "duplicate parameter: " + argName);
         }
       }
     }
-    for (Map.Entry<String, ServiceParameter> parameter :
-        method.parameters.entrySet()) {
-      String paramName = parameter.getKey();
-      if (parameter.getValue().required && !parameters.containsKey(paramName)) {
-        error("call", "missing required parameter: " + paramName);
-      }
-    }
-    HttpRequest request =
-        api.buildRequest(resourceName + "." + methodName, parameters);
+    HttpRequest request = api.buildRequest(resourceName + "." + methodName, parameters);
     request.url.putAll(queryParameters);
-    if (!request.url.containsKey("alt")) {
-      request.url.put("alt", "json");
-    }
-    if (!request.url.containsKey("prettyprint")) {
-      request.url.put("prettyprint", "true");
-    }
     if (requestBodyFile != null) {
       InputStreamContent fileContent = new InputStreamContent();
-      // TODO: support other content types?
-      fileContent.type = "application/json";
+      fileContent.type = contentType;
       fileContent.setFileInput(requestBodyFile);
       request.content = fileContent;
     }
@@ -224,8 +219,8 @@ public class DiscoverySample {
     }
   }
 
-  private static GoogleApi loadGoogleAPI(
-      String command, String apiName, String apiVersion) throws IOException {
+  private static GoogleApi loadGoogleAPI(String command, String apiName, String apiVersion)
+      throws IOException {
     if (!API_NAME_PATTERN.matcher(apiName).matches()) {
       error(command, "invalid API name: " + apiName);
     }
@@ -258,37 +253,45 @@ public class DiscoverySample {
     }
     String apiName = args[1];
     String apiVersion = args[2];
+    System.out.println();
+    System.out.println("API Name: " + apiName);
+    System.out.println("API Version: " + apiVersion);
+    System.out.println();
+    System.out.println("Methods:");
     GoogleApi api = loadGoogleAPI("discover", apiName, apiVersion);
     // compute method details
-    ArrayList<MethodDetails> result = new ArrayList<MethodDetails>();
+    ArrayList<MethodDetails> result = Lists.newArrayList();
     Map<String, ServiceResource> resources = api.serviceDefinition.resources;
     if (resources != null) {
-      for (Map.Entry<String, ServiceResource> resourceEntry :
-          resources.entrySet()) {
-        String resourceName = apiName + "." + resourceEntry.getKey();
+      // iterate over resources
+      for (Map.Entry<String, ServiceResource> resourceEntry : resources.entrySet()) {
+        String resourceName = resourceEntry.getKey();
         ServiceResource resource = resourceEntry.getValue();
+        // iterate over methods
         Map<String, ServiceMethod> methods = resource.methods;
         if (methods != null) {
-          for (Map.Entry<String, ServiceMethod> methodEntry :
-              methods.entrySet()) {
+          for (Map.Entry<String, ServiceMethod> methodEntry : methods.entrySet()) {
+            ServiceMethod method = methodEntry.getValue();
             MethodDetails details = new MethodDetails();
             details.name = resourceName + "." + methodEntry.getKey();
-            Map<String, ServiceParameter> parameters =
-                methodEntry.getValue().parameters;
+            details.hasContent =
+                !method.httpMethod.equals("GET") && !method.httpMethod.equals("DELETE");
+            // required parameters
+            for (String param : getRequiredParameters(method).keySet()) {
+              details.requiredParameters.add(param);
+            }
+            // optional parameters
+            Map<String, ServiceParameter> parameters = method.parameters;
             if (parameters != null) {
-              for (Map.Entry<String, ServiceParameter> parameterEntry :
-                  parameters.entrySet()) {
+              for (Map.Entry<String, ServiceParameter> parameterEntry : parameters.entrySet()) {
                 String parameterName = parameterEntry.getKey();
-                if (parameterEntry.getValue().required) {
-                  details.requiredParameters.add(parameterName);
-                } else {
+                ServiceParameter parameter = parameterEntry.getValue();
+                if (!parameter.required) {
                   details.optionalParameters.add(parameterName);
                 }
               }
-              Collections.sort(details.requiredParameters);
-              Collections.sort(details.optionalParameters);
-              result.add(details);
             }
+            result.add(details);
           }
         }
       }
@@ -297,22 +300,56 @@ public class DiscoverySample {
     // display method details
     for (MethodDetails methodDetail : result) {
       System.out.println();
-      System.out.println(methodDetail.name);
-      System.out.println("  required parameters: "
-          + showParams(methodDetail.requiredParameters));
-      System.out.println("  optional parameters: "
-          + showParams(methodDetail.optionalParameters));
+      System.out.print("google call " + apiName + " " + apiVersion + " " + methodDetail.name);
+      for (String param : methodDetail.requiredParameters) {
+        System.out.print(" <" + param + ">");
+      }
+      if (methodDetail.hasContent) {
+        System.out.print(" contentFile");
+      }
+      if (methodDetail.optionalParameters.isEmpty() && !methodDetail.hasContent) {
+        System.out.println();
+      } else {
+        System.out.println(" [optional parameters...]");
+        System.out.println("  --contentType <value> (default is \"application/json\")");
+        for (String param : methodDetail.optionalParameters) {
+          System.out.println("  --" + param + " <value>");
+        }
+      }
     }
   }
 
-  private static String showParams(ArrayList<String> params) {
-    StringBuilder buf = new StringBuilder();
-    for (int i = 0; i < params.size(); i++) {
-      if (i != 0) {
-        buf.append(", ");
+  static LinkedHashMap<String, ServiceParameter> getRequiredParameters(ServiceMethod method) {
+    ArrayList<String> requiredParams = Lists.newArrayList();
+    int cur = 0;
+    String pathUrl = method.pathUrl;
+    int length = pathUrl.length();
+    while (cur < length) {
+      int next = pathUrl.indexOf('{', cur);
+      if (next == -1) {
+        break;
       }
-      buf.append(params.get(i));
+      int close = pathUrl.indexOf('}', next + 2);
+      String paramName = pathUrl.substring(next + 1, close);
+      requiredParams.add(paramName);
+      cur = close + 1;
     }
-    return buf.toString();
+    Map<String, ServiceParameter> parameters = method.parameters;
+    if (parameters != null) {
+      SortedSet<String> nonPathRequiredParameters = Sets.newTreeSet();
+      for (Map.Entry<String, ServiceParameter> parameterEntry : parameters.entrySet()) {
+        String parameterName = parameterEntry.getKey();
+        ServiceParameter parameter = parameterEntry.getValue();
+        if (parameter.required && !requiredParams.contains(parameterName)) {
+          nonPathRequiredParameters.add(parameterName);
+        }
+      }
+      requiredParams.addAll(nonPathRequiredParameters);
+    }
+    LinkedHashMap<String, ServiceParameter> result = Maps.newLinkedHashMap();
+    for (String paramName : requiredParams) {
+      result.put(paramName, method.parameters.get(paramName));
+    }
+    return result;
   }
 }
