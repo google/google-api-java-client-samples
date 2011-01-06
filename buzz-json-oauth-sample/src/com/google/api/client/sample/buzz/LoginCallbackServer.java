@@ -1,16 +1,14 @@
 /*
  * Copyright (c) 2010 Google Inc.
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
 
@@ -33,8 +31,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Class that runs a Jetty server on a free port, waiting for OAuth to redirect
- * to it with the one-time authorization token.
+ * Class that runs a Jetty server on a free port, waiting for OAuth to redirect to it with the
+ * one-time authorization token.
  * <p>
  * Mostly copied from oacurl by phopkins@google.com.
  *
@@ -46,7 +44,7 @@ public class LoginCallbackServer {
   private int port;
   private Server server;
 
-  private Map<String, String> verifierMap = new HashMap<String, String>();
+  Map<String, String> verifierMap = new HashMap<String, String>();
 
   public void start() {
     if (server != null) {
@@ -93,8 +91,7 @@ public class LoginCallbackServer {
   }
 
   /**
-   * Call that blocks until the OAuth provider redirects back here with the
-   * verifier token.
+   * Call that blocks until the OAuth provider redirects back here with the verifier token.
    *
    * @param requestToken request token
    * @return The verifier token, or null if there was a timeout.
@@ -114,13 +111,13 @@ public class LoginCallbackServer {
   }
 
   /**
-   * Jetty handler that takes the verifier token passed over from the OAuth
-   * provider and stashes it where {@link LoginCallbackServer#waitForVerifier}
-   * will find it.
+   * Jetty handler that takes the verifier token passed over from the OAuth provider and stashes it
+   * where {@link LoginCallbackServer#waitForVerifier} will find it.
    */
   public class CallbackHandler extends AbstractHandler {
-    public void handle(String target, HttpServletRequest request,
-        HttpServletResponse response, int dispatch) throws IOException {
+    public void handle(
+        String target, HttpServletRequest request, HttpServletResponse response, int dispatch)
+        throws IOException {
       if (!CALLBACK_PATH.equals(target)) {
         return;
       }
@@ -138,23 +135,20 @@ public class LoginCallbackServer {
       }
     }
 
-    private void writeLandingHtml(HttpServletResponse response)
-        throws IOException {
+    private void writeLandingHtml(HttpServletResponse response) throws IOException {
       response.setStatus(HttpServletResponse.SC_OK);
       response.setContentType("text/html");
 
       PrintWriter doc = response.getWriter();
       doc.println("<html>");
-      doc.println(
-          "<head><title>OAuth Authentication Token Recieved</title></head>");
+      doc.println("<head><title>OAuth Authentication Token Recieved</title></head>");
       doc.println("<body>");
       doc.println("Received verifier token. Closing...");
       doc.println("<script type='text/javascript'>");
       // We open "" in the same window to trigger JS ownership of it, which lets
       // us then close it via JS, at least in Chrome.
       doc.println("window.setTimeout(function() {");
-      doc.println(
-          "    window.open('', '_self', ''); window.close(); }, 1000);");
+      doc.println("    window.open('', '_self', ''); window.close(); }, 1000);");
       doc.println("if (window.opener) { window.opener.checkToken(); }");
       doc.println("</script>");
       doc.println("</body>");
