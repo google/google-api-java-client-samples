@@ -14,29 +14,14 @@
 
 package com.google.api.client.sample.calendar.android.model;
 
-import com.google.api.client.util.Key;
-
-import java.util.List;
+import com.google.api.client.xml.XmlNamespaceDictionary;
 
 /**
  * @author Yaniv Inbar
  */
-public class Link {
+public class Util {
+  public static final boolean DEBUG = false;
 
-  @Key("@href")
-  public String href;
-
-  @Key("@rel")
-  public String rel;
-
-  public static String find(List<Link> links, String rel) {
-    if (links != null) {
-      for (Link link : links) {
-        if (rel.equals(link.rel)) {
-          return link.href;
-        }
-      }
-    }
-    return null;
-  }
+  public static final XmlNamespaceDictionary DICTIONARY =
+      new XmlNamespaceDictionary().set("", "http://www.w3.org/2005/Atom");
 }

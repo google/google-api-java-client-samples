@@ -1,32 +1,32 @@
 /*
  * Copyright (c) 2010 Google Inc.
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
 
 package com.google.api.client.sample.calendar.android;
 
+import com.google.api.client.apache.ApacheHttpTransport;
 import com.google.api.client.googleapis.GoogleHeaders;
-import com.google.api.client.googleapis.GoogleTransport;
 import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpResponseException;
 import com.google.api.client.http.HttpTransport;
+import com.google.api.client.javanet.NetHttpTransport;
 import com.google.api.client.sample.calendar.android.model.CalendarEntry;
 import com.google.api.client.sample.calendar.android.model.CalendarFeed;
 import com.google.api.client.sample.calendar.android.model.CalendarUrl;
-import com.google.api.client.sample.calendar.android.model.Namespace;
+import com.google.api.client.sample.calendar.android.model.Util;
 import com.google.api.client.util.DateTime;
 import com.google.api.client.xml.atom.AtomParser;
+import com.google.common.collect.Lists;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
@@ -36,6 +36,7 @@ import android.app.ListActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -47,19 +48,17 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ArrayAdapter;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Sample for Google Calendar Data API using the Atom wire format. It shows how
- * to authenticate, get calendars, add a new calendar, update it, and delete it.
+ * Sample for Google Calendar Data API using the Atom wire format. It shows how to authenticate, get
+ * calendars, add a new calendar, update it, and delete it.
  * <p>
- * To enable logging of HTTP requests/responses, run this command: {@code adb
- * shell setprop log.tag.HttpTransport DEBUG}. Then press-and-hold a calendar,
- * and enable "Logging".
+ * To enable logging of HTTP requests/responses, run this command: {@code adb shell setprop
+ * log.tag.HttpTransport DEBUG}. Then press-and-hold a calendar, and enable "Logging".
  * </p>
  *
  * @author Yaniv Inbar
@@ -69,6 +68,8 @@ public final class CalendarAndroidSample extends ListActivity {
   private static final String AUTH_TOKEN_TYPE = "cl";
 
   private static final String TAG = "CalendarSample";
+
+  private static final boolean LOGGING_DEFAULT = false;
 
   private static final int MENU_ADD = 0;
 
@@ -90,15 +91,23 @@ public final class CalendarAndroidSample extends ListActivity {
 
   private String authToken;
 
-  private final List<CalendarEntry> calendars = new ArrayList<CalendarEntry>();
+  private final List<CalendarEntry> calendars = Lists.newArrayList();
+
+  /** SDK 2.2 ("FroYo") version build number. */
+  private static final int FROYO = 8;
 
   public CalendarAndroidSample() {
-    transport = GoogleTransport.create();
-    GoogleHeaders headers = (GoogleHeaders) transport.defaultHeaders;
+    if (Build.VERSION.SDK_INT <= FROYO) {
+      transport = new ApacheHttpTransport();
+    } else {
+      transport = new NetHttpTransport();
+    }
+    GoogleHeaders headers = new GoogleHeaders();
     headers.setApplicationName("Google-CalendarAndroidSample/1.0");
     headers.gdataVersion = "2";
+    transport.defaultHeaders = headers;
     AtomParser parser = new AtomParser();
-    parser.namespaceDictionary = Namespace.DICTIONARY;
+    parser.namespaceDictionary = Util.DICTIONARY;
     transport.addParser(parser);
   }
 
@@ -106,10 +115,9 @@ public final class CalendarAndroidSample extends ListActivity {
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     SharedPreferences settings = getSharedPreferences(PREF, 0);
-    setLogging(settings.getBoolean("logging", false));
+    setLogging(settings.getBoolean("logging", LOGGING_DEFAULT));
     getListView().setTextFilterEnabled(true);
     registerForContextMenu(getListView());
-    Intent intent = getIntent();
     gotAccount(false);
   }
 
@@ -157,7 +165,7 @@ public final class CalendarAndroidSample extends ListActivity {
     showDialog(DIALOG_ACCOUNTS);
   }
 
-  private void gotAccount(final AccountManager manager, final Account account) {
+  void gotAccount(final AccountManager manager, final Account account) {
     SharedPreferences settings = getSharedPreferences(PREF, 0);
     SharedPreferences.Editor editor = settings.edit();
     editor.putString("accountName", account.name);
@@ -168,22 +176,19 @@ public final class CalendarAndroidSample extends ListActivity {
       public void run() {
         try {
           final Bundle bundle =
-              manager.getAuthToken(account, AUTH_TOKEN_TYPE, true, null, null)
-                  .getResult();
+              manager.getAuthToken(account, AUTH_TOKEN_TYPE, true, null, null).getResult();
           runOnUiThread(new Runnable() {
 
             public void run() {
               try {
                 if (bundle.containsKey(AccountManager.KEY_INTENT)) {
-                  Intent intent =
-                      bundle.getParcelable(AccountManager.KEY_INTENT);
+                  Intent intent = bundle.getParcelable(AccountManager.KEY_INTENT);
                   int flags = intent.getFlags();
                   flags &= ~Intent.FLAG_ACTIVITY_NEW_TASK;
                   intent.setFlags(flags);
                   startActivityForResult(intent, REQUEST_AUTHENTICATE);
                 } else if (bundle.containsKey(AccountManager.KEY_AUTHTOKEN)) {
-                  authenticatedClientLogin(
-                      bundle.getString(AccountManager.KEY_AUTHTOKEN));
+                  authenticatedClientLogin(bundle.getString(AccountManager.KEY_AUTHTOKEN));
                 }
               } catch (Exception e) {
                 handleException(e);
@@ -198,8 +203,7 @@ public final class CalendarAndroidSample extends ListActivity {
   }
 
   @Override
-  protected void onActivityResult(
-      int requestCode, int resultCode, Intent data) {
+  protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
     switch (requestCode) {
       case REQUEST_AUTHENTICATE:
@@ -212,7 +216,7 @@ public final class CalendarAndroidSample extends ListActivity {
     }
   }
 
-  private void authenticatedClientLogin(String authToken) {
+  void authenticatedClientLogin(String authToken) {
     this.authToken = authToken;
     ((GoogleHeaders) transport.defaultHeaders).setGoogleLogin(authToken);
     authenticated();
@@ -237,7 +241,7 @@ public final class CalendarAndroidSample extends ListActivity {
         CalendarEntry calendar = new CalendarEntry();
         calendar.title = "Calendar " + new DateTime(new Date());
         try {
-          CalendarEntry result = calendar.executeInsert(transport, url);
+          calendar.executeInsert(transport, url);
         } catch (IOException e) {
           handleException(e);
         }
@@ -251,15 +255,13 @@ public final class CalendarAndroidSample extends ListActivity {
   }
 
   @Override
-  public void onCreateContextMenu(
-      ContextMenu menu, View v, ContextMenuInfo menuInfo) {
+  public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
     super.onCreateContextMenu(menu, v, menuInfo);
     menu.add(0, CONTEXT_EDIT, 0, "Update Title");
     menu.add(0, CONTEXT_DELETE, 0, "Delete");
     SharedPreferences settings = getSharedPreferences(PREF, 0);
     boolean logging = settings.getBoolean("logging", false);
-    menu.add(0, CONTEXT_LOGGING, 0, "Logging").setCheckable(true).setChecked(
-        logging);
+    menu.add(0, CONTEXT_LOGGING, 0, "Logging").setCheckable(true).setChecked(logging);
   }
 
   @Override
@@ -270,8 +272,7 @@ public final class CalendarAndroidSample extends ListActivity {
       switch (item.getItemId()) {
         case CONTEXT_EDIT:
           CalendarEntry patchedCalendar = calendar.clone();
-          patchedCalendar.title =
-              calendar.title + " UPDATED " + new DateTime(new Date());
+          patchedCalendar.title = calendar.title + " UPDATED " + new DateTime(new Date());
           patchedCalendar.executePatchRelativeToOriginal(transport, calendar);
           executeRefreshCalendars();
           return true;
@@ -281,7 +282,7 @@ public final class CalendarAndroidSample extends ListActivity {
           return true;
         case CONTEXT_LOGGING:
           SharedPreferences settings = getSharedPreferences(PREF, 0);
-          boolean logging = settings.getBoolean("logging", false);
+          boolean logging = settings.getBoolean("logging", LOGGING_DEFAULT);
           setLogging(!logging);
           return true;
         default:
@@ -320,13 +321,12 @@ public final class CalendarAndroidSample extends ListActivity {
       calendarNames = new String[] {e.getMessage()};
       calendars.clear();
     }
-    setListAdapter(new ArrayAdapter<String>(
-        this, android.R.layout.simple_list_item_1, calendarNames));
+    setListAdapter(
+        new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, calendarNames));
   }
 
   private void setLogging(boolean logging) {
-    Logger.getLogger("com.google.api.client").setLevel(
-        logging ? Level.CONFIG : Level.OFF);
+    Logger.getLogger("com.google.api.client").setLevel(logging ? Level.CONFIG : Level.OFF);
     SharedPreferences settings = getSharedPreferences(PREF, 0);
     boolean currentSetting = settings.getBoolean("logging", false);
     if (currentSetting != logging) {
@@ -336,7 +336,7 @@ public final class CalendarAndroidSample extends ListActivity {
     }
   }
 
-  private void handleException(Exception e) {
+  void handleException(Exception e) {
     e.printStackTrace();
     SharedPreferences settings = getSharedPreferences(PREF, 0);
     boolean log = settings.getBoolean("logging", false);
