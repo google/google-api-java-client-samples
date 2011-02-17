@@ -49,9 +49,9 @@ public class Auth {
       GoogleOAuthGetTemporaryToken temporaryToken = new GoogleOAuthGetTemporaryToken();
       temporaryToken.transport = Util.AUTH_TRANSPORT;
       signer = new OAuthHmacSigner();
-      signer.clientSharedSecret = "anonymous";
+      signer.clientSharedSecret = ClientCredentials.ENTER_OAUTH_CONSUMER_SECRET;
       temporaryToken.signer = signer;
-      temporaryToken.consumerKey = "anonymous";
+      temporaryToken.consumerKey = ClientCredentials.ENTER_OAUTH_CONSUMER_KEY;
       temporaryToken.scope = "https://www.googleapis.com/auth/buzz";
       temporaryToken.displayName = BuzzSample.APP_DESCRIPTION;
       temporaryToken.callback = callbackServer.getCallbackUrl();
@@ -61,7 +61,7 @@ public class Auth {
       OAuthAuthorizeTemporaryTokenUrl authorizeUrl = new OAuthAuthorizeTemporaryTokenUrl(
           "https://www.google.com/buzz/api/auth/OAuthAuthorizeToken");
       authorizeUrl.set("scope", temporaryToken.scope);
-      authorizeUrl.set("domain", "anonymous");
+      authorizeUrl.set("domain", ClientCredentials.ENTER_OAUTH_CONSUMER_KEY);
       authorizeUrl.set("xoauth_displayname", BuzzSample.APP_DESCRIPTION);
       authorizeUrl.temporaryToken = tempToken = tempCredentials.token;
       String authorizationUrl = authorizeUrl.build();
@@ -89,7 +89,7 @@ public class Auth {
     accessToken.transport = Util.AUTH_TRANSPORT;
     accessToken.temporaryToken = tempToken;
     accessToken.signer = signer;
-    accessToken.consumerKey = "anonymous";
+    accessToken.consumerKey = ClientCredentials.ENTER_OAUTH_CONSUMER_KEY;
     accessToken.verifier = verifier;
     credentials = accessToken.execute();
     signer.tokenSharedSecret = credentials.tokenSecret;
@@ -108,7 +108,7 @@ public class Auth {
 
   private static OAuthParameters createOAuthParameters() {
     OAuthParameters authorizer = new OAuthParameters();
-    authorizer.consumerKey = "anonymous";
+    authorizer.consumerKey = ClientCredentials.ENTER_OAUTH_CONSUMER_KEY;
     authorizer.signer = signer;
     authorizer.token = credentials.token;
     return authorizer;

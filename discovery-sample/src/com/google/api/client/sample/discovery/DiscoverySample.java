@@ -21,6 +21,8 @@ import com.google.api.client.googleapis.json.GoogleApi;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpResponseException;
 import com.google.api.client.http.InputStreamContent;
+import com.google.api.client.http.apache.ApacheHttpTransport;
+import com.google.api.client.json.jackson.JacksonFactory;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
@@ -190,6 +192,7 @@ public class DiscoverySample {
       }
     }
     HttpRequest request = api.buildRequest(resourceName + "." + methodName, parameters);
+    // TODO(yanivi): bug that if prettyprint is set, error on String -> Boolean conversion
     request.url.putAll(queryParameters);
     if (requestBodyFile != null) {
       InputStreamContent fileContent = new InputStreamContent();
@@ -207,14 +210,14 @@ public class DiscoverySample {
       }
       String response = request.execute().parseAsString();
       System.out.println(response);
-      Auth.revoke();
+      Auth.revoke(api.transport);
     } catch (HttpResponseException e) {
       System.err.println(e.response.parseAsString());
-      Auth.revoke();
+      Auth.revoke(api.transport);
       System.exit(1);
     } catch (Throwable t) {
       t.printStackTrace();
-      Auth.revoke();
+      Auth.revoke(api.transport);
       System.exit(1);
     }
   }
@@ -230,6 +233,9 @@ public class DiscoverySample {
     GoogleApi api = new GoogleApi();
     api.name = apiName;
     api.version = apiVersion;
+    api.jsonFactory = new JacksonFactory();
+    api.discoveryTransport = new ApacheHttpTransport();
+    api.transport = new ApacheHttpTransport();
     try {
       api.load();
     } catch (HttpResponseException e) {

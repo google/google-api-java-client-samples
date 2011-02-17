@@ -1,16 +1,14 @@
 /*
  * Copyright (c) 2010 Google Inc.
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
 
@@ -28,21 +26,25 @@ public final class LatitudeUrl extends GoogleUrl {
 
   @Key
   public String granularity;
-  
+
   @Key("min-time")
   public String minTime;
-  
+
   @Key("max-time")
   public String maxTime;
-  
+
   @Key("max-results")
   public String maxResults;
-  
+
   /** Constructs a new Latitude URL from the given encoded URI. */
   public LatitudeUrl(String encodedUrl) {
     super(encodedUrl);
-    if (Debug.ENABLED) {
+    if (Util.DEBUG) {
       prettyprint = true;
+    }
+    // API Key
+    if (ClientCredentials.ENTER_KEY != null) {
+      key = ClientCredentials.ENTER_KEY;
     }
   }
 

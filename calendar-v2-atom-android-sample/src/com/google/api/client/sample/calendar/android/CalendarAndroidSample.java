@@ -14,15 +14,16 @@
 
 package com.google.api.client.sample.calendar.android;
 
-import com.google.api.client.apache.ApacheHttpTransport;
 import com.google.api.client.googleapis.GoogleHeaders;
 import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpResponseException;
 import com.google.api.client.http.HttpTransport;
-import com.google.api.client.javanet.NetHttpTransport;
+import com.google.api.client.http.apache.ApacheHttpTransport;
+import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.sample.calendar.android.model.CalendarEntry;
 import com.google.api.client.sample.calendar.android.model.CalendarFeed;
 import com.google.api.client.sample.calendar.android.model.CalendarUrl;
+import com.google.api.client.sample.calendar.android.model.RedirectHandler;
 import com.google.api.client.sample.calendar.android.model.Util;
 import com.google.api.client.util.DateTime;
 import com.google.api.client.xml.atom.AtomParser;
@@ -188,7 +189,7 @@ public final class CalendarAndroidSample extends ListActivity {
                   intent.setFlags(flags);
                   startActivityForResult(intent, REQUEST_AUTHENTICATE);
                 } else if (bundle.containsKey(AccountManager.KEY_AUTHTOKEN)) {
-                  authenticatedClientLogin(bundle.getString(AccountManager.KEY_AUTHTOKEN));
+                  authenticated(bundle.getString(AccountManager.KEY_AUTHTOKEN));
                 }
               } catch (Exception e) {
                 handleException(e);
@@ -216,13 +217,10 @@ public final class CalendarAndroidSample extends ListActivity {
     }
   }
 
-  void authenticatedClientLogin(String authToken) {
+  void authenticated(String authToken) {
     this.authToken = authToken;
     ((GoogleHeaders) transport.defaultHeaders).setGoogleLogin(authToken);
-    authenticated();
-  }
-
-  private void authenticated() {
+    RedirectHandler.resetSessionId(transport);
     executeRefreshCalendars();
   }
 

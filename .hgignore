@@ -2,16 +2,8 @@ syntax: regexp
 ^([^/]+/)?target$
 
 syntax: regexp
+^[^/]+/proguard$
+
+syntax: regexp
 ^[^/]+/gen$
 
-syntax: regexp
-^discovery-appengine-sample/war/discover$
-
-syntax: regexp
-^calendar-v2-atom-oauth-appengine-sample/war/calendar$
-
-syntax: regexp
-^[^/]+/war/WEB-INF/classes$
-
-syntax: regexp
-^[^/]+/war/WEB-INF/appengine-generated$

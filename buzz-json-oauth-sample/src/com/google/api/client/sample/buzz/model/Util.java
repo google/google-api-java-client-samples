@@ -17,9 +17,9 @@ package com.google.api.client.sample.buzz.model;
 import com.google.api.client.googleapis.GoogleHeaders;
 import com.google.api.client.googleapis.GoogleUtils;
 import com.google.api.client.http.HttpTransport;
-import com.google.api.client.javanet.NetHttpTransport;
+import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.gson.GsonFactory;
+import com.google.api.client.json.jackson.JacksonFactory;
 
 import java.util.logging.Handler;
 import java.util.logging.Level;
@@ -33,7 +33,7 @@ public class Util {
   public static final boolean DEBUG = false;
   public static final HttpTransport TRANSPORT = newTransport();
   public static final HttpTransport AUTH_TRANSPORT = newTransport();
-  public static final JsonFactory JSON_FACTORY = new GsonFactory();
+  public static final JsonFactory JSON_FACTORY = new JacksonFactory();
 
   static HttpTransport newTransport() {
     HttpTransport result = new NetHttpTransport();

@@ -37,14 +37,19 @@ public class RedirectHandler {
     private String gsessionid;
 
     SessionIntercepter(HttpTransport transport, GoogleUrl locationUrl) {
+      resetSessionId(transport);
       this.gsessionid = (String) locationUrl.getFirst("gsessionid");
-      transport.removeIntercepters(SessionIntercepter.class);
       transport.intercepters.add(0, this); // must be first
     }
 
     public void intercept(HttpRequest request) {
       request.url.set("gsessionid", this.gsessionid);
     }
+  }
+
+  /** Resets the session ID stored for the HTTP transport. */
+  public static void resetSessionId(HttpTransport transport) {
+    transport.removeIntercepters(SessionIntercepter.class);
   }
 
   static HttpResponse execute(HttpRequest request) throws IOException {
