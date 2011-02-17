@@ -31,7 +31,7 @@ public class CalendarUrl extends GoogleUrl {
 
   public CalendarUrl(String url) {
     super(url);
-    if (Debug.ENABLED) {
+    if (Util.DEBUG) {
       this.prettyprint = true;
     }
   }

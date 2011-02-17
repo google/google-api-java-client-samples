@@ -1,16 +1,14 @@
 /*
  * Copyright (c) 2010 Google Inc.
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
 
@@ -31,23 +29,27 @@ import java.io.IOException;
 public class RedirectHandler {
 
   /**
-   * See <a
-   * href="http://code.google.com/apis/calendar/faq.html#redirect_handling">How
-   * do I handle redirects...?</a>.
+   * See <a href="http://code.google.com/apis/calendar/faq.html#redirect_handling">How do I handle
+   * redirects...?</a>.
    */
-  private static class SessionIntercepter implements HttpExecuteIntercepter {
+  static class SessionIntercepter implements HttpExecuteIntercepter {
 
     private String gsessionid;
 
-    private SessionIntercepter(HttpTransport transport, GoogleUrl locationUrl) {
+    SessionIntercepter(HttpTransport transport, GoogleUrl locationUrl) {
+      resetSessionId(transport);
       this.gsessionid = (String) locationUrl.getFirst("gsessionid");
-      transport.removeIntercepters(SessionIntercepter.class);
       transport.intercepters.add(0, this); // must be first
     }
 
     public void intercept(HttpRequest request) {
       request.url.set("gsessionid", this.gsessionid);
     }
+  }
+
+  /** Resets the session ID stored for the HTTP transport. */
+  public static void resetSessionId(HttpTransport transport) {
+    transport.removeIntercepters(SessionIntercepter.class);
   }
 
   static HttpResponse execute(HttpRequest request) throws IOException {
@@ -60,9 +62,8 @@ public class RedirectHandler {
         new SessionIntercepter(request.transport, url);
         e.response.ignore(); // force the connection to close
         return request.execute();
-      } else {
-        throw e;
       }
+      throw e;
     }
   }
 }

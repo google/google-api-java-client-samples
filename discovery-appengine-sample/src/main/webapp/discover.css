@@ -1,0 +1,24 @@
+.header {
+  font-size: 2em;
+  font-weight: bold;
+  margin: 0px 0px 10px;
+  color: #777777;
+}
+
+.methodsTable {
+}
+  
+.methodsHeaderRow {
+  background-color: #2062B8;
+  color: white;
+}
+
+.methodParametersHeaderRow {
+  background-color: #2062B8;
+  color: white;
+  font-style: italic;
+}
+
+.parametersColumn {
+  font-style: italic;
+}

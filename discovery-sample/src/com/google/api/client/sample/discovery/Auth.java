@@ -107,10 +107,10 @@ public class Auth {
     createOAuthParameters().signRequestsUsingAuthorizationHeader(transport);
   }
 
-  static void revoke() {
+  static void revoke(HttpTransport transport) {
     if (credentials != null) {
       try {
-        GoogleOAuthGetAccessToken.revokeAccessToken(createOAuthParameters());
+        GoogleOAuthGetAccessToken.revokeAccessToken(transport, createOAuthParameters());
       } catch (Exception e) {
         e.printStackTrace(System.err);
       }

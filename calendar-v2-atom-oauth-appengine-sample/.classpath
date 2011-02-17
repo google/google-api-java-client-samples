@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="con" path="com.google.appengine.eclipse.core.GAE_CONTAINER"/>
-	<classpathentry kind="con" path="com.google.gwt.eclipse.core.GWT_CONTAINER"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="war/WEB-INF/lib/google-api-client-1.2.0-alpha.jar" sourcepath="google-api-client-1.2.0-alpha-sources.jar"/>
-	<classpathentry kind="lib" path="war/WEB-INF/lib/kxml2-2.3.0.jar" sourcepath="kxml2-2.3.0-sources.jar"/>
-	<classpathentry kind="output" path="war/WEB-INF/classes"/>
+  <classpathentry kind="src" path="src/main/java" />
+  <classpathentry kind="src" path="src/main/resources" />
+  <classpathentry kind="con"
+    path="com.google.appengine.eclipse.core.GAE_CONTAINER" />
+  <classpathentry kind="con"
+    path="com.google.gwt.eclipse.core.GWT_CONTAINER/GWT" />
+  <classpathentry kind="con"
+    path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6" />
+  <classpathentry kind="con"
+    path="org.maven.ide.eclipse.MAVEN2_CLASSPATH_CONTAINER" />
+  <classpathentry kind="output" path="target/war/WEB-INF/classes" />
 </classpath>
