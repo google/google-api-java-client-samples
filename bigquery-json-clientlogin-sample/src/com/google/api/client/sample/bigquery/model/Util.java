@@ -34,7 +34,6 @@ public class Util {
   public static final boolean DEBUG = false;
   public static final HttpTransport TRANSPORT = newTransport(false);
   public static final HttpTransport AUTH_TRANSPORT = newTransport(true);
-  public static final JsonFactory JSON_FACTORY = new JacksonFactory();
 
   static HttpTransport newTransport(boolean forAuth) {
     HttpTransport result = new NetHttpTransport();
@@ -44,7 +43,7 @@ public class Util {
     result.defaultHeaders = headers;
     if (!forAuth) {
       JsonCParser parser = new JsonCParser();
-      parser.jsonFactory = JSON_FACTORY;
+      parser.jsonFactory = new JacksonFactory();
       result.addParser(parser);
     }
     return result;
