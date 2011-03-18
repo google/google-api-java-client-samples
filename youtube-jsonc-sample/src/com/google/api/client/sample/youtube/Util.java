@@ -12,14 +12,13 @@
  * the License.
  */
 
-package com.google.api.client.sample.bigquery.model;
+package com.google.api.client.sample.youtube;
 
 import com.google.api.client.googleapis.GoogleHeaders;
 import com.google.api.client.googleapis.GoogleUtils;
 import com.google.api.client.googleapis.json.JsonCParser;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
-import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson.JacksonFactory;
 
 import java.util.logging.Handler;
@@ -31,26 +30,15 @@ import java.util.logging.Logger;
  * @author Yaniv Inbar
  */
 public class Util {
-  public static final boolean DEBUG = false;
-  public static final HttpTransport TRANSPORT = newTransport(false);
-  public static final HttpTransport AUTH_TRANSPORT = newTransport(true);
+  /**
+   * Set to {@code true} to show HTTP request/response or {@code false} to show only normal output.
+   */
+  static final boolean LOG_REQUESTS = false;
 
-  static HttpTransport newTransport(boolean forAuth) {
-    HttpTransport result = new NetHttpTransport();
-    GoogleUtils.useMethodOverride(result);
-    GoogleHeaders headers = new GoogleHeaders();
-    headers.setApplicationName("Google-BigQuerySample/1.0");
-    result.defaultHeaders = headers;
-    if (!forAuth) {
-      JsonCParser parser = new JsonCParser();
-      parser.jsonFactory = new JacksonFactory();
-      result.addParser(parser);
-    }
-    return result;
-  }
+  static final HttpTransport TRANSPORT = newTransport();
 
   public static void enableLogging() {
-    if (DEBUG) {
+    if (LOG_REQUESTS) {
       Logger logger = Logger.getLogger("com.google.api.client");
       logger.setLevel(Level.CONFIG);
       logger.addHandler(new Handler() {
@@ -72,5 +60,18 @@ public class Util {
         }
       });
     }
+  }
+
+  private static HttpTransport newTransport() {
+    HttpTransport result = new NetHttpTransport();
+    GoogleUtils.useMethodOverride(result);
+    GoogleHeaders headers = new GoogleHeaders();
+    headers.setApplicationName("Google-YouTubeSample/1.0");
+    result.defaultHeaders = headers;
+    headers.gdataVersion = "2";
+    JsonCParser parser = new JsonCParser();
+    parser.jsonFactory = new JacksonFactory();
+    result.addParser(parser);
+    return result;
   }
 }
