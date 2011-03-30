@@ -14,11 +14,8 @@
 
 package com.google.api.client.sample.youtube;
 
-import com.google.api.client.http.HttpRequest;
 import com.google.api.client.util.DateTime;
 import com.google.api.client.util.Key;
-
-import java.io.IOException;
 
 /**
  * @author Yaniv Inbar
@@ -36,10 +33,4 @@ public class Feed {
 
   @Key
   DateTime updated;
-
-  static Feed executeGet(YouTubeUrl url, Class<? extends Feed> feedClass) throws IOException {
-    HttpRequest request = Util.TRANSPORT.buildGetRequest();
-    request.url = url;
-    return request.execute().parseAs(feedClass);
-  }
 }

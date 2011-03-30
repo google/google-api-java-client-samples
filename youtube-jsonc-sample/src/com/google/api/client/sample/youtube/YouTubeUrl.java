@@ -22,6 +22,9 @@ import com.google.api.client.util.Key;
  */
 public class YouTubeUrl extends GoogleUrl {
 
+  /** Whether to pretty print HTTP requests and responses. */
+  private static final boolean PRETTY_PRINT = true;
+
   static final String ROOT_URL = "https://gdata.youtube.com/feeds/api";
 
   @Key
@@ -33,9 +36,7 @@ public class YouTubeUrl extends GoogleUrl {
   YouTubeUrl(String encodedUrl) {
     super(encodedUrl);
     this.alt = "jsonc";
-    if (Util.LOG_REQUESTS) {
-      this.prettyprint = true;
-    }
+    this.prettyprint = PRETTY_PRINT;
   }
 
   private static YouTubeUrl root() {

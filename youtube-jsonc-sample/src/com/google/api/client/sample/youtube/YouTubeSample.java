@@ -24,10 +24,10 @@ import java.io.IOException;
 public class YouTubeSample {
 
   public static void main(String[] args) {
-    Util.enableLogging();
     try {
       try {
-        showVideos();
+        YouTubeClient client = new YouTubeClient();
+        showVideos(client);
       } catch (HttpResponseException e) {
         System.err.println(e.response.parseAsString());
         throw e;
@@ -38,13 +38,13 @@ public class YouTubeSample {
     }
   }
 
-  private static VideoFeed showVideos() throws IOException {
+  private static VideoFeed showVideos(YouTubeClient client) throws IOException {
     View.header("Get Videos");
     // build URL for the video feed for "search stories"
     YouTubeUrl url = YouTubeUrl.forVideosFeed();
     url.author = "searchstories";
     // execute GData request for the feed
-    VideoFeed feed = VideoFeed.executeGet(url);
+    VideoFeed feed = client.executeGetVideoFeed(url);
     View.display(feed);
     return feed;
   }
