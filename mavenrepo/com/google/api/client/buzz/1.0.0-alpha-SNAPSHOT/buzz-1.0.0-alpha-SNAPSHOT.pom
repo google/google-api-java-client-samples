@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.google.api.client</groupId>
+  <artifactId>buzz</artifactId>
+  <version>1.0.0-alpha-SNAPSHOT</version>
+  <description>Generated Buzz v1 service helper</description>
+
+  <url>http://code.google.com/p/google-api-java-client/</url>
+  <issueManagement>
+    <system>code.google.com</system>
+    <url>http://code.google.com/p/google-api-java-client/issues/list</url>
+  </issueManagement>
+
+  <inceptionYear>2011</inceptionYear>
+
+  <prerequisites>
+    <maven>2.0.9</maven>
+  </prerequisites>
+
+  <scm>
+    <connection>scm:hg:https://samples.google-api-java-client.googlecode.com/hg/</connection>
+    <developerConnection>scm:hg:https://samples.google-api-java-client.googlecode.com/hg/</developerConnection>
+    <url>http://code.google.com/p/google-api-java-client/source/browse/?repo=samples</url>
+  </scm>
+
+  <dependencies>
+    <dependency>
+      <groupId>com.google.api.client</groupId>
+      <artifactId>google-api-client-googleapis</artifactId>
+      <version>1.4.0-alpha-SNAPSHOT</version>
+    </dependency>
+  </dependencies>
+
+</project>
