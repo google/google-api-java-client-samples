@@ -1,0 +1,72 @@
+<html>
+  <title>Google Site Verification API JSON OAuth Sample</title>
+  <body>
+    <h2>Instructions for the Google Site Verification API JSON OAuth Sample</h2>
+
+    <h3>Download</h3>
+    <p>You can download the sample by clicking on <a href="java-client-sample.zip">this link</a>.</p>
+
+    <h3>Build Instructions</h3>
+
+    <p><b>Prerequisites:</b> install <a href="http://java.com">Java 6</a>, <a
+                                                                              href="http://mercurial.selenic.com/">Mercurial</a> and <a
+                                                                                                                                        href="http://maven.apache.org/download.html">Maven</a>. You may need to set
+      your <code>JAVA_HOME</code>.</p>
+
+    <p><b>Important:</b> after checking out the project, and before compiling
+      and running it, you need to edit <a
+                                          href="http://code.google.com/p/google-api-java-client/source/browse/verification-json-oauth-sample/src/com/google/api/client/sample/verification/ClientCredentials.java?repo=samples">ClientCredentials.java</a>
+      to enter an developer key from the <a href="https://code.google.com/apis/console/">Google APIs Console</a>. You can also optionally add the domain and client shared secret for a registered domain that you own.
+      Without a valid developer key, you will only be able to make a limited
+      number of queries per second. When you exceed this limit, you will receive
+      a <code>403 Forbidden</code> error with the
+      message <code>Daily Limit Exceeded. Please sign up</code>. You will then
+      have to wait a period of time while the limited quota regenerates.</p>
+
+    <pre><code>
+        cd <i>[someDirectory]</i>
+        hg clone https://samples.google-api-java-client.googlecode.com/hg/ google-api-java-client-samples
+        cd google-api-java-client-samples/verification-jsonc-sample
+        <i>[editor]</i> src/com/google/api/client/sample/verification/ClientCredentials.java
+        mvn compile
+        mvn -q exec:java</code></pre>
+
+    <h3>Setup Project in Eclipse 3.5/3.6</h3>
+
+    <p><b>Prerequisites:</b> install <a href="http://www.eclipse.org/downloads/">Eclipse</a>,
+      the <a href="http://javaforge.com/project/HGE">Mercurial plugin</a>, and the <a
+                                                                                      href="http://m2eclipse.sonatype.org/installing-m2eclipse.html">Maven
+        plugin</a>.</p>
+
+    <ul>
+      <li>Setup Eclipse Preferences
+        <ul>
+          <li>Window &gt; Preferences... (or on Mac, Eclipse &gt; Preferences...)</li>
+          <li>Select Maven
+            <ul>
+              <li>check on "Download Artifact Sources"</li>
+              <li>check on "Download Artifact JavaDoc"</li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+      <li>Import <code>verification-json-oauth-sample</code> project
+        <ul>
+          <li>File &gt; Import...</li>
+          <li>Select "General &gt; Existing Project into Workspace" and click
+            "Next"</li>
+          <li>Click "Browse" next to "Select root directory", find <code><i>[someDirectory]</i>/java-client-sample</code>
+            and click "Next"</li>
+          <li>Click "Finish"</li>
+        </ul>
+      </li>
+      <li>Run
+        <ul>
+          <li>Right-click on project verification-json-oauth-sample</li>
+          <li>Run As &gt; Java Application</li>
+          <li>If asked, type "VerificationSample" and click OK</li>
+        </ul>
+      </li>
+    </ul>
+   </body>
+</html>
