@@ -17,6 +17,8 @@ package com.google.api.client.sample.buzz.v1.cmdline;
 import com.google.api.buzz.v1.Buzz;
 import com.google.api.buzz.v1.model.Activity;
 import com.google.api.buzz.v1.model.Group;
+import com.google.api.client.googleapis.json.GoogleJsonError;
+import com.google.api.client.googleapis.json.GoogleJsonError.ErrorInfo;
 import com.google.api.client.http.HttpResponseException;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
@@ -35,11 +37,11 @@ public class BuzzSample {
   private static final boolean READ_ONLY = false;
 
   public static void main(String[] args) {
+    HttpTransport transport = new NetHttpTransport();
+    JsonFactory factory = new JacksonFactory();
     try {
       try {
         // set up and authorization
-        HttpTransport transport = new NetHttpTransport();
-        JsonFactory factory = new JacksonFactory();
         Buzz buzz = new Buzz("Google-BuzzSample/1.0", transport, factory);
         buzz.prettyPrint = true;
         OAuth2Native.authorize(transport, factory);
@@ -61,8 +63,12 @@ public class BuzzSample {
           GroupActions.deleteGroup(buzz, group);
         }
       } catch (HttpResponseException e) {
-        System.err.println(e.response.parseAsString());
-        throw e;
+        GoogleJsonError errorResponse = GoogleJsonError.parse(factory, e.response);
+        System.err.println(errorResponse.code + " Error: " + errorResponse.message);
+        for (ErrorInfo error : errorResponse.errors) {
+          System.err.println(factory.toString(error));
+        }
+        System.exit(1);
       }
     } catch (Throwable t) {
       t.printStackTrace();

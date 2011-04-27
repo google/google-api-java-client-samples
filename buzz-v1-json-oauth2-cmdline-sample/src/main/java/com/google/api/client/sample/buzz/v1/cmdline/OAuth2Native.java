@@ -24,6 +24,7 @@ import com.google.api.client.http.HttpResponseException;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
+import com.google.common.base.Preconditions;
 
 import java.awt.Desktop;
 import java.awt.Desktop.Action;
@@ -40,6 +41,9 @@ import java.util.Scanner;
 class OAuth2Native {
 
   static void authorize(HttpTransport transport, JsonFactory jsonFactory) throws Exception {
+    Preconditions.checkArgument(
+        OAuth2ClientCredentials.CLIENT_ID != null && OAuth2ClientCredentials.CLIENT_SECRET != null,
+        "Please enter your client ID and secret in " + OAuth2ClientCredentials.class);
     // TODO(yanivi): store the refresh & access tokens locally (after handling token refresh)
     launchInBrowser();
     exchangeCodeForAccessToken(transport, jsonFactory);
