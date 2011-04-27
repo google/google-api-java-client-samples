@@ -17,6 +17,7 @@ package com.google.api.client.sample.buzz.v1.cmdline;
 import com.google.api.client.auth.oauth2.draft10.AccessProtectedResource;
 import com.google.api.client.auth.oauth2.draft10.AccessTokenErrorResponse;
 import com.google.api.client.auth.oauth2.draft10.AccessTokenResponse;
+import com.google.api.client.auth.oauth2.draft10.InstalledApp;
 import com.google.api.client.googleapis.auth.oauth2.draft10.GoogleAccessTokenRequest.GoogleAuthorizationCodeGrant;
 import com.google.api.client.googleapis.auth.oauth2.draft10.GoogleAuthorizationRequestUrl;
 import com.google.api.client.http.HttpResponseException;
@@ -47,7 +48,7 @@ class OAuth2Native {
   private static void launchInBrowser() {
     String authorizationUrl =
         new GoogleAuthorizationRequestUrl(OAuth2ClientCredentials.CLIENT_ID,
-            OAuth2ClientCredentials.REDIRECT_URIs, OAuth2ClientCredentials.SCOPE).build();
+            InstalledApp.OOB_REDIRECT_URI, OAuth2ClientCredentials.SCOPE).build();
     // launch in browser
     boolean browsed = false;
     if (Desktop.isDesktopSupported()) {
@@ -86,7 +87,7 @@ class OAuth2Native {
                 OAuth2ClientCredentials.CLIENT_ID,
                 OAuth2ClientCredentials.CLIENT_SECRET,
                 code,
-                OAuth2ClientCredentials.REDIRECT_URIs);
+                InstalledApp.OOB_REDIRECT_URI);
         AccessTokenResponse response = request.execute().parseAs(AccessTokenResponse.class);
         // set the access token into the authorization header
         AccessProtectedResource.usingAuthorizationHeader(transport, response.accessToken);

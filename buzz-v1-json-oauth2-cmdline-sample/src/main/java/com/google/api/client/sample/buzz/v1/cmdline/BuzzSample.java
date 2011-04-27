@@ -41,7 +41,6 @@ public class BuzzSample {
         HttpTransport transport = new NetHttpTransport();
         JsonFactory factory = new JacksonFactory();
         Buzz buzz = new Buzz("Google-BuzzSample/1.0", transport, factory);
-        buzz.accessKey = OAuth2ClientCredentials.ACCESS_KEY;
         buzz.prettyPrint = true;
         OAuth2Native.authorize(transport, factory);
         // groups

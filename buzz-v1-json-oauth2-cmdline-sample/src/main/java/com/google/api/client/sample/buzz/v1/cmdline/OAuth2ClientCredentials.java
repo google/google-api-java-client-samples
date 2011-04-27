@@ -15,31 +15,27 @@
 package com.google.api.client.sample.buzz.v1.cmdline;
 
 /**
- * Identity credentials found in the "OAuth 2 Credentials" section of the "Identity" tab in the <a
- * href="https://code.google.com/apis/console">Google apis console</a>
+ * OAuth 2 credentials found in the <a href="https://code.google.com/apis/console">Google apis
+ * console</a>.
+ *
+ * <p>
+ * Once at the Google apis console, click on "Add project...", or if you've already set up a
+ * project, click the arrow next to the project name and click on "Create..." under "Other
+ * projects". For "Buzz API", click on the status switch to flip it to "ON", and agree to the terms
+ * of service. Next, click on "API Access". Click on "Create an OAuth 2.0 Client ID...". Select a
+ * product name and click "Next". Make sure you select "Installed application" and click "Create
+ * client ID".
+ * </p>
  *
  * @author Yaniv Inbar
  */
 class OAuth2ClientCredentials {
 
-  /** Value of the "Client ID" shown in the console. */
+  /** Value of the "Client ID" shown under "Client ID for installed applications". */
   static final String CLIENT_ID = "enter_client_id";
 
-  /** Value of the "Client secret" shown in the console. */
+  /** Value of the "Client secret" shown under "Client ID for installed applications". */
   static final String CLIENT_SECRET = "enter_client_secret";
-
-  /**
-   * Redirect URIs must be {@code "oob"}. This means the authorization is "out of band", or in other
-   * words that there is no redirect.
-   * <p>
-   * Do not change the value here. Instead, in the console click "Edit redirect URIs...", type
-   * "oob", and click "Update".
-   * </p>
-   */
-  static final String REDIRECT_URIs = "oob";
-
-  /** Value of the "Access Key" shown in the console. */
-  static final String ACCESS_KEY = "enter_access_key";
 
   /** OAuth 2 scope to use (may also append {@code ".readonly"} for the read-only scope). */
   static final String SCOPE = "https://www.googleapis.com/auth/buzz";
