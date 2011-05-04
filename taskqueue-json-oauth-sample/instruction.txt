@@ -1,0 +1,10 @@
+// Install maven on your machine
+sudo apt-get install maven2
+// Compile and run the binary
+cd gtaskqueue_java/
+mvn compile
+mvn -q exec:java -Dexec.args="<your appengine app name> <taskqueue name>
+<lease seconds> <number of task to be leased>"
+// It asks for authorization only for the first time  and later uses the same.
+// It also asks for your developer key once(which can be generatated from api
+// console) and stores it for later use.
