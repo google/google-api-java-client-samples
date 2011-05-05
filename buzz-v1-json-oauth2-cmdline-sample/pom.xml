@@ -7,11 +7,11 @@
     <version>5</version>
   </parent>
   <groupId>com.google.api.client</groupId>
-  <artifactId>youtube-jsonc-sample</artifactId>
-  <version>1.2.0</version>
-  <name>youtube-jsonc-sample</name>
+  <artifactId>buzz-v1-json-oauth2-cmdline-sample</artifactId>
+  <version>1.0.0</version>
+  <name>buzz-v1-json-oauth2-cmdline-sample</name>
   <description>
-    Example for the YouTube API using JSON-C.
+    Example for the Buzz v1 API using JSON and OAuth 2.
   </description>
 
   <url>http://code.google.com/p/google-api-java-client/</url>
@@ -21,7 +21,7 @@
     <url>http://code.google.com/p/google-api-java-client/issues/list</url>
   </issueManagement>
 
-  <inceptionYear>2010</inceptionYear>
+  <inceptionYear>2011</inceptionYear>
 
   <prerequisites>
     <maven>2.0.9</maven>
@@ -32,6 +32,19 @@
     <developerConnection>scm:hg:https://samples.google-api-java-client.googlecode.com/hg/</developerConnection>
     <url>http://code.google.com/p/google-api-java-client/source/browse/?repo=samples</url>
   </scm>
+
+  <repositories>
+    <repository>
+      <id>googleapis</id>
+      <url>http://samples.google-api-java-client.googlecode.com/hg/mavenrepo/</url>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+    </repository>
+  </repositories>
 
   <developers>
     <developer>
@@ -68,7 +81,7 @@
           </execution>
         </executions>
         <configuration>
-          <mainClass>com.google.api.client.sample.youtube.YouTubeSample</mainClass>
+          <mainClass>com.google.api.client.sample.buzz.v1.cmdline.BuzzSample</mainClass>
           <systemProperties>
             <systemProperty>
               <key>java.util.logging.config.file</key>
@@ -85,8 +98,8 @@
   <dependencies>
     <dependency>
       <groupId>com.google.api.client</groupId>
-      <artifactId>google-api-client-googleapis</artifactId>
-      <version>1.4.0-alpha-SNAPSHOT</version>
+      <artifactId>buzz</artifactId>
+      <version>1.0.0-alpha-SNAPSHOT</version>
     </dependency>
   </dependencies>
   <properties>

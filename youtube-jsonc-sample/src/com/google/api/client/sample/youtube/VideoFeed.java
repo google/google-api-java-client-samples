@@ -16,7 +16,6 @@ package com.google.api.client.sample.youtube;
 
 import com.google.api.client.util.Key;
 
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -27,7 +26,4 @@ public class VideoFeed extends Feed {
   @Key
   List<Video> items;
 
-  static VideoFeed executeGet(YouTubeUrl url) throws IOException {
-    return (VideoFeed) Feed.executeGet(url, VideoFeed.class);
-  }
 }
