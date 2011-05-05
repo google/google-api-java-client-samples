@@ -14,17 +14,16 @@
 
 package com.google.api.client.sample.buzz.v1.cmdline;
 
-import com.google.api.client.auth.oauth2.draft10.AccessProtectedResource;
 import com.google.api.client.auth.oauth2.draft10.AccessTokenErrorResponse;
 import com.google.api.client.auth.oauth2.draft10.AccessTokenResponse;
 import com.google.api.client.auth.oauth2.draft10.InstalledApp;
+import com.google.api.client.googleapis.auth.oauth2.draft10.GoogleAccessProtectedResource;
 import com.google.api.client.googleapis.auth.oauth2.draft10.GoogleAccessTokenRequest.GoogleAuthorizationCodeGrant;
 import com.google.api.client.googleapis.auth.oauth2.draft10.GoogleAuthorizationRequestUrl;
 import com.google.api.client.http.HttpResponseException;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
-import com.google.common.base.Preconditions;
 
 import java.awt.Desktop;
 import java.awt.Desktop.Action;
@@ -40,41 +39,37 @@ import java.util.Scanner;
  */
 class OAuth2Native {
 
-  static void authorize(HttpTransport transport, JsonFactory jsonFactory) throws Exception {
-    Preconditions.checkArgument(
-        OAuth2ClientCredentials.CLIENT_ID != null && OAuth2ClientCredentials.CLIENT_SECRET != null,
-        "Please enter your client ID and secret in " + OAuth2ClientCredentials.class);
-    // TODO(yanivi): store the refresh & access tokens locally (after handling token refresh)
-    launchInBrowser();
-    exchangeCodeForAccessToken(transport, jsonFactory);
+  /*
+   * NOTE: ideally one should leverage the OS functionalities to store the access token and refresh
+   * token in encrypted form across invocation of this application. References: <a
+   * href="http://msdn.microsoft.com/en-us/library/ms717803(VS.85).aspx">Windows Data Protection
+   * Techniques</a> and <a href=
+   * "http://developer.apple.com/library/mac/#documentation/Security/Conceptual/keychainServConcepts/01introduction/introduction.html"
+   * >Keychains on Mac</a>.
+   */
+
+  static GoogleAccessProtectedResource authorize(HttpTransport transport, JsonFactory jsonFactory,
+      String clientId, String clientSecret, String scope) throws IOException {
+    launchInBrowser(clientId, scope);
+    return exchangeCodeForAccessToken(transport, jsonFactory, clientId, clientSecret);
   }
 
-  private static void launchInBrowser() {
+  private static void launchInBrowser(String clientId, String scope) throws IOException {
     String authorizationUrl =
-        new GoogleAuthorizationRequestUrl(OAuth2ClientCredentials.CLIENT_ID,
-            InstalledApp.OOB_REDIRECT_URI, OAuth2ClientCredentials.SCOPE).build();
-    // launch in browser
-    boolean browsed = false;
+        new GoogleAuthorizationRequestUrl(clientId, InstalledApp.OOB_REDIRECT_URI, scope).build();
     if (Desktop.isDesktopSupported()) {
       Desktop desktop = Desktop.getDesktop();
       if (desktop.isSupported(Action.BROWSE)) {
-        try {
-          desktop.browse(URI.create(authorizationUrl));
-          browsed = true;
-        } catch (Exception e) {
-          System.out.println();
-          System.err.println("Error: " + e.getMessage());
-          System.out.println();
-        }
+        desktop.browse(URI.create(authorizationUrl));
+        return;
       }
     }
-    if (!browsed) {
-      System.out.println("Open the following address in your favorite browser:");
-      System.out.println("  " + authorizationUrl);
-    }
+    System.out.println("Open the following address in your favorite browser:");
+    System.out.println("  " + authorizationUrl);
   }
 
-  private static void exchangeCodeForAccessToken(HttpTransport transport, JsonFactory jsonFactory)
+  private static GoogleAccessProtectedResource exchangeCodeForAccessToken(
+      HttpTransport transport, JsonFactory jsonFactory, String clientId, String clientSecret)
       throws IOException {
     while (true) {
       try {
@@ -85,17 +80,26 @@ class OAuth2Native {
           code = new Scanner(System.in).nextLine();
         }
         // exchange code for an access token
-        GoogleAuthorizationCodeGrant request =
+        final AccessTokenResponse response =
             new GoogleAuthorizationCodeGrant(new NetHttpTransport(),
                 jsonFactory,
-                OAuth2ClientCredentials.CLIENT_ID,
-                OAuth2ClientCredentials.CLIENT_SECRET,
+                clientId,
+                clientSecret,
                 code,
-                InstalledApp.OOB_REDIRECT_URI);
-        AccessTokenResponse response = request.execute().parseAs(AccessTokenResponse.class);
-        // set the access token into the authorization header
-        AccessProtectedResource.usingAuthorizationHeader(transport, response.accessToken);
-        return;
+                InstalledApp.OOB_REDIRECT_URI).execute();
+        // see comment above about storing access and refresh tokens
+        return new GoogleAccessProtectedResource(response.accessToken,
+            transport,
+            jsonFactory,
+            clientId,
+            clientSecret,
+            response.refreshToken) {
+
+          @Override
+          protected void onAccessToken(String accessToken) {
+            // see comment above about storing access and refresh tokens
+          }
+        };
       } catch (HttpResponseException e) {
         AccessTokenErrorResponse response = e.response.parseAs(AccessTokenErrorResponse.class);
         System.out.println();
@@ -103,5 +107,8 @@ class OAuth2Native {
         System.out.println();
       }
     }
+  }
+
+  private OAuth2Native() {
   }
 }

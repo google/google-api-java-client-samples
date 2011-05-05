@@ -18,7 +18,7 @@ import com.google.api.client.googleapis.GoogleHeaders;
 import com.google.api.client.googleapis.json.JsonCParser;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestFactory;
-import com.google.api.client.http.HttpRequestHandler;
+import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
@@ -38,18 +38,18 @@ public class YouTubeClient {
   private final HttpRequestFactory requestFactory;
 
   public YouTubeClient() {
-    JsonCParser parser = new JsonCParser();
+    final JsonCParser parser = new JsonCParser();
     parser.jsonFactory = jsonFactory;
-    transport.addParser(parser);
-    requestFactory = transport.createRequestFactory(new HttpRequestHandler() {
+    requestFactory = transport.createRequestFactory(new HttpRequestInitializer() {
 
       @Override
-      public void handle(HttpRequest request) {
+      public void initialize(HttpRequest request) {
         // headers
         GoogleHeaders headers = new GoogleHeaders();
         headers.setApplicationName("Google-YouTubeSample/1.0");
         headers.gdataVersion = "2";
         request.headers = headers;
+        request.addParser(parser);
       }
     });
   }

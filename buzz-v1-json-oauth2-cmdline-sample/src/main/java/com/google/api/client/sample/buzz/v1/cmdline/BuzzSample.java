@@ -17,13 +17,16 @@ package com.google.api.client.sample.buzz.v1.cmdline;
 import com.google.api.buzz.v1.Buzz;
 import com.google.api.buzz.v1.model.Activity;
 import com.google.api.buzz.v1.model.Group;
+import com.google.api.client.googleapis.auth.oauth2.draft10.GoogleAccessProtectedResource;
 import com.google.api.client.googleapis.json.GoogleJsonError;
 import com.google.api.client.googleapis.json.GoogleJsonError.ErrorInfo;
 import com.google.api.client.http.HttpResponseException;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.json.Json;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson.JacksonFactory;
+import com.google.common.base.Preconditions;
 
 /**
  * @author Yaniv Inbar
@@ -37,14 +40,21 @@ public class BuzzSample {
   private static final boolean READ_ONLY = false;
 
   public static void main(String[] args) {
+    Preconditions.checkArgument(
+        OAuth2ClientCredentials.CLIENT_ID != null && OAuth2ClientCredentials.CLIENT_SECRET != null,
+        "Please enter your client ID and secret in " + OAuth2ClientCredentials.class);
     HttpTransport transport = new NetHttpTransport();
-    JsonFactory factory = new JacksonFactory();
+    JsonFactory jsonFactory = new JacksonFactory();
     try {
       try {
-        // set up and authorization
-        Buzz buzz = new Buzz("Google-BuzzSample/1.0", transport, factory);
+        // authorization
+        GoogleAccessProtectedResource accessProtectedResource =
+            OAuth2Native.authorize(transport, jsonFactory, OAuth2ClientCredentials.CLIENT_ID,
+                OAuth2ClientCredentials.CLIENT_SECRET, OAuth2ClientCredentials.SCOPE);
+        // set up Buzz
+        final Buzz buzz = new Buzz("Google-BuzzSample/1.0", transport, jsonFactory);
         buzz.prettyPrint = true;
-        OAuth2Native.authorize(transport, factory);
+        buzz.setAccessToken(accessProtectedResource.getAccessToken());
         // groups
         GroupActions.showGroups(buzz);
         Group group = null;
@@ -63,10 +73,14 @@ public class BuzzSample {
           GroupActions.deleteGroup(buzz, group);
         }
       } catch (HttpResponseException e) {
-        GoogleJsonError errorResponse = GoogleJsonError.parse(factory, e.response);
-        System.err.println(errorResponse.code + " Error: " + errorResponse.message);
-        for (ErrorInfo error : errorResponse.errors) {
-          System.err.println(factory.toString(error));
+        if (!e.response.contentType.equals(Json.CONTENT_TYPE)) {
+          System.err.println(e.response.parseAsString());
+        } else {
+          GoogleJsonError errorResponse = GoogleJsonError.parse(jsonFactory, e.response);
+          System.err.println(errorResponse.code + " Error: " + errorResponse.message);
+          for (ErrorInfo error : errorResponse.errors) {
+            System.err.println(jsonFactory.toString(error));
+          }
         }
         System.exit(1);
       }
