@@ -23,19 +23,22 @@ import java.io.IOException;
  */
 public class YouTubeSample {
 
+  private static void run() throws IOException {
+    YouTubeClient client = new YouTubeClient();
+    showVideos(client);
+  }
+
   public static void main(String[] args) {
     try {
       try {
-        YouTubeClient client = new YouTubeClient();
-        showVideos(client);
+        run();
       } catch (HttpResponseException e) {
         System.err.println(e.response.parseAsString());
-        throw e;
       }
     } catch (Throwable t) {
       t.printStackTrace();
-      System.exit(1);
     }
+    System.exit(1);
   }
 
   private static VideoFeed showVideos(YouTubeClient client) throws IOException {

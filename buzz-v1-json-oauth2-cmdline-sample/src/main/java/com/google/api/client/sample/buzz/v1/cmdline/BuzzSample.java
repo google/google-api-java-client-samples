@@ -14,9 +14,6 @@
 
 package com.google.api.client.sample.buzz.v1.cmdline;
 
-import com.google.api.buzz.v1.Buzz;
-import com.google.api.buzz.v1.model.Activity;
-import com.google.api.buzz.v1.model.Group;
 import com.google.api.client.googleapis.auth.oauth2.draft10.GoogleAccessProtectedResource;
 import com.google.api.client.googleapis.json.GoogleJsonError;
 import com.google.api.client.googleapis.json.GoogleJsonError.ErrorInfo;
@@ -26,7 +23,11 @@ import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.Json;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson.JacksonFactory;
-import com.google.common.base.Preconditions;
+import com.google.api.client.sample.buzz.v1.cmdline.oauth.LocalServerReceiver;
+import com.google.api.client.sample.buzz.v1.cmdline.oauth.OAuth2Native;
+import com.google.api.services.buzz.v1.Buzz;
+import com.google.api.services.buzz.v1.model.Activity;
+import com.google.api.services.buzz.v1.model.Group;
 
 /**
  * @author Yaniv Inbar
@@ -39,39 +40,53 @@ public class BuzzSample {
    */
   private static final boolean READ_ONLY = false;
 
-  public static void main(String[] args) {
-    Preconditions.checkArgument(
-        OAuth2ClientCredentials.CLIENT_ID != null && OAuth2ClientCredentials.CLIENT_SECRET != null,
-        "Please enter your client ID and secret in " + OAuth2ClientCredentials.class);
+  private static void run(JsonFactory jsonFactory) throws Exception {
+    // authorization
     HttpTransport transport = new NetHttpTransport();
+    GoogleAccessProtectedResource accessProtectedResource = OAuth2Native.authorize(transport,
+        jsonFactory,
+        new LocalServerReceiver(),
+        null,
+        "google-chrome",
+        OAuth2ClientCredentials.CLIENT_ID,
+        OAuth2ClientCredentials.CLIENT_SECRET,
+        OAuth2ClientCredentials.SCOPE);
+    // set up Buzz
+    final Buzz buzz = new Buzz(transport, accessProtectedResource, jsonFactory);
+    buzz.setApplicationName("Google-BuzzSample/1.0");
+    buzz.prettyPrint = true;
+    // groups
+    GroupActions.showGroups(buzz);
+    Group group = null;
+    if (!READ_ONLY) {
+      group = GroupActions.insertGroup(buzz);
+      group = GroupActions.updateGroup(buzz, group);
+    }
+    // activities
+    ActivityActions.showActivitiesForConsumption(buzz);
+    ActivityActions.showPersonalActivities(buzz);
+    if (!READ_ONLY) {
+      Activity activity = ActivityActions.insertActivity(buzz, group);
+      activity = ActivityActions.updateActivity(buzz, activity);
+      // clean up
+      ActivityActions.deleteActivity(buzz, activity);
+      GroupActions.deleteGroup(buzz, group);
+    }
+  }
+
+  public static void main(String[] args) {
     JsonFactory jsonFactory = new JacksonFactory();
     try {
       try {
-        // authorization
-        GoogleAccessProtectedResource accessProtectedResource =
-            OAuth2Native.authorize(transport, jsonFactory, OAuth2ClientCredentials.CLIENT_ID,
-                OAuth2ClientCredentials.CLIENT_SECRET, OAuth2ClientCredentials.SCOPE);
-        // set up Buzz
-        final Buzz buzz = new Buzz("Google-BuzzSample/1.0", transport, jsonFactory);
-        buzz.prettyPrint = true;
-        buzz.setAccessToken(accessProtectedResource.getAccessToken());
-        // groups
-        GroupActions.showGroups(buzz);
-        Group group = null;
-        if (!READ_ONLY) {
-          group = GroupActions.insertGroup(buzz);
-          group = GroupActions.updateGroup(buzz, group);
+        if (OAuth2ClientCredentials.CLIENT_ID == null
+            || OAuth2ClientCredentials.CLIENT_SECRET == null) {
+          System.err.println(
+              "Please enter your client ID and secret in " + OAuth2ClientCredentials.class);
+        } else {
+          run(jsonFactory);
         }
-        // activities
-        ActivityActions.showActivitiesForConsumption(buzz);
-        ActivityActions.showPersonalActivities(buzz);
-        if (!READ_ONLY) {
-          Activity activity = ActivityActions.insertActivity(buzz, group);
-          activity = ActivityActions.updateActivity(buzz, activity);
-          // clean up
-          ActivityActions.deleteActivity(buzz, activity);
-          GroupActions.deleteGroup(buzz, group);
-        }
+        // success!
+        return;
       } catch (HttpResponseException e) {
         if (!e.response.contentType.equals(Json.CONTENT_TYPE)) {
           System.err.println(e.response.parseAsString());
@@ -82,11 +97,10 @@ public class BuzzSample {
             System.err.println(jsonFactory.toString(error));
           }
         }
-        System.exit(1);
       }
     } catch (Throwable t) {
       t.printStackTrace();
-      System.exit(1);
     }
+    System.exit(1);
   }
 }

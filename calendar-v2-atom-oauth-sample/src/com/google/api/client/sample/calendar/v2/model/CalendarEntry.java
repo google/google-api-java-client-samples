@@ -14,9 +14,6 @@
 
 package com.google.api.client.sample.calendar.v2.model;
 
-import java.io.IOException;
-
-
 /**
  * @author Yaniv Inbar
  */
@@ -31,12 +28,4 @@ public class CalendarEntry extends Entry {
     return (CalendarEntry) super.clone();
   }
 
-  @Override
-  public CalendarEntry executeInsert(CalendarUrl url) throws IOException {
-    return (CalendarEntry) super.executeInsert(url);
-  }
-
-  public CalendarEntry executePatchRelativeToOriginal(CalendarEntry original) throws IOException {
-    return (CalendarEntry) super.executePatchRelativeToOriginal(original);
-  }
 }

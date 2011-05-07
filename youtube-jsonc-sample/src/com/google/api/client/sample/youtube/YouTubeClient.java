@@ -55,10 +55,11 @@ public class YouTubeClient {
   }
 
   public VideoFeed executeGetVideoFeed(YouTubeUrl url) throws IOException {
-    return (VideoFeed) executeGetFeed(url, VideoFeed.class);
+    return executeGetFeed(url, VideoFeed.class);
   }
 
-  private Feed executeGetFeed(YouTubeUrl url, Class<? extends Feed> feedClass) throws IOException {
+  private <F extends Feed<? extends Item>> F executeGetFeed(YouTubeUrl url, Class<F> feedClass)
+      throws IOException {
     HttpRequest request = requestFactory.buildGetRequest(url);
     return request.execute().parseAs(feedClass);
   }

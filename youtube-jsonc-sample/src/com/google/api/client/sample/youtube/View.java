@@ -26,27 +26,30 @@ class View {
     System.out.println();
   }
 
-  static void display(VideoFeed feed) {
+  static void display(Feed<? extends Item> feed) {
     System.out.println(
         "Showing first " + feed.items.size() + " of " + feed.totalItems + " videos: ");
-    for (Video video : feed.items) {
+    for (Item item : feed.items) {
       System.out.println();
       System.out.println("-----------------------------------------------");
-      display(video);
+      display(item);
     }
   }
 
-  static void display(Video video) {
-    System.out.println("Video title: " + video.title);
-    System.out.println("Updated: " + video.updated);
-    if (video.description != null) {
-      System.out.println("Description: " + video.description);
-    }
-    if (!video.tags.isEmpty()) {
-      System.out.println("Tags: " + video.tags);
-    }
-    if (video.player != null) {
-      System.out.println("Play URL: " + video.player.defaultUrl);
+  static void display(Item item) {
+    System.out.println("Title: " + item.title);
+    System.out.println("Updated: " + item.updated);
+    if (item instanceof Video) {
+      Video video = (Video) item;
+      if (video.description != null) {
+        System.out.println("Description: " + video.description);
+      }
+      if (!video.tags.isEmpty()) {
+        System.out.println("Tags: " + video.tags);
+      }
+      if (video.player != null) {
+        System.out.println("Play URL: " + video.player.defaultUrl);
+      }
     }
   }
 }

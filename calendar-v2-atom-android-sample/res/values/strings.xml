@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Calendar V2 Atom Android Sample</string>
+    <string name="switch_account">Switch Account</string>
+    <string name="new_calendar">New Calendar</string>
+    <string name="update_title">Update Title</string>
+    <string name="delete">Delete</string>
 </resources>

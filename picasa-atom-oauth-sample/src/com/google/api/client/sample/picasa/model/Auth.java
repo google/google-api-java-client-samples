@@ -1,18 +1,20 @@
 /*
  * Copyright (c) 2010 Google Inc.
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
- * in compliance with the License. You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software distributed under the License
- * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
- * or implied. See the License for the specific language governing permissions and limitations under
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
  * the License.
  */
 
-package com.google.api.client.sample.calendar.v2;
+package com.google.api.client.sample.picasa.model;
 
 import com.google.api.client.auth.oauth.OAuthCredentialsResponse;
 import com.google.api.client.auth.oauth.OAuthHmacSigner;
@@ -20,8 +22,7 @@ import com.google.api.client.auth.oauth.OAuthParameters;
 import com.google.api.client.googleapis.auth.oauth.GoogleOAuthAuthorizeTemporaryTokenUrl;
 import com.google.api.client.googleapis.auth.oauth.GoogleOAuthGetAccessToken;
 import com.google.api.client.googleapis.auth.oauth.GoogleOAuthGetTemporaryToken;
-import com.google.api.client.sample.calendar.v2.model.CalendarUrl;
-import com.google.api.client.sample.calendar.v2.model.Util;
+import com.google.api.client.http.HttpTransport;
 
 import java.awt.Desktop;
 import java.awt.Desktop.Action;
@@ -34,13 +35,16 @@ import java.net.URI;
  */
 public class Auth {
 
-  private static final String APP_NAME = "Google Calendar Data API Java Client Sample";
+  private static final String APP_NAME =
+      "Picasa Web Albums Data API Java Client";
+
+  private static final String SCOPE = PicasaUrl.ROOT_URL;
 
   private static OAuthHmacSigner signer;
 
   private static OAuthCredentialsResponse credentials;
 
-  static void authorize() throws Exception {
+  static OAuthParameters authorize(HttpTransport transport) throws Exception {
     // callback server
     LoginCallbackServer callbackServer = null;
     String verifier = null;
@@ -49,13 +53,14 @@ public class Auth {
       callbackServer = new LoginCallbackServer();
       callbackServer.start();
       // temporary token
-      GoogleOAuthGetTemporaryToken temporaryToken = new GoogleOAuthGetTemporaryToken();
-      temporaryToken.transport = Util.AUTH_TRANSPORT;
+      GoogleOAuthGetTemporaryToken temporaryToken =
+          new GoogleOAuthGetTemporaryToken();
       signer = new OAuthHmacSigner();
-      signer.clientSharedSecret = ClientCredentials.ENTER_OAUTH_CONSUMER_SECRET;
+      signer.clientSharedSecret = "anonymous";
+      temporaryToken.transport = transport;
       temporaryToken.signer = signer;
-      temporaryToken.consumerKey = ClientCredentials.ENTER_OAUTH_CONSUMER_KEY;
-      temporaryToken.scope = CalendarUrl.ROOT_URL;
+      temporaryToken.consumerKey = "anonymous";
+      temporaryToken.scope = SCOPE;
       temporaryToken.displayName = APP_NAME;
       temporaryToken.callback = callbackServer.getCallbackUrl();
       OAuthCredentialsResponse tempCredentials = temporaryToken.execute();
@@ -67,7 +72,6 @@ public class Auth {
       String authorizationUrl = authorizeUrl.build();
       // launch in browser
       boolean browsed = false;
-      // TODO(yanivi): support Java 5
       if (Desktop.isDesktopSupported()) {
         Desktop desktop = Desktop.getDesktop();
         if (desktop.isSupported(Action.BROWSE)) {
@@ -86,20 +90,20 @@ public class Auth {
       }
     }
     GoogleOAuthGetAccessToken accessToken = new GoogleOAuthGetAccessToken();
-    accessToken.transport = Util.AUTH_TRANSPORT;
+    accessToken.transport = transport;
     accessToken.temporaryToken = tempToken;
     accessToken.signer = signer;
-    accessToken.consumerKey = ClientCredentials.ENTER_OAUTH_CONSUMER_KEY;
+    accessToken.consumerKey = "anonymous";
     accessToken.verifier = verifier;
     credentials = accessToken.execute();
     signer.tokenSharedSecret = credentials.tokenSecret;
-    createOAuthParameters().signRequestsUsingAuthorizationHeader(Util.TRANSPORT);
+    return createOAuthParameters();
   }
 
-  static void revoke() {
+  public static void revoke(HttpTransport transport) {
     if (credentials != null) {
       try {
-        GoogleOAuthGetAccessToken.revokeAccessToken(Util.AUTH_TRANSPORT, createOAuthParameters());
+        GoogleOAuthGetAccessToken.revokeAccessToken(transport, createOAuthParameters());
       } catch (Exception e) {
         e.printStackTrace(System.err);
       }
@@ -108,7 +112,7 @@ public class Auth {
 
   private static OAuthParameters createOAuthParameters() {
     OAuthParameters authorizer = new OAuthParameters();
-    authorizer.consumerKey = ClientCredentials.ENTER_OAUTH_CONSUMER_KEY;
+    authorizer.consumerKey = "anonymous";
     authorizer.signer = signer;
     authorizer.token = credentials.token;
     return authorizer;

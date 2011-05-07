@@ -14,13 +14,6 @@
 
 package com.google.api.client.sample.calendar.v2.model;
 
-import com.google.api.client.googleapis.GoogleHeaders;
-import com.google.api.client.googleapis.GoogleUtils;
-import com.google.api.client.http.HttpTransport;
-import com.google.api.client.http.javanet.NetHttpTransport;
-import com.google.api.client.xml.XmlNamespaceDictionary;
-import com.google.api.client.xml.atom.AtomParser;
-
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
@@ -31,29 +24,7 @@ import java.util.logging.Logger;
  */
 public class Util {
 
-  public static final XmlNamespaceDictionary DICTIONARY =
-      new XmlNamespaceDictionary().set("", "http://www.w3.org/2005/Atom").set(
-          "batch", "http://schemas.google.com/gdata/batch").set(
-          "gd", "http://schemas.google.com/g/2005");
-
-  public static final boolean DEBUG = false;
-  public static final HttpTransport TRANSPORT = newTransport(false);
-  public static final HttpTransport AUTH_TRANSPORT = newTransport(true);
-
-  static HttpTransport newTransport(boolean forAuth) {
-    HttpTransport result = new NetHttpTransport();
-    GoogleUtils.useMethodOverride(result);
-    GoogleHeaders headers = new GoogleHeaders();
-    headers.setApplicationName("Google-CalendarSample/1.0");
-    result.defaultHeaders = headers;
-    if (!forAuth) {
-      headers.gdataVersion = "2";
-      AtomParser parser = new AtomParser();
-      parser.namespaceDictionary = Util.DICTIONARY;
-      result.addParser(parser);
-    }
-    return result;
-  }
+  public static final boolean DEBUG = true;
 
   public static void enableLogging() {
     if (DEBUG) {

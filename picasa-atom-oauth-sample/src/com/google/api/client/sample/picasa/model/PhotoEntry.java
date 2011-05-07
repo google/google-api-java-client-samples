@@ -16,15 +16,7 @@
 
 package com.google.api.client.sample.picasa.model;
 
-import com.google.api.client.googleapis.GoogleHeaders;
-import com.google.api.client.http.HttpRequest;
-import com.google.api.client.http.HttpTransport;
-import com.google.api.client.http.InputStreamContent;
-import com.google.api.client.http.MultipartRelatedContent;
 import com.google.api.client.util.Key;
-import com.google.api.client.xml.atom.AtomContent;
-
-import java.io.IOException;
 
 /**
  * @author Yaniv Inbar
@@ -36,31 +28,4 @@ public class PhotoEntry extends Entry {
 
   @Key("media:group")
   public MediaGroup mediaGroup;
-
-  public static PhotoEntry executeInsert(HttpTransport transport,
-      String albumFeedLink, InputStreamContent content, String fileName)
-      throws IOException {
-    HttpRequest request = transport.buildPostRequest();
-    request.setUrl(albumFeedLink);
-    GoogleHeaders headers = (GoogleHeaders) request.headers;
-    headers.setSlugFromFileName(fileName);
-    request.content = content;
-    return request.execute().parseAs(PhotoEntry.class);
-  }
-
-  public PhotoEntry executeInsertWithMetadata(
-      HttpTransport transport, String albumFeedLink, InputStreamContent content)
-      throws IOException {
-    HttpRequest request = transport.buildPostRequest();
-    request.setUrl(albumFeedLink);
-    AtomContent atomContent = new AtomContent();
-    atomContent.namespaceDictionary = Util.NAMESPACE_DICTIONARY;
-    atomContent.entry = this;
-    MultipartRelatedContent multiPartContent =
-        MultipartRelatedContent.forRequest(request);
-    multiPartContent.parts.add(atomContent);
-    multiPartContent.parts.add(content);
-    request.content = multiPartContent;
-    return request.execute().parseAs(PhotoEntry.class);
-  }
 }

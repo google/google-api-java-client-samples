@@ -86,7 +86,7 @@
     <dependency>
       <groupId>com.google.api.client</groupId>
       <artifactId>google-api-client-googleapis</artifactId>
-      <version>1.4.0-alpha-SNAPSHOT</version>
+      <version>1.4.1-beta</version>
     </dependency>
   </dependencies>
   <properties>

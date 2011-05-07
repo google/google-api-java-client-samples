@@ -14,11 +14,8 @@
 
 package com.google.api.client.sample.calendar.v2.model;
 
-import com.google.api.client.googleapis.xml.atom.GoogleAtom;
-import com.google.api.client.http.HttpRequest;
 import com.google.api.client.util.Key;
 
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -34,11 +31,4 @@ public abstract class Feed {
   }
 
   public abstract List<? extends Entry> getEntries();
-
-  static Feed executeGet(CalendarUrl url, Class<? extends Feed> feedClass) throws IOException {
-    url.fields = GoogleAtom.getFieldsFor(feedClass);
-    HttpRequest request = Util.TRANSPORT.buildGetRequest();
-    request.url = url;
-    return RedirectHandler.execute(request).parseAs(feedClass);
-  }
 }

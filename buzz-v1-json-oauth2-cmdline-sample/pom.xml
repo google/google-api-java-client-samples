@@ -36,7 +36,7 @@
   <repositories>
     <repository>
       <id>googleapis</id>
-      <url>http://samples.google-api-java-client.googlecode.com/hg/mavenrepo/</url>
+      <url>http://mavenrepo.google-api-java-client.googlecode.com/hg/</url>
       <snapshots>
         <enabled>true</enabled>
       </snapshots>
@@ -97,9 +97,14 @@
   </build>
   <dependencies>
     <dependency>
-      <groupId>com.google.api.client</groupId>
-      <artifactId>buzz</artifactId>
-      <version>1.0.0-alpha-SNAPSHOT</version>
+      <groupId>com.google.api.services.buzz</groupId>
+      <artifactId>google-api-services-buzz-v1</artifactId>
+      <version>1.0.0-beta</version>
+    </dependency>
+    <dependency>
+    	<groupId>org.mortbay.jetty</groupId>
+    	<artifactId>jetty</artifactId>
+    	<version>6.1.26</version>
     </dependency>
   </dependencies>
   <properties>

@@ -1,33 +1,29 @@
 /*
  * Copyright (c) 2010 Google Inc.
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
 
 package com.google.api.client.sample.picasa;
 
-import com.google.api.client.googleapis.GoogleHeaders;
-import com.google.api.client.googleapis.GoogleTransport;
+import com.google.api.client.http.FileContent;
 import com.google.api.client.http.HttpResponseException;
-import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.InputStreamContent;
 import com.google.api.client.sample.picasa.model.AlbumEntry;
 import com.google.api.client.sample.picasa.model.AlbumFeed;
 import com.google.api.client.sample.picasa.model.PhotoEntry;
+import com.google.api.client.sample.picasa.model.PicasaClient;
 import com.google.api.client.sample.picasa.model.PicasaUrl;
 import com.google.api.client.sample.picasa.model.UserFeed;
 import com.google.api.client.sample.picasa.model.Util;
-import com.google.api.client.xml.atom.AtomParser;
 
 import java.io.File;
 import java.io.IOException;
@@ -40,58 +36,54 @@ public class PicasaSample {
 
   public static void main(String[] args) {
     Util.enableLogging();
+    PicasaClient client = new PicasaClient();
     try {
+      client.authorize();
       try {
-        HttpTransport transport = setUpTransport();
-        Auth.authorize(transport);
-        UserFeed feed = showAlbums(transport);
-        AlbumEntry album = postAlbum(transport, feed);
-        postPhoto(transport, album);
-        // postVideo(transport, album);
-        album = getUpdatedAlbum(transport, album);
-        album = updateTitle(transport, album);
-        deleteAlbum(transport, album);
+        UserFeed feed = showAlbums(client);
+        AlbumEntry album = postAlbum(client, feed);
+        postPhoto(client, album);
+        // postVideo(client, album);
+        album = getUpdatedAlbum(client, album);
+        album = updateTitle(client, album);
+        deleteAlbum(client, album);
+        shutdown(client);
       } catch (HttpResponseException e) {
         System.err.println(e.response.parseAsString());
         throw e;
       }
     } catch (Throwable t) {
       t.printStackTrace();
-      Auth.revoke();
+      shutdown(client);
       System.exit(1);
     }
   }
 
-  private static HttpTransport setUpTransport() {
-    HttpTransport transport = GoogleTransport.create();
-    GoogleHeaders headers = (GoogleHeaders) transport.defaultHeaders;
-    headers.setApplicationName("Google-PicasaSample/1.0");
-    headers.gdataVersion = "2";
-    AtomParser parser = new AtomParser();
-    parser.namespaceDictionary = Util.NAMESPACE_DICTIONARY;
-    transport.addParser(parser);
-    return transport;
+  private static void shutdown(PicasaClient client) {
+    try {
+      client.shutdown();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 
-  private static UserFeed showAlbums(HttpTransport transport)
-      throws IOException {
+  private static UserFeed showAlbums(PicasaClient client) throws IOException {
     // build URL for the default user feed of albums
     PicasaUrl url = PicasaUrl.relativeToRoot("feed/api/user/default");
     // execute GData request for the feed
-    UserFeed feed = UserFeed.executeGet(transport, url);
+    UserFeed feed = client.executeGetUserFeed(url);
     System.out.println("User: " + feed.author.name);
     System.out.println("Total number of albums: " + feed.totalResults);
     // show albums
     if (feed.albums != null) {
       for (AlbumEntry album : feed.albums) {
-        showAlbum(transport, album);
+        showAlbum(client, album);
       }
     }
     return feed;
   }
 
-  private static void showAlbum(HttpTransport transport, AlbumEntry album)
-      throws IOException {
+  private static void showAlbum(PicasaClient client, AlbumEntry album) throws IOException {
     System.out.println();
     System.out.println("-----------------------------------------------");
     System.out.println("Album title: " + album.title);
@@ -103,7 +95,7 @@ public class PicasaSample {
     if (album.numPhotos != 0) {
       System.out.println("Total number of photos: " + album.numPhotos);
       PicasaUrl url = new PicasaUrl(album.getFeedLink());
-      AlbumFeed feed = AlbumFeed.executeGet(transport, url);
+      AlbumFeed feed = client.executeGetAlbumFeed(url);
       for (PhotoEntry photo : feed.photos) {
         System.out.println();
         System.out.println("Photo title: " + photo.title);
@@ -116,66 +108,60 @@ public class PicasaSample {
     }
   }
 
-  private static AlbumEntry postAlbum(HttpTransport transport, UserFeed feed)
-      throws IOException {
+  private static AlbumEntry postAlbum(PicasaClient client, UserFeed feed) throws IOException {
     System.out.println();
     AlbumEntry newAlbum = new AlbumEntry();
     newAlbum.access = "private";
     newAlbum.title = "A new album";
     newAlbum.summary = "My favorite photos";
-    AlbumEntry album = feed.insertAlbum(transport, newAlbum);
-    showAlbum(transport, album);
+    AlbumEntry album = client.insertAlbum(feed, newAlbum);
+    showAlbum(client, album);
     return album;
   }
 
-  private static PhotoEntry postPhoto(HttpTransport transport, AlbumEntry album)
-      throws IOException {
+  private static PhotoEntry postPhoto(PicasaClient client, AlbumEntry album) throws IOException {
     String fileName = "picasaweblogo-en_US.gif";
     String photoUrlString = "http://www.google.com/accounts/lh2/" + fileName;
     InputStreamContent content = new InputStreamContent();
     content.inputStream = new URL(photoUrlString).openStream();
     content.type = "image/jpeg";
-    PhotoEntry photo = PhotoEntry.executeInsert(
-        transport, album.getFeedLink(), content, fileName);
+    PhotoEntry photo = client.executeInsertPhotoEntry(album.getFeedLink(), content, fileName);
     System.out.println("Posted photo: " + photo.title);
     return photo;
   }
 
-  private static PhotoEntry postVideo(HttpTransport transport, AlbumEntry album)
-      throws IOException {
-    InputStreamContent imageContent = new InputStreamContent();
+  @SuppressWarnings("unused")
+  private static PhotoEntry postVideo(PicasaClient client, AlbumEntry album) throws IOException {
     // NOTE: this video is not included in the sample
     File file = new File("myvideo.3gp");
-    imageContent.setFileInput(file);
+    FileContent imageContent = new FileContent(file);
     imageContent.type = "video/3gpp";
     PhotoEntry video = new PhotoEntry();
     video.title = file.getName();
     video.summary = "My video";
-    PhotoEntry result = video.executeInsertWithMetadata(
-        transport, album.getFeedLink(), imageContent);
+    PhotoEntry result =
+        client.executeInsertPhotoEntryWithMetadata(video, album.getFeedLink(), imageContent);
     System.out.println("Posted video (pending processing): " + result.title);
     return result;
   }
 
-  private static AlbumEntry getUpdatedAlbum(
-      HttpTransport transport, AlbumEntry album) throws IOException {
-    album = AlbumEntry.executeGet(transport, album.getSelfLink());
-    showAlbum(transport, album);
+  private static AlbumEntry getUpdatedAlbum(PicasaClient client, AlbumEntry album)
+      throws IOException {
+    album = client.executeGetAlbum(album.getSelfLink());
+    showAlbum(client, album);
     return album;
   }
 
-  private static AlbumEntry updateTitle(
-      HttpTransport transport, AlbumEntry album) throws IOException {
+  private static AlbumEntry updateTitle(PicasaClient client, AlbumEntry album) throws IOException {
     AlbumEntry patched = album.clone();
     patched.title = "My favorite web logos";
-    album = patched.executePatchRelativeToOriginal(transport, album);
-    showAlbum(transport, album);
+    album = client.executePatchAlbumRelativeToOriginal(patched, album);
+    showAlbum(client, album);
     return album;
   }
 
-  private static void deleteAlbum(HttpTransport transport, AlbumEntry album)
-      throws IOException {
-    album.executeDelete(transport);
+  private static void deleteAlbum(PicasaClient client, AlbumEntry album) throws IOException {
+    client.executeDeleteEntry(album);
     System.out.println();
     System.out.println("Album deleted.");
   }

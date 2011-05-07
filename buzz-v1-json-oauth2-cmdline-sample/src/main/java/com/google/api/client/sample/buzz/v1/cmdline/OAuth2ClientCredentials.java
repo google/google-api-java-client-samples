@@ -32,10 +32,10 @@ package com.google.api.client.sample.buzz.v1.cmdline;
 class OAuth2ClientCredentials {
 
   /** Value of the "Client ID" shown under "Client ID for installed applications". */
-  static final String CLIENT_ID = null;
+  static final String CLIENT_ID = "359672225969.apps.googleusercontent.com";
 
   /** Value of the "Client secret" shown under "Client ID for installed applications". */
-  static final String CLIENT_SECRET = null;
+  static final String CLIENT_SECRET = "6SGxS5nYm7msXVxeN9cIDlO9";
 
   /** OAuth 2 scope to use (may also append {@code ".readonly"} for the read-only scope). */
   static final String SCOPE = "https://www.googleapis.com/auth/buzz";

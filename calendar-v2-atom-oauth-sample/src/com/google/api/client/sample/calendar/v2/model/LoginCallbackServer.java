@@ -14,7 +14,7 @@
  * the License.
  */
 
-package com.google.api.client.sample.calendar.v2;
+package com.google.api.client.sample.calendar.v2.model;
 
 import com.google.common.base.Preconditions;
 

@@ -18,6 +18,7 @@ import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpResponseException;
 import com.google.api.client.sample.calendar.v2.model.BatchOperation;
 import com.google.api.client.sample.calendar.v2.model.BatchStatus;
+import com.google.api.client.sample.calendar.v2.model.CalendarClient;
 import com.google.api.client.sample.calendar.v2.model.CalendarEntry;
 import com.google.api.client.sample.calendar.v2.model.CalendarFeed;
 import com.google.api.client.sample.calendar.v2.model.CalendarUrl;
@@ -37,59 +38,70 @@ public class CalendarSample {
 
   public static void main(String[] args) {
     Util.enableLogging();
+    CalendarClient client = new CalendarClient(
+        ClientCredentials.ENTER_OAUTH_CONSUMER_KEY, ClientCredentials.ENTER_OAUTH_CONSUMER_SECRET);
     try {
       try {
-        Auth.authorize();
-        showCalendars();
-        CalendarEntry calendar = addCalendar();
-        calendar = updateCalendar(calendar);
-        addEvent(calendar);
-        batchAddEvents(calendar);
-        showEvents(calendar);
-        deleteCalendar(calendar);
-        Auth.revoke();
+        client.authorize();
+        showCalendars(client);
+        CalendarEntry calendar = addCalendar(client);
+        calendar = updateCalendar(client, calendar);
+        addEvent(client, calendar);
+        batchAddEvents(client, calendar);
+        showEvents(client, calendar);
+        deleteCalendar(client, calendar);
+        shutdown(client);
       } catch (HttpResponseException e) {
         System.err.println(e.response.parseAsString());
         throw e;
       }
     } catch (Throwable t) {
       t.printStackTrace();
-      Auth.revoke();
+      shutdown(client);
       System.exit(1);
     }
   }
 
-  private static void showCalendars() throws IOException {
+  private static void shutdown(CalendarClient client) {
+    try {
+      client.shutdown();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+  private static void showCalendars(CalendarClient client) throws IOException {
     View.header("Show Calendars");
     CalendarUrl url = CalendarUrl.forAllCalendarsFeed();
-    CalendarFeed feed = CalendarFeed.executeGet(url);
+    CalendarFeed feed = client.executeGetCalendarFeed(url);
     View.display(feed);
   }
 
-  private static CalendarEntry addCalendar() throws IOException {
+  private static CalendarEntry addCalendar(CalendarClient client) throws IOException {
     View.header("Add Calendar");
     CalendarUrl url = CalendarUrl.forOwnCalendarsFeed();
     CalendarEntry entry = new CalendarEntry();
     entry.title = "Calendar for Testing";
-    CalendarEntry result = entry.executeInsert(url);
+    CalendarEntry result = client.executeInsertCalendar(entry, url);
     View.display(result);
     return result;
   }
 
-  public static CalendarEntry updateCalendar(CalendarEntry calendar) throws IOException {
+  public static CalendarEntry updateCalendar(CalendarClient client, CalendarEntry calendar)
+      throws IOException {
     View.header("Update Calendar");
     CalendarEntry original = calendar.clone();
     calendar.title = "Updated Calendar for Testing";
-    CalendarEntry result = calendar.executePatchRelativeToOriginal(original);
+    CalendarEntry result = client.executePatchCalendarRelativeToOriginal(calendar, original);
     View.display(result);
     return result;
   }
 
-  private static void addEvent(CalendarEntry calendar) throws IOException {
+  private static void addEvent(CalendarClient client, CalendarEntry calendar) throws IOException {
     View.header("Add Event");
     CalendarUrl url = new CalendarUrl(calendar.getEventFeedLink());
     EventEntry event = newEvent();
-    EventEntry result = event.executeInsert(url);
+    EventEntry result = client.executeInsertEvent(event, url);
     View.display(result);
   }
 
@@ -102,7 +114,8 @@ public class CalendarSample {
     return event;
   }
 
-  private static void batchAddEvents(CalendarEntry calendar) throws IOException {
+  private static void batchAddEvents(CalendarClient client, CalendarEntry calendar)
+      throws IOException {
     View.header("Batch Add Events");
     EventFeed feed = new EventFeed();
     for (int i = 0; i < 3; i++) {
@@ -115,7 +128,7 @@ public class CalendarSample {
       event.batchOperation = BatchOperation.INSERT;
       feed.events.add(event);
     }
-    EventFeed result = feed.executeBatch(calendar);
+    EventFeed result = client.executeBatchEventFeed(feed, calendar);
     for (EventEntry event : result.events) {
       BatchStatus batchStatus = event.batchStatus;
       if (batchStatus != null && !HttpResponse.isSuccessStatusCode(batchStatus.code)) {
@@ -125,15 +138,16 @@ public class CalendarSample {
     View.display(result);
   }
 
-  private static void showEvents(CalendarEntry calendar) throws IOException {
+  private static void showEvents(CalendarClient client, CalendarEntry calendar) throws IOException {
     View.header("Show Events");
     CalendarUrl url = new CalendarUrl(calendar.getEventFeedLink());
-    EventFeed feed = EventFeed.executeGet(url);
+    EventFeed feed = client.executeGetEventFeed(url);
     View.display(feed);
   }
 
-  public static void deleteCalendar(CalendarEntry calendar) throws IOException {
+  public static void deleteCalendar(CalendarClient client, CalendarEntry calendar)
+      throws IOException {
     View.header("Delete Calendar");
-    calendar.executeDelete();
+    client.executeDelete(calendar);
   }
 }

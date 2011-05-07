@@ -14,16 +14,9 @@
 
 package com.google.api.client.sample.youtube;
 
-import com.google.api.client.util.Key;
-
-import java.util.List;
 
 /**
  * @author Yaniv Inbar
  */
-public class VideoFeed extends Feed {
-
-  @Key
-  List<Video> items;
-
+public class VideoFeed extends Feed<Video> {
 }

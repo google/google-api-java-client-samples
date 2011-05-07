@@ -16,10 +16,7 @@
 
 package com.google.api.client.sample.picasa.model;
 
-import com.google.api.client.http.HttpTransport;
 import com.google.api.client.util.Key;
-
-import java.io.IOException;
 
 /**
  * @author Yaniv Inbar
@@ -38,17 +35,5 @@ public class AlbumEntry extends Entry {
   @Override
   public AlbumEntry clone() {
     return (AlbumEntry) super.clone();
-  }
-
-  public static AlbumEntry executeGet(HttpTransport transport, String link)
-      throws IOException {
-    PicasaUrl url = new PicasaUrl(link);
-    return (AlbumEntry) Entry.executeGet(transport, url, AlbumEntry.class);
-  }
-
-  public AlbumEntry executePatchRelativeToOriginal(HttpTransport transport,
-      AlbumEntry original) throws IOException {
-    return (AlbumEntry) super.executePatchRelativeToOriginal(transport,
-        original);
   }
 }

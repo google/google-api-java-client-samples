@@ -14,9 +14,9 @@
 
 package com.google.api.client.sample.buzz.v1.cmdline;
 
-import com.google.api.buzz.v1.Buzz;
-import com.google.api.buzz.v1.model.Group;
-import com.google.api.buzz.v1.model.GroupFeed;
+import com.google.api.services.buzz.v1.Buzz;
+import com.google.api.services.buzz.v1.model.Group;
+import com.google.api.services.buzz.v1.model.GroupFeed;
 
 import java.io.IOException;
 import java.util.Date;
@@ -30,7 +30,7 @@ public class GroupActions {
 
   static void showGroups(Buzz buzz) throws IOException {
     View.header("Show Buzz Groups");
-    com.google.api.buzz.v1.Buzz.Groups.List request = buzz.groups.list("@me");
+    com.google.api.services.buzz.v1.Buzz.Groups.List request = buzz.groups.list("@me");
     request.put("fields", FIELDS_GROUP_FEED);
     GroupFeed feed = request.execute();
     View.display(feed);
@@ -40,7 +40,7 @@ public class GroupActions {
     View.header("Insert Buzz Group");
     Group group = new Group();
     group.title = "Temporary Group (" + new Date() + ")";
-    com.google.api.buzz.v1.Buzz.Groups.Insert request = buzz.groups.insert("@me", group);
+    com.google.api.services.buzz.v1.Buzz.Groups.Insert request = buzz.groups.insert("@me", group);
     request.put("fields", FIELDS_GROUP);
     Group result = request.execute();
     View.display(result);
@@ -50,7 +50,8 @@ public class GroupActions {
   static Group updateGroup(Buzz buzz, Group group) throws IOException {
     View.header("Update Buzz Group");
     group.title += " (updated)";
-    com.google.api.buzz.v1.Buzz.Groups.Update request = buzz.groups.update("@me", group.id, group);
+    com.google.api.services.buzz.v1.Buzz.Groups.Update request =
+        buzz.groups.update("@me", group.id, group);
     request.put("fields", FIELDS_GROUP);
     Group result = request.execute();
     View.display(result);

@@ -14,11 +14,8 @@
 
 package com.google.api.client.sample.calendar.v2.model;
 
-import com.google.api.client.http.HttpRequest;
 import com.google.api.client.util.Key;
-import com.google.api.client.xml.atom.AtomFeedContent;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,26 +27,6 @@ public class EventFeed extends Feed {
 
   @Key("entry")
   public List<EventEntry> events = new ArrayList<EventEntry>();
-
-  public static EventFeed executeGet(CalendarUrl url) throws IOException {
-    return (EventFeed) Feed.executeGet(url, EventFeed.class);
-  }
-
-  public EventFeed executeBatch(CalendarEntry calendar) throws IOException {
-    // batch link
-    CalendarUrl eventFeedUrl = new CalendarUrl(calendar.getEventFeedLink());
-    eventFeedUrl.maxResults = 0;
-    EventFeed eventFeed = EventFeed.executeGet(eventFeedUrl);
-    CalendarUrl url = new CalendarUrl(eventFeed.getBatchLink());
-    // execute request
-    HttpRequest request = Util.TRANSPORT.buildPostRequest();
-    request.url = url;
-    AtomFeedContent content = new AtomFeedContent();
-    content.namespaceDictionary = Util.DICTIONARY;
-    content.feed = this;
-    request.content = content;
-    return RedirectHandler.execute(request).parseAs(getClass());
-  }
 
   @Override
   public List<EventEntry> getEntries() {

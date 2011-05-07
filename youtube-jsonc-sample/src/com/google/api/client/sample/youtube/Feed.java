@@ -17,10 +17,15 @@ package com.google.api.client.sample.youtube;
 import com.google.api.client.util.DateTime;
 import com.google.api.client.util.Key;
 
+import java.util.List;
+
 /**
  * @author Yaniv Inbar
  */
-public class Feed {
+public class Feed<T extends Item> {
+
+  @Key
+  List<T> items;
 
   @Key
   int itemsPerPage;

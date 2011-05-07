@@ -14,30 +14,34 @@
 
 package com.google.api.client.sample.calendar.android;
 
+import com.google.api.client.extensions.android2.AndroidHttp;
 import com.google.api.client.googleapis.GoogleHeaders;
+import com.google.api.client.googleapis.GoogleUrl;
+import com.google.api.client.googleapis.MethodOverride;
+import com.google.api.client.googleapis.extensions.android2.auth.GoogleAccountManager;
+import com.google.api.client.http.HttpExecuteInterceptor;
+import com.google.api.client.http.HttpRequest;
+import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpResponseException;
 import com.google.api.client.http.HttpTransport;
-import com.google.api.client.http.apache.ApacheHttpTransport;
-import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.http.HttpUnsuccessfulResponseHandler;
+import com.google.api.client.sample.calendar.android.model.CalendarClient;
 import com.google.api.client.sample.calendar.android.model.CalendarEntry;
 import com.google.api.client.sample.calendar.android.model.CalendarFeed;
 import com.google.api.client.sample.calendar.android.model.CalendarUrl;
-import com.google.api.client.sample.calendar.android.model.RedirectHandler;
-import com.google.api.client.sample.calendar.android.model.Util;
 import com.google.api.client.util.DateTime;
-import com.google.api.client.xml.atom.AtomParser;
 import com.google.common.collect.Lists;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
-import android.app.AlertDialog;
-import android.app.Dialog;
+import android.accounts.AccountManagerCallback;
+import android.accounts.AccountManagerFuture;
+import android.accounts.AuthenticatorException;
+import android.accounts.OperationCanceledException;
 import android.app.ListActivity;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -58,19 +62,24 @@ import java.util.logging.Logger;
  * Sample for Google Calendar Data API using the Atom wire format. It shows how to authenticate, get
  * calendars, add a new calendar, update it, and delete it.
  * <p>
- * To enable logging of HTTP requests/responses, run this command: {@code adb shell setprop
- * log.tag.HttpTransport DEBUG}. Then press-and-hold a calendar, and enable "Logging".
+ * To enable logging of HTTP requests/responses, change {@link #LOGGING_LEVEL} to
+ * {@link Level#CONFIG} or {@link Level#ALL} and run this command:
  * </p>
+ *
+ * <pre>
+adb shell setprop log.tag.HttpTransport DEBUG
+ * </pre>
  *
  * @author Yaniv Inbar
  */
 public final class CalendarAndroidSample extends ListActivity {
 
+  /** Logging level for HTTP requests/responses. */
+  private static Level LOGGING_LEVEL = Level.OFF;
+
   private static final String AUTH_TOKEN_TYPE = "cl";
 
   private static final String TAG = "CalendarSample";
-
-  private static final boolean LOGGING_DEFAULT = false;
 
   private static final int MENU_ADD = 0;
 
@@ -80,127 +89,157 @@ public final class CalendarAndroidSample extends ListActivity {
 
   private static final int CONTEXT_DELETE = 1;
 
-  private static final int CONTEXT_LOGGING = 2;
-
   private static final int REQUEST_AUTHENTICATE = 0;
 
-  private static final String PREF = "MyPrefs";
-
-  private static final int DIALOG_ACCOUNTS = 0;
-
-  private static HttpTransport transport;
-
-  private String authToken;
+  CalendarClient client;
 
   private final List<CalendarEntry> calendars = Lists.newArrayList();
 
-  /** SDK 2.2 ("FroYo") version build number. */
-  private static final int FROYO = 8;
+  private final HttpTransport transport = AndroidHttp.newCompatibleTransport();
 
-  public CalendarAndroidSample() {
-    if (Build.VERSION.SDK_INT <= FROYO) {
-      transport = new ApacheHttpTransport();
-    } else {
-      transport = new NetHttpTransport();
-    }
-    GoogleHeaders headers = new GoogleHeaders();
-    headers.setApplicationName("Google-CalendarAndroidSample/1.0");
-    headers.gdataVersion = "2";
-    transport.defaultHeaders = headers;
-    AtomParser parser = new AtomParser();
-    parser.namespaceDictionary = Util.DICTIONARY;
-    transport.addParser(parser);
-  }
+  String gsessionid;
+  String authToken;
+  String accountName;
+
+  static final String PREF = TAG;
+  static final String PREF_ACCOUNT_NAME = "accountName";
+  static final String PREF_AUTH_TOKEN = "authToken";
+  static final String PREF_GSESSIONID = "gsessionid";
+  GoogleAccountManager accountManager;
+  SharedPreferences settings;
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    SharedPreferences settings = getSharedPreferences(PREF, 0);
-    setLogging(settings.getBoolean("logging", LOGGING_DEFAULT));
+    Logger.getLogger("com.google.api.client").setLevel(LOGGING_LEVEL);
+    accountManager = new GoogleAccountManager(this);
+    settings = this.getSharedPreferences(PREF, 0);
+    authToken = settings.getString(PREF_AUTH_TOKEN, null);
+    gsessionid = settings.getString(PREF_GSESSIONID, null);
+    final MethodOverride override = new MethodOverride(); // needed for PATCH
+    client = new CalendarClient(transport.createRequestFactory(new HttpRequestInitializer() {
+
+      public void initialize(HttpRequest request) {
+        GoogleHeaders headers = new GoogleHeaders();
+        headers.setApplicationName("Google-CalendarAndroidSample/1.0");
+        headers.gdataVersion = "2";
+        request.headers = headers;
+        client.initializeParser(request);
+        request.interceptor = new HttpExecuteInterceptor() {
+
+          public void intercept(HttpRequest request) throws IOException {
+            GoogleHeaders headers = (GoogleHeaders) request.headers;
+            headers.setGoogleLogin(authToken);
+            request.url.set("gsessionid", gsessionid);
+            override.intercept(request);
+          }
+        };
+        request.unsuccessfulResponseHandler = new HttpUnsuccessfulResponseHandler() {
+
+          public boolean handleResponse(
+              HttpRequest request, HttpResponse response, boolean retrySupported) {
+            switch (response.statusCode) {
+              case 302:
+                GoogleUrl url = new GoogleUrl(response.headers.location);
+                gsessionid = (String) url.getFirst("gsessionid");
+                SharedPreferences.Editor editor = settings.edit();
+                editor.putString(PREF_GSESSIONID, gsessionid);
+                editor.commit();
+                return true;
+              case 401:
+                accountManager.invalidateAuthToken(authToken);
+                authToken = null;
+                SharedPreferences.Editor editor2 = settings.edit();
+                editor2.remove(PREF_AUTH_TOKEN);
+                editor2.commit();
+                return false;
+            }
+            return false;
+          }
+        };
+      }
+    }));
     getListView().setTextFilterEnabled(true);
     registerForContextMenu(getListView());
-    gotAccount(false);
+    gotAccount();
   }
 
-  @Override
-  protected Dialog onCreateDialog(int id) {
-    switch (id) {
-      case DIALOG_ACCOUNTS:
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Select a Google account");
-        final AccountManager manager = AccountManager.get(this);
-        final Account[] accounts = manager.getAccountsByType("com.google");
-        final int size = accounts.length;
-        String[] names = new String[size];
-        for (int i = 0; i < size; i++) {
-          names[i] = accounts[i].name;
-        }
-        builder.setItems(names, new DialogInterface.OnClickListener() {
-          public void onClick(DialogInterface dialog, int which) {
-            gotAccount(manager, accounts[which]);
-          }
-        });
-        return builder.create();
-    }
-    return null;
-  }
-
-  private void gotAccount(boolean tokenExpired) {
-    SharedPreferences settings = getSharedPreferences(PREF, 0);
-    String accountName = settings.getString("accountName", null);
-    if (accountName != null) {
-      AccountManager manager = AccountManager.get(this);
-      Account[] accounts = manager.getAccountsByType("com.google");
-      int size = accounts.length;
-      for (int i = 0; i < size; i++) {
-        Account account = accounts[i];
-        if (accountName.equals(account.name)) {
-          if (tokenExpired) {
-            manager.invalidateAuthToken("com.google", this.authToken);
-          }
-          gotAccount(manager, account);
-          return;
-        }
-      }
-    }
-    showDialog(DIALOG_ACCOUNTS);
-  }
-
-  void gotAccount(final AccountManager manager, final Account account) {
-    SharedPreferences settings = getSharedPreferences(PREF, 0);
+  void setAuthToken(String authToken) {
     SharedPreferences.Editor editor = settings.edit();
-    editor.putString("accountName", account.name);
+    editor.putString(PREF_AUTH_TOKEN, authToken);
     editor.commit();
-    new Thread() {
+    this.authToken = authToken;
+  }
 
-      @Override
-      public void run() {
-        try {
-          final Bundle bundle =
-              manager.getAuthToken(account, AUTH_TOKEN_TYPE, true, null, null).getResult();
-          runOnUiThread(new Runnable() {
+  void setAccountName(String accountName) {
+    SharedPreferences.Editor editor = settings.edit();
+    editor.putString(PREF_ACCOUNT_NAME, accountName);
+    editor.remove(PREF_GSESSIONID);
+    editor.commit();
+    this.accountName = accountName;
+    gsessionid = null;
+  }
 
-            public void run() {
-              try {
-                if (bundle.containsKey(AccountManager.KEY_INTENT)) {
-                  Intent intent = bundle.getParcelable(AccountManager.KEY_INTENT);
-                  int flags = intent.getFlags();
-                  flags &= ~Intent.FLAG_ACTIVITY_NEW_TASK;
-                  intent.setFlags(flags);
-                  startActivityForResult(intent, REQUEST_AUTHENTICATE);
-                } else if (bundle.containsKey(AccountManager.KEY_AUTHTOKEN)) {
-                  authenticated(bundle.getString(AccountManager.KEY_AUTHTOKEN));
+  private void gotAccount() {
+    Account account = accountManager.getAccountByName(accountName);
+    if (account != null) {
+      // handle invalid token
+      if (authToken == null) {
+        accountManager.manager.getAuthToken(
+            account, AUTH_TOKEN_TYPE, true, new AccountManagerCallback<Bundle>() {
+
+              public void run(AccountManagerFuture<Bundle> future) {
+                try {
+                  Bundle bundle = future.getResult();
+                  if (bundle.containsKey(AccountManager.KEY_INTENT)) {
+                    Intent intent = bundle.getParcelable(AccountManager.KEY_INTENT);
+                    int flags = intent.getFlags();
+                    flags &= ~Intent.FLAG_ACTIVITY_NEW_TASK;
+                    intent.setFlags(flags);
+                    startActivityForResult(intent, REQUEST_AUTHENTICATE);
+                  } else if (bundle.containsKey(AccountManager.KEY_AUTHTOKEN)) {
+                    setAuthToken(bundle.getString(AccountManager.KEY_AUTHTOKEN));
+                    executeRefreshCalendars();
+                  }
+                } catch (Exception e) {
+                  handleException(e);
                 }
-              } catch (Exception e) {
-                handleException(e);
               }
-            }
-          });
-        } catch (Exception e) {
-          handleException(e);
-        }
+            }, null);
+      } else {
+        executeRefreshCalendars();
       }
-    }.start();
+      return;
+    }
+    chooseAccount();
+  }
+
+  private void chooseAccount() {
+    accountManager.manager.getAuthTokenByFeatures(GoogleAccountManager.ACCOUNT_TYPE,
+        AUTH_TOKEN_TYPE,
+        null,
+        CalendarAndroidSample.this,
+        null,
+        null,
+        new AccountManagerCallback<Bundle>() {
+
+          public void run(AccountManagerFuture<Bundle> future) {
+            Bundle bundle;
+            try {
+              bundle = future.getResult();
+              setAccountName(bundle.getString(AccountManager.KEY_ACCOUNT_NAME));
+              setAuthToken(bundle.getString(AccountManager.KEY_AUTHTOKEN));
+              executeRefreshCalendars();
+            } catch (OperationCanceledException e) {
+              // user canceled
+            } catch (AuthenticatorException e) {
+              handleException(e);
+            } catch (IOException e) {
+              handleException(e);
+            }
+          }
+        },
+        null);
   }
 
   @Override
@@ -209,25 +248,20 @@ public final class CalendarAndroidSample extends ListActivity {
     switch (requestCode) {
       case REQUEST_AUTHENTICATE:
         if (resultCode == RESULT_OK) {
-          gotAccount(false);
+          gotAccount();
         } else {
-          showDialog(DIALOG_ACCOUNTS);
+          chooseAccount();
         }
         break;
     }
   }
 
-  void authenticated(String authToken) {
-    this.authToken = authToken;
-    ((GoogleHeaders) transport.defaultHeaders).setGoogleLogin(authToken);
-    RedirectHandler.resetSessionId(transport);
-    executeRefreshCalendars();
-  }
-
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
-    menu.add(0, MENU_ADD, 0, "New calendar");
-    menu.add(0, MENU_ACCOUNTS, 0, "Switch Account");
+    menu.add(0, MENU_ADD, 0, getString(R.string.new_calendar));
+    if (accountManager.getAccounts().length >= 2) {
+      menu.add(0, MENU_ACCOUNTS, 0, getString(R.string.switch_account));
+    }
     return true;
   }
 
@@ -239,14 +273,14 @@ public final class CalendarAndroidSample extends ListActivity {
         CalendarEntry calendar = new CalendarEntry();
         calendar.title = "Calendar " + new DateTime(new Date());
         try {
-          calendar.executeInsert(transport, url);
+          client.executeInsertCalendar(calendar, url);
         } catch (IOException e) {
           handleException(e);
         }
         executeRefreshCalendars();
         return true;
       case MENU_ACCOUNTS:
-        showDialog(DIALOG_ACCOUNTS);
+        chooseAccount();
         return true;
     }
     return false;
@@ -255,11 +289,8 @@ public final class CalendarAndroidSample extends ListActivity {
   @Override
   public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
     super.onCreateContextMenu(menu, v, menuInfo);
-    menu.add(0, CONTEXT_EDIT, 0, "Update Title");
-    menu.add(0, CONTEXT_DELETE, 0, "Delete");
-    SharedPreferences settings = getSharedPreferences(PREF, 0);
-    boolean logging = settings.getBoolean("logging", false);
-    menu.add(0, CONTEXT_LOGGING, 0, "Logging").setCheckable(true).setChecked(logging);
+    menu.add(0, CONTEXT_EDIT, 0, getString(R.string.update_title));
+    menu.add(0, CONTEXT_DELETE, 0, getString(R.string.delete));
   }
 
   @Override
@@ -271,17 +302,12 @@ public final class CalendarAndroidSample extends ListActivity {
         case CONTEXT_EDIT:
           CalendarEntry patchedCalendar = calendar.clone();
           patchedCalendar.title = calendar.title + " UPDATED " + new DateTime(new Date());
-          patchedCalendar.executePatchRelativeToOriginal(transport, calendar);
+          client.executePatchCalendarRelativeToOriginal(patchedCalendar, calendar);
           executeRefreshCalendars();
           return true;
         case CONTEXT_DELETE:
-          calendar.executeDelete(transport);
+          client.executeDelete(calendar);
           executeRefreshCalendars();
-          return true;
-        case CONTEXT_LOGGING:
-          SharedPreferences settings = getSharedPreferences(PREF, 0);
-          boolean logging = settings.getBoolean("logging", LOGGING_DEFAULT);
-          setLogging(!logging);
           return true;
         default:
           return super.onContextItemSelected(item);
@@ -292,7 +318,7 @@ public final class CalendarAndroidSample extends ListActivity {
     return false;
   }
 
-  private void executeRefreshCalendars() {
+  void executeRefreshCalendars() {
     String[] calendarNames;
     List<CalendarEntry> calendars = this.calendars;
     calendars.clear();
@@ -300,7 +326,7 @@ public final class CalendarAndroidSample extends ListActivity {
       CalendarUrl url = CalendarUrl.forAllCalendarsFeed();
       // page through results
       while (true) {
-        CalendarFeed feed = CalendarFeed.executeGet(transport, url);
+        CalendarFeed feed = client.executeGetCalendarFeed(url);
         if (feed.calendars != null) {
           calendars.addAll(feed.calendars);
         }
@@ -323,21 +349,8 @@ public final class CalendarAndroidSample extends ListActivity {
         new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, calendarNames));
   }
 
-  private void setLogging(boolean logging) {
-    Logger.getLogger("com.google.api.client").setLevel(logging ? Level.CONFIG : Level.OFF);
-    SharedPreferences settings = getSharedPreferences(PREF, 0);
-    boolean currentSetting = settings.getBoolean("logging", false);
-    if (currentSetting != logging) {
-      SharedPreferences.Editor editor = settings.edit();
-      editor.putBoolean("logging", logging);
-      editor.commit();
-    }
-  }
-
   void handleException(Exception e) {
     e.printStackTrace();
-    SharedPreferences settings = getSharedPreferences(PREF, 0);
-    boolean log = settings.getBoolean("logging", false);
     if (e instanceof HttpResponseException) {
       HttpResponse response = ((HttpResponseException) e).response;
       int statusCode = response.statusCode;
@@ -346,20 +359,12 @@ public final class CalendarAndroidSample extends ListActivity {
       } catch (IOException e1) {
         e1.printStackTrace();
       }
-      if (statusCode == 401 || statusCode == 403) {
-        gotAccount(true);
+      // TODO(yanivi): should only try this once to avoid infinite loop
+      if (statusCode == 401) {
+        gotAccount();
         return;
       }
-      if (log) {
-        try {
-          Log.e(TAG, response.parseAsString());
-        } catch (IOException parseException) {
-          parseException.printStackTrace();
-        }
-      }
     }
-    if (log) {
-      Log.e(TAG, e.getMessage(), e);
-    }
+    Log.e(TAG, e.getMessage(), e);
   }
 }

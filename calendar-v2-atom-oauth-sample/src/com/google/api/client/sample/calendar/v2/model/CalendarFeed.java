@@ -16,7 +16,6 @@ package com.google.api.client.sample.calendar.v2.model;
 
 import com.google.api.client.util.Key;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,10 +27,6 @@ public class CalendarFeed extends Feed {
 
   @Key("entry")
   public List<CalendarEntry> calendars = new ArrayList<CalendarEntry>();
-
-  public static CalendarFeed executeGet(CalendarUrl url) throws IOException {
-    return (CalendarFeed) Feed.executeGet(url, CalendarFeed.class);
-  }
 
   @Override
   public List<CalendarEntry> getEntries() {

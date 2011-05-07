@@ -29,7 +29,7 @@ public class CalendarUrl extends GoogleUrl {
 
   public CalendarUrl(String url) {
     super(url);
-    if (Util.DEBUG) {
+    if (CalendarClient.DEBUG) {
       this.prettyprint = true;
     }
   }

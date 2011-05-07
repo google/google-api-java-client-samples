@@ -16,14 +16,9 @@
 
 package com.google.api.client.sample.picasa.model;
 
-import com.google.api.client.googleapis.xml.atom.AtomPatchRelativeToOriginalContent;
-import com.google.api.client.googleapis.xml.atom.GData;
-import com.google.api.client.http.HttpRequest;
-import com.google.api.client.http.HttpTransport;
-import com.google.api.client.util.DataUtil;
+import com.google.api.client.util.Data;
 import com.google.api.client.util.Key;
 
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -56,39 +51,17 @@ public class Entry implements Cloneable {
 
   @Override
   protected Entry clone() {
-    return DataUtil.clone(this);
+    try {
+      @SuppressWarnings("unchecked")
+      Entry result = (Entry) super.clone();
+      Data.deepCopy(this, result);
+      return result;
+    } catch (CloneNotSupportedException e) {
+      throw new IllegalStateException(e);
+    }
   }
 
-  public void executeDelete(HttpTransport transport) throws IOException {
-    HttpRequest request = transport.buildDeleteRequest();
-    request.setUrl(getEditLink());
-    request.headers.ifMatch = etag;
-    request.execute().ignore();
-  }
-
-  static Entry executeGet(HttpTransport transport, PicasaUrl url,
-      Class<? extends Entry> entryClass) throws IOException {
-    url.fields = GData.getFieldsFor(entryClass);
-    HttpRequest request = transport.buildGetRequest();
-    request.url = url;
-    return request.execute().parseAs(entryClass);
-  }
-
-  Entry executePatchRelativeToOriginal(HttpTransport transport, Entry original)
-      throws IOException {
-    HttpRequest request = transport.buildPatchRequest();
-    request.setUrl(getEditLink());
-    request.headers.ifMatch = etag;
-    AtomPatchRelativeToOriginalContent content =
-        new AtomPatchRelativeToOriginalContent();
-    content.namespaceDictionary = Util.NAMESPACE_DICTIONARY;
-    content.originalEntry = original;
-    content.patchedEntry = this;
-    request.content = content;
-    return request.execute().parseAs(getClass());
-  }
-
-  private String getEditLink() {
+  String getEditLink() {
     return Link.find(links, "edit");
   }
 }

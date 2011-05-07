@@ -14,12 +14,8 @@
 
 package com.google.api.client.sample.calendar.android.model;
 
-import com.google.api.client.googleapis.xml.atom.GoogleAtom;
-import com.google.api.client.http.HttpRequest;
-import com.google.api.client.http.HttpTransport;
 import com.google.api.client.util.Key;
 
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -36,13 +32,5 @@ public class Feed {
 
   public String getBatchLink() {
     return Link.find(links, "http://schemas.google.com/g/2005#batch");
-  }
-
-  static Feed executeGet(HttpTransport transport, CalendarUrl url, Class<? extends Feed> feedClass)
-      throws IOException {
-    url.fields = GoogleAtom.getFieldsFor(feedClass);
-    HttpRequest request = transport.buildGetRequest();
-    request.url = url;
-    return RedirectHandler.execute(request).parseAs(feedClass);
   }
 }

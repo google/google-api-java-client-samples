@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Google Inc.
+ * Copyright (c) 2011 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -12,16 +12,21 @@
  * the License.
  */
 
-package com.google.api.client.sample.calendar.android.model;
-
-import com.google.api.client.xml.XmlNamespaceDictionary;
+package com.google.api.client.sample.buzz.v1.cmdline.oauth;
 
 /**
+ * Verification code receiver.
+ *
  * @author Yaniv Inbar
  */
-public class Util {
-  public static final boolean DEBUG = false;
+public interface VerificationCodeReceiver {
 
-  public static final XmlNamespaceDictionary DICTIONARY =
-      new XmlNamespaceDictionary().set("", "http://www.w3.org/2005/Atom");
+  /** Returns the redirect URL. */
+  String getRedirectUrl() throws Exception;
+
+  /** Waits for a verification code. */
+  String waitForCode();
+
+  /** Releases any resources and stops any processes started. */
+  void stop() throws Exception;
 }
