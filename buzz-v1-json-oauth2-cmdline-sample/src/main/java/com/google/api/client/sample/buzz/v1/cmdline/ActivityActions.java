@@ -12,18 +12,18 @@
  * the License.
  */
 
-package com.google.api.client.sample.buzz.v1.cmdline;
+package com.google.api.client.sample.buzz.cmdline;
 
-import com.google.api.buzz.v1.Buzz;
-import com.google.api.buzz.v1.Buzz.Activities.Insert;
-import com.google.api.buzz.v1.Buzz.Activities.List;
-import com.google.api.buzz.v1.Buzz.Activities.Update;
-import com.google.api.buzz.v1.model.Activity;
-import com.google.api.buzz.v1.model.ActivityFeed;
-import com.google.api.buzz.v1.model.ActivityObject;
-import com.google.api.buzz.v1.model.ActivityVisibility;
-import com.google.api.buzz.v1.model.ActivityVisibilityEntries;
-import com.google.api.buzz.v1.model.Group;
+import com.google.api.services.buzz.Buzz;
+import com.google.api.services.buzz.Buzz.Activities.Insert;
+import com.google.api.services.buzz.Buzz.Activities.List;
+import com.google.api.services.buzz.Buzz.Activities.Update;
+import com.google.api.services.buzz.model.Activity;
+import com.google.api.services.buzz.model.ActivityFeed;
+import com.google.api.services.buzz.model.ActivityObject;
+import com.google.api.services.buzz.model.ActivityVisibility;
+import com.google.api.services.buzz.model.ActivityVisibilityEntries;
+import com.google.api.services.buzz.model.Group;
 import com.google.common.collect.Lists;
 
 import java.io.IOException;

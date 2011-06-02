@@ -12,11 +12,11 @@
  * the License.
  */
 
-package com.google.api.client.sample.buzz.v1.cmdline;
+package com.google.api.client.sample.buzz.cmdline;
 
-import com.google.api.buzz.v1.Buzz;
-import com.google.api.buzz.v1.model.Activity;
-import com.google.api.buzz.v1.model.Group;
+import com.google.api.services.buzz.Buzz;
+import com.google.api.services.buzz.model.Activity;
+import com.google.api.services.buzz.model.Group;
 import com.google.api.client.googleapis.auth.oauth2.draft10.GoogleAccessProtectedResource;
 import com.google.api.client.googleapis.json.GoogleJsonError;
 import com.google.api.client.googleapis.json.GoogleJsonError.ErrorInfo;
@@ -51,6 +51,7 @@ public class BuzzSample {
         GoogleAccessProtectedResource accessProtectedResource =
             OAuth2Native.authorize(transport, jsonFactory, OAuth2ClientCredentials.CLIENT_ID,
                 OAuth2ClientCredentials.CLIENT_SECRET, OAuth2ClientCredentials.SCOPE);
+
         // set up Buzz
         final Buzz buzz = new Buzz("Google-BuzzSample/1.0", transport, jsonFactory);
         buzz.prettyPrint = true;

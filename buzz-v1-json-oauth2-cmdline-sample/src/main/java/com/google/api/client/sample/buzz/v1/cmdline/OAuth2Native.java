@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.google.api.client.sample.buzz.v1.cmdline;
+package com.google.api.client.sample.buzz.cmdline;
 
 import com.google.api.client.auth.oauth2.draft10.AccessTokenErrorResponse;
 import com.google.api.client.auth.oauth2.draft10.AccessTokenResponse;

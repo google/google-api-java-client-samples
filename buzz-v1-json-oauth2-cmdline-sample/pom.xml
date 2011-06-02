@@ -35,14 +35,9 @@
 
   <repositories>
     <repository>
-      <id>googleapis</id>
-      <url>http://samples.google-api-java-client.googlecode.com/hg/mavenrepo/</url>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-      <releases>
-        <enabled>true</enabled>
-      </releases>
+      <id>google-api-services</id>
+      <url>file:///home/aiuto/ws/google-api-java-client-mavenrepo/</url>
+      <!--url>http://samples.google-api-java-client.googlecode.com/hg/mavenrepo/</url-->
     </repository>
   </repositories>
 
@@ -81,7 +76,7 @@
           </execution>
         </executions>
         <configuration>
-          <mainClass>com.google.api.client.sample.buzz.v1.cmdline.BuzzSample</mainClass>
+          <mainClass>com.google.api.client.sample.buzz.cmdline.BuzzSample</mainClass>
           <systemProperties>
             <systemProperty>
               <key>java.util.logging.config.file</key>
@@ -97,9 +92,9 @@
   </build>
   <dependencies>
     <dependency>
-      <groupId>com.google.api.client</groupId>
-      <artifactId>buzz</artifactId>
-      <version>1.0.0-alpha-SNAPSHOT</version>
+      <groupId>com.google.api.services.buzz</groupId>
+      <artifactId>google-api-services-buzz-v1</artifactId>
+      <version>1.1.0-beta</version>
     </dependency>
   </dependencies>
   <properties>
