@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.google.api.client.sample.buzz.v1.cmdline.oauth;
+package com.google.api.client.sample.buzz.cmdline.oauth;
 
 /**
  * Verification code receiver.

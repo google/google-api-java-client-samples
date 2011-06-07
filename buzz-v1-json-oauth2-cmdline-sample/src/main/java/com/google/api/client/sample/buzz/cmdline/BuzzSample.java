@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.google.api.client.sample.buzz.v1.cmdline;
+package com.google.api.client.sample.buzz.cmdline;
 
 import com.google.api.client.googleapis.auth.oauth2.draft10.GoogleAccessProtectedResource;
 import com.google.api.client.googleapis.json.GoogleJsonError;
@@ -23,8 +23,8 @@ import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.Json;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson.JacksonFactory;
-import com.google.api.client.sample.buzz.v1.cmdline.oauth.LocalServerReceiver;
-import com.google.api.client.sample.buzz.v1.cmdline.oauth.OAuth2Native;
+import com.google.api.client.sample.buzz.cmdline.oauth.LocalServerReceiver;
+import com.google.api.client.sample.buzz.cmdline.oauth.OAuth2Native;
 import com.google.api.services.buzz.Buzz;
 import com.google.api.services.buzz.model.Activity;
 import com.google.api.services.buzz.model.Group;

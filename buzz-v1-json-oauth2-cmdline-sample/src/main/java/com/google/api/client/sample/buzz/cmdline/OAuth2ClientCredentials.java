@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.google.api.client.sample.buzz.v1.cmdline;
+package com.google.api.client.sample.buzz.cmdline;
 
 /**
  * OAuth 2 credentials found in the <a href="https://code.google.com/apis/console">Google apis

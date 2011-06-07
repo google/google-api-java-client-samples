@@ -78,7 +78,7 @@
           </execution>
         </executions>
         <configuration>
-          <mainClass>com.google.api.client.sample.buzz.v1.cmdline.BuzzSample</mainClass>
+          <mainClass>com.google.api.client.sample.buzz.cmdline.BuzzSample</mainClass>
           <systemProperties>
             <systemProperty>
               <key>java.util.logging.config.file</key>

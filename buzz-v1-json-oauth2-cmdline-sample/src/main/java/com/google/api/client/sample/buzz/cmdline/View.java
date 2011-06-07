@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.google.api.client.sample.buzz.v1.cmdline;
+package com.google.api.client.sample.buzz.cmdline;
 
 import com.google.api.services.buzz.model.Activity;
 import com.google.api.services.buzz.model.ActivityFeed;

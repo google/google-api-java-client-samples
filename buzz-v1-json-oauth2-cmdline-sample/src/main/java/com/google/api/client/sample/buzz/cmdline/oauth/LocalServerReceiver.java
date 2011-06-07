@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.google.api.client.sample.buzz.v1.cmdline.oauth;
+package com.google.api.client.sample.buzz.cmdline.oauth;
 
 import org.mortbay.jetty.Connector;
 import org.mortbay.jetty.Request;
