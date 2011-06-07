@@ -14,10 +14,10 @@
 
 package com.google.api.client.sample.buzz.v1.cmdline;
 
-import com.google.api.services.buzz.v1.model.Activity;
-import com.google.api.services.buzz.v1.model.ActivityFeed;
-import com.google.api.services.buzz.v1.model.Group;
-import com.google.api.services.buzz.v1.model.GroupFeed;
+import com.google.api.services.buzz.model.Activity;
+import com.google.api.services.buzz.model.ActivityFeed;
+import com.google.api.services.buzz.model.Group;
+import com.google.api.services.buzz.model.GroupFeed;
 
 
 /**

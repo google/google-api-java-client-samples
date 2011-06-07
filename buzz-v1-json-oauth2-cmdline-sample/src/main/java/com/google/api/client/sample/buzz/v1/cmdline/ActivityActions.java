@@ -14,16 +14,13 @@
 
 package com.google.api.client.sample.buzz.v1.cmdline;
 
-import com.google.api.services.buzz.v1.Buzz;
-import com.google.api.services.buzz.v1.Buzz.Activities.Insert;
-import com.google.api.services.buzz.v1.Buzz.Activities.List;
-import com.google.api.services.buzz.v1.Buzz.Activities.Update;
-import com.google.api.services.buzz.v1.model.Activity;
-import com.google.api.services.buzz.v1.model.ActivityFeed;
-import com.google.api.services.buzz.v1.model.ActivityObject;
-import com.google.api.services.buzz.v1.model.ActivityVisibility;
-import com.google.api.services.buzz.v1.model.ActivityVisibilityEntries;
-import com.google.api.services.buzz.v1.model.Group;
+import com.google.api.services.buzz.Buzz;
+import com.google.api.services.buzz.model.Activity;
+import com.google.api.services.buzz.model.ActivityFeed;
+import com.google.api.services.buzz.model.ActivityObject;
+import com.google.api.services.buzz.model.ActivityVisibility;
+import com.google.api.services.buzz.model.ActivityVisibilityEntries;
+import com.google.api.services.buzz.model.Group;
 import com.google.common.collect.Lists;
 
 import java.io.IOException;
@@ -38,16 +35,16 @@ public class ActivityActions {
 
   static void showActivitiesForConsumption(Buzz buzz) throws IOException {
     View.header("Show Buzz Activities for Consumption");
-    List request = buzz.activities.list("@me", "@consumption");
-    request.put("fields", FIELDS_ACTIVITY_FEED);
+    Buzz.Activities.List request = buzz.activities.list("@me", "@consumption");
+    request.fields = FIELDS_ACTIVITY_FEED;
     ActivityFeed feed = request.execute();
     View.display(feed);
   }
 
   static void showPersonalActivities(Buzz buzz) throws IOException {
     View.header("Show Buzz Personal Activities");
-    List request = buzz.activities.list("@me", "@self");
-    request.put("fields", FIELDS_ACTIVITY_FEED);
+    Buzz.Activities.List request = buzz.activities.list("@me", "@self");
+    request.fields = FIELDS_ACTIVITY_FEED;
     ActivityFeed feed = request.execute();
     View.display(feed);
   }
@@ -63,7 +60,7 @@ public class ActivityActions {
     ActivityVisibilityEntries entry = new ActivityVisibilityEntries();
     entry.id = group.id;
     activity.visibility.entries.add(entry);
-    Insert request = buzz.activities.insert("@me", activity);
+    Buzz.Activities.Insert request = buzz.activities.insert("@me", activity);
     request.put("fields", FIELDS_ACTIVITY);
     Activity result = request.execute();
     View.display(result);
@@ -73,8 +70,8 @@ public class ActivityActions {
   static Activity updateActivity(Buzz buzz, Activity activity) throws IOException {
     View.header("Update Buzz Activity");
     activity.buzzObject.content += " (updated)";
-    Update request = buzz.activities.update("@me", "@self", activity.id, activity);
-    request.put("fields", FIELDS_ACTIVITY);
+    Buzz.Activities.Patch request = buzz.activities.patch("@me", "@self", activity.id, activity);
+    request.fields = FIELDS_ACTIVITY;
     Activity result = request.execute();
     View.display(result);
     return result;

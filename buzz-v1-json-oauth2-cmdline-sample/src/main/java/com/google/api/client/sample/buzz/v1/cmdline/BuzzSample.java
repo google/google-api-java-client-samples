@@ -25,9 +25,9 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson.JacksonFactory;
 import com.google.api.client.sample.buzz.v1.cmdline.oauth.LocalServerReceiver;
 import com.google.api.client.sample.buzz.v1.cmdline.oauth.OAuth2Native;
-import com.google.api.services.buzz.v1.Buzz;
-import com.google.api.services.buzz.v1.model.Activity;
-import com.google.api.services.buzz.v1.model.Group;
+import com.google.api.services.buzz.Buzz;
+import com.google.api.services.buzz.model.Activity;
+import com.google.api.services.buzz.model.Group;
 
 /**
  * @author Yaniv Inbar
