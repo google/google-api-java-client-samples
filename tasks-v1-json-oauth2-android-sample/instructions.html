@@ -1,0 +1,91 @@
+<html>
+<title>Google Tasks API JSON OAuth2 Sample for Android</title>
+<body>
+<h2>Instructions for the Google Tasks API JSON OAuth2 Sample for
+Android</h2>
+
+<h3>Browse Online</h3>
+
+<ul>
+  <li><a
+    href="http://code.google.com/p/google-api-java-client/source/browse?repo=samples#hg/tasks-v1-json-oauth2-android-sample">Browse
+  Source</a>, or main file <a
+    href="http://code.google.com/p/google-api-java-client/source/browse/tasks-v1-json-oauth2-android-sample/src/com/google/api/client/sample/tasks/v1/android/TasksSample.java?repo=samples">TasksSample.java</a></li>
+</ul>
+
+<h3>Checkout Instructions</h3>
+
+<p><b>Prerequisites:</b> install <a href="http://java.com">Java 6</a>, <a
+  href="http://mercurial.selenic.com/">Mercurial</a> and <a
+  href="http://maven.apache.org/download.html">Maven</a>. You may need to set
+your <code>JAVA_HOME</code>.</p>
+
+<pre><code>cd <i>[someDirectory]</i>
+hg clone https://samples.google-api-java-client.googlecode.com/hg/ google-api-java-client-samples</code></pre>
+
+<h3>API access Instructions</h3>
+<p><b>Important:</b> after checking out the project, and before compiling
+and running it, you need to:
+<ul>
+<li><a href="http://code.google.com/apis/console-help/#creatingdeletingprojects">Create a project in Google APIs console</a></li>
+<li><a href="http://code.google.com/apis/console-help/#activatingapis">Activate</a> Tasks API for your project </li>
+<li>Edit <a href="http://code.google.com/p/google-api-java-client/source/browse/tasks-v1-json-oauth2-android-sample/src/com/google/api/client/sample/tasks/v1/android/TasksSample.java?repo=samples">TasksSample.java</a> to replace INSERT_YOUR_API_KEY with the API key generated from <a href="https://code.google.com/apis/console/">Google APIs Console</a> API Access pane.</li>
+</ul>
+</p>
+
+<h3>Setup Project in Eclipse 3.5</h3>
+
+<p><b>Prerequisites:</b> install <a href="http://www.eclipse.org/downloads/">Eclipse</a>,
+the <a href="http://javaforge.com/project/HGE">Mercurial plugin</a>, the <a
+  href="http://m2eclipse.sonatype.org/installing-m2eclipse.html">Maven
+plugin</a>, and the <a
+  href="http://developer.android.com/sdk/eclipse-adt.html#installing">Android
+plugin</a>.</p>
+
+<ul>
+  <li>Preferences:
+  <ul>
+    <li>Android: setup SDK location</li>
+  </ul>
+  </li>
+  <li>Window &gt; Android SDK and AVD Manager
+  <ul>
+    <li>Follow instructions to install Package "Google API's by Google
+    Inc., Android API 8"</li>
+    <li>Follow instructions to create a new Android Virtual Device based on
+    target "Google API's (Google Inc.) - API Level 8"</li>
+    <li>Click "Start..." (wait a while...)</li>
+    <li>On home screen in emulator, click Menu button, Settings</li>
+    <li>Click on "Accounts and Sync"</li>
+    <li>Click on "Add Account"</li>
+    <li>Click "Google" and follow instructions</li>
+  </ul>
+  </li>
+  <li>Import <code>tasks-v1-json-oauth2-android-sample</code> project
+  <ul>
+    <li>File &gt; Import...</li>
+    <li>Select "General &gt; Existing Project into Workspace" and click
+    "Next"</li>
+    <li>Click "Browse" next to "Select root directory", find <code><i>[someDirectory]</i>/google-api-java-client-samples/tasks-v1-json-oauth2-android-sample</code>
+    and click "Next"</li>
+    <li>Click "Finish"</li>
+  </ul>
+  </li>
+  <li>Clean Project (if compile error about missing gen directory)
+  <ul>
+    <li>Select <code>tasks-v1-json-oauth2-android-sample</code> project</li>
+    <li>Project &gt; Clean...</li>
+    <li>Select "Clean projects selected below"</li>
+    <li>Click on "OK"</li>
+  </ul>
+  </li>
+  <li>Run
+  <ul>
+    <li>Right-click on project tasks-v1-json-oauth2-android-sample</li>
+    <li>Run As &gt; Android Application</li>
+  </ul>
+  </li>
+</ul>
+
+</body>
+</html>
