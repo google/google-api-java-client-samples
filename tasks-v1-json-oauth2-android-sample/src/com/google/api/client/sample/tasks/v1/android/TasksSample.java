@@ -33,8 +33,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Sample for Buzz on Android. It shows how to authenticate, show activities, post a new activity,
- * update it, and delete it.
+ * Sample for Tasks API on Android. 
+ * It shows how to authenticate using OAuth, and get the list of tasks.
  * <p>
  * To enable logging of HTTP requests/responses, change {@link #LOGGING_LEVEL} to
  * {@link Level#CONFIG} or {@link Level#ALL} and run this command:
@@ -62,7 +62,7 @@ public class TasksSample extends ListActivity {
 
   final Tasks service = new Tasks("Google-TasksSample/1.0", transport, new JacksonFactory());
 
-  // TODO(yanivi): save auth token in preferences
+  // TODO: save auth token in preferences
   public String authToken;
   public GoogleAccountManager accountManager;
 
@@ -183,7 +183,7 @@ public class TasksSample extends ListActivity {
       } catch (IOException e1) {
         e1.printStackTrace();
       }
-      // TODO(yanivi): should only try this once to avoid infinite loop
+      // TODO: should only try this once to avoid infinite loop
       if (statusCode == 401) {
         gotAccount(true);
         return;
