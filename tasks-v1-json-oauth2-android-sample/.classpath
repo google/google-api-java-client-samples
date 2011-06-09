@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="gen"/>
+	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
+	<classpathentry kind="var" path="M2_REPO/org/codehaus/jackson/jackson-core-asl/1.6.7/jackson-core-asl-1.6.7.jar" />
+	<classpathentry kind="var" path="M2_REPO/com/google/guava/guava/r08/guava-r08.jar" />
+	<classpathentry kind="var" path="M2_REPO/com/google/api/client/google-api-client/1.4.1-beta/google-api-client-1.4.1-beta.jar" />
+	<classpathentry kind="var" path="M2_REPO/com/google/api/client/google-api-client-googleapis/1.4.1-beta/google-api-client-googleapis-1.4.1-beta.jar" />
+	<classpathentry kind="var" path="M2_REPO/com/google/api/client/google-api-client-extensions-android2/1.4.1-beta/google-api-client-extensions-android2-1.4.1-beta.jar" />
+	<classpathentry kind="var" path="M2_REPO/com/google/api/client/google-api-client-googleapis-extensions-android2/1.4.1-beta/google-api-client-googleapis-extensions-android2-1.4.1-beta.jar" />
+	<classpathentry kind="var" path="M2_REPO/com/google/api/services/tasks/google-api-services-tasks-v1/1.0.0-beta/google-api-services-tasks-v1-1.0.0-beta.jar"/>
+	<classpathentry kind="output" path="target/classes"/>
+</classpath>
