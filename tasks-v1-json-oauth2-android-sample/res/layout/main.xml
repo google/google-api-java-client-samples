@@ -4,5 +4,5 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     >
-    <ListView android:layout_width="fill_parent" android:layout_height="match_parent" android:id="@android:id/list"></ListView>
+    <ListView android:layout_width="fill_parent" android:layout_height="fill_parent" android:id="@android:id/list"></ListView>
 </LinearLayout>

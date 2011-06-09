@@ -62,6 +62,18 @@
       </roles>
       <timezone>-5</timezone>
     </developer>
+    <developer>
+      <id>proppy</id>
+      <name>Johan Euphrosine</name>
+      <email>proppy@google.com</email>
+      <organization>Google</organization>
+      <organizationUrl>http://www.google.com</organizationUrl>
+      <roles>
+        <role>owner</role>
+        <role>developer</role>
+      </roles>
+      <timezone>+2</timezone>
+    </developer>   
   </developers>
   <build>
     <plugins>
@@ -97,5 +109,10 @@
       <artifactId>google-api-services-tasks-v1</artifactId>
       <version>1.0.0-beta</version>
     </dependency>
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+      <version>r08</version>
+    </dependency>    
   </dependencies>
 </project>
