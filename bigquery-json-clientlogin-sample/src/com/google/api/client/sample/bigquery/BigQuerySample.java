@@ -39,8 +39,8 @@ public class BigQuerySample {
         executeSchema("bigquery/samples/shakespeare");
         executeQuery("select count(*) from [bigquery/samples/shakespeare];");
         executeQuery(
-
-            "select corpus, word, word_count from [bigquery/samples/shakespeare] where word_count > 600 order by word_count desc;");
+            "select corpus, word, word_count from [bigquery/samples/shakespeare]"
+            + " where word_count > 600 order by word_count desc;");
       } catch (HttpResponseException e) {
         System.err.println(e.response.parseAsString());
         throw e;

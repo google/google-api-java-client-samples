@@ -22,7 +22,8 @@ public class DeniedAuth extends HttpServlet {
     UserService userService = UserServiceFactory.getUserService();
     User loggedIn = userService.getCurrentUser();
 
-    resp.getWriter().print("<h3>" + loggedIn.getNickname() + ", why don't you want to play with me?</h1>");
+    resp.getWriter().print("<h3>" + loggedIn.getNickname()
+                           + ", why don't you want to play with me?</h1>");
     resp.setStatus(200);
     resp.addHeader("Content-Type", "text/html");
   }
