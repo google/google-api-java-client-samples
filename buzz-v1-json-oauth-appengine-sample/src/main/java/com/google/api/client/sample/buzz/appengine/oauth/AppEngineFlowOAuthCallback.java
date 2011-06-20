@@ -12,11 +12,11 @@
  * the License.
  */
 
-package com.google.api.client.sample.buzz.appengine.oauth2;
+package com.google.api.client.sample.buzz.appengine.oauth;
 
 import com.google.api.client.extensions.appengine.auth.AbstractAppEngineCallbackServlet;
 import com.google.api.client.extensions.auth.helpers.ThreeLeggedFlow;
-import com.google.api.client.googleapis.extensions.auth.helpers.oauth2.draft10.GoogleOAuth2ThreeLeggedFlow;
+import com.google.api.client.googleapis.extensions.auth.helpers.oauth.GoogleOAuthHmacThreeLeggedFlow;
 
 import javax.jdo.PersistenceManagerFactory;
 
@@ -27,16 +27,16 @@ import javax.jdo.PersistenceManagerFactory;
  * @author moshenko@google.com (Jacob Moshenko)
  *
  */
-public class AppEngineFlowOAuth2Callback extends AbstractAppEngineCallbackServlet {
+public class AppEngineFlowOAuthCallback extends AbstractAppEngineCallbackServlet {
 
   @Override
   protected Class<? extends ThreeLeggedFlow> getConcreteFlowType() {
-    return GoogleOAuth2ThreeLeggedFlow.class;
+    return GoogleOAuthHmacThreeLeggedFlow.class;
   }
 
   @Override
   protected String getCompletionCodeQueryParam() {
-    return "code";
+    return "oauth_verifier";
   }
 
   @Override

@@ -12,10 +12,10 @@
  * the License.
  */
 
-package com.google.api.client.sample.buzz.appengine.oauth2;
+package com.google.api.client.sample.buzz.appengine.oauth;
 
 /**
- * OAuth 2.0 credentials found in the <a href="https://code.google.com/apis/console">Google APIs
+ * OAuth 1.0 credentials found in the <a href="https://code.google.com/apis/console">Google APIs
  * Console</a>.
  *
  * <p>
@@ -27,16 +27,18 @@ package com.google.api.client.sample.buzz.appengine.oauth2;
  * client ID".
  * </p>
  *
- * @author Yaniv Inbar
+ * @author Jacob Moshenko
  */
-class OAuth2ClientCredentials {
+class OAuthClientCredentials {
+  /** OAuth 1 Consumer Key available from the "Keys" page of the Google APIs Console */
+  static final String CONSUMER_KEY = "anonymous";
 
-  /** Value of the "Client ID" shown under "Client ID for installed applications". */
-  static final String CLIENT_ID = "28040055140.apps.googleusercontent.com";
+  /** OAuth 1 Consumer Secret available from the "Keys" page of the Google APIs Console */
+  static final String CONSUMER_SECRET = "anonymous";
 
-  /** Value of the "Client secret" shown under "Client ID for installed applications". */
-  static final String CLIENT_SECRET = "vc1yjuXxCeELm+T+o6y+nL0F";
-
-  /** OAuth 2 scope to use (may also append {@code ".readonly"} for the read-only scope). */
+  /** OAuth scope(s) to which this app requires access */
   static final String SCOPE = "https://www.googleapis.com/auth/buzz";
+
+  /** Display name that will be presented to the user when requesting access */
+  static final String X_OAUTH_DISPLAYNAME = "Hey Bro, mind if I access your Buzz?";
 }

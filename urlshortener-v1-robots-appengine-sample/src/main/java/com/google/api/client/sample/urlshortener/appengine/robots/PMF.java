@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.google.api.client.sample.buzz.appengine.oauth2;
+package com.google.api.client.sample.urlshortener.appengine.robots;
 
 import javax.jdo.JDOHelper;
 import javax.jdo.PersistenceManagerFactory;

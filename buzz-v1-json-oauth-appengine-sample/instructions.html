@@ -1,15 +1,15 @@
 <html>
-<title>Google Buzz API OAuth 2 App Engine Sample</title>
+<title>Google Buzz API OAuth App Engine Sample</title>
 <body>
-<h2>Instructions for the Google Buzz API OAuth 2 App Engine Sample</h2>
+<h2>Instructions for the Google Buzz API OAuth App Engine Sample</h2>
 
 <h3>Browse Source Code</h3>
 
 <ul>
   <li><a
-    href="http://code.google.com/p/google-api-java-client/source/browse/buzz-v1-json-oauth2-appengine-sample/?repo=samples">buzz-v1-json-oauth2-appengine-sample</a>
+    href="http://code.google.com/p/google-api-java-client/source/browse/buzz-v1-json-oauth-appengine-sample/?repo=samples">buzz-v1-json-oauth-appengine-sample</a>
   or <a
-    href="http://code.google.com/p/google-api-java-client/source/browse/buzz-v1-json-oauth2-appengine-sample/src/main/java/com/google/api/client/sample/buzz/appengine/oauth2/SampleApp.java?repo=samples">SampleApp.java</a></li>
+    href="http://code.google.com/p/google-api-java-client/source/browse/buzz-v1-json-oauth-appengine-sample/src/main/java/com/google/api/client/sample/buzz/appengine/oauth/SampleApp.java?repo=samples">SampleApp.java</a></li>
 </ul>
 
 <h3>Checkout Instructions</h3>
@@ -22,7 +22,7 @@ to set your <code>JAVA_HOME</code>.</p>
 
 <pre><code>cd <i>[someDirectory]</i>
 hg clone https://samples.google-api-java-client.googlecode.com/hg/ google-api-java-client-samples
-cd google-api-java-client-samples/buzz-v1-json-oauth2-appengine-sample
+cd google-api-java-client-samples/buzz-v1-json-oauth-appengine-sample
 mvn clean package</code></pre>
 
 <h3>Setup Project in Eclipse 3.5/3.6</h3>
@@ -30,22 +30,25 @@ mvn clean package</code></pre>
 <p><b>Prerequisites:</b> install <a href="http://www.eclipse.org/downloads/">Eclipse</a>,
 <a href="http://code.google.com/eclipse/">Google Plugin for Eclipse</a>, and the
 <a href="http://javaforge.com/project/HGE">Mercurial plugin</a>.</p>
+<a href="http://m2eclipse.sonatype.org">m2Eclipse plugin</a>
 
 <ul>
-  <li>Import <code>buzz-v1-json-oauth2-appengine-sample</code> project
+  <li>Import <code>buzz-v1-json-oauth-appengine-sample</code> project
   <ul>
     <li>File &gt; Import...</li>
     <li>Select "General &gt; Existing Project into Workspace" and click
     "Next"</li>
-    <li>Click "Browse" next to "Select root directory", find <code><i>[someDirectory]</i>/google-api-java-client-samples/buzz-v1-json-oauth2-appengine-sample</code>
+    <li>Click "Browse" next to "Select root directory", find <code><i>[someDirectory]</i>/google-api-java-client-samples/buzz-v1-json-oauth-appengine-sample</code>
     and click "Next"</li>
     <li>Click "Finish"</li>
   </ul>
   </li>
   <li>Run
   <ul>
-    <li>Right-click on project buzz-v1-json-oauth2-appengine-sample</li>
-    <li>Run As &gt; Web Application</li>
+    <li>Right-click on project buzz-v1-json-oauth-appengine-sample</li>
+    <li>Run As &gt; Maven Build</li>
+    <li>Enter "package gae:run" (without quotes) in the goals field</li>
+    <li>Click Run</li>
   </ul>
   </li>
 </ul>

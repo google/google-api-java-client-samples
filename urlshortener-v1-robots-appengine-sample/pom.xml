@@ -8,11 +8,11 @@
     <version>5</version>
   </parent>
   <groupId>com.google.api.client</groupId>
-  <artifactId>buzz-v1-json-oauth2-appengine-sample</artifactId>
+  <artifactId>urlshortener-v1-robots-appengine-sample</artifactId>
   <version>1.0.0</version>
-  <name>buzz-v1-json-oauth2-appengine-sample</name>
+  <name>urlshortener-v1-robots-appengine-sample</name>
   <description>
-    Example of using OAuth2 helpers on AppEngine with Buzz.
+    Example for the Buzz API using Oauth 2 on Google App Engine.
   </description>
   <packaging>war</packaging>
 
@@ -55,7 +55,7 @@
 
   <properties>
     <datanucleus.version>1.1.5</datanucleus.version>
-    <gae.version>1.4.2</gae.version>
+    <gae.version>1.5.0</gae.version>
     <gwt.version>2.1.1</gwt.version>
     <google-api-client.version>1.5.0-beta-SNAPSHOT</google-api-client.version>
     <webappDirectory>${project.build.directory}/${project.build.finalName}
@@ -124,21 +124,21 @@
       <version>${google-api-client.version}</version>
     </dependency>
     <dependency>
-      <groupId>com.google.api.services.buzz</groupId>
-      <artifactId>google-api-services-buzz-v1</artifactId>
-      <version>1.0.0-beta</version>
+      <groupId>com.google.api.services.urlshortener</groupId>
+      <artifactId>google-api-services-urlshortener-v1</artifactId>
+      <version>1.1.0-beta</version>
     </dependency>
     <dependency>
       <groupId>com.google.appengine</groupId>
       <artifactId>appengine-api-1.0-sdk</artifactId>
-      <version>1.4.3</version>
+      <version>1.5.0</version>
       <type>jar</type>
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>com.google.appengine</groupId>
       <artifactId>appengine-tools-sdk</artifactId>
-      <version>1.4.3</version>
+      <version>1.5.0</version>
       <type>jar</type>
       <scope>compile</scope>
     </dependency>
@@ -169,6 +169,19 @@
       <version>1.1.5</version>
       <type>jar</type>
       <scope>compile</scope>
+    </dependency>
+    <dependency>
+    	<groupId>com.google.oauth.client</groupId>
+    	<artifactId>google-oauth-client-extensions</artifactId>
+    	<version>${google-api-client.version}</version>
+    	<type>jar</type>
+    	<scope>compile</scope>
+    </dependency>
+    <dependency>
+    	<groupId>com.google.oauth.client</groupId>
+    	<artifactId>google-oauth-client</artifactId>
+    	<version>${google-api-client.version}</version>
+    	<scope>compile</scope>
     </dependency>
   </dependencies>
 </project>

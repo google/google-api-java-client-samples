@@ -8,20 +8,15 @@
     <version>5</version>
   </parent>
   <groupId>com.google.api.client</groupId>
-  <artifactId>buzz-v1-json-oauth2-appengine-sample</artifactId>
+  <artifactId>buzz-v1-json-oauth-appengine-sample</artifactId>
   <version>1.0.0</version>
-  <name>buzz-v1-json-oauth2-appengine-sample</name>
+  <name>buzz-v1-json-oauth-appengine-sample</name>
   <description>
-    Example of using OAuth2 helpers on AppEngine with Buzz.
+    Example of using OAuth helpers on AppEngine with Buzz.
   </description>
   <packaging>war</packaging>
 
   <url>http://code.google.com/p/google-api-java-client/</url>
-
-  <issueManagement>
-    <system>code.google.com</system>
-    <url>http://code.google.com/p/google-api-java-client/issues/list</url>
-  </issueManagement>
 
   <inceptionYear>2011</inceptionYear>
 
@@ -55,7 +50,7 @@
 
   <properties>
     <datanucleus.version>1.1.5</datanucleus.version>
-    <gae.version>1.4.2</gae.version>
+    <gae.version>1.5.0</gae.version>
     <gwt.version>2.1.1</gwt.version>
     <google-api-client.version>1.5.0-beta-SNAPSHOT</google-api-client.version>
     <webappDirectory>${project.build.directory}/${project.build.finalName}
@@ -63,20 +58,6 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
-  <developers>
-    <developer>
-      <id>yanivi</id>
-      <name>Yaniv Inbar</name>
-      <email>yanivi@google.com</email>
-      <organization>Google</organization>
-      <organizationUrl>http://www.google.com</organizationUrl>
-      <roles>
-        <role>owner</role>
-        <role>developer</role>
-      </roles>
-      <timezone>-5</timezone>
-    </developer>
-  </developers>
   <build>
     <finalName>war</finalName>
     <testSourceDirectory>tests_disabled</testSourceDirectory>
@@ -126,7 +107,7 @@
     <dependency>
       <groupId>com.google.api.services.buzz</groupId>
       <artifactId>google-api-services-buzz-v1</artifactId>
-      <version>1.0.0-beta</version>
+      <version>1.1.0-beta</version>
     </dependency>
     <dependency>
       <groupId>com.google.appengine</groupId>
