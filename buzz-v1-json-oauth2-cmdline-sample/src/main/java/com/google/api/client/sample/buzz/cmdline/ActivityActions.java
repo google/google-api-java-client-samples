@@ -69,7 +69,7 @@ public class ActivityActions {
 
   static Activity updateActivity(Buzz buzz, Activity activity) throws IOException {
     View.header("Update Buzz Activity");
-    activity.buzzObject.content = activity.buzzObject.content.toString() + " (updated)";
+    activity.buzzObject.content = activity.buzzObject.content + " (updated)";
     Buzz.Activities.Patch request = buzz.activities.patch("@me", "@self", activity.id.toString(),
                                                           activity);
     request.fields = FIELDS_ACTIVITY;
