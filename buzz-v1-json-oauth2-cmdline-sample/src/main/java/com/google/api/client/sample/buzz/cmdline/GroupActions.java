@@ -49,9 +49,9 @@ public class GroupActions {
 
   static Group updateGroup(Buzz buzz, Group group) throws IOException {
     View.header("Update Buzz Group");
-    group.title += " (updated)";
+    group.title = group.title + " (updated)";
     Buzz.Groups.Update request =
-        buzz.groups.update("@me", group.id, group);
+        buzz.groups.update("@me", group.id.toString(), group);
     request.put("fields", FIELDS_GROUP);
     Group result = request.execute();
     View.display(result);
@@ -60,7 +60,7 @@ public class GroupActions {
 
   static void deleteGroup(Buzz buzz, Group group) throws IOException {
     View.header("Delete Buzz Group");
-    buzz.groups.delete("@me", group.id).execute();
+    buzz.groups.delete("@me", group.id.toString()).execute();
     System.out.println("Deleted.");
   }
 

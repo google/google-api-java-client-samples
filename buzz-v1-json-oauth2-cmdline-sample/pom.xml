@@ -8,7 +8,7 @@
   </parent>
   <groupId>com.google.api.client</groupId>
   <artifactId>buzz-v1-json-oauth2-cmdline-sample</artifactId>
-  <version>1.1.0</version>
+  <version>1.1.1</version>
   <name>buzz-v1-json-oauth2-cmdline-sample</name>
   <description>
     Example for the Buzz v1 API using JSON and OAuth 2.
@@ -103,18 +103,10 @@
       <artifactId>google-api-client</artifactId>
       <version>1.4.1-beta</version>
     </dependency>
-
     <dependency>
       <groupId>com.google.api.services.buzz</groupId>
       <artifactId>google-api-services-buzz-v1</artifactId>
       <version>1.1.0-beta</version>
-
-      <!-- hack for testing -->
-      <scope>system</scope>
-      <systemPath>
-        /home/aiuto/ws/dd/google3/blaze-bin/apiserving/discoverydata/buzz/libbuzz.jar
-      </systemPath>
-
     </dependency>
     <dependency>
       <groupId>org.mortbay.jetty</groupId>

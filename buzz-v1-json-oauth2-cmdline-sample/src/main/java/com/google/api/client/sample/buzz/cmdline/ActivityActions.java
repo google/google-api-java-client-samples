@@ -69,8 +69,9 @@ public class ActivityActions {
 
   static Activity updateActivity(Buzz buzz, Activity activity) throws IOException {
     View.header("Update Buzz Activity");
-    activity.buzzObject.content += " (updated)";
-    Buzz.Activities.Patch request = buzz.activities.patch("@me", "@self", activity.id, activity);
+    activity.buzzObject.content = activity.buzzObject.content.toString() + " (updated)";
+    Buzz.Activities.Patch request = buzz.activities.patch("@me", "@self", activity.id.toString(),
+                                                          activity);
     request.fields = FIELDS_ACTIVITY;
     Activity result = request.execute();
     View.display(result);
@@ -79,7 +80,7 @@ public class ActivityActions {
 
   static void deleteActivity(Buzz buzz, Activity activity) throws IOException {
     View.header("Delete Buzz Activity");
-    buzz.activities.delete("@me", "@self", activity.id).execute();
+    buzz.activities.delete("@me", "@self", activity.id.toString()).execute();
     System.out.println("Deleted.");
   }
 
