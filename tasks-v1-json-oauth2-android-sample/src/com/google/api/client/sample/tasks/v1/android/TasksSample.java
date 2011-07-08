@@ -1,11 +1,12 @@
 package com.google.api.client.sample.tasks.v1.android;
 
+
 import com.google.api.client.extensions.android2.AndroidHttp;
 import com.google.api.client.googleapis.auth.oauth2.draft10.GoogleAccessProtectedResource;
 import com.google.api.client.googleapis.extensions.android2.auth.GoogleAccountManager;
-import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpResponseException;
+import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.jackson.JacksonFactory;
 import com.google.api.services.tasks.v1.Tasks;
 import com.google.api.services.tasks.v1.model.Task;
@@ -14,17 +15,23 @@ import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.accounts.AccountManagerCallback;
 import android.accounts.AccountManagerFuture;
-import android.app.ListActivity;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.ListActivity;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.Html;
+import android.text.Spanned;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -34,17 +41,17 @@ import java.util.logging.Logger;
 
 /**
  * Sample for Tasks API on Android. 
- * It shows how to authenticate using OAuth, and get the list of tasks.
+ * It shows how to authenticate using OAuth2, and get the list of tasks.
  * <p>
  * To enable logging of HTTP requests/responses, change {@link #LOGGING_LEVEL} to
  * {@link Level#CONFIG} or {@link Level#ALL} and run this command:
  * </p>
- *
+ * 
  * <pre>
 adb shell setprop log.tag.HttpTransport DEBUG
  * </pre>
- *
- * @author Johan Euphrosine (derived from Yaniv Inbar's Buzz sample)
+ * 
+ * @author Johan Euphrosine (based on Yaniv Inbar Buzz sample)
  */
 public class TasksSample extends ListActivity {
 
@@ -60,21 +67,22 @@ public class TasksSample extends ListActivity {
 
   private final HttpTransport transport = AndroidHttp.newCompatibleTransport();
 
-  final Tasks service = new Tasks("Google-TasksSample/1.0", transport, new JacksonFactory());
+  Tasks service;
+  GoogleAccessProtectedResource accessProtectedResource = new GoogleAccessProtectedResource(null);
 
   // TODO: save auth token in preferences
-  public String authToken;
   public GoogleAccountManager accountManager;
 
   // Follow API access Instructions in instructions.html
   // And replace INSERT_YOUR_API_KEY with your generated API Key.
   static final String API_KEY = "INSERT_YOUR_API_KEY";
-
+  
   @Override
   public void onCreate(Bundle savedInstanceState) {
-    System.out.println("onCreate");
-    super.onCreate(savedInstanceState);
+    service = new Tasks(transport, accessProtectedResource, new JacksonFactory());
     service.accessKey = API_KEY;
+    service.setApplicationName("Google-TasksSample/1.0");
+    super.onCreate(savedInstanceState);
     accountManager = new GoogleAccountManager(this);
     Logger.getLogger("com.google.api.client").setLevel(LOGGING_LEVEL);
     gotAccount(false);
@@ -108,8 +116,8 @@ public class TasksSample extends ListActivity {
     Account account = accountManager.getAccountByName(accountName);
     if (account != null) {
       if (tokenExpired) {
-        accountManager.invalidateAuthToken(authToken);
-        authToken = null;
+        accountManager.invalidateAuthToken(accessProtectedResource.getAccessToken());
+        accessProtectedResource.setAccessToken(null);
       }
       gotAccount(account);
       return;
@@ -122,8 +130,8 @@ public class TasksSample extends ListActivity {
     SharedPreferences.Editor editor = settings.edit();
     editor.putString("accountName", account.name);
     editor.commit();
-    accountManager.manager.getAuthToken(
-        account, AUTH_TOKEN_TYPE, true, new AccountManagerCallback<Bundle>() {
+    accountManager.manager.getAuthToken(account, AUTH_TOKEN_TYPE, true,
+        new AccountManagerCallback<Bundle>() {
 
           public void run(AccountManagerFuture<Bundle> future) {
             try {
@@ -133,7 +141,8 @@ public class TasksSample extends ListActivity {
                 intent.setFlags(intent.getFlags() & ~Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivityForResult(intent, REQUEST_AUTHENTICATE);
               } else if (bundle.containsKey(AccountManager.KEY_AUTHTOKEN)) {
-                authToken = bundle.getString(AccountManager.KEY_AUTHTOKEN);
+                accessProtectedResource.setAccessToken(bundle
+                    .getString(AccountManager.KEY_AUTHTOKEN));
                 onAuthToken();
               }
             } catch (Exception e) {
@@ -193,14 +202,6 @@ public class TasksSample extends ListActivity {
   }
 
   void onAuthToken() {
-    new GoogleAccessProtectedResource(authToken) {
-
-      @Override
-      protected void onAccessToken(String accessToken) {
-        gotAccount(true);
-      }
-    };
-    service.setAccessToken(authToken);
     try {
       List<String> tasks = new ArrayList<String>();
       for (Task task : service.tasks.list("@default").execute().items) {
