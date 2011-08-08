@@ -38,8 +38,7 @@ public class YouTubeClient {
   private final HttpRequestFactory requestFactory;
 
   public YouTubeClient() {
-    final JsonCParser parser = new JsonCParser();
-    parser.jsonFactory = jsonFactory;
+    final JsonCParser parser = new JsonCParser(jsonFactory);
     requestFactory = transport.createRequestFactory(new HttpRequestInitializer() {
 
       @Override
@@ -48,7 +47,7 @@ public class YouTubeClient {
         GoogleHeaders headers = new GoogleHeaders();
         headers.setApplicationName("Google-YouTubeSample/1.0");
         headers.gdataVersion = "2";
-        request.headers = headers;
+        request.setHeaders(headers);
         request.addParser(parser);
       }
     });

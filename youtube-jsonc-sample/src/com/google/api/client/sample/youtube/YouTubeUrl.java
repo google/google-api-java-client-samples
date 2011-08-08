@@ -45,7 +45,7 @@ public class YouTubeUrl extends GoogleUrl {
 
   static YouTubeUrl forVideosFeed() {
     YouTubeUrl result = root();
-    result.pathParts.add("videos");
+    result.getPathParts().add("videos");
     return result;
   }
 }

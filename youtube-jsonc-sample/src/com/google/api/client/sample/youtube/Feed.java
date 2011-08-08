@@ -20,6 +20,7 @@ import com.google.api.client.util.Key;
 import java.util.List;
 
 /**
+ * @param <T> item type
  * @author Yaniv Inbar
  */
 public class Feed<T extends Item> {

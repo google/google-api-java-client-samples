@@ -33,7 +33,7 @@ public class YouTubeSample {
       try {
         run();
       } catch (HttpResponseException e) {
-        System.err.println(e.response.parseAsString());
+        System.err.println(e.getResponse().parseAsString());
       }
     } catch (Throwable t) {
       t.printStackTrace();
