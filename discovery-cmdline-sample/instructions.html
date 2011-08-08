@@ -1,0 +1,48 @@
+<html>
+<title>Google Discovery API Sample</title>
+<body>
+<h2>Instructions for the Google API Discovery Service Sample (<a
+  href="http://goo.gl/cKxzB">http://goo.gl/cKxzB</a>)</h2>
+
+<h3>Usage</h3>
+
+Examples using <b><code>google call</code></b>:
+
+<pre><code>  google call discovery v1 apis.getRest buzz v1
+  google call buzz v1 activities.list @me @self --max-results 3 --alt json --prettyPrint true
+  echo {\"data\":{\"object\":{\"content\":\"Posting using Google command-line tool based on Discovery \(http://goo.gl/ojuXq\)\"}}} > buzzpost.json && google call buzz v1 activities.insert @me buzzpost.json
+</code></pre>
+
+Examples using <b><code>google discover</code></b>:
+
+<pre><code>  google discover
+  google discover buzz v1
+  google discover moderator v1</code></pre>
+
+<h3>Browse Online</h3>
+
+<ul>
+  <li><a
+    href="http://code.google.com/p/google-api-java-client/source/browse?repo=samples#hg/discovery-cmdline-sample">Browse
+  Source</a>, or main file <a
+    href="http://code.google.com/p/google-api-java-client/source/browse/discovery-cmdline-sample/src/main/java/com/google/api/services/samples/discovery/cmdline/DiscoverySample.java?repo=samples">DiscoverySample.java</a></li>
+</ul>
+
+<h3>Installation Instructions</h3>
+
+<p><b>Prerequisites:</b> install <a href="http://java.com">Java 6</a>, <a
+  href="http://mercurial.selenic.com/">Mercurial</a> and <a
+  href="http://maven.apache.org/download.html">Maven</a>. You may need to set
+your <code>JAVA_HOME</code>.</p>
+
+<pre><code>cd <i>[someDirectory]</i>
+hg clone https://samples.google-api-java-client.googlecode.com/hg/ google-api-java-client-samples
+cd google-api-java-client-samples/cmdline-sample-shared
+edit src/main/java/com/google/api/services/samples/shared/oauth2/OAuth2ClientCredentials.java
+mvn install
+cd ../discovery-cmdline-sample
+mvn assembly:assembly
+alias google="<i>[someDirectory]</i>/google-api-java-client-samples/discovery-cmdline-sample/run_sample"</code></pre>
+
+</body>
+</html>
