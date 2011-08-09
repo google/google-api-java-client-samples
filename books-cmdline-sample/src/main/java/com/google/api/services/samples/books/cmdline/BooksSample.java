@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.google.sample.books;
+package com.google.api.services.samples.books.cmdline;
 
 import com.google.api.client.googleapis.json.GoogleJsonError;
 import com.google.api.client.googleapis.json.GoogleJsonError.ErrorInfo;
@@ -21,12 +21,12 @@ import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.Json;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson.JacksonFactory;
-import com.google.api.services.books.v1.Books;
-import com.google.api.services.books.v1.Books.Volumes.List;
-import com.google.api.services.books.v1.model.Volume;
-import com.google.api.services.books.v1.model.VolumeSaleInfo;
-import com.google.api.services.books.v1.model.VolumeVolumeInfo;
-import com.google.api.services.books.v1.model.Volumes;
+import com.google.api.services.books.Books;
+import com.google.api.services.books.Books.Volumes.List;
+import com.google.api.services.books.model.Volume;
+import com.google.api.services.books.model.VolumeSaleInfo;
+import com.google.api.services.books.model.VolumeVolumeInfo;
+import com.google.api.services.books.model.Volumes;
 
 import java.net.URLEncoder;
 import java.text.NumberFormat;
@@ -56,31 +56,29 @@ public class BooksSample {
     // Set up Books client.
     final Books books = new Books(new NetHttpTransport(), jsonFactory);
     books.setApplicationName("Google-BooksSample/1.0");
-    if (API_KEY != null && API_KEY.length() > 0) {
-      books.accessKey = API_KEY;
-    }
+    books.setKey(API_KEY);
 
     // Set query string and filter only Google eBooks.
     System.out.println("Query: [" + query + "]");
     List volumesList = books.volumes.list(query);
-    volumesList.filter = "ebooks";
+    volumesList.setFilter("ebooks");
 
     // Execute the query.
     Volumes volumes = volumesList.execute();
-    if (volumes.totalItems == 0 || volumes.items == null) {
+    if (volumes.getTotalItems() == 0 || volumes.getItems() == null) {
       System.out.println("No matches found.");
       return;
     }
 
     // Output results.
-    for (Volume volume : volumes.items) {
-      VolumeVolumeInfo volumeInfo = volume.volumeInfo;
-      VolumeSaleInfo saleInfo = volume.saleInfo;
+    for (Volume volume : volumes.getItems()) {
+      VolumeVolumeInfo volumeInfo = volume.getVolumeInfo();
+      VolumeSaleInfo saleInfo = volume.getSaleInfo();
       System.out.println("==========");
       // Title.
-      System.out.println("Title: " + volumeInfo.title);
+      System.out.println("Title: " + volumeInfo.getTitle());
       // Author(s).
-      java.util.List<String> authors = volumeInfo.authors;
+      java.util.List<String> authors = volumeInfo.getAuthors();
       if (authors != null && !authors.isEmpty()) {
         System.out.print("Author(s): ");
         for (int i = 0; i < authors.size(); ++i) {
@@ -92,35 +90,35 @@ public class BooksSample {
         System.out.println();
       }
       // Description (if any).
-      if (volumeInfo.description != null && volumeInfo.description.length() > 0) {
-        System.out.println("Description: " + volumeInfo.description);
+      if (volumeInfo.getDescription() != null && volumeInfo.getDescription().length() > 0) {
+        System.out.println("Description: " + volumeInfo.getDescription());
       }
       // Ratings (if any).
-      if (volumeInfo.ratingsCount != null && volumeInfo.ratingsCount > 0) {
-        int fullRating = (int) Math.round(volumeInfo.averageRating.doubleValue());
+      if (volumeInfo.getRatingsCount() != null && volumeInfo.getRatingsCount() > 0) {
+        int fullRating = (int) Math.round(volumeInfo.getAverageRating().doubleValue());
         System.out.print("User Rating: ");
         for (int i = 0; i < fullRating; ++i) {
           System.out.print("*");
         }
-        System.out.println(" (" + volumeInfo.ratingsCount + " rating(s))");
+        System.out.println(" (" + volumeInfo.getRatingsCount() + " rating(s))");
       }
       // Price (if any).
-      if ("FOR_SALE".equals(saleInfo.saleability)) {
-        double save = saleInfo.listPrice.amount - saleInfo.retailPrice.amount;
+      if ("FOR_SALE".equals(saleInfo.getSaleability())) {
+        double save = saleInfo.getListPrice().getAmount() - saleInfo.getRetailPrice().getAmount();
         if (save > 0.0) {
-          System.out.print("List: " + CURRENCY_FORMATTER.format(saleInfo.listPrice.amount)
+          System.out.print("List: " + CURRENCY_FORMATTER.format(saleInfo.getListPrice().getAmount())
               + "  ");
         }
         System.out.print("Google eBooks Price: "
-            + CURRENCY_FORMATTER.format(saleInfo.retailPrice.amount));
+            + CURRENCY_FORMATTER.format(saleInfo.getRetailPrice().getAmount()));
         if (save > 0.0) {
           System.out.print("  You Save: " + CURRENCY_FORMATTER.format(save) + " ("
-              + PERCENT_FORMATTER.format(save / saleInfo.listPrice.amount) + ")");
+              + PERCENT_FORMATTER.format(save / saleInfo.getListPrice().getAmount()) + ")");
         }
         System.out.println();
       }
       // Access status.
-      String accessViewStatus = volume.accessInfo.accessViewStatus;
+      String accessViewStatus = volume.getAccessInfo().getAccessViewStatus();
       String message = "Additional information about this book is available from Google eBooks at:";
       if ("FULL_PUBLIC_DOMAIN".equals(accessViewStatus)) {
         message = "This public domain book is available for free from Google eBooks at:";
@@ -129,10 +127,11 @@ public class BooksSample {
       }
       System.out.println(message);
       // Link to Google eBooks.
-      System.out.println(volumeInfo.infoLink);
+      System.out.println(volumeInfo.getInfoLink());
     }
     System.out.println("==========");
-    System.out.println(volumes.totalItems + " total results at http://books.google.com/ebooks?q="
+    System.out.println(
+        volumes.getTotalItems() + " total results at http://books.google.com/ebooks?q="
         + URLEncoder.encode(query, "UTF-8"));
   }
 
@@ -170,10 +169,10 @@ public class BooksSample {
         // Success!
         return;
       } catch (HttpResponseException e) {
-        if (!e.response.contentType.equals(Json.CONTENT_TYPE)) {
-          System.err.println(e.response.parseAsString());
+        if (!Json.CONTENT_TYPE.equals(e.getResponse().getContentType())) {
+          System.err.println(e.getResponse().parseAsString());
         } else {
-          GoogleJsonError errorResponse = GoogleJsonError.parse(jsonFactory, e.response);
+          GoogleJsonError errorResponse = GoogleJsonError.parse(jsonFactory, e.getResponse());
           System.err.println(errorResponse.code + " Error: " + errorResponse.message);
           for (ErrorInfo error : errorResponse.errors) {
             System.err.println(jsonFactory.toString(error));

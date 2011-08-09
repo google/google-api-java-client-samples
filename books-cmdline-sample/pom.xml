@@ -6,13 +6,10 @@
     <artifactId>google</artifactId>
     <version>5</version>
   </parent>
-  <groupId>com.google.api.client</groupId>
-  <artifactId>books-v1-json-cmdline-sample</artifactId>
-  <version>1.0.0</version>
-  <name>books-v1-json-cmdline-sample</name>
-  <description>
-    Example for the Google Books v1 API using JSON.
-  </description>
+  <groupId>com.google.apis-samples</groupId>
+  <artifactId>books-cmdline-sample</artifactId>
+  <version>1.2.0</version>
+  <name>Example for the Google Books API v1 using JSON.</name>
 
   <url>http://code.google.com/p/google-api-java-client/</url>
 
@@ -64,6 +61,7 @@
     <plugins>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
+        <version>2.3.2</version>
         <configuration>
           <source>1.6</source>
           <target>1.6</target>
@@ -81,7 +79,7 @@
           </execution>
         </executions>
         <configuration>
-          <mainClass>com.google.sample.books.BooksSample</mainClass>
+          <mainClass>com.google.api.services.samples.books.cmdline.BooksSample</mainClass>
           <systemProperties>
             <systemProperty>
               <key>java.util.logging.config.file</key>
@@ -90,21 +88,50 @@
           </systemProperties>
         </configuration>
       </plugin>
+      <plugin>
+        <artifactId>maven-checkstyle-plugin</artifactId>
+        <version>2.6</version>
+        <configuration>
+          <configLocation>../checkstyle.xml</configLocation>
+          <consoleOutput>true</consoleOutput>
+          <failOnViolation>false</failOnViolation>
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>check</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>findbugs-maven-plugin</artifactId>
+        <version>2.3.2</version>
+        <configuration>
+          <failOnError>false</failOnError>
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>check</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
     <finalName>${project.artifactId}-${project.version}</finalName>
-    <sourceDirectory>.</sourceDirectory>
-    <testSourceDirectory>tests_disabled</testSourceDirectory>
   </build>
   <dependencies>
     <dependency>
-      <groupId>com.google.api.client</groupId>
-      <artifactId>google-api-client</artifactId>
-      <version>1.4.1-beta</version>
+      <groupId>com.google.apis</groupId>
+      <artifactId>google-api-services-books</artifactId>
+      <version>v1-1.2.0-beta-SNAPSHOT</version>
     </dependency>
     <dependency>
-      <groupId>com.google.api.services.books</groupId>
-      <artifactId>google-api-services-books-v1</artifactId>
-      <version>1.0.0-beta</version>
+      <groupId>com.google.api-client</groupId>
+      <artifactId>google-api-client</artifactId>
+      <version>1.5.0-beta</version>
     </dependency>
   </dependencies>
   <properties>
