@@ -1,15 +1,15 @@
 <html>
-<title>Google Prediction API v1.1 JSON ClientLogin Sample</title>
+<title>Google Prediction API v1.3 JSON ClientLogin Sample</title>
 <body>
-<h2>Instructions for the Google Prediction API v1.1 JSON ClientLogin Sample</h2>
+<h2>Instructions for the Google Prediction API v1.3 JSON ClientLogin Sample</h2>
 
 <h3>Browse Online</h3>
 
 <ul>
   <li><a
-    href="http://code.google.com/p/google-api-java-client/source/browse?repo=samples#hg/prediction-json-clientlogin-sample">Browse
+    href="http://code.google.com/p/google-api-java-client/source/browse?repo=samples#hg/prediction-cmdline-sample">Browse
   Source</a>, or main file <a
-    href="http://code.google.com/p/google-api-java-client/source/browse/prediction-json-clientlogin-sample/src/com/google/api/client/sample/prediction/PredictionSample.java?repo=samples">PredictionSample.java</a></li>
+    href="http://code.google.com/p/google-api-java-client/source/browse/prediction-cmdline-sample/src/main/java/com/google/api/services/samples/prediction/cmdline/PredictionSample.java?repo=samples">PredictionSample.java</a></li>
 </ul>
 
 <h3>Checkout Instructions</h3>
@@ -21,7 +21,7 @@ your <code>JAVA_HOME</code>.</p>
 
 <p><b>Important:</b> after checking out the project, and before compiling
 and running it, you need to edit <a
-  href="http://code.google.com/p/google-api-java-client/source/browse/prediction-json-clientlogin-sample/src/com/google/api/client/sample/prediction/ClientLoginCredentials.java?repo=samples">ClientLoginCredentials.java</a>
+  href="http://code.google.com/p/google-api-java-client/source/browse/prediction-cmdline-sample/src/com/google/api/client/sample/prediction/ClientLoginCredentials.java?repo=samples">ClientLoginCredentials.java</a>
 to enter a username and password that has access to the Google Prediction API.
 Otherwise, you will get a <code>403 Forbidden</code> exception. You will also
 need to upload the <a
@@ -30,10 +30,11 @@ data</a> to Google Storage and edit the <code>OBJECT_PATH</code>.</p>
 
 <pre><code>cd <i>[someDirectory]</i>
 hg clone https://samples.google-api-java-client.googlecode.com/hg/ google-api-java-client-samples
-cd google-api-java-client-samples/prediction-json-clientlogin-sample
-<i>[editor]</i> src/com/google/api/client/sample/prediction/ClientLoginCredentials.java
-mvn compile
-mvn -q exec:java</code></pre>
+cd google-api-java-client-samples/cmdline-sample-shared
+edit src/main/java/com/google/api/services/samples/shared/oauth2/OAuth2ClientCredentials.java
+mvn install
+cd ../prediction-cmdline-sample
+mvn -q compile exec:java</code></pre>
 
 <h3>Setup Project in Eclipse 3.5/3.6</h3>
 
@@ -54,21 +55,30 @@ plugin</a>.</p>
     </li>
   </ul>
   </li>
-  <li>Import <code>prediction-json-clientlogin-sample</code> project
+  <li>Import <code>prediction-cmdline-sample</code> project
   <ul>
     <li>File &gt; Import...</li>
     <li>Select "General &gt; Existing Project into Workspace" and click
     "Next"</li>
-    <li>Click "Browse" next to "Select root directory", find <code><i>[someDirectory]</i>/google-api-java-client-samples/prediction-json-clientlogin-sample</code>
+    <li>Click "Browse" next to "Select root directory", find <code><i>[someDirectory]</i>/google-api-java-client-samples/prediction-cmdline-sample</code>
     and click "Next"</li>
     <li>Click "Finish"</li>
   </ul>
   </li>
   <li>Run
   <ul>
-    <li>Right-click on project <code>prediction-json-clientlogin-sample</code></li>
+    <li>Right-click on project <code>prediction-cmdline-sample</code></li>
     <li>Run As &gt; Java Application</li>
     <li>If asked, type "PredictionSample" and click OK</li>
+    <li>To enable logging:
+    <ul>
+      <li>Run &gt; Run Configurations...</li>
+      <li>Click on "Java Application &gt; PredictionSample"</li>
+      <li>Click on "Arguments" tab</li>
+      <li>VM arguments: <code>-Djava.util.logging.config.file=${project_loc}/logging.properties</code></li>
+      <li>Click "Run"</li>
+    </ul>
+    </li>
   </ul>
   </li>
 </ul>

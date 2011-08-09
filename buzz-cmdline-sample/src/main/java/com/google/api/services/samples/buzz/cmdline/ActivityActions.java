@@ -36,7 +36,7 @@ public class ActivityActions {
   static void showActivitiesForConsumption(Buzz buzz) throws IOException {
     View.header("Show Buzz Activities for Consumption");
     Buzz.Activities.List request = buzz.activities.list("@me", "@consumption");
-    request.fields = FIELDS_ACTIVITY_FEED;
+    request.setFields(FIELDS_ACTIVITY_FEED);
     ActivityFeed feed = request.execute();
     View.display(feed);
   }
@@ -44,7 +44,7 @@ public class ActivityActions {
   static void showPersonalActivities(Buzz buzz) throws IOException {
     View.header("Show Buzz Personal Activities");
     Buzz.Activities.List request = buzz.activities.list("@me", "@self");
-    request.fields = FIELDS_ACTIVITY_FEED;
+    request.setFields(FIELDS_ACTIVITY_FEED);
     ActivityFeed feed = request.execute();
     View.display(feed);
   }
@@ -72,7 +72,7 @@ public class ActivityActions {
     activity.getBuzzObject().setContent(activity.getBuzzObject().getContent() + " (updated)");
     Buzz.Activities.Patch request =
         buzz.activities.patch("@me", "@self", activity.getId().toString(), activity);
-    request.fields = FIELDS_ACTIVITY;
+    request.setFields(FIELDS_ACTIVITY);
     Activity result = request.execute();
     View.display(result);
     return result;
