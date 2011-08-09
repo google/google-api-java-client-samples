@@ -6,7 +6,7 @@
     <artifactId>google</artifactId>
     <version>5</version>
   </parent>
-  <groupId>com.google.api-client</groupId>
+  <groupId>com.google.apis-samples</groupId>
   <artifactId>discovery-cmdline-sample</artifactId>
   <version>1.2.0</version>
   <name>Example for the Google APIs Discovery Service v1 using JSON and OAuth 2</name>
@@ -87,6 +87,7 @@
         <configuration>
           <configLocation>../checkstyle.xml</configLocation>
           <consoleOutput>true</consoleOutput>
+          <failOnViolation>false</failOnViolation>
         </configuration>
         <executions>
           <execution>
@@ -100,40 +101,30 @@
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>findbugs-maven-plugin</artifactId>
         <version>2.3.2</version>
+        <configuration>
+          <failOnError>false</failOnError>
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>check</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
     <finalName>${project.artifactId}-${project.version}</finalName>
   </build>
   <dependencies>
     <dependency>
-      <groupId>com.google.api.services.discovery</groupId>
-      <artifactId>google-api-services-discovery-v1</artifactId>
-      <version>1.2.0-beta-SNAPSHOT</version>
+      <groupId>com.google.apis</groupId>
+      <artifactId>google-api-services-discovery</artifactId>
+      <version>v1-1.2.0-beta-SNAPSHOT</version>
     </dependency>
     <dependency>
-      <groupId>com.google.api-services-samples</groupId>
+      <groupId>com.google.apis-samples</groupId>
       <artifactId>cmdline-sample-shared</artifactId>
       <version>1.0.0</version>
-    </dependency>
-    <dependency>
-      <groupId>com.google.api-client</groupId>
-      <artifactId>google-api-client</artifactId>
-      <version>1.5.0-beta</version>
-    </dependency>
-    <dependency>
-      <groupId>com.google.oauth-client</groupId>
-      <artifactId>google-oauth-client</artifactId>
-      <version>1.5.0-beta</version>
-    </dependency>
-    <dependency>
-      <groupId>com.google.http-client</groupId>
-      <artifactId>google-http-client</artifactId>
-      <version>1.5.0-beta</version>
-    </dependency>
-    <dependency>
-      <groupId>org.mortbay.jetty</groupId>
-      <artifactId>jetty-embedded</artifactId>
-      <version>6.1.24</version>
     </dependency>
   </dependencies>
   <properties>

@@ -1,15 +1,15 @@
 <html>
-<title>buzz-cmdline-sample</title>
+<title>Google Documents List Data API Atom OAuth Sample</title>
 <body>
-<h2>Instructions for the Buzz v1 JSON OAuth2 Command-Line Sample</h2>
+<h2>Instructions for the Google Documents List Data API Atom OAuth Sample</h2>
 
 <h3>Browse Online</h3>
 
 <ul>
   <li><a
-    href="http://code.google.com/p/google-api-java-client/source/browse?repo=samples#hg/buzz-cmdline-sample">Browse
+    href="http://code.google.com/p/google-api-java-client/source/browse?repo=samples#hg/docs-cmdline-sample">Browse
   Source</a>, or main file <a
-    href="http://code.google.com/p/google-api-java-client/source/browse/buzz-cmdline-sample/src/main/java/com/google/api/services/samples/buzz/cmdline/BuzzSample.java?repo=samples">BuzzSample.java</a></li>
+    href="http://code.google.com/p/google-api-java-client/source/browse/docs-cmdline-sample/src/main/java/com/google/api/services/samples/docs/cmdline/DocsSample.java?repo=samples">DocsSample.java</a></li>
 </ul>
 
 <h3>Checkout Instructions</h3>
@@ -29,7 +29,7 @@ hg clone https://samples.google-api-java-client.googlecode.com/hg/ google-api-ja
 cd google-api-java-client-samples/cmdline-sample-shared
 edit src/main/java/com/google/api/services/samples/shared/oauth2/OAuth2ClientCredentials.java
 mvn install
-cd ../buzz-cmdline-sample
+cd ../docs-cmdline-sample
 mvn -q compile exec:java</code></pre>
 
 <h3>Setup Project in Eclipse 3.5/3.6</h3>
@@ -51,25 +51,25 @@ plugin</a>.</p>
     </li>
   </ul>
   </li>
-  <li>Import <code>buzz-cmdline-sample</code> project
+  <li>Import <code>docs-cmdline-sample</code> project
   <ul>
     <li>File &gt; Import...</li>
     <li>Select "General &gt; Existing Project into Workspace" and click
     "Next"</li>
-    <li>Click "Browse" next to "Select root directory", find <code><i>[someDirectory]</i>/google-api-java-client-samples/buzz-cmdline-sample</code>
+    <li>Click "Browse" next to "Select root directory", find <code><i>[someDirectory]</i>/google-api-java-client-samples/docs-cmdline-sample</code>
     and click "Next"</li>
     <li>Click "Finish"</li>
   </ul>
   </li>
   <li>Run
   <ul>
-    <li>Right-click on project buzz-cmdline-sample</li>
+    <li>Right-click on project docs-cmdline-sample</li>
     <li>Run As &gt; Java Application</li>
-    <li>If asked, type "BuzzSample" and click OK</li>
+    <li>If asked, type "DocsSample" and click OK</li>
     <li>To enable logging:
     <ul>
       <li>Run &gt; Run Configurations...</li>
-      <li>Click on "Java Application &gt; BuzzSample"</li>
+      <li>Click on "Java Application &gt; DocsSample"</li>
       <li>Click on "Arguments" tab</li>
       <li>VM arguments: <code>-Djava.util.logging.config.file=${project_loc}/logging.properties</code></li>
       <li>Click "Run"</li>

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011 Google Inc.
+ * Copyright (c) 2010 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.google.api.services.samples.buzz.cmdline;
+package com.google.api.services.samples.prediction.cmdline;
 
 import com.google.api.client.googleapis.auth.oauth2.draft10.GoogleAccessProtectedResource;
 import com.google.api.client.googleapis.json.GoogleJsonError;
@@ -23,27 +23,27 @@ import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.Json;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson.JacksonFactory;
-import com.google.api.services.buzz.Buzz;
-import com.google.api.services.buzz.model.Activity;
-import com.google.api.services.buzz.model.Group;
+import com.google.api.services.prediction.Prediction;
+import com.google.api.services.prediction.model.Input;
+import com.google.api.services.prediction.model.InputInput;
+import com.google.api.services.prediction.model.Output;
+import com.google.api.services.prediction.model.Training;
 import com.google.api.services.samples.shared.oauth2.LocalServerReceiver;
 import com.google.api.services.samples.shared.oauth2.OAuth2ClientCredentials;
 import com.google.api.services.samples.shared.oauth2.OAuth2Native;
 
+import java.io.IOException;
+import java.util.Collections;
+
 /**
  * @author Yaniv Inbar
  */
-public class BuzzSample {
+public class PredictionSample {
 
-  /**
-   * Set to {@code true} to only perform read-only actions or {@code false} to also do
-   * insert/update/delete.
-   */
-  private static final boolean READ_ONLY = false;
+  static final String OBJECT_PATH = "enter_bucket/language_id.txt";
 
   /** OAuth 2 scope. */
-  private static final String SCOPE =
-      "https://www.googleapis.com/auth/buzz" + (READ_ONLY ? ".readonly" : "");
+  private static final String SCOPE = "https://www.googleapis.com/auth/prediction";
 
   private static void run(JsonFactory jsonFactory) throws Exception {
     // authorization
@@ -56,28 +56,53 @@ public class BuzzSample {
         OAuth2ClientCredentials.CLIENT_ID,
         OAuth2ClientCredentials.CLIENT_SECRET,
         SCOPE);
-    // set up Buzz
-    Buzz buzz = new Buzz(transport, accessProtectedResource, jsonFactory);
-    buzz.setApplicationName("Google-BuzzSample/1.0");
-    buzz.setPrettyPrint(true);
-    // groups
-    GroupActions.showGroups(buzz);
-    Group group = null;
-    if (!READ_ONLY) {
-      group = GroupActions.insertGroup(buzz);
-      // NOTE: update group is currently failing
-      // group = GroupActions.updateGroup(buzz, group);
+    Prediction prediction = new Prediction(transport, accessProtectedResource, jsonFactory);
+    prediction.setApplicationName("Google-PredictionSample/1.0");
+    train(prediction);
+    predict(prediction, "Is this sentence in English?");
+    predict(prediction, "¿Es esta frase en Español?");
+    predict(prediction, "Est-ce cette phrase en Français?");
+  }
+
+  private static void train(Prediction prediction) throws IOException {
+    Training training = new Training();
+    training.setId(OBJECT_PATH);
+    prediction.training.insert(training).execute();
+    System.out.println("Training started.");
+    System.out.print("Waiting for training to complete");
+    System.out.flush();
+    while (true) {
+      training = prediction.training.get(OBJECT_PATH).execute();
+      String trainingStatus = training.getTrainingStatus();
+      if (!trainingStatus.equals("RUNNING")) {
+        if (trainingStatus.startsWith("ERROR")) {
+          System.err.println();
+          System.err.println(trainingStatus);
+          System.exit(1);
+        }
+        System.out.println();
+        System.out.println("Training completed.");
+        System.out.println(training.getModelInfo());
+        break;
+      }
+      try {
+        Thread.sleep(1000);
+      } catch (InterruptedException e) {
+        break;
+      }
+      System.out.print(".");
+      System.out.flush();
     }
-    // activities
-    ActivityActions.showActivitiesForConsumption(buzz);
-    ActivityActions.showPersonalActivities(buzz);
-    if (!READ_ONLY) {
-      Activity activity = ActivityActions.insertActivity(buzz, group);
-      activity = ActivityActions.updateActivity(buzz, activity);
-      // clean up
-      ActivityActions.deleteActivity(buzz, activity);
-      GroupActions.deleteGroup(buzz, group);
-    }
+  }
+
+  private static void predict(Prediction prediction, String text) throws IOException {
+    Input input = new Input();
+    InputInput inputInput = new InputInput();
+    inputInput.setCsvInstance(Collections.<Object>singletonList(text));
+    input.setInput(inputInput);
+    Output output = prediction.training.predict(OBJECT_PATH, input).execute();
+    System.out.println("Text: " + text);
+    System.out.println("Predicted language: " + output.getOutputLabel());
   }
 
   public static void main(String[] args) {
@@ -88,7 +113,6 @@ public class BuzzSample {
             || OAuth2ClientCredentials.CLIENT_SECRET == null) {
           System.err.println(
               "Please enter your client ID and secret in " + OAuth2ClientCredentials.class);
-          System.exit(1);
         } else {
           run(jsonFactory);
         }

@@ -7,9 +7,9 @@
     <version>5</version>
   </parent>
   <groupId>com.google.apis-samples</groupId>
-  <artifactId>prediction-cmdline-sample</artifactId>
-  <version>1.0.0</version>
-  <name>Example for the Google Prediction API v1.3 using JSON and OAuth 2.</name>
+  <artifactId>docs-v3-atom-oauth-sample</artifactId>
+  <version>1.1.0</version>
+  <name>Example for the Google Documents List Data API version 3 using Atom and OAuth.</name>
 
   <url>http://code.google.com/p/google-api-java-client/</url>
 
@@ -18,7 +18,7 @@
     <url>http://code.google.com/p/google-api-java-client/issues/list</url>
   </issueManagement>
 
-  <inceptionYear>2011</inceptionYear>
+  <inceptionYear>2010</inceptionYear>
 
   <prerequisites>
     <maven>2.0.9</maven>
@@ -29,16 +29,6 @@
     <developerConnection>scm:hg:https://samples.google-api-java-client.googlecode.com/hg/</developerConnection>
     <url>http://code.google.com/p/google-api-java-client/source/browse/?repo=samples</url>
   </scm>
-
-  <repositories>
-    <repository>
-      <id>googleapis</id>
-      <url>http://mavenrepo.google-api-java-client.googlecode.com/hg/</url>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-    </repository>
-  </repositories>
 
   <developers>
     <developer>
@@ -76,7 +66,7 @@
           </execution>
         </executions>
         <configuration>
-          <mainClass>com.google.api.services.samples.prediction.cmdline.PredictionSample</mainClass>
+          <mainClass>com.google.api.services.samples.docs.cmdline.DocsSample</mainClass>
           <systemProperties>
             <systemProperty>
               <key>java.util.logging.config.file</key>
@@ -120,11 +110,6 @@
     <finalName>${project.artifactId}-${project.version}</finalName>
   </build>
   <dependencies>
-    <dependency>
-      <groupId>com.google.apis</groupId>
-      <artifactId>google-api-services-prediction</artifactId>
-      <version>v1.3-1.2.0-beta-SNAPSHOT</version>
-    </dependency>
     <dependency>
       <groupId>com.google.apis-samples</groupId>
       <artifactId>cmdline-sample-shared</artifactId>
