@@ -20,13 +20,12 @@
 your <code>JAVA_HOME</code>.</p>
 
 <p><b>Important:</b> after checking out the project, and before compiling
-and running it, you need to edit <a
-  href="http://code.google.com/p/google-api-java-client/source/browse/prediction-cmdline-sample/src/com/google/api/client/sample/prediction/ClientLoginCredentials.java?repo=samples">ClientLoginCredentials.java</a>
-to enter a username and password that has access to the Google Prediction API.
-Otherwise, you will get a <code>403 Forbidden</code> exception. You will also
-need to upload the <a
+and running it, you need to edit <code>OAuth2ClientCredentials.java</code> to
+enter the required credentials information. Otherwise, you will get a <code>400
+INVALID_CLIENT</code> error in the browser. You will also need to upload the <a
   href="http://code.google.com/apis/predict/docs/language_id.txt">training
-data</a> to Google Storage and edit the <code>OBJECT_PATH</code>.</p>
+data</a> to Google Storage and edit the <code>OBJECT_PATH</code>. Otherwise, you
+will get a 400 error "Training data file not found".</p>
 
 <pre><code>cd <i>[someDirectory]</i>
 hg clone https://samples.google-api-java-client.googlecode.com/hg/ google-api-java-client-samples

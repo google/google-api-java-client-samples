@@ -17,6 +17,7 @@ package com.google.api.services.samples.prediction.cmdline;
 import com.google.api.client.googleapis.auth.oauth2.draft10.GoogleAccessProtectedResource;
 import com.google.api.client.googleapis.json.GoogleJsonError;
 import com.google.api.client.googleapis.json.GoogleJsonError.ErrorInfo;
+import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpResponseException;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
@@ -71,28 +72,35 @@ public class PredictionSample {
     System.out.println("Training started.");
     System.out.print("Waiting for training to complete");
     System.out.flush();
-    while (true) {
-      training = prediction.training.get(OBJECT_PATH).execute();
-      String trainingStatus = training.getTrainingStatus();
-      if (!trainingStatus.equals("RUNNING")) {
-        if (trainingStatus.startsWith("ERROR")) {
-          System.err.println();
-          System.err.println(trainingStatus);
-          System.exit(1);
-        }
+    int triesCounter = 0;
+    while (triesCounter < 10) {
+      // NOTE: if model not found, it will throw an HttpResponseException with a 404 error
+      HttpResponse response = prediction.training.get(OBJECT_PATH).executeUnparsed();
+      if (response.getStatusCode() == 200) {
+        training = response.parseAs(Training.class);
         System.out.println();
         System.out.println("Training completed.");
         System.out.println(training.getModelInfo());
-        break;
+        return;
       }
+      response.ignore();
       try {
-        Thread.sleep(1000);
+        // 5 seconds times the tries counter
+        Thread.sleep(5000 * (triesCounter + 1));
       } catch (InterruptedException e) {
         break;
       }
       System.out.print(".");
       System.out.flush();
+      triesCounter++;
     }
+    error("ERROR: training not completed.");
+  }
+
+  private static void error(String errorMessage) {
+    System.err.println();
+    System.err.println(errorMessage);
+    System.exit(1);
   }
 
   private static void predict(Prediction prediction, String text) throws IOException {
