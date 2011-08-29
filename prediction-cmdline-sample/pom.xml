@@ -127,7 +127,7 @@
     </dependency>
     <dependency>
       <groupId>com.google.apis-samples</groupId>
-      <artifactId>cmdline-sample-shared</artifactId>
+      <artifactId>shared-sample-cmdline</artifactId>
       <version>1.0.0</version>
     </dependency>
   </dependencies>

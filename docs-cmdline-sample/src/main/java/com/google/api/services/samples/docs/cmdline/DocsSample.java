@@ -14,7 +14,17 @@
 
 package com.google.api.services.samples.docs.cmdline;
 
+import com.google.api.client.googleapis.auth.oauth2.draft10.GoogleAccessProtectedResource;
 import com.google.api.client.http.HttpResponseException;
+import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.json.jackson.JacksonFactory;
+import com.google.api.services.docs.DocsClient;
+import com.google.api.services.docs.DocsUrl;
+import com.google.api.services.docs.model.DocumentListEntry;
+import com.google.api.services.docs.model.DocumentListFeed;
+import com.google.api.services.samples.shared.cmdline.oauth2.LocalServerReceiver;
+import com.google.api.services.samples.shared.cmdline.oauth2.OAuth2ClientCredentials;
+import com.google.api.services.samples.shared.cmdline.oauth2.OAuth2Native;
 
 import java.io.IOException;
 
@@ -23,30 +33,41 @@ import java.io.IOException;
  */
 public class DocsSample {
 
+  static final NetHttpTransport TRANSPORT = new NetHttpTransport();
+  static final JacksonFactory JSON_FACTORY = new JacksonFactory();
+
   public static void main(String[] args) {
-    DocsClient client = new DocsClient();
     try {
-      client.authorize();
+      OAuth2ClientCredentials.errorIfNotSpecified();
+      GoogleAccessProtectedResource accessProtectedResource = OAuth2Native.authorize(TRANSPORT,
+          JSON_FACTORY,
+          new LocalServerReceiver(),
+          null,
+          "google-chrome",
+          OAuth2ClientCredentials.CLIENT_ID,
+          OAuth2ClientCredentials.CLIENT_SECRET,
+          DocsUrl.ROOT_URL);
+      DocsClient client = new DocsClient(TRANSPORT.createRequestFactory(accessProtectedResource));
+      client.setApplicationName("Google-DocsSample/1.0");
       try {
-        showDocs(client);
-        shutdown(client);
+        run(client);
       } catch (HttpResponseException e) {
         System.err.println(e.getResponse().parseAsString());
         throw e;
       }
     } catch (Throwable t) {
       t.printStackTrace();
-      shutdown(client);
+      try {
+        TRANSPORT.shutdown();
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
       System.exit(1);
     }
   }
 
-  private static void shutdown(DocsClient client) {
-    try {
-      client.shutdown();
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
+  public static void run(DocsClient client) throws IOException {
+    showDocs(client);
   }
 
   private static void showDocs(DocsClient client) throws IOException {

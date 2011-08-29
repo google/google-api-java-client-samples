@@ -37,10 +37,12 @@ your <code>JAVA_HOME</code>.</p>
 
 <pre><code>cd <i>[someDirectory]</i>
 hg clone https://samples.google-api-java-client.googlecode.com/hg/ google-api-java-client-samples
-cd google-api-java-client-samples/cmdline-sample-shared
+cd google-api-java-client-samples/shared/shared-sample-common
 edit src/main/java/com/google/api/services/samples/shared/oauth2/OAuth2ClientCredentials.java
 mvn install
-cd ../discovery-cmdline-sample
+cd ../shared-sample-cmdline
+mvn install
+cd ../../discovery-cmdline-sample
 mvn assembly:assembly
 alias google="<i>[someDirectory]</i>/google-api-java-client-samples/discovery-cmdline-sample/run_sample"</code></pre>
 

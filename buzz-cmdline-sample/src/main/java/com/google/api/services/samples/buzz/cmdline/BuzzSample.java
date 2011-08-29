@@ -26,9 +26,9 @@ import com.google.api.client.json.jackson.JacksonFactory;
 import com.google.api.services.buzz.Buzz;
 import com.google.api.services.buzz.model.Activity;
 import com.google.api.services.buzz.model.Group;
-import com.google.api.services.samples.shared.oauth2.LocalServerReceiver;
-import com.google.api.services.samples.shared.oauth2.OAuth2ClientCredentials;
-import com.google.api.services.samples.shared.oauth2.OAuth2Native;
+import com.google.api.services.samples.shared.cmdline.oauth2.LocalServerReceiver;
+import com.google.api.services.samples.shared.cmdline.oauth2.OAuth2ClientCredentials;
+import com.google.api.services.samples.shared.cmdline.oauth2.OAuth2Native;
 
 /**
  * @author Yaniv Inbar
@@ -48,6 +48,7 @@ public class BuzzSample {
   private static void run(JsonFactory jsonFactory) throws Exception {
     // authorization
     HttpTransport transport = new NetHttpTransport();
+    OAuth2ClientCredentials.errorIfNotSpecified();
     GoogleAccessProtectedResource accessProtectedResource = OAuth2Native.authorize(transport,
         jsonFactory,
         new LocalServerReceiver(),

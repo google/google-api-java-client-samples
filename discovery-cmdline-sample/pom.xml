@@ -119,11 +119,11 @@
     <dependency>
       <groupId>com.google.apis</groupId>
       <artifactId>google-api-services-discovery</artifactId>
-      <version>v1-1.2.0-beta-SNAPSHOT</version>
+      <version>v1-1.2.0-beta</version>
     </dependency>
     <dependency>
       <groupId>com.google.apis-samples</groupId>
-      <artifactId>cmdline-sample-shared</artifactId>
+      <artifactId>shared-sample-cmdline</artifactId>
       <version>1.0.0</version>
     </dependency>
   </dependencies>

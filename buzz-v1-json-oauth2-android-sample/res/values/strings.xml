@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="app_name">Buzz V1 JSON Android Sample</string>
-    <string name="post">Post</string>
-    <string name="delete">Delete</string>
-    <string name="no_activities">No Activities.</string>
-    <string name="loading_activities">Loading Activities...</string>
-</resources>

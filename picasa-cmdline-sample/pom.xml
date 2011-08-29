@@ -112,8 +112,13 @@
   <dependencies>
     <dependency>
       <groupId>com.google.apis-samples</groupId>
-      <artifactId>cmdline-sample-shared</artifactId>
+      <artifactId>shared-sample-cmdline</artifactId>
       <version>1.0.0</version>
+    </dependency>
+    <dependency>
+      <groupId>com.google.apis-samples</groupId>
+      <artifactId>shared-sample-picasa</artifactId>
+      <version>v2-1.0.0</version>
     </dependency>
   </dependencies>
   <properties>

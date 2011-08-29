@@ -7,9 +7,9 @@
     <version>5</version>
   </parent>
   <groupId>com.google.apis-samples</groupId>
-  <artifactId>docs-v3-atom-oauth-sample</artifactId>
+  <artifactId>docs-cmdline-sample</artifactId>
   <version>1.1.0</version>
-  <name>Example for the Google Documents List Data API version 3 using Atom and OAuth.</name>
+  <name>Example for the Google Documents List Data API version 3 using Atom and OAuth 2.</name>
 
   <url>http://code.google.com/p/google-api-java-client/</url>
 
@@ -112,8 +112,13 @@
   <dependencies>
     <dependency>
       <groupId>com.google.apis-samples</groupId>
-      <artifactId>cmdline-sample-shared</artifactId>
+      <artifactId>shared-sample-cmdline</artifactId>
       <version>1.0.0</version>
+    </dependency>
+    <dependency>
+      <groupId>com.google.apis-samples</groupId>
+      <artifactId>shared-sample-docs</artifactId>
+      <version>v3-1.0.0</version>
     </dependency>
   </dependencies>
   <properties>

@@ -14,9 +14,21 @@
 
 package com.google.api.services.samples.picasa.cmdline;
 
+import com.google.api.client.googleapis.auth.oauth2.draft10.GoogleAccessProtectedResource;
 import com.google.api.client.http.FileContent;
 import com.google.api.client.http.HttpResponseException;
 import com.google.api.client.http.InputStreamContent;
+import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.json.jackson.JacksonFactory;
+import com.google.api.services.picasa.PicasaClient;
+import com.google.api.services.picasa.PicasaUrl;
+import com.google.api.services.picasa.model.AlbumEntry;
+import com.google.api.services.picasa.model.AlbumFeed;
+import com.google.api.services.picasa.model.PhotoEntry;
+import com.google.api.services.picasa.model.UserFeed;
+import com.google.api.services.samples.shared.cmdline.oauth2.LocalServerReceiver;
+import com.google.api.services.samples.shared.cmdline.oauth2.OAuth2ClientCredentials;
+import com.google.api.services.samples.shared.cmdline.oauth2.OAuth2Native;
 
 import java.io.File;
 import java.io.IOException;
@@ -27,36 +39,48 @@ import java.net.URL;
  */
 public class PicasaSample {
 
+  static final NetHttpTransport TRANSPORT = new NetHttpTransport();
+  static final JacksonFactory JSON_FACTORY = new JacksonFactory();
+
   public static void main(String[] args) {
-    PicasaClient client = new PicasaClient();
     try {
-      client.authorize();
+      OAuth2ClientCredentials.errorIfNotSpecified();
+      GoogleAccessProtectedResource accessProtectedResource = OAuth2Native.authorize(TRANSPORT,
+          JSON_FACTORY,
+          new LocalServerReceiver(),
+          null,
+          "google-chrome",
+          OAuth2ClientCredentials.CLIENT_ID,
+          OAuth2ClientCredentials.CLIENT_SECRET,
+          PicasaUrl.ROOT_URL);
+      PicasaClient client =
+          new PicasaClient(TRANSPORT.createRequestFactory(accessProtectedResource));
+      client.setApplicationName("Google-PicasaSample/1.0");
       try {
-        UserFeed feed = showAlbums(client);
-        AlbumEntry album = postAlbum(client, feed);
-        postPhoto(client, album);
-        // postVideo(client, album);
-        album = getUpdatedAlbum(client, album);
-        album = updateTitle(client, album);
-        deleteAlbum(client, album);
-        shutdown(client);
+        run(client);
       } catch (HttpResponseException e) {
         System.err.println(e.getResponse().parseAsString());
         throw e;
       }
     } catch (Throwable t) {
       t.printStackTrace();
-      shutdown(client);
+      try {
+        TRANSPORT.shutdown();
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
       System.exit(1);
     }
   }
 
-  private static void shutdown(PicasaClient client) {
-    try {
-      client.shutdown();
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
+  public static void run(PicasaClient client) throws IOException {
+    UserFeed feed = showAlbums(client);
+    AlbumEntry album = postAlbum(client, feed);
+    postPhoto(client, album);
+    // postVideo(client, album);
+    album = getUpdatedAlbum(client, album);
+    album = updateTitle(client, album);
+    deleteAlbum(client, album);
   }
 
   private static UserFeed showAlbums(PicasaClient client) throws IOException {
@@ -106,7 +130,7 @@ public class PicasaSample {
     newAlbum.access = "private";
     newAlbum.title = "A new album";
     newAlbum.summary = "My favorite photos";
-    AlbumEntry album = client.insertAlbum(feed, newAlbum);
+    AlbumEntry album = client.executeInsert(feed, newAlbum);
     showAlbum(client, album);
     return album;
   }
@@ -116,7 +140,8 @@ public class PicasaSample {
     String photoUrlString = "http://www.google.com/accounts/lh2/" + fileName;
     InputStreamContent content =
         new InputStreamContent("image/jpeg", new URL(photoUrlString).openStream());
-    PhotoEntry photo = client.executeInsertPhotoEntry(album.getFeedLink(), content, fileName);
+    PhotoEntry photo =
+        client.executeInsertPhotoEntry(new PicasaUrl(album.getFeedLink()), content, fileName);
     System.out.println("Posted photo: " + photo.title);
     return photo;
   }
@@ -129,8 +154,8 @@ public class PicasaSample {
     PhotoEntry video = new PhotoEntry();
     video.title = file.getName();
     video.summary = "My video";
-    PhotoEntry result =
-        client.executeInsertPhotoEntryWithMetadata(video, album.getFeedLink(), imageContent);
+    PhotoEntry result = client.executeInsertPhotoEntryWithMetadata(
+        video, new PicasaUrl(album.getFeedLink()), imageContent);
     System.out.println("Posted video (pending processing): " + result.title);
     return result;
   }
@@ -145,13 +170,13 @@ public class PicasaSample {
   private static AlbumEntry updateTitle(PicasaClient client, AlbumEntry album) throws IOException {
     AlbumEntry patched = album.clone();
     patched.title = "My favorite web logos";
-    album = client.executePatchAlbumRelativeToOriginal(patched, album);
+    album = client.executePatchRelativeToOriginal(album, patched);
     showAlbum(client, album);
     return album;
   }
 
   private static void deleteAlbum(PicasaClient client, AlbumEntry album) throws IOException {
-    client.executeDeleteEntry(album);
+    client.executeDelete(album);
     System.out.println();
     System.out.println("Album deleted.");
   }

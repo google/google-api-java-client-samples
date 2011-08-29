@@ -26,10 +26,12 @@ INVALID_CLIENT</code> error in the browser.</p>
 
 <pre><code>cd <i>[someDirectory]</i>
 hg clone https://samples.google-api-java-client.googlecode.com/hg/ google-api-java-client-samples
-cd google-api-java-client-samples/cmdline-sample-shared
+cd google-api-java-client-samples/shared/shared-sample-common
 edit src/main/java/com/google/api/services/samples/shared/oauth2/OAuth2ClientCredentials.java
 mvn install
-cd ../buzz-cmdline-sample
+cd ../shared-sample-cmdline
+mvn install
+cd ../../buzz-cmdline-sample
 mvn -q compile exec:java</code></pre>
 
 <h3>Setup Project in Eclipse 3.5/3.6</h3>

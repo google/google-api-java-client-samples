@@ -29,9 +29,9 @@ import com.google.api.services.prediction.model.Input;
 import com.google.api.services.prediction.model.InputInput;
 import com.google.api.services.prediction.model.Output;
 import com.google.api.services.prediction.model.Training;
-import com.google.api.services.samples.shared.oauth2.LocalServerReceiver;
-import com.google.api.services.samples.shared.oauth2.OAuth2ClientCredentials;
-import com.google.api.services.samples.shared.oauth2.OAuth2Native;
+import com.google.api.services.samples.shared.cmdline.oauth2.LocalServerReceiver;
+import com.google.api.services.samples.shared.cmdline.oauth2.OAuth2ClientCredentials;
+import com.google.api.services.samples.shared.cmdline.oauth2.OAuth2Native;
 
 import java.io.IOException;
 import java.util.Collections;

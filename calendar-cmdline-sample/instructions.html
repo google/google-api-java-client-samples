@@ -1,0 +1,87 @@
+<html>
+<title>Google Calendar Data API Atom OAuth Sample</title>
+<body>
+<h2>Instructions for the Google Calendar Data API Atom OAuth Sample</h2>
+
+<h3>Browse Online</h3>
+
+<ul>
+  <li><a
+    href="http://code.google.com/p/google-api-java-client/source/browse?repo=samples#hg/calendar-cmdline-sample">Browse
+  Source</a>, or main file <a
+    href="http://code.google.com/p/google-api-java-client/source/browse/calendar-cmdline-sample/src/main/java/com/google/api/services/samples/calendar/cmdline/CalendarSample.java?repo=samples">CalendarSample.java</a></li>
+</ul>
+
+<h3>Checkout Instructions</h3>
+
+<p><b>Prerequisites:</b> install <a href="http://java.com">Java 6</a>, <a
+  href="http://mercurial.selenic.com/">Mercurial</a>, and <a
+  href="http://maven.apache.org/download.html">Maven</a>. You may need to set
+your <code>JAVA_HOME</code>.</p>
+
+<p><b>Important:</b> after checking out the project, and before compiling
+and running it, you need to edit <code>OAuth2ClientCredentials.java</code> to
+enter the required credentials information. Otherwise, you will get a <code>400
+INVALID_CLIENT</code> error in the browser.</p>
+
+<pre><code>cd <i>[someDirectory]</i>
+hg clone https://samples.google-api-java-client.googlecode.com/hg/ google-api-java-client-samples
+cd google-api-java-client-samples/shared/shared-sample-common
+edit src/main/java/com/google/api/services/samples/shared/oauth2/OAuth2ClientCredentials.java
+mvn install
+cd ../shared-sample-cmdline
+mvn install
+cd ../shared-sample-calendar
+mvn install
+cd ../../calendar-cmdline-sample
+mvn -q compile exec:java</code></pre>
+
+<h3>Setup Project in Eclipse 3.5/3.6</h3>
+
+<p><b>Prerequisites:</b> install <a href="http://www.eclipse.org/downloads/">Eclipse</a>,
+the <a href="http://javaforge.com/project/HGE">Mercurial plugin</a>, and the <a
+  href="http://m2eclipse.sonatype.org/installing-m2eclipse.html">Maven
+plugin</a>.</p>
+
+<ul>
+  <li>Setup Eclipse Preferences
+  <ul>
+    <li>Window &gt; Preferences... (or on Mac, Eclipse &gt; Preferences...)</li>
+    <li>Select Maven
+    <ul>
+      <li>check on "Download Artifact Sources"</li>
+      <li>check on "Download Artifact JavaDoc"</li>
+    </ul>
+    </li>
+  </ul>
+  </li>
+  <li>Import <code>calendar-cmdline-sample</code> project
+  <ul>
+    <li>File &gt; Import...</li>
+    <li>Select "General &gt; Existing Project into Workspace" and click
+    "Next"</li>
+    <li>Click "Browse" next to "Select root directory", find <code><i>[someDirectory]</i>/google-api-java-client-samples/calendar-cmdline-sample</code>
+    and click "Next"</li>
+    <li>Click "Finish"</li>
+  </ul>
+  </li>
+  <li>Run
+  <ul>
+    <li>Right-click on project calendar-cmdline-sample</li>
+    <li>Run As &gt; Java Application</li>
+    <li>If asked, type "CalendarSample" and click OK</li>
+    <li>To enable logging:
+    <ul>
+      <li>Run &gt; Run Configurations...</li>
+      <li>Click on "Java Application &gt; DocsSample"</li>
+      <li>Click on "Arguments" tab</li>
+      <li>VM arguments: <code>-Djava.util.logging.config.file=${project_loc}/logging.properties</code></li>
+      <li>Click "Run"</li>
+    </ul>
+    </li>
+  </ul>
+  </li>
+</ul>
+
+</body>
+</html>

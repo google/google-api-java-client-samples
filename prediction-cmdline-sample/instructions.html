@@ -1,7 +1,7 @@
 <html>
-<title>Google Prediction API v1.3 JSON ClientLogin Sample</title>
+<title>Google Prediction API v1.3 JSON OAuth 2 Sample</title>
 <body>
-<h2>Instructions for the Google Prediction API v1.3 JSON ClientLogin Sample</h2>
+<h2>Instructions for the Google Prediction API v1.3 JSON OAuth 2 Sample</h2>
 
 <h3>Browse Online</h3>
 
@@ -29,10 +29,12 @@ will get a 400 error "Training data file not found".</p>
 
 <pre><code>cd <i>[someDirectory]</i>
 hg clone https://samples.google-api-java-client.googlecode.com/hg/ google-api-java-client-samples
-cd google-api-java-client-samples/cmdline-sample-shared
+cd google-api-java-client-samples/shared/shared-sample-common
 edit src/main/java/com/google/api/services/samples/shared/oauth2/OAuth2ClientCredentials.java
 mvn install
-cd ../prediction-cmdline-sample
+cd ../shared-sample-cmdline
+mvn install
+cd ../../prediction-cmdline-sample
 mvn -q compile exec:java</code></pre>
 
 <h3>Setup Project in Eclipse 3.5/3.6</h3>

@@ -1,9 +1,12 @@
 syntax: regexp
-^([^/]+/)?target$
+^([^/]+/)+target$
 
 syntax: regexp
 ^[^/]+/proguard$
 
 syntax: regexp
 ^[^/]+/gen$
+
+syntax: regexp
+^[^/]+/.gwt$
 

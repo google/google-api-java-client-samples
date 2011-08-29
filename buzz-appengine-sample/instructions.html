@@ -1,0 +1,68 @@
+<html>
+<title>Google Buzz API App OAuth 2 Engine Sample</title>
+<body>
+<h2>Instructions for the Google Buzz API App OAuth 2 Engine Sample</h2>
+
+<h3>Browse Source Code</h3>
+
+<ul>
+  <li><a
+    href="http://code.google.com/p/google-api-java-client/source/browse/buzz-appengine-sample/?repo=samples">buzz-appengine-sample</a>
+  or <a
+    href="http://code.google.com/p/google-api-java-client/source/browse/buzz-appengine-sample/src/main/java/com/google/api/client/sample/buzz/appengine/oauth2/SampleApp.java?repo=samples">SampleApp.java</a></li>
+</ul>
+
+<h3>Checkout Instructions</h3>
+
+<p><b>Prerequisites:</b> install <a href="http://java.com">Java 6</a>, <a
+  href="http://code.google.com/appengine/downloads.html">Google App Engine
+1.4.0</a>, <a href="http://mercurial.selenic.com/">Mercurial</a>, and <a
+  href="http://maven.apache.org/download.html">Maven</a>. You may need
+to set your <code>JAVA_HOME</code>.</p>
+
+<pre><code>cd <i>[someDirectory]</i>
+hg clone https://samples.google-api-java-client.googlecode.com/hg/ google-api-java-client-samples
+cd google-api-java-client-samples/shared/shared-sample-common
+edit src/main/java/com/google/api/services/samples/shared/oauth2/OAuth2ClientCredentials.java
+mvn install
+cd ../../buzz-appengine-sample
+mvn clean package</code></pre>
+
+<h3>Setup Project in Eclipse 3.5/3.6</h3>
+
+<p><b>Prerequisites:</b> install <a href="http://www.eclipse.org/downloads/">Eclipse</a>,
+<a href="http://code.google.com/eclipse/">Google Plugin for Eclipse</a>, and the
+<a href="http://javaforge.com/project/HGE">Mercurial plugin</a>.</p>
+
+<ul>
+  <li>Setup Eclipse Preferences
+  <ul>
+    <li>Window &gt; Preferences... (or on Mac, Eclipse &gt; Preferences...)</li>
+    <li>Select Maven
+    <ul>
+      <li>check on "Download Artifact Sources"</li>
+      <li>check on "Download Artifact JavaDoc"</li>
+    </ul>
+    </li>
+  </ul>
+  </li>
+  <li>Import <code>buzz-appengine-sample</code> project
+  <ul>
+    <li>File &gt; Import...</li>
+    <li>Select "General &gt; Existing Project into Workspace" and click
+    "Next"</li>
+    <li>Click "Browse" next to "Select root directory", find <code><i>[someDirectory]</i>/google-api-java-client-samples/buzz-appengine-sample</code>
+    and click "Next"</li>
+    <li>Click "Finish"</li>
+  </ul>
+  </li>
+  <li>Run
+  <ul>
+    <li>Right-click on project buzz-appengine-sample</li>
+    <li>Run As &gt; Web Application</li>
+  </ul>
+  </li>
+</ul>
+
+</body>
+</html>

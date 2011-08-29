@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src/main/java"/>
+  <classpathentry kind="src" path="gen"/>
+  <classpathentry kind="con"
+    path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK" />
+  <classpathentry kind="var"
+    path="M2_REPO/com/google/http-client/google-http-client/1.5.0-beta/google-http-client-1.5.0-beta.jar"
+    sourcepath="M2_REPO/com/google/http-client/google-http-client/1.5.0-beta/google-http-client-1.5.0-beta-sources.jar" />
+  <classpathentry kind="var"
+    path="M2_REPO/com/google/http-client/google-http-client-extensions-android2/1.5.0-beta/google-http-client-extensions-android2-1.5.0-beta.jar"
+    sourcepath="M2_REPO/com/google/http-client/google-http-client-extensions-android2/1.5.0-beta/google-http-client-extensions-android2-1.5.0-beta-sources.jar" />
+  <classpathentry kind="var"
+    path="M2_REPO/com/google/api-client/google-api-client/1.5.0-beta/google-api-client-1.5.0-beta.jar"
+    sourcepath="M2_REPO/com/google/api-client/google-api-client/1.5.0-beta/google-api-client-1.5.0-beta-sources.jar" />
+  <classpathentry kind="var"
+    path="M2_REPO/com/google/api-client/google-api-client-extensions-android2/1.5.0-beta/google-api-client-extensions-android2-1.5.0-beta.jar"
+    sourcepath="M2_REPO/com/google/api-client/google-api-client-extensions-android2/1.5.0-beta/google-api-client-extensions-android2-1.5.0-beta-sources.jar" />
+  <classpathentry kind="var"
+    path="M2_REPO/com/google/apis-samples/shared-sample-calendar/v2-1.0.0/shared-sample-calendar-v2-1.0.0.jar"
+    sourcepath="M2_REPO/com/google/apis-samples/shared-sample-calendar/v2-1.0.0/shared-sample-calendar-v2-1.0.0-sources.jar" />
+  <classpathentry kind="var"
+    path="M2_REPO/com/google/apis-samples/shared-sample-gdata/1.0.0/shared-sample-gdata-1.0.0.jar"
+    sourcepath="M2_REPO/com/google/apis-samples/shared-sample-gdata/1.0.0/shared-sample-gdata-1.0.0-sources.jar" />
+	<classpathentry kind="var" path="M2_REPO/com/google/guava/guava/r09/guava-r09.jar"/>
+	<classpathentry kind="output" path="target/classes"/>
+</classpath>
