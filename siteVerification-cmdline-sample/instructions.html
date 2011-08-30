@@ -1,7 +1,7 @@
 <html>
-  <title>Google Site Verification API JSON OAuth Sample</title>
+  <title>Google Site Verification API JSON OAuth 2.0 Sample</title>
   <body>
-    <h2>Instructions for the Google Site Verification API JSON OAuth Sample</h2>
+    <h2>Instructions for the Google Site Verification API JSON OAuth 2.0 Sample</h2>
     <h3>Build Instructions</h3>
 
     <p><b>Prerequisites:</b> install <a href="http://java.com">Java 6</a>, <a
@@ -9,23 +9,18 @@
                                                                                                                                         href="http://maven.apache.org/download.html">Maven</a>. You may need to set
       your <code>JAVA_HOME</code>.</p>
 
-    <p><b>Important:</b> after checking out the project, and before compiling
-      and running it, you need to edit <a
-                                          href="http://code.google.com/p/google-api-java-client/source/browse/verification-json-oauth-sample/src/com/google/api/client/sample/verification/ClientCredentials.java?repo=samples">ClientCredentials.java</a>
-      to enter an developer key from the <a href="https://code.google.com/apis/console/">Google APIs Console</a>. You can also optionally add the domain and client shared secret for a registered domain that you own.
-      Without a valid developer key, you will only be able to make a limited
-      number of queries per second. When you exceed this limit, you will receive
-      a <code>403 Forbidden</code> error with the
-      message <code>Daily Limit Exceeded. Please sign up</code>. You will then
-      have to wait a period of time while the limited quota regenerates.</p>
+    <p><b>Important:</b> after checking out the project, and before compiling and running it, you need to edit
+      <code>OAuth2ClientCredentials.java</code> to enter the required credentials information. Otherwise, you will get a
+      <code>400 INVALID_CLIENT</code> error in the browser.</p>
 
     <pre><code>
         cd <i>[someDirectory]</i>
         hg clone https://samples.google-api-java-client.googlecode.com/hg/ google-api-java-client-samples
-        cd google-api-java-client-samples/verification-jsonc-sample
-        <i>[editor]</i> src/com/google/api/client/sample/verification/ClientCredentials.java
-        mvn compile
-        mvn -q exec:java</code></pre>
+        cd google-api-java-client-samples/shared/shared-sample-cmdline
+        edit src/main/java/com/google/api/services/samples/shared/cmdline/oauth2/OAuth2ClientCredentials.java
+        mvn install
+        cd ../../siteVerification-cmdline-sample
+        mvn -q compile exec:java</code></pre>
 
     <h3>Setup Project in Eclipse 3.5/3.6</h3>
 
@@ -46,7 +41,7 @@
           </li>
         </ul>
       </li>
-      <li>Import <code>verification-json-oauth-sample</code> project
+      <li>Import <code>siteVerification-cmdline-sample</code> project
         <ul>
           <li>File &gt; Import...</li>
           <li>Select "General &gt; Existing Project into Workspace" and click
@@ -58,9 +53,18 @@
       </li>
       <li>Run
         <ul>
-          <li>Right-click on project verification-json-oauth-sample</li>
+          <li>Right-click on project siteVerification-cmdline-sample</li>
           <li>Run As &gt; Java Application</li>
           <li>If asked, type "VerificationSample" and click OK</li>
+        </ul>
+      </li>
+      <li>To enable logging:
+        <ul>
+          <li>Run &gt; Run Configurations...</li>
+          <li>Click on "Java Application &gt; VerificationSample"</li>
+          <li>Click on "Arguments" tab</li>
+          <li>VM arguments: <code>-Djava.util.logging.config.file=${project_loc}/logging.properties</code></li>
+          <li>Click "Run"</li>
         </ul>
       </li>
     </ul>
