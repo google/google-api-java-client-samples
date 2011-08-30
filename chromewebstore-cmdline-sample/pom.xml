@@ -7,9 +7,9 @@
     <version>5</version>
   </parent>
   <groupId>com.google.apis-samples</groupId>
-  <artifactId>books-cmdline-sample</artifactId>
+  <artifactId>chromewebstore-cmdline-sample</artifactId>
   <version>1.2.0</version>
-  <name>Example for the Google Books API v1 using JSON.</name>
+  <name>Example for the Chrome Web Store Licensing API using JSON and OAuth 1.0a.</name>
 
   <url>http://code.google.com/p/google-api-java-client/</url>
 
@@ -18,7 +18,7 @@
     <url>http://code.google.com/p/google-api-java-client/issues/list</url>
   </issueManagement>
 
-  <inceptionYear>2011</inceptionYear>
+  <inceptionYear>2010</inceptionYear>
 
   <prerequisites>
     <maven>2.0.9</maven>
@@ -37,24 +37,21 @@
       <snapshots>
         <enabled>true</enabled>
       </snapshots>
-      <releases>
-        <enabled>true</enabled>
-      </releases>
     </repository>
   </repositories>
 
   <developers>
     <developer>
-      <id>dlu</id>
-      <name>David Lu</name>
-      <email>dlu@google.com</email>
+      <id>yanivi</id>
+      <name>Yaniv Inbar</name>
+      <email>yanivi@google.com</email>
       <organization>Google</organization>
       <organizationUrl>http://www.google.com</organizationUrl>
       <roles>
         <role>owner</role>
         <role>developer</role>
       </roles>
-      <timezone>-8</timezone>
+      <timezone>-5</timezone>
     </developer>
   </developers>
   <build>
@@ -79,7 +76,7 @@
           </execution>
         </executions>
         <configuration>
-          <mainClass>com.google.api.services.samples.books.cmdline.BooksSample</mainClass>
+          <mainClass>com.google.api.services.samples.chromewebstore.cmdline.ChromeLicensingSample</mainClass>
           <systemProperties>
             <systemProperty>
               <key>java.util.logging.config.file</key>
@@ -125,7 +122,7 @@
   <dependencies>
     <dependency>
       <groupId>com.google.apis</groupId>
-      <artifactId>google-api-services-books</artifactId>
+      <artifactId>google-api-services-chromewebstore</artifactId>
       <version>v1-1.2.0-beta</version>
     </dependency>
   </dependencies>
