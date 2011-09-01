@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>taskqueue-json-oauth-sample</name>
-	<comment></comment>
-	<projects>
-	</projects>
+  <name>taskqueue-cmdline-sample</name>
+  <comment></comment>
+  <projects>
+  </projects>
   <buildSpec>
     <buildCommand>
       <name>org.eclipse.jdt.core.javabuilder</name>
