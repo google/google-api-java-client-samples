@@ -1,0 +1,93 @@
+<html>
+<title>Buzz API JSON OAuth 2.0 Sample for Android</title>
+<body>
+<h2>Instructions for the Buzz API JSON OAuth 2.0 Sample for Android</h2>
+
+<h3>Browse Online</h3>
+
+<ul>
+  <li><a
+    href="http://code.google.com/p/google-api-java-client/source/browse?repo=samples#hg/buzz-android-sample">Browse
+  Source</a>, or main file <a
+    href="http://code.google.com/p/google-api-java-client/source/browse/buzz-android-sample/src/main/java/com/google/api/services/samples/buzz/android/BuzzSample.java?repo=samples">BuzzSample.java</a></li>
+</ul>
+
+<h3>Checkout Instructions</h3>
+
+<p><b>Prerequisites:</b> install <a href="http://java.com">Java 6</a>, <a
+  href="http://mercurial.selenic.com/">Mercurial</a> and <a
+  href="http://maven.apache.org/download.html">Maven</a>. You may need to set
+your <code>JAVA_HOME</code>.</p>
+
+<p><b>Important:</b> after checking out the project, and before compiling and
+ running it, you need to edit <code>ClientCredentials.java</code> to enter the
+ required API key generated from <a href="https://code.google.com/apis/console/">Google APIs Console</a>.
+ Without a valid key, you will only be able to make a limited number of queries per second.
+ When you exceed this limit, you will receive a <code>403 Forbidden</code> error with the message <code>Daily Limit Exceeded. Please
+ sign up</code>. You will then have to wait a period of time while the limited quota regenerates.
+
+<pre><code>cd <i>[someDirectory]</i>
+hg clone https://samples.google-api-java-client.googlecode.com/hg/ google-api-java-client-samples
+cd google-api-java-client-samples/shared/shared-sample-android
+<i>[editor]</i> src/main/java/com/google/api/services/samples/shared/android/ClientCredentials.java
+mvn source:jar install
+cd ../../buzz-android-sample
+mvn compile
+mvn -q exec:java</code></pre>
+
+<h3>Setup Project in Eclipse 3.5</h3>
+
+<p><b>Prerequisites:</b> install <a href="http://www.eclipse.org/downloads/">Eclipse</a>,
+the <a href="http://javaforge.com/project/HGE">Mercurial plugin</a>, the <a
+  href="http://m2eclipse.sonatype.org/installing-m2eclipse.html">Maven
+plugin</a>, and the <a
+  href="http://developer.android.com/sdk/eclipse-adt.html#installing">Android
+plugin</a>.</p>
+
+<ul>
+  <li>Preferences:
+  <ul>
+    <li>Android: setup SDK location</li>
+  </ul>
+  </li>
+  <li>Window &gt; Android SDK and AVD Manager
+  <ul>
+    <li>Follow instructions to install Package "Google API's by Google
+    Inc., Android API 7"</li>
+    <li>Follow instructions to create a new Android Virtual Device based on
+    target "Google API's (Google Inc.) - API Level 7"</li>
+    <li>Click "Start..." (wait a while...)</li>
+    <li>On home screen in emulator, click Menu button, Settings</li>
+    <li>Click on "Accounts and Sync"</li>
+    <li>Click on "Add Account"</li>
+    <li>Click "Google" and follow instructions</li>
+  </ul>
+  </li>
+  <li>Import <code>buzz-android-sample</code> project
+  <ul>
+    <li>File &gt; Import...</li>
+    <li>Select "General &gt; Existing Project into Workspace" and click
+    "Next"</li>
+    <li>Click "Browse" next to "Select root directory", find <code><i>[someDirectory]</i>/google-api-java-client-samples/buzz-android-sample</code>
+    and click "Next"</li>
+    <li>Click "Finish"</li>
+  </ul>
+  </li>
+  <li>Clean Project (if compile error about missing gen directory)
+  <ul>
+    <li>Select <code>buzz-android-sample</code> project</li>
+    <li>Project &gt; Clean...</li>
+    <li>Select "Clean projects selected below"</li>
+    <li>Click on "OK"</li>
+  </ul>
+  </li>
+  <li>Run
+  <ul>
+    <li>Right-click on project buzz-android-sample</li>
+    <li>Run As &gt; Android Application</li>
+  </ul>
+  </li>
+</ul>
+
+</body>
+</html>
