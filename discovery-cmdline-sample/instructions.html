@@ -36,12 +36,10 @@ Examples using <b><code>google discover</code></b>:
 your <code>JAVA_HOME</code>.</p>
 
 <pre><code>cd <i>[someDirectory]</i>
-hg clone https://samples.google-api-java-client.googlecode.com/hg/ google-api-java-client-samples
-cd google-api-java-client-samples/shared/shared-sample-common
-edit src/main/java/com/google/api/services/samples/shared/oauth2/OAuth2ClientCredentials.java
-mvn install
-cd ../shared-sample-cmdline
-mvn install
+hg clone https://code.google.com/p/google-api-java-client.samples/ google-api-java-client-samples
+cd google-api-java-client-samples/shared/shared-sample-cmdline
+<i>[editor]</i> src/main/java/com/google/api/services/samples/shared/cmdline/oauth2/OAuth2ClientCredentials.java
+mvn source:jar install
 cd ../../discovery-cmdline-sample
 mvn assembly:assembly
 alias google="<i>[someDirectory]</i>/google-api-java-client-samples/discovery-cmdline-sample/run_sample"</code></pre>

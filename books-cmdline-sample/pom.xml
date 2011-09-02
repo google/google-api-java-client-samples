@@ -8,7 +8,7 @@
   </parent>
   <groupId>com.google.apis-samples</groupId>
   <artifactId>books-cmdline-sample</artifactId>
-  <version>1.2.0</version>
+  <version>1.2.1</version>
   <name>Example for the Google Books API v1 using JSON.</name>
 
   <url>http://code.google.com/p/google-api-java-client/</url>
@@ -127,6 +127,11 @@
       <groupId>com.google.apis</groupId>
       <artifactId>google-api-services-books</artifactId>
       <version>v1-1.2.0-beta</version>
+    </dependency>
+    <dependency>
+      <groupId>com.google.apis-samples</groupId>
+      <artifactId>shared-sample-cmdline</artifactId>
+      <version>1.0.0</version>
     </dependency>
   </dependencies>
   <properties>

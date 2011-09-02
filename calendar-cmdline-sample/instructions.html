@@ -1,7 +1,7 @@
 <html>
-<title>Google Calendar Data API Atom OAuth Sample</title>
+<title>calendar-cmdline-sample</title>
 <body>
-<h2>Instructions for the Google Calendar Data API Atom OAuth Sample</h2>
+<h2>Instructions for the Google Calendar Data API V2 Command-Line Sample</h2>
 
 <h3>Browse Online</h3>
 
@@ -25,16 +25,15 @@ enter the required credentials information. Otherwise, you will get a <code>400
 INVALID_CLIENT</code> error in the browser.</p>
 
 <pre><code>cd <i>[someDirectory]</i>
-hg clone https://samples.google-api-java-client.googlecode.com/hg/ google-api-java-client-samples
-cd google-api-java-client-samples/shared/shared-sample-common
-edit src/main/java/com/google/api/services/samples/shared/oauth2/OAuth2ClientCredentials.java
-mvn install
-cd ../shared-sample-cmdline
-mvn install
+hg clone https://code.google.com/p/google-api-java-client.samples/ google-api-java-client-samples
+cd google-api-java-client-samples/shared/shared-sample-cmdline
+<i>[editor]</i> src/main/java/com/google/api/services/samples/shared/cmdline/oauth2/OAuth2ClientCredentials.java
+mvn source:jar install
 cd ../shared-sample-calendar
-mvn install
+mvn source:jar install
 cd ../../calendar-cmdline-sample
-mvn -q compile exec:java</code></pre>
+mvn compile
+mvn -q exec:java</code></pre>
 
 <h3>Setup Project in Eclipse 3.5/3.6</h3>
 
@@ -73,7 +72,7 @@ plugin</a>.</p>
     <li>To enable logging:
     <ul>
       <li>Run &gt; Run Configurations...</li>
-      <li>Click on "Java Application &gt; DocsSample"</li>
+      <li>Click on "Java Application &gt; CalendarSample"</li>
       <li>Click on "Arguments" tab</li>
       <li>VM arguments: <code>-Djava.util.logging.config.file=${project_loc}/logging.properties</code></li>
       <li>Click "Run"</li>

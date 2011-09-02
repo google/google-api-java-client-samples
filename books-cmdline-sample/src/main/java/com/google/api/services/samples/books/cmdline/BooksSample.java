@@ -27,12 +27,13 @@ import com.google.api.services.books.model.Volume;
 import com.google.api.services.books.model.VolumeSaleInfo;
 import com.google.api.services.books.model.VolumeVolumeInfo;
 import com.google.api.services.books.model.Volumes;
+import com.google.api.services.samples.shared.cmdline.ClientCredentials;
 
 import java.net.URLEncoder;
 import java.text.NumberFormat;
 
 /**
- * A sample application that demonstrates how Goole Books Client Library for
+ * A sample application that demonstrates how Google Books Client Library for
  * Java can be used to query Google Books. It accepts queries in the command
  * line, and prints the results to the console.
  *
@@ -43,12 +44,6 @@ import java.text.NumberFormat;
  */
 public class BooksSample {
 
-  // Sign up for your API Key at https://code.google.com/apis/console
-  // Only limited requests can be made without an API key for development.
-  // Production apps should use an API key to for higher production quota.
-  // You can also request for even higher quota, but only with an API Key.
-  private static final String API_KEY = null;
-
   private static final NumberFormat CURRENCY_FORMATTER = NumberFormat.getCurrencyInstance();
   private static final NumberFormat PERCENT_FORMATTER = NumberFormat.getPercentInstance();
 
@@ -56,7 +51,7 @@ public class BooksSample {
     // Set up Books client.
     final Books books = new Books(new NetHttpTransport(), jsonFactory);
     books.setApplicationName("Google-BooksSample/1.0");
-    books.setKey(API_KEY);
+    books.setKey(ClientCredentials.KEY);
 
     // Set query string and filter only Google eBooks.
     System.out.println("Query: [" + query + "]");
