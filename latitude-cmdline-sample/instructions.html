@@ -1,7 +1,7 @@
 <html>
-<title>Google Latitude API JSON OAuth 2.0 Sample</title>
+<title>latitude-cmdline-sample</title>
 <body>
-<h2>Instructions for the Google Latitude API JSON OAuth 2.0 Sample</h2>
+<h2>Instructions for the Latitude V1 Command-Line Sample</h2>
 
 <h3>Browse Online</h3>
 
@@ -25,10 +25,10 @@ enter the required credentials information. Otherwise, you will get a <code>400
 INVALID_CLIENT</code> error in the browser.</p>
 
 <pre><code>cd <i>[someDirectory]</i>
-hg clone https://samples.google-api-java-client.googlecode.com/hg/ google-api-java-client-samples
+hg clone https://code.google.com/p/google-api-java-client.samples/ google-api-java-client-samples
 cd google-api-java-client-samples/shared/shared-sample-cmdline
 edit src/main/java/com/google/api/services/samples/shared/cmdline/oauth2/OAuth2ClientCredentials.java
-mvn install
+mvn source:jar install
 cd ../../latitude-cmdline-sample
 mvn -q compile exec:java</code></pre>
 

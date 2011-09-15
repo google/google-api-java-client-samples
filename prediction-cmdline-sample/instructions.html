@@ -1,7 +1,7 @@
 <html>
-<title>Google Prediction API v1.3 JSON OAuth 2 Sample</title>
+<title>prediction-cmdline-sample</title>
 <body>
-<h2>Instructions for the Google Prediction API v1.3 JSON OAuth 2 Sample</h2>
+<h2>Instructions for the Prediction V1.3 Command-Line Sample</h2>
 
 <h3>Browse Online</h3>
 
@@ -28,12 +28,10 @@ data</a> to Google Storage and edit the <code>OBJECT_PATH</code>. Otherwise, you
 will get a 400 error "Training data file not found".</p>
 
 <pre><code>cd <i>[someDirectory]</i>
-hg clone https://samples.google-api-java-client.googlecode.com/hg/ google-api-java-client-samples
-cd google-api-java-client-samples/shared/shared-sample-common
-edit src/main/java/com/google/api/services/samples/shared/oauth2/OAuth2ClientCredentials.java
-mvn install
-cd ../shared-sample-cmdline
-mvn install
+hg clone https://code.google.com/p/google-api-java-client.samples/ google-api-java-client-samples
+cd google-api-java-client-samples/shared/shared-sample-cmdline
+edit src/main/java/com/google/api/services/samples/shared/cmdline/oauth2/OAuth2ClientCredentials.java
+mvn source:jar install
 cd ../../prediction-cmdline-sample
 mvn -q compile exec:java</code></pre>
 

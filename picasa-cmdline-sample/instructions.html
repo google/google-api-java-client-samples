@@ -1,15 +1,15 @@
 <html>
-<title>Picasa Web Albums Data API Atom OAuth Sample</title>
+<title>picasa-cmdline-sample</title>
 <body>
-<h2>Instructions for the Picasa Web Albums Data API Atom OAuth Sample</h2>
+<h2>Instructions for the Picasa Web Albums Command-Line Sample</h2>
 
 <h3>Browse Online</h3>
 
 <ul>
   <li><a
-    href="http://code.google.com/p/google-api-java-client/source/browse?repo=samples#hg/picasa-atom-oauth-sample">Browse
+    href="http://code.google.com/p/google-api-java-client/source/browse?repo=samples#hg/picasa-cmdline-sample">Browse
   Source</a>, or main file <a
-    href="http://code.google.com/p/google-api-java-client/source/browse/picasa-atom-oauth-sample/src/com/google/api/client/sample/picasa/PicasaSample.java?repo=samples">PicasaSample.java</a></li>
+    href="http://code.google.com/p/google-api-java-client/source/browse/picasa-cmdline-sample/src/main/java/com/google/api/services/samples/picasa/cmdline/PicasaSample.java?repo=samples">PicasaSample.java</a></li>
 </ul>
 
 <h3>Checkout Instructions</h3>
@@ -25,13 +25,13 @@ enter the required credentials information. Otherwise, you will get a <code>400
 INVALID_CLIENT</code> error in the browser.</p>
 
 <pre><code>cd <i>[someDirectory]</i>
-hg clone https://samples.google-api-java-client.googlecode.com/hg/ google-api-java-client-samples
-cd google-api-java-client-samples/shared/shared-sample-common
-edit src/main/java/com/google/api/services/samples/shared/oauth2/OAuth2ClientCredentials.java
+hg clone https://code.google.com/p/google-api-java-client.samples/ google-api-java-client-samples
+cd google-api-java-client-samples/shared/shared-sample-cmdline
+edit src/main/java/com/google/api/services/samples/shared/cmdline/oauth2/OAuth2ClientCredentials.java
 mvn source:jar install
-cd ../shared-sample-cmdline
+cd ../gdata/shared-sample-picasa
 mvn source:jar install
-cd ../../picasa-atom-oauth-sample
+cd ../../../picasa-cmdline-sample
 mvn -q compile exec:java</code></pre>
 
 <h3>Setup Project in Eclipse 3.5/3.6</h3>
@@ -53,19 +53,18 @@ plugin</a>.</p>
     </li>
   </ul>
   </li>
-  <li>Import <code>picasa-atom-oauth-sample</code> project
+  <li>Import <code>picasa-cmdline-sample</code> project
   <ul>
     <li>File &gt; Import...</li>
     <li>Select "General &gt; Existing Project into Workspace" and click
     "Next"</li>
-    <li>Click "Browse" next to "Select root directory", find <code><i>[someDirectory]</i>/google-api-java-client-samples/picasa-atom-oauth-sample</code>
-    and click "Next"</li>
+    <li>Click "Browse" next to "Select root directory", find <code><i>[someDirectory]</i>/google-api-java-client-samples/picasa-cmdline-sample</code> and click "Next"</li>
     <li>Click "Finish"</li>
   </ul>
   </li>
   <li>Run
   <ul>
-    <li>Right-click on project picasa-atom-oauth-sample</li>
+    <li>Right-click on project picasa-cmdline-sample</li>
     <li>Run As &gt; Java Application</li>
     <li>If asked, type "PicasaSample" and click OK</li>
     <li>To enable logging:

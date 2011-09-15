@@ -1,15 +1,15 @@
 <html>
-<title>Google Buzz API App OAuth 2 Engine Sample</title>
+<title>buzz-appengine-sample</title>
 <body>
-<h2>Instructions for the Google Buzz API App OAuth 2 Engine Sample</h2>
+<h2>Instructions for the Buzz V1 App Engine Sample</h2>
 
 <h3>Browse Source Code</h3>
 
 <ul>
   <li><a
-    href="http://code.google.com/p/google-api-java-client/source/browse/buzz-appengine-sample/?repo=samples">buzz-appengine-sample</a>
-  or <a
-    href="http://code.google.com/p/google-api-java-client/source/browse/buzz-appengine-sample/src/main/java/com/google/api/client/sample/buzz/appengine/oauth2/SampleApp.java?repo=samples">SampleApp.java</a></li>
+    href="http://code.google.com/p/google-api-java-client/source/browse/buzz-appengine-sample/?repo=samples">Browse Source</a>
+  or main file <a
+    href="http://code.google.com/p/google-api-java-client/source/browse/buzz-appengine-sample/src/main/java/com/google/api/services/samples/buzz/appengine/SampleApp.java?repo=samples">SampleApp.java</a></li>
 </ul>
 
 <h3>Checkout Instructions</h3>
@@ -21,10 +21,10 @@
 to set your <code>JAVA_HOME</code>.</p>
 
 <pre><code>cd <i>[someDirectory]</i>
-hg clone https://samples.google-api-java-client.googlecode.com/hg/ google-api-java-client-samples
-cd google-api-java-client-samples/shared/shared-sample-common
-edit src/main/java/com/google/api/services/samples/shared/oauth2/OAuth2ClientCredentials.java
-mvn install
+hg clone https://code.google.com/p/google-api-java-client.samples/ google-api-java-client-samples
+cd google-api-java-client-samples/shared/shared-sample-appengine
+edit src/main/java/com/google/api/services/samples/shared/appengine/OAuth2ClientCredentials.java
+mvn source:jar install
 cd ../../buzz-appengine-sample
 mvn clean package</code></pre>
 

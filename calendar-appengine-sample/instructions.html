@@ -1,7 +1,7 @@
 <html>
-<title>Google Calendar Data API App Engine Sample</title>
+<title>calendar-appengine-sample</title>
 <body>
-<h2>Instructions for the Google Calendar Data API App Engine Sample</h2>
+<h2>Instructions for the Calendar App Engine Sample</h2>
 
 <h3>Try Online</h3>
 
@@ -11,9 +11,9 @@
 
 <ul>
   <li><a
-    href="http://code.google.com/p/google-api-java-client/source/browse/calendar-appengine-sample/?repo=samples">calendar-appengine-sample</a>
-  or <a
-    href="http://code.google.com/p/google-api-java-client/source/browse/calendar-appengine-sample/src/com/google/api/client/sample/calendar/v2/appengine/server/CalendarServiceImpl.java?repo=samples">CalendarServiceImpl.java</a></li>
+    href="http://code.google.com/p/google-api-java-client/source/browse/calendar-appengine-sample/?repo=samples">Browse Source</a>
+  or main file <a
+    href="http://code.google.com/p/google-api-java-client/source/browse/calendar-appengine-sample/src/main/java/com/google/api/services/samples/calendar/appengine/server/CalendarAppEngineSample.java?repo=samples">CalendarAppEngineSample.java</a></li>
 </ul>
 
 <h3>Checkout Instructions</h3>
@@ -26,13 +26,13 @@
 to set your <code>JAVA_HOME</code>.</p>
 
 <pre><code>cd <i>[someDirectory]</i>
-hg clone https://samples.google-api-java-client.googlecode.com/hg/ google-api-java-client-samples
-cd google-api-java-client-samples/shared/shared-sample-common
-edit src/main/java/com/google/api/services/samples/shared/oauth2/OAuth2ClientCredentials.java
-mvn install
-cd ../shared-sample-calendar
-mvn install
-cd ../../calendar-appengine-sample
+hg clone https://code.google.com/p/google-api-java-client.samples/ google-api-java-client-samples
+cd google-api-java-client-samples/shared/shared-sample-appengine
+edit src/main/java/com/google/api/services/samples/shared/appengine/OAuth2ClientCredentials.java
+mvn source:jar install
+cd ../gdata/shared-sample-calendar
+mvn source:jar install
+cd ../../../calendar-appengine-sample
 mvn clean package</code></pre>
 
 <h3>Setup Project in Eclipse 3.5/3.6</h3>
