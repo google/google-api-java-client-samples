@@ -29,7 +29,9 @@ hg clone https://code.google.com/p/google-api-java-client.samples/ google-api-ja
 cd google-api-java-client-samples/shared/shared-sample-cmdline
 <i>[editor]</i> src/main/java/com/google/api/services/samples/shared/cmdline/oauth2/OAuth2ClientCredentials.java
 mvn source:jar install
-cd ../gdata/shared-sample-picasa
+cd ../gdata/shared-sample-gdata
+mvn source:jar install
+cd ../shared-sample-picasa
 mvn source:jar install
 cd ../../../picasa-cmdline-sample
 mvn compile

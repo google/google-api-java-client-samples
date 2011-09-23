@@ -23,7 +23,7 @@ import com.google.api.client.http.GenericUrl;
 import com.google.api.services.buzz.Buzz;
 import com.google.api.services.buzz.model.Activity;
 import com.google.api.services.buzz.model.ActivityFeed;
-import com.google.api.services.samples.shared.oauth2.OAuth2ClientCredentials;
+import com.google.api.services.samples.shared.appengine.OAuth2ClientCredentials;
 
 import java.io.IOException;
 import java.io.PrintWriter;

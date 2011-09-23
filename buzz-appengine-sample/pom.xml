@@ -142,13 +142,13 @@
   <dependencies>
     <dependency>
       <groupId>com.google.apis-samples</groupId>
-      <artifactId>shared-sample-common</artifactId>
+      <artifactId>shared-sample-appengine</artifactId>
       <version>1.0.0</version>
     </dependency>
     <dependency>
       <groupId>com.google.apis</groupId>
       <artifactId>google-api-services-buzz</artifactId>
-      <version>v1-1.2.0-beta-SNAPSHOT</version>
+      <version>v1-1.2.0-beta</version>
     </dependency>
     <dependency>
       <groupId>com.google.api-client</groupId>

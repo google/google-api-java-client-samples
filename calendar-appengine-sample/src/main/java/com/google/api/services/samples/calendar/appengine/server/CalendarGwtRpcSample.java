@@ -46,10 +46,10 @@ public class CalendarGwtRpcSample extends RemoteServiceServlet implements Calend
       ArrayList<GwtCalendar> result = new ArrayList<GwtCalendar>();
       // iterate through all pages via next links
       CalendarClient client = Utils.loadCalendarClient();
-      CalendarFeed feed = client.calendarFeed().get().execute(url);
+      CalendarFeed feed = client.calendarFeed().list().execute(url);
       appendCalendars(feed, result);
       while (feed.getNextLink() != null) {
-        feed = client.calendarFeed().get().execute(new CalendarUrl(feed.getNextLink()));
+        feed = client.calendarFeed().list().execute(new CalendarUrl(feed.getNextLink()));
         appendCalendars(feed, result);
       }
       return result;
