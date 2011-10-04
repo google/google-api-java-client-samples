@@ -22,10 +22,11 @@ your <code>JAVA_HOME</code>.</p>
 <p><b>Important:</b> after checking out the project, and before compiling
 and running it, you need to edit <code>OAuth2ClientCredentials.java</code> to
 enter the required credentials information. Otherwise, you will get a <code>400
-INVALID_CLIENT</code> error in the browser. You will also need to upload the <a
-  href="http://code.google.com/apis/predict/docs/language_id.txt">training
-data</a> to Google Storage and edit the <code>OBJECT_PATH</code>. Otherwise, you
-will get a 400 error "Training data file not found".</p>
+  INVALID_CLIENT</code> error in the browser.</p>
+
+<p>You will also need to <a href='http://code.google.com/apis/storage/docs/signup.html#'>Activate Google Storage</a>,
+upload the <a href="http://code.google.com/apis/predict/docs/language_id.txt">training data</a> required by the sample to Google Storage.
+And then edit <code>OBJECT_PATH</code> in <code>PredictionSample.java</code> to point to the training data. Otherwise, you will get a 400 error "Training data file not found".</p>
 
 <pre><code>cd <i>[someDirectory]</i>
 hg clone https://code.google.com/p/google-api-java-client.samples/ google-api-java-client-samples
@@ -33,6 +34,7 @@ cd google-api-java-client-samples/shared/shared-sample-cmdline
 <i>[editor]</i> src/main/java/com/google/api/services/samples/shared/cmdline/oauth2/OAuth2ClientCredentials.java
 mvn source:jar install
 cd ../../prediction-cmdline-sample
+<i>[editor]</i> src/main/java/com/google/api/services/samples/prediction/cmdline/PredictionSample.java
 mvn compile
 mvn -q exec:java</code></pre>
 
