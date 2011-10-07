@@ -32,6 +32,7 @@ public class YouTubeSample {
     try {
       try {
         run();
+        return;
       } catch (HttpResponseException e) {
         System.err.println(e.getResponse().parseAsString());
       }
