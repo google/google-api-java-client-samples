@@ -9,7 +9,7 @@
   <groupId>com.google.apis-samples</groupId>
   <artifactId>prediction-cmdline-sample</artifactId>
   <version>1.0.0</version>
-  <name>Example for the Google Prediction API v1.3 using JSON and OAuth 2.</name>
+  <name>Example for the Google Prediction API v1.4 using JSON and OAuth 2.</name>
 
   <url>http://code.google.com/p/google-api-java-client/</url>
 
@@ -123,7 +123,7 @@
     <dependency>
       <groupId>com.google.apis</groupId>
       <artifactId>google-api-services-prediction</artifactId>
-      <version>v1.3-1.2.0-beta</version>
+      <version>v1.4-1.2.5-beta</version>
     </dependency>
     <dependency>
       <groupId>com.google.apis-samples</groupId>

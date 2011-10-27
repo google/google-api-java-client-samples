@@ -21,9 +21,10 @@ import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpResponseException;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.http.json.JsonHttpParser;
+import com.google.api.client.json.jackson.JacksonFactory;
 import com.google.api.client.json.Json;
 import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.jackson.JacksonFactory;
 import com.google.api.services.prediction.Prediction;
 import com.google.api.services.prediction.model.Input;
 import com.google.api.services.prediction.model.InputInput;
@@ -41,7 +42,8 @@ import java.util.Collections;
  */
 public class PredictionSample {
 
-  static final String OBJECT_PATH = "enter_bucket/language_id.txt";
+  static final String MODEL_ID = "mymodel";
+  static final String STORAGE_DATA_LOCATION = "enter_bucket/language_id.txt";
 
   /** OAuth 2 scope. */
   private static final String SCOPE = "https://www.googleapis.com/auth/prediction";
@@ -59,31 +61,38 @@ public class PredictionSample {
         SCOPE);
     Prediction prediction = new Prediction(transport, accessProtectedResource, jsonFactory);
     prediction.setApplicationName("Google-PredictionSample/1.0");
-    train(prediction);
+    train(prediction, jsonFactory);
     predict(prediction, "Is this sentence in English?");
     predict(prediction, "¿Es esta frase en Español?");
     predict(prediction, "Est-ce cette phrase en Français?");
   }
 
-  private static void train(Prediction prediction) throws IOException {
+  private static void train(Prediction prediction, JsonFactory jsonFactory) throws IOException {
     Training training = new Training();
-    training.setId(OBJECT_PATH);
-    prediction.training.insert(training).execute();
+    training.setId(MODEL_ID);
+    training.setStorageDataLocation(STORAGE_DATA_LOCATION);
+    prediction.trainedmodels.insert(training).execute();
     System.out.println("Training started.");
     System.out.print("Waiting for training to complete");
     System.out.flush();
+
+    JsonHttpParser jsonHttpParser = new JsonHttpParser(jsonFactory);
     int triesCounter = 0;
-    while (triesCounter < 10) {
+    while (triesCounter < 100) {
       // NOTE: if model not found, it will throw an HttpResponseException with a 404 error
-      HttpResponse response = prediction.training.get(OBJECT_PATH).executeUnparsed();
-      if (response.getStatusCode() == 200) {
-        training = response.parseAs(Training.class);
-        System.out.println();
-        System.out.println("Training completed.");
-        System.out.println(training.getModelInfo());
-        return;
+      try {
+        HttpResponse response = prediction.trainedmodels.get(MODEL_ID).executeUnparsed();
+        if (response.getStatusCode() == 200) {
+          training = jsonHttpParser.parse(response, Training.class);
+          System.out.println();
+          System.out.println("Training completed.");
+          System.out.println(training.getModelInfo());
+          return;
+        }
+        response.ignore();
+      } catch (HttpResponseException e) {
       }
-      response.ignore();
+
       try {
         // 5 seconds times the tries counter
         Thread.sleep(5000 * (triesCounter + 1));
@@ -108,7 +117,7 @@ public class PredictionSample {
     InputInput inputInput = new InputInput();
     inputInput.setCsvInstance(Collections.<Object>singletonList(text));
     input.setInput(inputInput);
-    Output output = prediction.training.predict(OBJECT_PATH, input).execute();
+    Output output = prediction.trainedmodels.predict(MODEL_ID, input).execute();
     System.out.println("Text: " + text);
     System.out.println("Predicted language: " + output.getOutputLabel());
   }
