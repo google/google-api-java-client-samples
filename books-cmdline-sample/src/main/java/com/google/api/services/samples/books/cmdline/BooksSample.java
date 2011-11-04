@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2011 Google Inc.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied. See the License for the specific language governing permissions and limitations under
@@ -18,11 +18,14 @@ import com.google.api.client.googleapis.json.GoogleJsonError;
 import com.google.api.client.googleapis.json.GoogleJsonError.ErrorInfo;
 import com.google.api.client.http.HttpResponseException;
 import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.http.json.JsonHttpRequest;
+import com.google.api.client.http.json.JsonHttpRequestInitializer;
 import com.google.api.client.json.Json;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson.JacksonFactory;
 import com.google.api.services.books.Books;
 import com.google.api.services.books.Books.Volumes.List;
+import com.google.api.services.books.BooksRequest;
 import com.google.api.services.books.model.Volume;
 import com.google.api.services.books.model.VolumeSaleInfo;
 import com.google.api.services.books.model.VolumeVolumeInfo;
@@ -49,13 +52,19 @@ public class BooksSample {
 
   private static void queryGoogleBooks(JsonFactory jsonFactory, String query) throws Exception {
     // Set up Books client.
-    final Books books = new Books(new NetHttpTransport(), jsonFactory);
-    books.setApplicationName("Google-BooksSample/1.0");
-    books.setKey(ClientCredentials.KEY);
-
+    final Books books = Books.builder(new NetHttpTransport(), jsonFactory)
+        .setApplicationName("Google-BooksSample/1.0")
+        .setJsonHttpRequestInitializer(new JsonHttpRequestInitializer() {
+          @Override
+          public void initialize(JsonHttpRequest request) {
+            BooksRequest booksRequest = (BooksRequest) request;
+            booksRequest.setKey(ClientCredentials.KEY);
+          }
+        })
+        .build();
     // Set query string and filter only Google eBooks.
     System.out.println("Query: [" + query + "]");
-    List volumesList = books.volumes.list(query);
+    List volumesList = books.volumes().list(query);
     volumesList.setFilter("ebooks");
 
     // Execute the query.

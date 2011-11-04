@@ -14,7 +14,6 @@
 
 package com.google.api.services.samples.discovery.cmdline;
 
-import com.google.api.client.googleapis.GoogleUrl;
 import com.google.api.client.googleapis.auth.oauth2.draft10.GoogleAccessProtectedResource;
 import com.google.api.client.http.FileContent;
 import com.google.api.client.http.GenericUrl;
@@ -24,6 +23,7 @@ import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestFactory;
 import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpResponseException;
+import com.google.api.client.http.UriTemplate;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.http.json.JsonHttpParser;
 import com.google.api.client.json.JsonFactory;
@@ -247,8 +247,10 @@ public class DiscoverySample {
         putParameter(argName, parameters, parameterName, parameter, parameterValue);
       }
     }
-    GenericUrl url = GoogleUrl.create(
-        "https://www.googleapis.com" + restDescription.getBasePath(), method.getPath(), parameters);
+    GenericUrl url =
+        new GenericUrl(UriTemplate.expand(
+            "https://www.googleapis.com" + restDescription.getBasePath() + method.getPath(),
+            parameters, true));
     HttpContent content = null;
     if (requestBodyFile != null) {
       content = new FileContent(contentType, requestBodyFile);
@@ -296,7 +298,7 @@ public class DiscoverySample {
       error(command, "invalid API version: " + apiVersion);
     }
     try {
-      HttpResponse response = DISCOVERY.apis.getRest(apiName, apiVersion).executeUnparsed();
+      HttpResponse response = DISCOVERY.apis().getRest(apiName, apiVersion).executeUnparsed();
       response.getRequest().addParser(new JsonHttpParser(JSON_FACTORY));
       return response.parseAs(RestDescription.class);
     } catch (HttpResponseException e) {
@@ -360,7 +362,7 @@ public class DiscoverySample {
   private static void discover(String[] args) throws IOException {
     System.out.println(APP_NAME);
     if (args.length == 1) {
-      DirectoryList directoryList = DISCOVERY.apis.list().execute();
+      DirectoryList directoryList = DISCOVERY.apis().list().execute();
       for (DirectoryListItems item : directoryList.getItems()) {
         System.out.println();
         System.out.print(item.getTitle() + " " + item.getVersion());

@@ -20,6 +20,8 @@ import com.google.api.client.googleapis.json.GoogleJsonError.ErrorInfo;
 import com.google.api.client.http.HttpResponseException;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.http.json.JsonHttpRequest;
+import com.google.api.client.http.json.JsonHttpRequestInitializer;
 import com.google.api.client.json.Json;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson.JacksonFactory;
@@ -27,6 +29,7 @@ import com.google.api.services.samples.shared.cmdline.oauth2.LocalServerReceiver
 import com.google.api.services.samples.shared.cmdline.oauth2.OAuth2ClientCredentials;
 import com.google.api.services.samples.shared.cmdline.oauth2.OAuth2Native;
 import com.google.api.services.taskqueue.Taskqueue;
+import com.google.api.services.taskqueue.TaskqueueRequest;
 import com.google.api.services.taskqueue.model.Task;
 import com.google.api.services.taskqueue.model.Tasks;
 
@@ -70,9 +73,17 @@ public class TaskQueueSample {
         SCOPE);
 
     // set up Taskqueue
-    Taskqueue taskQueue = new Taskqueue(transport, accessProtectedResource, jsonFactory);
-    taskQueue.setApplicationName("Google-TaskQueueSample/1.0");
-    taskQueue.setPrettyPrint(true);
+    Taskqueue taskQueue = Taskqueue.builder(transport, jsonFactory)
+        .setApplicationName("Google-TaskQueueSample/1.0")
+        .setHttpRequestInitializer(accessProtectedResource)
+        .setJsonHttpRequestInitializer(new JsonHttpRequestInitializer() {
+          @Override
+          public void initialize(JsonHttpRequest request) {
+            TaskqueueRequest taskQueueRequest = (TaskqueueRequest) request;
+            taskQueueRequest.setPrettyPrint(true);
+          }
+        })
+        .build();
 
     // get queue
     com.google.api.services.taskqueue.model.Taskqueue queue = getQueue(taskQueue);
@@ -156,7 +167,7 @@ public class TaskQueueSample {
    */
   private static com.google.api.services.taskqueue.model.Taskqueue getQueue(Taskqueue taskQueue)
       throws IOException {
-    Taskqueue.Taskqueues.Get request = taskQueue.taskqueues.get(projectName, taskQueueName);
+    Taskqueue.Taskqueues.Get request = taskQueue.taskqueues().get(projectName, taskQueueName);
     request.setGetStats(true);
     return request.execute();
   }
@@ -169,7 +180,7 @@ public class TaskQueueSample {
    * @throws IOException if the request fails.
    */
   private static Tasks getLeasedTasks(Taskqueue taskQueue) throws IOException {
-    Taskqueue.Tasks.Lease leaseRequest = taskQueue.tasks.lease(
+    Taskqueue.Tasks.Lease leaseRequest = taskQueue.tasks().lease(
         projectName, taskQueueName, numTasks, leaseSecs);
     return leaseRequest.execute();
   }
@@ -194,7 +205,7 @@ public class TaskQueueSample {
    * @throws IOException if the request fails
    */
   private static void deleteTask(Taskqueue taskQueue, Task task) throws IOException {
-    Taskqueue.Tasks.Delete request = taskQueue.tasks.delete(
+    Taskqueue.Tasks.Delete request = taskQueue.tasks().delete(
         projectName, taskQueueName, task.getId());
     request.execute();
   }

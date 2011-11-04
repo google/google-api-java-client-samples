@@ -20,11 +20,13 @@ import com.google.api.client.googleapis.json.GoogleJsonError.ErrorInfo;
 import com.google.api.client.http.HttpResponseException;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.http.json.JsonHttpRequest;
+import com.google.api.client.http.json.JsonHttpRequestInitializer;
 import com.google.api.client.json.Json;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson.JacksonFactory;
 import com.google.api.services.latitude.Latitude;
-import com.google.api.services.latitude.model.LatitudeCurrentlocationResourceJson;
+import com.google.api.services.latitude.LatitudeRequest;
 import com.google.api.services.latitude.model.Location;
 import com.google.api.services.latitude.model.LocationFeed;
 import com.google.api.services.samples.shared.cmdline.oauth2.LocalServerReceiver;
@@ -54,9 +56,17 @@ public class LatitudeSample {
         SCOPE);
 
     // set up Latitude
-    Latitude latitude = new Latitude(transport, accessProtectedResource, jsonFactory);
-    latitude.setApplicationName("Google-LatitudeSample/1.0");
-    latitude.setPrettyPrint(true);
+    Latitude latitude = Latitude.builder(transport, jsonFactory)
+        .setApplicationName("Google-LatitudeSample/1.0")
+        .setHttpRequestInitializer(accessProtectedResource)
+        .setJsonHttpRequestInitializer(new JsonHttpRequestInitializer() {
+          @Override
+          public void initialize(JsonHttpRequest request) {
+            LatitudeRequest latitudeRequest = (LatitudeRequest) request;
+            latitudeRequest.setPrettyPrint(true);
+          }
+        })
+        .build();
 
     showCurrentLocation(latitude);
     showLocationHistory(latitude);
@@ -88,17 +98,17 @@ public class LatitudeSample {
   }
 
   private static void showCurrentLocation(Latitude latitude) throws IOException {
-    Latitude.CurrentLocation.Get request = latitude.currentLocation.get();
+    Latitude.CurrentLocation.Get request = latitude.currentLocation().get();
     // (optional) The finest granularity of locations you want to access. Can
     // be either city or best. If this parameter is omitted, city is assumed.
     request.setGranularity("best");
-    LatitudeCurrentlocationResourceJson currentLocation = request.execute();
+    Location currentLocation = request.execute();
     System.out.println("Current location:");
     System.out.println(currentLocation);
   }
 
   private static void showLocationHistory(Latitude latitude) throws IOException {
-    Latitude.Location.List request = latitude.location.list();
+    Latitude.Location.List request = latitude.location().list();
     // (optional) The finest granularity of locations you want to access. Can
     // be either city or best. If this parameter is omitted, city is assumed.
     request.setGranularity("best");

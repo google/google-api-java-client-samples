@@ -21,11 +21,15 @@ import com.google.api.client.googleapis.json.GoogleJsonError.ErrorInfo;
 import com.google.api.client.http.HttpResponseException;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.http.json.JsonHttpRequest;
+import com.google.api.client.http.json.JsonHttpRequestInitializer;
 import com.google.api.client.json.Json;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson.JacksonFactory;
 import com.google.api.services.chromewebstore.Chromewebstore;
+import com.google.api.services.chromewebstore.ChromewebstoreRequest;
 import com.google.api.services.chromewebstore.model.License;
+import com.google.api.services.samples.shared.cmdline.ClientCredentials;
 
 import java.util.Scanner;
 
@@ -37,12 +41,19 @@ public class ChromeLicensingSample {
   private static void run(JsonFactory jsonFactory) throws Exception {
     HttpTransport transport = new NetHttpTransport();
     // Set up Chromewebstore.
-    Chromewebstore chromeWebStore = new Chromewebstore(transport, getOAuthParams(),
-        jsonFactory);
-    chromeWebStore.setApplicationName("Google-ChromeLicensingSample/1.0");
-    chromeWebStore.setPrettyPrint(true);
+    Chromewebstore chromeWebStore = Chromewebstore.builder(transport, jsonFactory)
+        .setApplicationName("Google-ChromeLicensingSample/1.0")
+        .setHttpRequestInitializer(getOAuthParams())
+        .setJsonHttpRequestInitializer(new JsonHttpRequestInitializer() {
+          @Override
+          public void initialize(JsonHttpRequest request) {
+            ChromewebstoreRequest chromewebstoreRequest = (ChromewebstoreRequest) request;
+            chromewebstoreRequest.setPrettyPrint(true);
+          }
+        })
+        .build();
     // Get the License.
-    License license = chromeWebStore.licenses.get(
+    License license = chromeWebStore.licenses().get(
         ClientCredentials.APP_ID, inputUsername()).execute();
     System.out.print("YES".equals(license.getResult())
         ? "FULL".equals(license.getAccessLevel()) ? "Full" : "Free" : "No");

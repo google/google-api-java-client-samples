@@ -20,10 +20,13 @@ import com.google.api.client.googleapis.json.GoogleJsonError.ErrorInfo;
 import com.google.api.client.http.HttpResponseException;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.http.json.JsonHttpRequest;
+import com.google.api.client.http.json.JsonHttpRequestInitializer;
 import com.google.api.client.json.Json;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson.JacksonFactory;
 import com.google.api.services.moderator.Moderator;
+import com.google.api.services.moderator.ModeratorRequest;
 import com.google.api.services.moderator.model.Series;
 import com.google.api.services.moderator.model.Submission;
 import com.google.api.services.moderator.model.SubmissionAttribution;
@@ -57,16 +60,24 @@ public class ModeratorSample {
         SCOPE);
 
     // set up Moderator
-    Moderator moderator = new Moderator(transport, accessProtectedResource, jsonFactory);
-    moderator.setApplicationName("Google-ModeratorSample/1.0");
-    moderator.setPrettyPrint(true);
+    Moderator moderator = Moderator.builder(transport, jsonFactory)
+        .setApplicationName("Google-ModeratorSample/1.0")
+        .setHttpRequestInitializer(accessProtectedResource)
+        .setJsonHttpRequestInitializer(new JsonHttpRequestInitializer() {
+          @Override
+          public void initialize(JsonHttpRequest request) {
+            ModeratorRequest moderatorRequest = (ModeratorRequest) request;
+            moderatorRequest.setPrettyPrint(true);
+          }
+        })
+        .build();
 
     Series series = createSeries(moderator);
-    int seriesId = series.getId().getSeriesId().intValue();
+    long seriesId = series.getId().getSeriesId();
     Topic topic = createTopic(moderator, seriesId);
-    int topicId = topic.getId().getTopicId().intValue();
+    long topicId = topic.getId().getTopicId();
     Submission submission = createSubmission(moderator, seriesId, topicId);
-    int submissionId = submission.getId().getSubmissionId().intValue();
+    long submissionId = submission.getId().getSubmissionId();
     Vote vote = createVote(moderator, seriesId, submissionId);
     updateVote(moderator, seriesId, submissionId, vote);
     printVote(moderator, seriesId);
@@ -104,24 +115,24 @@ public class ModeratorSample {
     series.setDescription("Share and rank tips for eating healthily on the cheaps!");
     series.setName("Eating Healthy & Cheap");
     // insert the series
-    Moderator.Series.Insert request = moderator.series.insert(series);
+    Moderator.Series.Insert request = moderator.series().insert(series);
     return request.execute();
   }
 
   private static Topic createTopic(
-      Moderator moderator, int seriesId) throws IOException {
+      Moderator moderator, long seriesId) throws IOException {
     // setup topic
     Topic topic = new Topic();
     topic.setDescription("Share your ideas on eating healthy!");
     topic.setName("Ideas");
     topic.setPresenter("liz");
     // insert the topic
-    Moderator.Topics.Insert request = moderator.topics.insert(seriesId, topic);
+    Moderator.Topics.Insert request = moderator.topics().insert(seriesId, topic);
     return request.execute();
   }
 
   private static Submission createSubmission(
-      Moderator moderator, int seriesId, int topicId) throws IOException {
+      Moderator moderator, long seriesId, long topicId) throws IOException {
     // setup submission
     Submission submission = new Submission();
     submission.setAttachmentUrl("http://www.youtube.com/watch?v=1a1wyc5Xxpg");
@@ -132,32 +143,32 @@ public class ModeratorSample {
     attribution.setLocation("Bainbridge Island, WA");
     submission.setAttribution(attribution);
     // insert the submission
-    Moderator.Submissions.Insert request = moderator.submissions.insert(
+    Moderator.Submissions.Insert request = moderator.submissions().insert(
         seriesId, topicId, submission);
     return request.execute();
   }
 
   private static Vote createVote(
-      Moderator moderator, int seriesId, int submissionId)
+      Moderator moderator, long seriesId, long submissionId)
       throws IOException {
     // setup vote
     Vote vote = new Vote();
     vote.setVote("PLUS");
     // insert the vote
-    Moderator.Votes.Insert request = moderator.votes.insert(seriesId, submissionId, vote);
+    Moderator.Votes.Insert request = moderator.votes().insert(seriesId, submissionId, vote);
     return request.execute();
   }
 
   private static Vote updateVote(
-      Moderator moderator, Integer seriesId, Integer submissionId, Vote vote) throws IOException {
+      Moderator moderator, Long seriesId, Long submissionId, Vote vote) throws IOException {
     vote.setVote("MINUS");
     // update the vote
-    Moderator.Votes.Update request = moderator.votes.update(seriesId, submissionId, vote);
+    Moderator.Votes.Update request = moderator.votes().update(seriesId, submissionId, vote);
     return request.execute();
   }
 
-  private static void printVote(Moderator moderator, int seriesId) throws IOException {
-    Moderator.Votes.List request = moderator.votes.list(seriesId);
+  private static void printVote(Moderator moderator, long seriesId) throws IOException {
+    Moderator.Votes.List request = moderator.votes().list(seriesId);
     VoteList voteList = request.execute();
     for (Vote vote : voteList.getItems()) {
       System.out.println("Vote is: " + vote.getVote());

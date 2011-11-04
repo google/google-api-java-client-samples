@@ -59,8 +59,10 @@ public class PredictionSample {
         OAuth2ClientCredentials.CLIENT_ID,
         OAuth2ClientCredentials.CLIENT_SECRET,
         SCOPE);
-    Prediction prediction = new Prediction(transport, accessProtectedResource, jsonFactory);
-    prediction.setApplicationName("Google-PredictionSample/1.0");
+    Prediction prediction = Prediction.builder(transport, jsonFactory)
+        .setApplicationName("Google-PredictionSample/1.0")
+        .setHttpRequestInitializer(accessProtectedResource)
+        .build();
     train(prediction, jsonFactory);
     predict(prediction, "Is this sentence in English?");
     predict(prediction, "¿Es esta frase en Español?");
@@ -71,7 +73,7 @@ public class PredictionSample {
     Training training = new Training();
     training.setId(MODEL_ID);
     training.setStorageDataLocation(STORAGE_DATA_LOCATION);
-    prediction.trainedmodels.insert(training).execute();
+    prediction.trainedmodels().insert(training).execute();
     System.out.println("Training started.");
     System.out.print("Waiting for training to complete");
     System.out.flush();
@@ -81,7 +83,7 @@ public class PredictionSample {
     while (triesCounter < 100) {
       // NOTE: if model not found, it will throw an HttpResponseException with a 404 error
       try {
-        HttpResponse response = prediction.trainedmodels.get(MODEL_ID).executeUnparsed();
+        HttpResponse response = prediction.trainedmodels().get(MODEL_ID).executeUnparsed();
         if (response.getStatusCode() == 200) {
           training = jsonHttpParser.parse(response, Training.class);
           System.out.println();
@@ -117,7 +119,7 @@ public class PredictionSample {
     InputInput inputInput = new InputInput();
     inputInput.setCsvInstance(Collections.<Object>singletonList(text));
     input.setInput(inputInput);
-    Output output = prediction.trainedmodels.predict(MODEL_ID, input).execute();
+    Output output = prediction.trainedmodels().predict(MODEL_ID, input).execute();
     System.out.println("Text: " + text);
     System.out.println("Predicted language: " + output.getOutputLabel());
   }

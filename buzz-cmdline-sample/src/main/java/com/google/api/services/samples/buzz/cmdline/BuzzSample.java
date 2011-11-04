@@ -20,12 +20,16 @@ import com.google.api.client.googleapis.json.GoogleJsonError.ErrorInfo;
 import com.google.api.client.http.HttpResponseException;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.http.json.JsonHttpRequest;
+import com.google.api.client.http.json.JsonHttpRequestInitializer;
 import com.google.api.client.json.Json;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson.JacksonFactory;
 import com.google.api.services.buzz.Buzz;
+import com.google.api.services.buzz.BuzzRequest;
 import com.google.api.services.buzz.model.Activity;
 import com.google.api.services.buzz.model.Group;
+import com.google.api.services.samples.shared.cmdline.ClientCredentials;
 import com.google.api.services.samples.shared.cmdline.oauth2.LocalServerReceiver;
 import com.google.api.services.samples.shared.cmdline.oauth2.OAuth2ClientCredentials;
 import com.google.api.services.samples.shared.cmdline.oauth2.OAuth2Native;
@@ -58,9 +62,17 @@ public class BuzzSample {
         OAuth2ClientCredentials.CLIENT_SECRET,
         SCOPE);
     // set up Buzz
-    Buzz buzz = new Buzz(transport, accessProtectedResource, jsonFactory);
-    buzz.setApplicationName("Google-BuzzSample/1.0");
-    buzz.setPrettyPrint(true);
+    Buzz buzz = Buzz.builder(transport, jsonFactory)
+        .setApplicationName("Google-BuzzSample/1.0")
+        .setHttpRequestInitializer(accessProtectedResource)
+        .setJsonHttpRequestInitializer(new JsonHttpRequestInitializer() {
+          @Override
+          public void initialize(JsonHttpRequest request) {
+            BuzzRequest buzzRequest = (BuzzRequest) request;
+            buzzRequest.setPrettyPrint(true);
+          }
+        })
+        .build();
     // groups
     GroupActions.showGroups(buzz);
     Group group = null;
