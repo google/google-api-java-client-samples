@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2011 Google Inc.
- *
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
- *
+ * 
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software distributed under the License
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied. See the License for the specific language governing permissions and limitations under
@@ -20,9 +20,12 @@ import com.google.api.client.googleapis.extensions.android2.auth.GoogleAccountMa
 import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpResponseException;
 import com.google.api.client.http.HttpTransport;
+import com.google.api.client.http.json.JsonHttpRequest;
+import com.google.api.client.http.json.JsonHttpRequestInitializer;
 import com.google.api.client.json.jackson.JacksonFactory;
 import com.google.api.services.samples.shared.android.ClientCredentials;
 import com.google.api.services.tasks.Tasks;
+import com.google.api.services.tasks.TasksRequest;
 import com.google.api.services.tasks.model.Task;
 
 import android.accounts.Account;
@@ -54,9 +57,9 @@ import java.util.logging.Logger;
  * To enable logging of HTTP requests/responses, change {@link #LOGGING_LEVEL} to
  * {@link Level#CONFIG} or {@link Level#ALL} and run this command:
  * </p>
- *
+ * 
  * <pre>adb shell setprop log.tag.HttpTransport DEBUG * </pre>
- *
+ * 
  * @author Johan Euphrosine (based on Yaniv Inbar Buzz sample)
  */
 public class TasksSample extends ListActivity {
@@ -86,9 +89,16 @@ public class TasksSample extends ListActivity {
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    service = new Tasks(transport, accessProtectedResource, new JacksonFactory());
-    service.setKey(ClientCredentials.KEY);
-    service.setApplicationName("Google-TasksSample/1.0");
+    service =
+        Tasks.builder(transport, new JacksonFactory()).setApplicationName("Google-TasksSample/1.0")
+            .setHttpRequestInitializer(accessProtectedResource)
+            .setJsonHttpRequestInitializer(new JsonHttpRequestInitializer() {
+
+              public void initialize(JsonHttpRequest request) throws IOException {
+                TasksRequest tasksRequest = (TasksRequest) request;
+                tasksRequest.setKey(ClientCredentials.KEY);
+              }
+            }).build();
     accountManager = new GoogleAccountManager(this);
     Logger.getLogger("com.google.api.client").setLevel(LOGGING_LEVEL);
     gotAccount(false);
@@ -136,8 +146,8 @@ public class TasksSample extends ListActivity {
     SharedPreferences.Editor editor = settings.edit();
     editor.putString("accountName", account.name);
     editor.commit();
-    accountManager.manager.getAuthToken(
-        account, AUTH_TOKEN_TYPE, true, new AccountManagerCallback<Bundle>() {
+    accountManager.manager.getAuthToken(account, AUTH_TOKEN_TYPE, true,
+        new AccountManagerCallback<Bundle>() {
 
           public void run(AccountManagerFuture<Bundle> future) {
             try {
@@ -147,8 +157,8 @@ public class TasksSample extends ListActivity {
                 intent.setFlags(intent.getFlags() & ~Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivityForResult(intent, REQUEST_AUTHENTICATE);
               } else if (bundle.containsKey(AccountManager.KEY_AUTHTOKEN)) {
-                accessProtectedResource.setAccessToken(
-                    bundle.getString(AccountManager.KEY_AUTHTOKEN));
+                accessProtectedResource.setAccessToken(bundle
+                    .getString(AccountManager.KEY_AUTHTOKEN));
                 onAuthToken();
               }
             } catch (Exception e) {
@@ -210,7 +220,7 @@ public class TasksSample extends ListActivity {
   void onAuthToken() {
     try {
       List<String> taskTitles = new ArrayList<String>();
-      List<Task> tasks = service.tasks.list("@default").execute().getItems();
+      List<Task> tasks = service.tasks().list("@default").execute().getItems();
       if (tasks != null) {
         for (Task task : tasks) {
           taskTitles.add(task.getTitle());
