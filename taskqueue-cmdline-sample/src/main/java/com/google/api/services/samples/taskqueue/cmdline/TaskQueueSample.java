@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2010 Google Inc.
- *
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
- *
+ * 
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software distributed under the License
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied. See the License for the specific language governing permissions and limitations under
@@ -15,14 +15,12 @@
 package com.google.api.services.samples.taskqueue.cmdline;
 
 import com.google.api.client.googleapis.auth.oauth2.draft10.GoogleAccessProtectedResource;
-import com.google.api.client.googleapis.json.GoogleJsonError;
-import com.google.api.client.googleapis.json.GoogleJsonError.ErrorInfo;
+import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.http.HttpResponseException;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.http.json.JsonHttpRequest;
 import com.google.api.client.http.json.JsonHttpRequestInitializer;
-import com.google.api.client.json.Json;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson.JacksonFactory;
 import com.google.api.services.samples.shared.cmdline.oauth2.LocalServerReceiver;
@@ -36,8 +34,9 @@ import com.google.api.services.taskqueue.model.Tasks;
 import java.io.IOException;
 
 /**
- * Sample which leases task from TaskQueueService, performs work on the payload
- * of the task and then deletes the task.
+ * Sample which leases task from TaskQueueService, performs work on the payload of the task and then
+ * deletes the task.
+ * 
  * @author Vibhooti Verma
  */
 public class TaskQueueSample {
@@ -51,39 +50,36 @@ public class TaskQueueSample {
   private static final String SCOPE = "https://www.googleapis.com/auth/taskqueue";
 
   /**
-   * You can perform following operations using TaskQueueService.
-   * 1. leasetasks
-   * 2. gettask
-   * 3. delete task
-   * 4. getqueue
-   * For illustration purpose, we are first getting the stats of the specified
-   * queue followed by leasing tasks and then deleting them. Users can change the
-   * flow according to their needs.
+   * You can perform following operations using TaskQueueService. 1. leasetasks 2. gettask 3. delete
+   * task 4. getqueue For illustration purpose, we are first getting the stats of the specified
+   * queue followed by leasing tasks and then deleting them. Users can change the flow according to
+   * their needs.
    */
   private static void run(JsonFactory jsonFactory) throws Exception {
     // authorization
     HttpTransport transport = new NetHttpTransport();
-    GoogleAccessProtectedResource accessProtectedResource = OAuth2Native.authorize(transport,
-        jsonFactory,
-        new LocalServerReceiver(),
-        null,
-        null,  // Require user to paste url into the browser.
-        OAuth2ClientCredentials.CLIENT_ID,
-        OAuth2ClientCredentials.CLIENT_SECRET,
-        SCOPE);
+    GoogleAccessProtectedResource accessProtectedResource =
+        OAuth2Native.authorize(transport, jsonFactory, new LocalServerReceiver(), null, null, // Require
+                                                                                              // user
+                                                                                              // to
+                                                                                              // paste
+                                                                                              // url
+                                                                                              // into
+                                                                                              // the
+                                                                                              // browser.
+            OAuth2ClientCredentials.CLIENT_ID, OAuth2ClientCredentials.CLIENT_SECRET, SCOPE);
 
     // set up Taskqueue
-    Taskqueue taskQueue = Taskqueue.builder(transport, jsonFactory)
-        .setApplicationName("Google-TaskQueueSample/1.0")
-        .setHttpRequestInitializer(accessProtectedResource)
-        .setJsonHttpRequestInitializer(new JsonHttpRequestInitializer() {
-          @Override
-          public void initialize(JsonHttpRequest request) {
-            TaskqueueRequest taskQueueRequest = (TaskqueueRequest) request;
-            taskQueueRequest.setPrettyPrint(true);
-          }
-        })
-        .build();
+    Taskqueue taskQueue =
+        Taskqueue.builder(transport, jsonFactory).setApplicationName("Google-TaskQueueSample/1.0")
+            .setHttpRequestInitializer(accessProtectedResource)
+            .setJsonHttpRequestInitializer(new JsonHttpRequestInitializer() {
+              @Override
+              public void initialize(JsonHttpRequest request) {
+                TaskqueueRequest taskQueueRequest = (TaskqueueRequest) request;
+                taskQueueRequest.setPrettyPrint(true);
+              }
+            }).build();
 
     // get queue
     com.google.api.services.taskqueue.model.Taskqueue queue = getQueue(taskQueue);
@@ -108,20 +104,19 @@ public class TaskQueueSample {
       leaseSecs = Integer.parseInt(args[2]);
       numTasks = Integer.parseInt(args[3]);
       return true;
-   } catch (ArrayIndexOutOfBoundsException ae) {
-     System.out.println("Insufficient Arguments");
-     return false;
-   } catch (NumberFormatException ae) {
-     System.out.println("Please specify lease seconds and Number of tasks to"
-         + "lease, in number format");
-     return false;
-   }
- }
+    } catch (ArrayIndexOutOfBoundsException ae) {
+      System.out.println("Insufficient Arguments");
+      return false;
+    } catch (NumberFormatException ae) {
+      System.out.println("Please specify lease seconds and Number of tasks to"
+          + "lease, in number format");
+      return false;
+    }
+  }
 
   public static void printUsage() {
-    System.out.println("mvn -q exec:java -Dexec.args=\""
-                       + "<ProjectName> <TaskQueueName> "
-                       + "<LeaseSeconds> <NumberOfTasksToLease>\"");
+    System.out.println("mvn -q exec:java -Dexec.args=\"" + "<ProjectName> <TaskQueueName> "
+        + "<LeaseSeconds> <NumberOfTasksToLease>\"");
   }
 
   public static void main(String[] args) {
@@ -141,16 +136,13 @@ public class TaskQueueSample {
         run(jsonFactory);
         // success!
         return;
+      } catch (GoogleJsonResponseException e) {
+        // message already includes parsed response
+        System.err.println(e.getMessage());
       } catch (HttpResponseException e) {
-        if (!Json.CONTENT_TYPE.equals(e.getResponse().getContentType())) {
-          System.err.println(e.getResponse().parseAsString());
-        } else {
-          GoogleJsonError errorResponse = GoogleJsonError.parse(jsonFactory, e.getResponse());
-          System.err.println(errorResponse.code + " Error: " + errorResponse.message);
-          for (ErrorInfo error : errorResponse.errors) {
-            System.err.println(jsonFactory.toString(error));
-          }
-        }
+        // message doesn't include parsed response
+        System.err.println(e.getMessage());
+        System.err.println(e.getResponse().parseAsString());
       }
     } catch (Throwable t) {
       t.printStackTrace();
@@ -160,7 +152,7 @@ public class TaskQueueSample {
 
   /**
    * Method that sends a get request to get the queue.
-   *
+   * 
    * @param taskQueue The task queue that should be used to get the queue from.
    * @return {@link com.google.api.services.taskqueue.model.Taskqueue}
    * @throws IOException if the request fails.
@@ -174,22 +166,21 @@ public class TaskQueueSample {
 
   /**
    * Method that sends a lease request to the specified task queue.
-   *
+   * 
    * @param taskQueue The task queue that should be used to lease tasks from.
    * @return {@link Tasks}
    * @throws IOException if the request fails.
    */
   private static Tasks getLeasedTasks(Taskqueue taskQueue) throws IOException {
-    Taskqueue.Tasks.Lease leaseRequest = taskQueue.tasks().lease(
-        projectName, taskQueueName, numTasks, leaseSecs);
+    Taskqueue.Tasks.Lease leaseRequest =
+        taskQueue.tasks().lease(projectName, taskQueueName, numTasks, leaseSecs);
     return leaseRequest.execute();
   }
 
   /**
-   * This method actually performs the desired work on tasks. It can make use of
-   * payload of the task. By default, we are just printing the payload of the
-   * leased task.
-   *
+   * This method actually performs the desired work on tasks. It can make use of payload of the
+   * task. By default, we are just printing the payload of the leased task.
+   * 
    * @param task The task that should be executed.
    */
   private static void executeTask(Task task) {
@@ -199,14 +190,14 @@ public class TaskQueueSample {
 
   /**
    * Method that sends a delete request for the specified task object to the taskqueue service.
-   *
+   * 
    * @param taskQueue The task queue the specified task lies in.
    * @param task The task that should be deleted.
    * @throws IOException if the request fails
    */
   private static void deleteTask(Taskqueue taskQueue, Task task) throws IOException {
-    Taskqueue.Tasks.Delete request = taskQueue.tasks().delete(
-        projectName, taskQueueName, task.getId());
+    Taskqueue.Tasks.Delete request =
+        taskQueue.tasks().delete(projectName, taskQueueName, task.getId());
     request.execute();
   }
 }

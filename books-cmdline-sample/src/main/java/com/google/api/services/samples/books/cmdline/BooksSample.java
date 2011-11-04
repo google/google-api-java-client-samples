@@ -15,6 +15,7 @@
 package com.google.api.services.samples.books.cmdline;
 
 import com.google.api.client.googleapis.json.GoogleJsonError;
+import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.googleapis.json.GoogleJsonError.ErrorInfo;
 import com.google.api.client.http.HttpResponseException;
 import com.google.api.client.http.javanet.NetHttpTransport;
@@ -172,16 +173,13 @@ public class BooksSample {
         queryGoogleBooks(jsonFactory, query);
         // Success!
         return;
+      } catch (GoogleJsonResponseException e) {
+        // message already includes parsed response
+        System.err.println(e.getMessage());
       } catch (HttpResponseException e) {
-        if (!Json.CONTENT_TYPE.equals(e.getResponse().getContentType())) {
-          System.err.println(e.getResponse().parseAsString());
-        } else {
-          GoogleJsonError errorResponse = GoogleJsonError.parse(jsonFactory, e.getResponse());
-          System.err.println(errorResponse.code + " Error: " + errorResponse.message);
-          for (ErrorInfo error : errorResponse.errors) {
-            System.err.println(jsonFactory.toString(error));
-          }
-        }
+        // message doesn't include parsed response
+        System.err.println(e.getMessage());
+        System.err.println(e.getResponse().parseAsString());
       }
     } catch (Throwable t) {
       t.printStackTrace();
