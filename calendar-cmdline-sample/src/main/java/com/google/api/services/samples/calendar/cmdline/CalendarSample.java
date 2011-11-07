@@ -17,8 +17,6 @@ package com.google.api.services.samples.calendar.cmdline;
 import com.google.api.client.googleapis.auth.oauth2.draft10.GoogleAccessProtectedResource;
 import com.google.api.client.http.HttpResponseException;
 import com.google.api.client.http.HttpStatusCodes;
-import com.google.api.client.http.javanet.NetHttpTransport;
-import com.google.api.client.json.jackson.JacksonFactory;
 import com.google.api.client.util.DateTime;
 import com.google.api.services.calendar.CalendarClient;
 import com.google.api.services.calendar.CalendarUrl;
@@ -29,8 +27,8 @@ import com.google.api.services.calendar.model.CalendarFeed;
 import com.google.api.services.calendar.model.EventEntry;
 import com.google.api.services.calendar.model.EventFeed;
 import com.google.api.services.calendar.model.When;
+import com.google.api.services.samples.shared.cmdline.CmdlineUtils;
 import com.google.api.services.samples.shared.cmdline.oauth2.LocalServerReceiver;
-import com.google.api.services.samples.shared.cmdline.oauth2.OAuth2ClientCredentials;
 import com.google.api.services.samples.shared.cmdline.oauth2.OAuth2Native;
 
 import java.io.IOException;
@@ -41,16 +39,11 @@ import java.util.Date;
  */
 public class CalendarSample {
 
-  static final NetHttpTransport TRANSPORT = new NetHttpTransport();
-  static final JacksonFactory JSON_FACTORY = new JacksonFactory();
-
   public static void main(String[] args) {
     try {
-      OAuth2ClientCredentials.errorIfNotSpecified();
       GoogleAccessProtectedResource accessProtectedResource =
-          OAuth2Native.authorize(TRANSPORT, JSON_FACTORY, new LocalServerReceiver(), null,
-              "google-chrome", OAuth2ClientCredentials.CLIENT_ID,
-              OAuth2ClientCredentials.CLIENT_SECRET, CalendarUrl.ROOT_URL);
+          OAuth2Native.authorize(new LocalServerReceiver(), null, "google-chrome",
+              CalendarUrl.ROOT_URL);
       CalendarClient client =
           new CalendarClient(
               new CalendarCmdlineRequestInitializer(accessProtectedResource).createRequestFactory());
@@ -65,7 +58,7 @@ public class CalendarSample {
     } catch (Throwable t) {
       t.printStackTrace();
       try {
-        TRANSPORT.shutdown();
+        CmdlineUtils.getHttpTransport().shutdown();
       } catch (IOException e) {
         e.printStackTrace();
       }

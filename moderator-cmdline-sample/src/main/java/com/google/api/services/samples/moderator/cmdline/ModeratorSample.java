@@ -17,12 +17,8 @@ package com.google.api.services.samples.moderator.cmdline;
 import com.google.api.client.googleapis.auth.oauth2.draft10.GoogleAccessProtectedResource;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.http.HttpResponseException;
-import com.google.api.client.http.HttpTransport;
-import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.http.json.JsonHttpRequest;
 import com.google.api.client.http.json.JsonHttpRequestInitializer;
-import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.jackson.JacksonFactory;
 import com.google.api.services.moderator.Moderator;
 import com.google.api.services.moderator.ModeratorRequest;
 import com.google.api.services.moderator.model.Series;
@@ -31,8 +27,8 @@ import com.google.api.services.moderator.model.SubmissionAttribution;
 import com.google.api.services.moderator.model.Topic;
 import com.google.api.services.moderator.model.Vote;
 import com.google.api.services.moderator.model.VoteList;
+import com.google.api.services.samples.shared.cmdline.CmdlineUtils;
 import com.google.api.services.samples.shared.cmdline.oauth2.LocalServerReceiver;
-import com.google.api.services.samples.shared.cmdline.oauth2.OAuth2ClientCredentials;
 import com.google.api.services.samples.shared.cmdline.oauth2.OAuth2Native;
 
 import java.io.IOException;
@@ -45,17 +41,15 @@ public class ModeratorSample {
   /** OAuth 2 scope. */
   private static final String SCOPE = "https://www.googleapis.com/auth/moderator";
 
-  private static void run(JsonFactory jsonFactory) throws Exception {
+  private static void run() throws Exception {
     // authorization
-    HttpTransport transport = new NetHttpTransport();
     GoogleAccessProtectedResource accessProtectedResource =
-        OAuth2Native.authorize(transport, jsonFactory, new LocalServerReceiver(), null,
-            "google-chrome", OAuth2ClientCredentials.CLIENT_ID,
-            OAuth2ClientCredentials.CLIENT_SECRET, SCOPE);
+        OAuth2Native.authorize(new LocalServerReceiver(), null, "google-chrome", SCOPE);
 
     // set up Moderator
     Moderator moderator =
-        Moderator.builder(transport, jsonFactory).setApplicationName("Google-ModeratorSample/1.0")
+        Moderator.builder(CmdlineUtils.getHttpTransport(), CmdlineUtils.getJsonFactory())
+            .setApplicationName("Google-ModeratorSample/1.0")
             .setHttpRequestInitializer(accessProtectedResource)
             .setJsonHttpRequestInitializer(new JsonHttpRequestInitializer() {
               @Override
@@ -77,11 +71,9 @@ public class ModeratorSample {
   }
 
   public static void main(String[] args) {
-    JsonFactory jsonFactory = new JacksonFactory();
     try {
       try {
-        OAuth2ClientCredentials.errorIfNotSpecified();
-        run(jsonFactory);
+        run();
         // success!
         return;
       } catch (GoogleJsonResponseException e) {

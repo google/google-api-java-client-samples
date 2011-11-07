@@ -17,14 +17,12 @@ package com.google.api.services.samples.verification.cmdline;
 import com.google.api.client.googleapis.auth.oauth2.draft10.GoogleAccessProtectedResource;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.http.HttpResponseException;
-import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.http.json.JsonHttpRequest;
 import com.google.api.client.http.json.JsonHttpRequestInitializer;
 import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.jackson.JacksonFactory;
+import com.google.api.services.samples.shared.cmdline.CmdlineUtils;
 import com.google.api.services.samples.shared.cmdline.oauth2.LocalServerReceiver;
-import com.google.api.services.samples.shared.cmdline.oauth2.OAuth2ClientCredentials;
 import com.google.api.services.samples.shared.cmdline.oauth2.OAuth2Native;
 import com.google.api.services.siteVerification.SiteVerification;
 import com.google.api.services.siteVerification.SiteVerificationRequest;
@@ -49,17 +47,14 @@ public class VerificationSample {
   /** OAuth2 scope. */
   private static final String SCOPE = "https://www.googleapis.com/auth/siteverification";
 
-  private static void run(JsonFactory jsonFactory) throws Exception {
+  private static void run() throws Exception {
     BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 
     // authorization
     System.out.println("Getting an OAuth access token. "
         + "Please follow the prompts on the browser window.");
-    HttpTransport transport = new NetHttpTransport();
     GoogleAccessProtectedResource accessProtectedResource =
-        OAuth2Native.authorize(transport, jsonFactory, new LocalServerReceiver(), null,
-            "google-chrome", OAuth2ClientCredentials.CLIENT_ID,
-            OAuth2ClientCredentials.CLIENT_SECRET, SCOPE);
+        OAuth2Native.authorize(new LocalServerReceiver(), null, "google-chrome", SCOPE);
 
     System.out.println("This is an sample Java-based client for the Google Site "
         + "Verification API.\n" + "Your data may be modified as a result of running "
@@ -71,7 +66,7 @@ public class VerificationSample {
 
     // set up SiteVerification
     SiteVerification siteVerification =
-        SiteVerification.builder(new NetHttpTransport(), jsonFactory)
+        SiteVerification.builder(CmdlineUtils.getHttpTransport(), CmdlineUtils.getJsonFactory())
             .setApplicationName("Google-SiteVerificationSample/1.0")
             .setHttpRequestInitializer(accessProtectedResource)
             .setJsonHttpRequestInitializer(new JsonHttpRequestInitializer() {
@@ -134,11 +129,9 @@ public class VerificationSample {
   }
 
   public static void main(String[] args) {
-    JsonFactory jsonFactory = new JacksonFactory();
     try {
       try {
-        OAuth2ClientCredentials.errorIfNotSpecified();
-        run(jsonFactory);
+        run();
         // success!
         return;
       } catch (GoogleJsonResponseException e) {

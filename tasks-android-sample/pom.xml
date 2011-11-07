@@ -117,12 +117,12 @@
     <dependency>
       <groupId>com.google.http-client</groupId>
       <artifactId>google-http-client-extensions-android2</artifactId>
-      <version>1.6.0-beta-SNAPSHOT</version>
+      <version>1.6.0-beta</version>
     </dependency>
     <dependency>
       <groupId>com.google.api-client</groupId>
       <artifactId>google-api-client-extensions-android2</artifactId>
-      <version>1.6.0-beta-SNAPSHOT</version>
+      <version>1.6.0-beta</version>
     </dependency>
     <dependency>
       <groupId>com.google.android</groupId>

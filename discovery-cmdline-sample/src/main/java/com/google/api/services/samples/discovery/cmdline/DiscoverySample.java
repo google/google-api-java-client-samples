@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2010 Google Inc.
- *
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
- *
+ * 
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software distributed under the License
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied. See the License for the specific language governing permissions and limitations under
@@ -24,10 +24,7 @@ import com.google.api.client.http.HttpRequestFactory;
 import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpResponseException;
 import com.google.api.client.http.UriTemplate;
-import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.http.json.JsonHttpParser;
-import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.jackson.JacksonFactory;
 import com.google.api.services.discovery.Discovery;
 import com.google.api.services.discovery.model.DirectoryList;
 import com.google.api.services.discovery.model.DirectoryListItems;
@@ -35,8 +32,8 @@ import com.google.api.services.discovery.model.Jsonschema;
 import com.google.api.services.discovery.model.RestDescription;
 import com.google.api.services.discovery.model.Restmethod;
 import com.google.api.services.discovery.model.Restresource;
+import com.google.api.services.samples.shared.cmdline.CmdlineUtils;
 import com.google.api.services.samples.shared.cmdline.oauth2.LocalServerReceiver;
-import com.google.api.services.samples.shared.cmdline.oauth2.OAuth2ClientCredentials;
 import com.google.api.services.samples.shared.cmdline.oauth2.OAuth2Native;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
@@ -58,9 +55,8 @@ import java.util.regex.Pattern;
  */
 public class DiscoverySample {
 
-  static final NetHttpTransport TRANSPORT = new NetHttpTransport();
-  static final JsonFactory JSON_FACTORY = new JacksonFactory();
-  static final Discovery DISCOVERY = new Discovery(TRANSPORT, JSON_FACTORY);
+  static final Discovery DISCOVERY = new Discovery(CmdlineUtils.getHttpTransport(),
+      CmdlineUtils.getJsonFactory());
 
   private static final String APP_NAME = "Google Discovery API Client 1.2.0";
 
@@ -258,23 +254,13 @@ public class DiscoverySample {
     try {
       HttpRequestFactory requestFactory;
       if (method.getScopes() != null) {
-        if (OAuth2ClientCredentials.CLIENT_ID == null
-            || OAuth2ClientCredentials.CLIENT_SECRET == null) {
-          error(
-              "call", "Please enter your client ID and secret in " + OAuth2ClientCredentials.class);
-        }
         String scope = method.getScopes().get(0);
-        GoogleAccessProtectedResource accessProtectedResource = OAuth2Native.authorize(TRANSPORT,
-            JSON_FACTORY,
-            new LocalServerReceiver(),
-            null,
-            "google-chrome",
-            OAuth2ClientCredentials.CLIENT_ID,
-            OAuth2ClientCredentials.CLIENT_SECRET,
-            scope);
-        requestFactory = TRANSPORT.createRequestFactory(accessProtectedResource);
+        GoogleAccessProtectedResource accessProtectedResource =
+            OAuth2Native.authorize(new LocalServerReceiver(), null, "google-chrome", scope);
+        requestFactory =
+            CmdlineUtils.getHttpTransport().createRequestFactory(accessProtectedResource);
       } else {
-        requestFactory = TRANSPORT.createRequestFactory();
+        requestFactory = CmdlineUtils.getHttpTransport().createRequestFactory();
       }
       HttpRequest request =
           requestFactory.buildRequest(HttpMethod.valueOf(method.getHttpMethod()), url, content);
@@ -299,7 +285,7 @@ public class DiscoverySample {
     }
     try {
       HttpResponse response = DISCOVERY.apis().getRest(apiName, apiVersion).executeUnparsed();
-      response.getRequest().addParser(new JsonHttpParser(JSON_FACTORY));
+      response.getRequest().addParser(new JsonHttpParser(CmdlineUtils.getJsonFactory()));
       return response.parseAs(RestDescription.class);
     } catch (HttpResponseException e) {
       if (e.getResponse().getStatusCode() == 404) {
@@ -310,8 +296,8 @@ public class DiscoverySample {
     }
   }
 
-  private static void processMethods(
-      ArrayList<MethodDetails> result, String resourceName, Map<String, Restmethod> methodMap) {
+  private static void processMethods(ArrayList<MethodDetails> result, String resourceName,
+      Map<String, Restmethod> methodMap) {
     if (methodMap == null) {
       return;
     }
@@ -346,8 +332,8 @@ public class DiscoverySample {
     }
   }
 
-  private static void processResources(
-      ArrayList<MethodDetails> result, String resourceName, Map<String, Restresource> resourceMap) {
+  private static void processResources(ArrayList<MethodDetails> result, String resourceName,
+      Map<String, Restresource> resourceMap) {
     if (resourceMap == null) {
       return;
     }

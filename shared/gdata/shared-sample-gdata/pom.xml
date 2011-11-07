@@ -8,7 +8,7 @@
   </parent>
   <groupId>com.google.apis-samples</groupId>
   <artifactId>shared-sample-gdata</artifactId>
-  <version>1.0.0</version>
+  <version>1.1.0</version>
   <name>Example shared code for the Goole Data API (GData) samples</name>
 
   <url>http://code.google.com/p/google-api-java-client/</url>
@@ -85,7 +85,7 @@
     <dependency>
       <groupId>com.google.api-client</groupId>
       <artifactId>google-api-client</artifactId>
-      <version>1.6.0-beta-SNAPSHOT</version>
+      <version>1.6.0-beta</version>
     </dependency>
   </dependencies>
   <properties>

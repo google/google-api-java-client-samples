@@ -18,18 +18,14 @@ import com.google.api.client.googleapis.auth.oauth2.draft10.GoogleAccessProtecte
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpResponseException;
-import com.google.api.client.http.HttpTransport;
-import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.http.json.JsonHttpParser;
-import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.jackson.JacksonFactory;
 import com.google.api.services.prediction.Prediction;
 import com.google.api.services.prediction.model.Input;
 import com.google.api.services.prediction.model.InputInput;
 import com.google.api.services.prediction.model.Output;
 import com.google.api.services.prediction.model.Training;
+import com.google.api.services.samples.shared.cmdline.CmdlineUtils;
 import com.google.api.services.samples.shared.cmdline.oauth2.LocalServerReceiver;
-import com.google.api.services.samples.shared.cmdline.oauth2.OAuth2ClientCredentials;
 import com.google.api.services.samples.shared.cmdline.oauth2.OAuth2Native;
 
 import java.io.IOException;
@@ -46,24 +42,21 @@ public class PredictionSample {
   /** OAuth 2 scope. */
   private static final String SCOPE = "https://www.googleapis.com/auth/prediction";
 
-  private static void run(JsonFactory jsonFactory) throws Exception {
+  private static void run() throws Exception {
     // authorization
-    HttpTransport transport = new NetHttpTransport();
     GoogleAccessProtectedResource accessProtectedResource =
-        OAuth2Native.authorize(transport, jsonFactory, new LocalServerReceiver(), null,
-            "google-chrome", OAuth2ClientCredentials.CLIENT_ID,
-            OAuth2ClientCredentials.CLIENT_SECRET, SCOPE);
+        OAuth2Native.authorize(new LocalServerReceiver(), null, "google-chrome", SCOPE);
     Prediction prediction =
-        Prediction.builder(transport, jsonFactory)
+        Prediction.builder(CmdlineUtils.getHttpTransport(), CmdlineUtils.getJsonFactory())
             .setApplicationName("Google-PredictionSample/1.0")
             .setHttpRequestInitializer(accessProtectedResource).build();
-    train(prediction, jsonFactory);
+    train(prediction);
     predict(prediction, "Is this sentence in English?");
     predict(prediction, "¿Es esta frase en Español?");
     predict(prediction, "Est-ce cette phrase en Français?");
   }
 
-  private static void train(Prediction prediction, JsonFactory jsonFactory) throws IOException {
+  private static void train(Prediction prediction) throws IOException {
     Training training = new Training();
     training.setId(MODEL_ID);
     training.setStorageDataLocation(STORAGE_DATA_LOCATION);
@@ -72,7 +65,7 @@ public class PredictionSample {
     System.out.print("Waiting for training to complete");
     System.out.flush();
 
-    JsonHttpParser jsonHttpParser = new JsonHttpParser(jsonFactory);
+    JsonHttpParser jsonHttpParser = new JsonHttpParser(CmdlineUtils.getJsonFactory());
     int triesCounter = 0;
     while (triesCounter < 100) {
       // NOTE: if model not found, it will throw an HttpResponseException with a 404 error
@@ -119,16 +112,9 @@ public class PredictionSample {
   }
 
   public static void main(String[] args) {
-    JsonFactory jsonFactory = new JacksonFactory();
     try {
       try {
-        if (OAuth2ClientCredentials.CLIENT_ID == null
-            || OAuth2ClientCredentials.CLIENT_SECRET == null) {
-          System.err.println("Please enter your client ID and secret in "
-              + OAuth2ClientCredentials.class);
-        } else {
-          run(jsonFactory);
-        }
+        run();
         // success!
         return;
       } catch (GoogleJsonResponseException e) {

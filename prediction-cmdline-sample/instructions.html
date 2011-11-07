@@ -20,9 +20,11 @@
 your <code>JAVA_HOME</code>.</p>
 
 <p><b>Important:</b> after checking out the project, and before compiling
-and running it, you need to edit <code>OAuth2ClientCredentials.java</code> to
-enter the required credentials information. Otherwise, you will get a <code>400
-  INVALID_CLIENT</code> error in the browser.</p>
+and running it, you need to edit <code>client_secrets.json</code> to
+enter the required credentials information (see <a
+href="http://code.google.com/p/google-api-java-client/source/browse/shared/shared-sample-cmdline/src/main/java/com/google/api/services/samples/shared/cmdline/oauth2/OAuth2ClientCredentials.java?repo=samples"
+>instructions</a>). Otherwise, you will get a <code>400
+INVALID_CLIENT</code> error in the browser.</p>
 
 <p>You will also need to <a href='http://code.google.com/apis/storage/docs/signup.html#'>Activate Google Storage</a>,
 upload the <a href="http://code.google.com/apis/predict/docs/language_id.txt">training data</a> required by the sample to Google Storage.
@@ -31,7 +33,7 @@ And then edit <code>OBJECT_PATH</code> in <code>PredictionSample.java</code> to 
 <pre><code>cd <i>[someDirectory]</i>
 hg clone https://code.google.com/p/google-api-java-client.samples/ google-api-java-client-samples
 cd google-api-java-client-samples/shared/shared-sample-cmdline
-<i>[editor]</i> src/main/java/com/google/api/services/samples/shared/cmdline/oauth2/OAuth2ClientCredentials.java
+<i>[editor]</i> src/main/resources/client_secrets.json
 mvn source:jar install
 cd ../../prediction-cmdline-sample
 <i>[editor]</i> src/main/java/com/google/api/services/samples/prediction/cmdline/PredictionSample.java

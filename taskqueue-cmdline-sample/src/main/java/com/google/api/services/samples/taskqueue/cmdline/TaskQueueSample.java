@@ -21,10 +21,8 @@ import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.http.json.JsonHttpRequest;
 import com.google.api.client.http.json.JsonHttpRequestInitializer;
-import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.jackson.JacksonFactory;
+import com.google.api.services.samples.shared.cmdline.CmdlineUtils;
 import com.google.api.services.samples.shared.cmdline.oauth2.LocalServerReceiver;
-import com.google.api.services.samples.shared.cmdline.oauth2.OAuth2ClientCredentials;
 import com.google.api.services.samples.shared.cmdline.oauth2.OAuth2Native;
 import com.google.api.services.taskqueue.Taskqueue;
 import com.google.api.services.taskqueue.TaskqueueRequest;
@@ -55,23 +53,15 @@ public class TaskQueueSample {
    * queue followed by leasing tasks and then deleting them. Users can change the flow according to
    * their needs.
    */
-  private static void run(JsonFactory jsonFactory) throws Exception {
+  private static void run() throws Exception {
     // authorization
-    HttpTransport transport = new NetHttpTransport();
     GoogleAccessProtectedResource accessProtectedResource =
-        OAuth2Native.authorize(transport, jsonFactory, new LocalServerReceiver(), null, null, // Require
-                                                                                              // user
-                                                                                              // to
-                                                                                              // paste
-                                                                                              // url
-                                                                                              // into
-                                                                                              // the
-                                                                                              // browser.
-            OAuth2ClientCredentials.CLIENT_ID, OAuth2ClientCredentials.CLIENT_SECRET, SCOPE);
+        OAuth2Native.authorize(new LocalServerReceiver(), null, null, SCOPE);
 
     // set up Taskqueue
     Taskqueue taskQueue =
-        Taskqueue.builder(transport, jsonFactory).setApplicationName("Google-TaskQueueSample/1.0")
+        Taskqueue.builder(CmdlineUtils.getHttpTransport(), CmdlineUtils.getJsonFactory())
+            .setApplicationName("Google-TaskQueueSample/1.0")
             .setHttpRequestInitializer(accessProtectedResource)
             .setJsonHttpRequestInitializer(new JsonHttpRequestInitializer() {
               @Override
@@ -129,11 +119,9 @@ public class TaskQueueSample {
       System.exit(1);
     }
 
-    JsonFactory jsonFactory = new JacksonFactory();
     try {
       try {
-        OAuth2ClientCredentials.errorIfNotSpecified();
-        run(jsonFactory);
+        run();
         // success!
         return;
       } catch (GoogleJsonResponseException e) {
