@@ -61,9 +61,9 @@
 
   <properties>
     <datanucleus.version>1.1.5</datanucleus.version>
-    <gae.version>1.5.2</gae.version>
+    <gae.version>1.5.5</gae.version>
     <gwt.version>2.1.1</gwt.version>
-    <google-api-client.version>1.6.0-beta-SNAPSHOT</google-api-client.version>
+    <google-api-client.version>1.6.0-beta</google-api-client.version>
     <webappDirectory>${project.build.directory}/${project.build.finalName}
     </webappDirectory>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -225,12 +225,12 @@
     <dependency>
       <groupId>com.google.apis-samples</groupId>
       <artifactId>shared-sample-appengine</artifactId>
-      <version>1.0.0</version>
+      <version>1.1.0</version>
     </dependency>
     <dependency>
       <groupId>com.google.apis-samples</groupId>
       <artifactId>shared-sample-calendar</artifactId>
-      <version>v2-1.0.0</version>
+      <version>v2-1.1.0</version>
     </dependency>
     <dependency>
       <groupId>net.kindleit</groupId>

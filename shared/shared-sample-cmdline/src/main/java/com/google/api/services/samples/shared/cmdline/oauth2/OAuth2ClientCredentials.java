@@ -59,10 +59,12 @@ public class OAuth2ClientCredentials {
 
   private static Credentials credentials = null;
 
+  /** Returns the client ID. */
   public static String getClientId() throws IOException {
     return getCredentials().clientId;
   }
 
+  /** Returns the client secret. */
   public static String getClientSecret() throws IOException {
     return getCredentials().clientSecret;
   }
