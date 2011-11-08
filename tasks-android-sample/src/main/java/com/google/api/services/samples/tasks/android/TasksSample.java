@@ -65,7 +65,7 @@ import java.util.logging.Logger;
 public class TasksSample extends ListActivity {
 
   /** Logging level for HTTP requests/responses. */
-  private static Level LOGGING_LEVEL = Level.OFF;
+  private static final Level LOGGING_LEVEL = Level.OFF;
 
   private static final String TAG = "TasksSample";
 

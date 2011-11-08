@@ -8,7 +8,7 @@
   </parent>
   <groupId>com.google.apis-samples</groupId>
   <artifactId>shared-sample-android</artifactId>
-  <version>1.0.0</version>
+  <version>1.1.0</version>
   <name>Example shared code for Android samples</name>
 
   <url>http://code.google.com/p/google-api-java-client/</url>
