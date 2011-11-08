@@ -24,8 +24,8 @@
     path="M2_REPO/com/google/api-client/google-api-client-extensions-android2/1.6.0-beta/google-api-client-extensions-android2-1.6.0-beta.jar"
     sourcepath="M2_REPO/com/google/api-client/google-api-client-extensions-android2/1.6.0-beta/google-api-client-extensions-android2-1.6.0-beta-sources.jar" />
   <classpathentry kind="var"
-    path="M2_REPO/com/google/apis/google-api-services-tasks/v1-1.3.0-beta-SNAPSHOT/google-api-services-tasks-v1-1.3.0-beta-SNAPSHOT.jar"
-    sourcepath="M2_REPO/com/google/apis/google-api-services-tasks/v1-1.3.0-beta-SNAPSHOT/google-api-services-tasks-v1-1.3.0-beta-SNAPSHOT-sources.jar" />
+    path="M2_REPO/com/google/apis/google-api-services-tasks/v1-1.3.0-beta/google-api-services-tasks-v1-1.3.0-beta.jar"
+    sourcepath="M2_REPO/com/google/apis/google-api-services-tasks/v1-1.3.0-beta/google-api-services-tasks-v1-1.3.0-beta-sources.jar" />
   <classpathentry kind="var"
     path="M2_REPO/com/google/apis-samples/shared-sample-android/1.0.0/shared-sample-android-1.0.0.jar"
     sourcepath="M2_REPO/com/google/api-client/shared-sample-android/1.0.0/shared-sample-android-1.0.0-sources.jar" />
