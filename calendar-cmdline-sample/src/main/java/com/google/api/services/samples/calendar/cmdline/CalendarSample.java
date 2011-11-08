@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2010 Google Inc.
- *
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
- *
+ * 
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software distributed under the License
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied. See the License for the specific language governing permissions and limitations under
@@ -15,10 +15,8 @@
 package com.google.api.services.samples.calendar.cmdline;
 
 import com.google.api.client.googleapis.auth.oauth2.draft10.GoogleAccessProtectedResource;
-import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpResponseException;
-import com.google.api.client.http.javanet.NetHttpTransport;
-import com.google.api.client.json.jackson.JacksonFactory;
+import com.google.api.client.http.HttpStatusCodes;
 import com.google.api.client.util.DateTime;
 import com.google.api.services.calendar.CalendarClient;
 import com.google.api.services.calendar.CalendarUrl;
@@ -29,8 +27,8 @@ import com.google.api.services.calendar.model.CalendarFeed;
 import com.google.api.services.calendar.model.EventEntry;
 import com.google.api.services.calendar.model.EventFeed;
 import com.google.api.services.calendar.model.When;
+import com.google.api.services.samples.shared.cmdline.CmdlineUtils;
 import com.google.api.services.samples.shared.cmdline.oauth2.LocalServerReceiver;
-import com.google.api.services.samples.shared.cmdline.oauth2.OAuth2ClientCredentials;
 import com.google.api.services.samples.shared.cmdline.oauth2.OAuth2Native;
 
 import java.io.IOException;
@@ -41,22 +39,14 @@ import java.util.Date;
  */
 public class CalendarSample {
 
-  static final NetHttpTransport TRANSPORT = new NetHttpTransport();
-  static final JacksonFactory JSON_FACTORY = new JacksonFactory();
-
   public static void main(String[] args) {
     try {
-      OAuth2ClientCredentials.errorIfNotSpecified();
-      GoogleAccessProtectedResource accessProtectedResource = OAuth2Native.authorize(TRANSPORT,
-          JSON_FACTORY,
-          new LocalServerReceiver(),
-          null,
-          "google-chrome",
-          OAuth2ClientCredentials.CLIENT_ID,
-          OAuth2ClientCredentials.CLIENT_SECRET,
-          CalendarUrl.ROOT_URL);
-      CalendarClient client = new CalendarClient(
-          new CalendarCmdlineRequestInitializer(accessProtectedResource).createRequestFactory());
+      GoogleAccessProtectedResource accessProtectedResource =
+          OAuth2Native.authorize(new LocalServerReceiver(), null, "google-chrome",
+              CalendarUrl.ROOT_URL);
+      CalendarClient client =
+          new CalendarClient(
+              new CalendarCmdlineRequestInitializer(accessProtectedResource).createRequestFactory());
       client.setPrettyPrint(true);
       client.setApplicationName("Google-CalendarSample/1.0");
       try {
@@ -68,7 +58,7 @@ public class CalendarSample {
     } catch (Throwable t) {
       t.printStackTrace();
       try {
-        TRANSPORT.shutdown();
+        CmdlineUtils.getHttpTransport().shutdown();
       } catch (IOException e) {
         e.printStackTrace();
       }
@@ -152,7 +142,7 @@ public class CalendarSample {
     EventFeed result = client.eventFeed().batch().execute(feed, batchUrl);
     for (EventEntry event : result.events) {
       BatchStatus batchStatus = event.batchStatus;
-      if (batchStatus != null && !HttpResponse.isSuccessStatusCode(batchStatus.code)) {
+      if (batchStatus != null && !HttpStatusCodes.isSuccess(batchStatus.code)) {
         System.err.println("Error posting event: " + batchStatus.reason);
       }
     }

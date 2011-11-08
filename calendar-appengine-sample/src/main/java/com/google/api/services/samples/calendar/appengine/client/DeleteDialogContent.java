@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2010 Google Inc.
- *
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
- *
+ * 
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software distributed under the License
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied. See the License for the specific language governing permissions and limitations under
@@ -28,7 +28,7 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 
 /**
  * Delete dialog content.
- *
+ * 
  * @author Yaniv Inbar
  */
 public class DeleteDialogContent extends Composite {
@@ -51,8 +51,8 @@ public class DeleteDialogContent extends Composite {
 
   final int calendarIndex;
 
-  DeleteDialogContent(
-      CalendarGwtSample main, DialogBox dialogBox, GwtCalendar calendar, int calendarIndex) {
+  DeleteDialogContent(CalendarGwtSample main, DialogBox dialogBox, GwtCalendar calendar,
+      int calendarIndex) {
     this.main = main;
     this.dialogBox = dialogBox;
     this.calendar = calendar;
@@ -64,7 +64,7 @@ public class DeleteDialogContent extends Composite {
   @UiHandler("deleteButton")
   void handleDelete(ClickEvent e) {
     dialogBox.hide();
-    CalendarGwtSample.SERVICE.delete(calendar, new AsyncCallback() {
+    CalendarGwtSample.SERVICE.delete(calendar, new AsyncCallback<Void>() {
 
       @Override
       public void onFailure(Throwable caught) {
@@ -72,7 +72,7 @@ public class DeleteDialogContent extends Composite {
       }
 
       @Override
-      public void onSuccess(Object result) {
+      public void onSuccess(Void result) {
         main.calendars.remove(calendarIndex);
         main.refreshTable();
       }

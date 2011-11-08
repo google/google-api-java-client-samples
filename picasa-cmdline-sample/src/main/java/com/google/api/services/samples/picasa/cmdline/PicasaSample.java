@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2010 Google Inc.
- *
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
- *
+ * 
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software distributed under the License
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied. See the License for the specific language governing permissions and limitations under
@@ -18,16 +18,14 @@ import com.google.api.client.googleapis.auth.oauth2.draft10.GoogleAccessProtecte
 import com.google.api.client.http.FileContent;
 import com.google.api.client.http.HttpResponseException;
 import com.google.api.client.http.InputStreamContent;
-import com.google.api.client.http.javanet.NetHttpTransport;
-import com.google.api.client.json.jackson.JacksonFactory;
 import com.google.api.services.picasa.PicasaClient;
 import com.google.api.services.picasa.PicasaUrl;
 import com.google.api.services.picasa.model.AlbumEntry;
 import com.google.api.services.picasa.model.AlbumFeed;
 import com.google.api.services.picasa.model.PhotoEntry;
 import com.google.api.services.picasa.model.UserFeed;
+import com.google.api.services.samples.shared.cmdline.CmdlineUtils;
 import com.google.api.services.samples.shared.cmdline.oauth2.LocalServerReceiver;
-import com.google.api.services.samples.shared.cmdline.oauth2.OAuth2ClientCredentials;
 import com.google.api.services.samples.shared.cmdline.oauth2.OAuth2Native;
 
 import java.io.File;
@@ -39,22 +37,14 @@ import java.net.URL;
  */
 public class PicasaSample {
 
-  static final NetHttpTransport TRANSPORT = new NetHttpTransport();
-  static final JacksonFactory JSON_FACTORY = new JacksonFactory();
-
   public static void main(String[] args) {
     try {
-      OAuth2ClientCredentials.errorIfNotSpecified();
-      GoogleAccessProtectedResource accessProtectedResource = OAuth2Native.authorize(TRANSPORT,
-          JSON_FACTORY,
-          new LocalServerReceiver(),
-          null,
-          "google-chrome",
-          OAuth2ClientCredentials.CLIENT_ID,
-          OAuth2ClientCredentials.CLIENT_SECRET,
-          PicasaUrl.ROOT_URL);
+      GoogleAccessProtectedResource accessProtectedResource =
+          OAuth2Native.authorize(new LocalServerReceiver(), null, "google-chrome",
+              PicasaUrl.ROOT_URL);
       PicasaClient client =
-          new PicasaClient(TRANSPORT.createRequestFactory(accessProtectedResource));
+          new PicasaClient(CmdlineUtils.getHttpTransport().createRequestFactory(
+              accessProtectedResource));
       client.setApplicationName("Google-PicasaSample/1.0");
       try {
         run(client);
@@ -65,7 +55,7 @@ public class PicasaSample {
     } catch (Throwable t) {
       t.printStackTrace();
       try {
-        TRANSPORT.shutdown();
+        CmdlineUtils.getHttpTransport().shutdown();
       } catch (IOException e) {
         e.printStackTrace();
       }
@@ -154,8 +144,9 @@ public class PicasaSample {
     PhotoEntry video = new PhotoEntry();
     video.title = file.getName();
     video.summary = "My video";
-    PhotoEntry result = client.executeInsertPhotoEntryWithMetadata(
-        video, new PicasaUrl(album.getFeedLink()), imageContent);
+    PhotoEntry result =
+        client.executeInsertPhotoEntryWithMetadata(video, new PicasaUrl(album.getFeedLink()),
+            imageContent);
     System.out.println("Posted video (pending processing): " + result.title);
     return result;
   }

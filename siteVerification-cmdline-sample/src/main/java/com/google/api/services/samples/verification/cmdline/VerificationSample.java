@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2010 Google Inc.
- *
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
- *
+ * 
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software distributed under the License
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied. See the License for the specific language governing permissions and limitations under
@@ -15,18 +15,17 @@
 package com.google.api.services.samples.verification.cmdline;
 
 import com.google.api.client.googleapis.auth.oauth2.draft10.GoogleAccessProtectedResource;
-import com.google.api.client.googleapis.json.GoogleJsonError;
-import com.google.api.client.googleapis.json.GoogleJsonError.ErrorInfo;
+import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.http.HttpResponseException;
-import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
-import com.google.api.client.json.Json;
+import com.google.api.client.http.json.JsonHttpRequest;
+import com.google.api.client.http.json.JsonHttpRequestInitializer;
 import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.jackson.JacksonFactory;
+import com.google.api.services.samples.shared.cmdline.CmdlineUtils;
 import com.google.api.services.samples.shared.cmdline.oauth2.LocalServerReceiver;
-import com.google.api.services.samples.shared.cmdline.oauth2.OAuth2ClientCredentials;
 import com.google.api.services.samples.shared.cmdline.oauth2.OAuth2Native;
 import com.google.api.services.siteVerification.SiteVerification;
+import com.google.api.services.siteVerification.SiteVerificationRequest;
 import com.google.api.services.siteVerification.model.SiteverificationWebResourceGettokenResponse;
 import com.google.api.services.siteVerification.model.SiteverificationWebResourceListResponse;
 import com.google.api.services.siteVerification.model.SiteverificationWebResourceResource;
@@ -48,17 +47,14 @@ public class VerificationSample {
   /** OAuth2 scope. */
   private static final String SCOPE = "https://www.googleapis.com/auth/siteverification";
 
-  private static void run(JsonFactory jsonFactory) throws Exception {
+  private static void run() throws Exception {
     BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 
     // authorization
     System.out.println("Getting an OAuth access token. "
         + "Please follow the prompts on the browser window.");
-    HttpTransport transport = new NetHttpTransport();
     GoogleAccessProtectedResource accessProtectedResource =
-        OAuth2Native.authorize(transport, jsonFactory, new LocalServerReceiver(), null,
-            "google-chrome", OAuth2ClientCredentials.CLIENT_ID,
-            OAuth2ClientCredentials.CLIENT_SECRET, SCOPE);
+        OAuth2Native.authorize(new LocalServerReceiver(), null, "google-chrome", SCOPE);
 
     System.out.println("This is an sample Java-based client for the Google Site "
         + "Verification API.\n" + "Your data may be modified as a result of running "
@@ -70,9 +66,16 @@ public class VerificationSample {
 
     // set up SiteVerification
     SiteVerification siteVerification =
-        new SiteVerification(new NetHttpTransport(), accessProtectedResource, jsonFactory);
-    siteVerification.setApplicationName("Google-SiteVerificationSample/1.0");
-    siteVerification.setPrettyPrint(true);
+        SiteVerification.builder(CmdlineUtils.getHttpTransport(), CmdlineUtils.getJsonFactory())
+            .setApplicationName("Google-SiteVerificationSample/1.0")
+            .setHttpRequestInitializer(accessProtectedResource)
+            .setJsonHttpRequestInitializer(new JsonHttpRequestInitializer() {
+              @Override
+              public void initialize(JsonHttpRequest request) {
+                SiteVerificationRequest verificationRequest = (SiteVerificationRequest) request;
+                verificationRequest.setPrettyPrint(true);
+              }
+            }).build();
 
     String token = getToken(siteUrl, siteVerification);
     System.out.println("Place this META tag on your site:\n\t" + token
@@ -126,23 +129,18 @@ public class VerificationSample {
   }
 
   public static void main(String[] args) {
-    JsonFactory jsonFactory = new JacksonFactory();
     try {
       try {
-        OAuth2ClientCredentials.errorIfNotSpecified();
-        run(jsonFactory);
+        run();
         // success!
         return;
+      } catch (GoogleJsonResponseException e) {
+        // message already includes parsed response
+        System.err.println(e.getMessage());
       } catch (HttpResponseException e) {
-        if (!Json.CONTENT_TYPE.equals(e.getResponse().getContentType())) {
-          System.err.println(e.getResponse().parseAsString());
-        } else {
-          GoogleJsonError errorResponse = GoogleJsonError.parse(jsonFactory, e.getResponse());
-          System.err.println(errorResponse.code + " Error: " + errorResponse.message);
-          for (ErrorInfo error : errorResponse.errors) {
-            System.err.println(jsonFactory.toString(error));
-          }
-        }
+        // message doesn't include parsed response
+        System.err.println(e.getMessage());
+        System.err.println(e.getResponse().parseAsString());
       }
     } catch (Throwable t) {
       t.printStackTrace();
@@ -151,12 +149,13 @@ public class VerificationSample {
   }
 
   /**
-   * This method demonstrates an example of a
-   * <a href='https://code.google.com/apis/siteverification/v1/reference.html#method_siteVerification_webResource_getToken'>getToken</a> call.
+   * This method demonstrates an example of a <a href=
+   * 'https://code.google.com/apis/siteverification/v1/reference.html#method_siteVerification_webResource_getToken'>getToken</a>
+   * call.
    */
   private static String getToken(String siteUrl, SiteVerification siteVerification)
       throws IOException {
-    SiteVerification.WebResource.GetToken request = siteVerification.webResource.getToken();
+    SiteVerification.WebResource.GetToken request = siteVerification.webResource().getToken();
     request.setVerificationMethod(META_VERIFICATION_METHOD);
     request.setIdentifier(siteUrl);
     request.setType(SITE_TYPE);
@@ -165,8 +164,9 @@ public class VerificationSample {
   }
 
   /**
-   * This method demonstrates an example of an
-   * <a href='https://code.google.com/apis/siteverification/v1/reference.html#method_siteVerification_webResource_insert'>Insert</a> call.
+   * This method demonstrates an example of an <a href=
+   * 'https://code.google.com/apis/siteverification/v1/reference.html#method_siteVerification_webResource_insert'>Insert</a>
+   * call.
    */
   private static SiteverificationWebResourceResource verifySite(String siteUrl,
       SiteVerification siteVerification) throws IOException {
@@ -177,54 +177,58 @@ public class VerificationSample {
     resourceSite.setType(SITE_TYPE);
     resource.setSite(resourceSite);
     SiteVerification.WebResource.Insert request =
-        siteVerification.webResource.insert(META_VERIFICATION_METHOD, resource);
+        siteVerification.webResource().insert(META_VERIFICATION_METHOD, resource);
     return request.execute();
   }
 
   /**
-   * This method demonstrates an example of a
-   * <a href='https://code.google.com/apis/siteverification/v1/reference.html#method_siteVerification_webResource_delete'>Delete</a> call.
+   * This method demonstrates an example of a <a href=
+   * 'https://code.google.com/apis/siteverification/v1/reference.html#method_siteVerification_webResource_delete'>Delete</a>
+   * call.
    */
   private static void unVerifySite(String siteUrl, SiteVerification siteVerification)
       throws IOException {
     SiteVerification.WebResource.Delete deleteRequest =
-        siteVerification.webResource.delete(siteUrl);
+        siteVerification.webResource().delete(siteUrl);
     deleteRequest.execute();
   }
 
   /**
-   * This method demonstrates an example of an
-   * <a href='https://code.google.com/apis/siteverification/v1/reference.html#method_siteVerification_webResource_update'>Update</a> call.
+   * This method demonstrates an example of an <a href=
+   * 'https://code.google.com/apis/siteverification/v1/reference.html#method_siteVerification_webResource_update'>Update</a>
+   * call.
    */
   private static void addDelegatedOwner(String delegatedOwner, String siteUrl,
       SiteVerification siteVerification, SiteverificationWebResourceResource verifiedSite)
       throws IOException {
     verifiedSite.getOwners().add(delegatedOwner);
     SiteVerification.WebResource.Update updateRequest =
-        siteVerification.webResource.update(siteUrl, verifiedSite);
+        siteVerification.webResource().update(siteUrl, verifiedSite);
     updateRequest.execute();
   }
 
   /**
-   * This method demonstrates an example of an
-   * <a href='https://code.google.com/apis/siteverification/v1/reference.html#method_siteVerification_webResource_update'>Update</a> call.
+   * This method demonstrates an example of an <a href=
+   * 'https://code.google.com/apis/siteverification/v1/reference.html#method_siteVerification_webResource_update'>Update</a>
+   * call.
    */
   private static void removeDelegatedOwner(String delegatedOwner, String siteUrl,
       SiteVerification siteVerification, SiteverificationWebResourceResource verifiedSite)
       throws IOException {
     verifiedSite.getOwners().remove(delegatedOwner);
     SiteVerification.WebResource.Update updateRequest =
-        siteVerification.webResource.update(siteUrl, verifiedSite);
+        siteVerification.webResource().update(siteUrl, verifiedSite);
     updateRequest.execute();
   }
 
   /**
-   * This method demonstrates an example of a
-   * <a href='https://code.google.com/apis/siteverification/v1/reference.html#method_siteVerification_webResource_list'>List</a> call.
+   * This method demonstrates an example of a <a href=
+   * 'https://code.google.com/apis/siteverification/v1/reference.html#method_siteVerification_webResource_list'>List</a>
+   * call.
    */
   private static List<SiteverificationWebResourceResource> listOwnedSites(
       SiteVerification siteVerification) throws IOException {
-    SiteVerification.WebResource.List listRequest = siteVerification.webResource.list();
+    SiteVerification.WebResource.List listRequest = siteVerification.webResource().list();
     SiteverificationWebResourceListResponse listResponse = listRequest.execute();
     return listResponse.getItems();
   }
