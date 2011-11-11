@@ -1,91 +1,103 @@
 <html>
 <title>picasa-android-sample</title>
 <body>
-<h2>Instructions for the Picasa Web Albums Android Sample</h2>
+  <h2>Instructions for the Picasa Web Albums Android Sample</h2>
 
-<h3>Browse Online</h3>
+  <h3>Browse Online</h3>
 
-<ul>
-  <li><a
-    href="http://code.google.com/p/google-api-java-client/source/browse?repo=samples#hg/picasa-android-sample">Browse
-  Source</a>, or main file <a
-    href="http://code.google.com/p/google-api-java-client/source/browse/picasa-android-sample/src/main/java/com/google/api/services/samples/picasa/android/PicasaSample.java?repo=samples">PicasaSample.java</a></li>
-</ul>
+  <ul>
+    <li><a
+      href="http://code.google.com/p/google-api-java-client/source/browse?repo=samples#hg/picasa-android-sample">Browse
+        Source</a>, or main file <a
+      href="http://code.google.com/p/google-api-java-client/source/browse/picasa-android-sample/src/main/java/com/google/api/services/samples/picasa/android/PicasaSample.java?repo=samples">PicasaSample.java</a>
+    </li>
+  </ul>
 
-<h3>Checkout Instructions</h3>
+  <h3>Checkout Instructions</h3>
 
-<p><b>Prerequisites:</b> install <a href="http://java.com">Java 6</a>, <a
-  href="http://mercurial.selenic.com/">Mercurial</a> and <a
-  href="http://maven.apache.org/download.html">Maven</a>. You may need to set
-your <code>JAVA_HOME</code>.</p>
+  <p>
+    <b>Prerequisites:</b> install <a href="http://java.com">Java 6</a>, <a
+      href="http://mercurial.selenic.com/">Mercurial</a> (requires 1.6 or
+    higher) and <a href="http://maven.apache.org/download.html">Maven</a>
+    (requires 3.0 or higher). You may need to set your
+    <code>JAVA_HOME</code>
+    .
+  </p>
 
-<pre><code>cd <i>[someDirectory]</i>
+  <pre>
+    <code>cd <i>[someDirectory]</i>
 hg clone https://code.google.com/p/google-api-java-client.samples/ google-api-java-client-samples
 cd google-api-java-client-samples/shared/gdata/shared-sample-gdata
 mvn source:jar install
 cd ../shared-sample-picasa
-mvn source:jar install
-cd ../../../picasa-android-sample
-mvn compile</code></pre>
+mvn source:jar install</code>
+  </pre>
 
-<h3>Setup Project in Eclipse 3.5</h3>
+  <h3>Setup Project in Eclipse 3.7 (Indigo)</h3>
 
-<p><b>Prerequisites:</b> install <a href="http://www.eclipse.org/downloads/">Eclipse</a>,
-the <a href="http://javaforge.com/project/HGE">Mercurial plugin</a>, the <a
-  href="http://m2eclipse.sonatype.org/installing-m2eclipse.html">Maven
-plugin</a>, and the <a
-  href="http://developer.android.com/sdk/eclipse-adt.html#installing">Android
-plugin</a>.</p>
+  <p>
+    <b>Prerequisites:</b> install <a href="http://www.eclipse.org/downloads/">Eclipse</a>,
+    the <a href="http://javaforge.com/project/HGE">Mercurial plugin</a>, the <a
+      href="http://eclipse.org/m2e/">Maven plugin</a>, and the <a
+      href="http://developer.android.com/sdk/eclipse-adt.html#installing">Android
+      plugin</a>.
+  </p>
 
-<ul>
-  <li>Preferences:
   <ul>
-    <li>Android: setup SDK location</li>
+    <li>Preferences:
+      <ul>
+        <li>Android: setup SDK location</li>
+      </ul></li>
+    <li>Window &gt; Android SDK and AVD Manager
+      <ul>
+        <li>Follow instructions to install Package "Google API's by Google
+          Inc., Android API 8"</li>
+        <li>Follow instructions to create a new Android Virtual Device
+          based on target "Google API's (Google Inc.) - API Level 8"</li>
+        <li>Click "Start..." (wait a while...)</li>
+        <li>On home screen in emulator, click Menu button, Settings</li>
+        <li>Click on "Accounts and Sync"</li>
+        <li>Click on "Add Account"</li>
+        <li>Click "Google" and follow instructions</li>
+      </ul></li>
+    <li>Import <code>picasa-android-sample</code> project
+      <ul>
+        <li>File &gt; Import...</li>
+        <li>Select "General &gt; Existing Project into Workspace" and click
+          "Next"</li>
+        <li>Click "Browse" next to "Select root directory", find <code>
+            <i>[someDirectory]</i>/google-api-java-client-samples/picasa-android-sample
+          </code> and click "Next"</li>
+        <li>Click "Finish"</li>
+      </ul></li>
+    <li>Clean Project (if compile error about missing gen directory)
+      <ul>
+        <li>Select <code>picasa-android-sample</code> project</li>
+        <li>Project &gt; Clean...</li>
+        <li>Select "Clean projects selected below"</li>
+        <li>Click on "OK"</li>
+      </ul></li>
+    <li>Run
+      <ul>
+        <li>Right-click on project picasa-android-sample</li>
+        <li>Run As &gt; Android Application</li>
+        <li>On your device, click the Menu button to switch accounts or add
+          a new Album. Select and hold on an album to update or delete it.</li>
+        <li>There is also a demo for uploading photos. After taking a
+          picture using your Android device, browse your pictures, then click on
+          "Share", click "Picasa Sample", and the photo will be uploaded to
+          Picasa Web Albums.</li>
+      </ul></li>
   </ul>
-  </li>
-  <li>Window &gt; Android SDK and AVD Manager
-  <ul>
-    <li>Follow instructions to install Package "Google API's by Google
-    Inc., Android API 8"</li>
-    <li>Follow instructions to create a new Android Virtual Device based on
-    target "Google API's (Google Inc.) - API Level 8"</li>
-    <li>Click "Start..." (wait a while...)</li>
-    <li>On home screen in emulator, click Menu button, Settings</li>
-    <li>Click on "Accounts and Sync"</li>
-    <li>Click on "Add Account"</li>
-    <li>Click "Google" and follow instructions</li>
-  </ul>
-  </li>
-  <li>Import <code>picasa-android-sample</code> project
-  <ul>
-    <li>File &gt; Import...</li>
-    <li>Select "General &gt; Existing Project into Workspace" and click
-    "Next"</li>
-    <li>Click "Browse" next to "Select root directory", find <code><i>[someDirectory]</i>/google-api-java-client-samples/picasa-android-sample</code>
-    and click "Next"</li>
-    <li>Click "Finish"</li>
-  </ul>
-  </li>
-  <li>Clean Project (if compile error about missing gen directory)
-  <ul>
-    <li>Select <code>picasa-android-sample</code> project</li>
-    <li>Project &gt; Clean...</li>
-    <li>Select "Clean projects selected below"</li>
-    <li>Click on "OK"</li>
-  </ul>
-  </li>
-  <li>Run
-  <ul>
-    <li>Right-click on project picasa-android-sample</li>
-    <li>Run As &gt; Android Application</li>
-    <li>On your device, click the Menu button to switch accounts or add a
-    new Album. Select and hold on an album to update or delete it.</li>
-    <li>There is also a demo for uploading photos. After taking a picture
-    using your Android device, browse your pictures, then click on "Share",
-    click "Picasa Sample", and the photo will be uploaded to Picasa Web Albums.</li>
-  </ul>
-  </li>
-</ul>
 
+  <h3>Setup Project with Maven</h3>
+
+  <ul>
+    <li><code>cd google-api-java-client-samples/picasa-android-sample</code>
+    </li>
+    <li>Uncomment the dependency on android in <code>pom.xml</code>
+    </li>
+    <li><code>mvn install android:deploy android:run</code></li>
+  </ul>
 </body>
 </html>

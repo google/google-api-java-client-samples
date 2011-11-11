@@ -19,6 +19,7 @@ import com.google.api.client.util.Key;
 import com.google.api.services.samples.shared.cmdline.CmdlineUtils;
 import com.google.common.base.Preconditions;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -57,6 +58,10 @@ public class OAuth2ClientCredentials {
 
   private static final String RESOURCE_LOCATION = "/client_secrets.json";
 
+  private static final String RESOURCE_PATH =
+      ("shared/shared-sample-cmdline/src/main/resources" + RESOURCE_LOCATION).replace('/',
+          File.separatorChar);
+
   private static Credentials credentials = null;
 
   /** Returns the client ID. */
@@ -78,10 +83,10 @@ public class OAuth2ClientCredentials {
       parser.skipToKey("installed");
       credentials = new Credentials();
       parser.parse(credentials, null);
-      Preconditions.checkArgument(
-          !credentials.clientId.isEmpty() && !credentials.clientSecret.isEmpty(),
-          "Please enter your client ID and secret from the Google APIs Console in %s",
-          RESOURCE_LOCATION);
+      Preconditions.checkArgument(!credentials.clientId.startsWith("[[")
+          && !credentials.clientSecret.startsWith("[["),
+          "Please enter your client ID and secret from the Google APIs Console in %s from the "
+              + "root samples directory", RESOURCE_PATH);
     }
     return credentials;
   }
