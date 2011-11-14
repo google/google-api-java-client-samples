@@ -17,10 +17,7 @@ package com.google.api.services.samples.plus.cmdline;
 import com.google.api.client.googleapis.auth.oauth2.draft10.GoogleAccessProtectedResource;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.http.HttpResponseException;
-import com.google.api.client.http.json.JsonHttpRequest;
-import com.google.api.client.http.json.JsonHttpRequestInitializer;
 import com.google.api.services.plus.Plus;
-import com.google.api.services.plus.PlusRequest;
 import com.google.api.services.plus.model.Activity;
 import com.google.api.services.plus.model.ActivityFeed;
 import com.google.api.services.plus.model.Person;
@@ -50,14 +47,7 @@ public class PlusSample {
         plus =
             Plus.builder(CmdlineUtils.getHttpTransport(), CmdlineUtils.getJsonFactory())
                 .setApplicationName("Google-PlusSample/1.0")
-                .setHttpRequestInitializer(accessProtectedResource)
-                .setJsonHttpRequestInitializer(new JsonHttpRequestInitializer() {
-                  @Override
-                  public void initialize(JsonHttpRequest request) {
-                    PlusRequest plusRequest = (PlusRequest) request;
-                    plusRequest.setPrettyPrint(true);
-                  }
-                }).build();
+                .setHttpRequestInitializer(accessProtectedResource).build();
         // run commands
         listActivities();
         getActivity();

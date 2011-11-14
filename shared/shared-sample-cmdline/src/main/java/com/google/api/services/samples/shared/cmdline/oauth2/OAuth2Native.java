@@ -106,6 +106,7 @@ public class OAuth2Native {
     if (browser != null) {
       try {
         Runtime.getRuntime().exec(new String[] {browser, url});
+        return;
       } catch (IOException e) {
         // handled below
       }
