@@ -54,7 +54,10 @@ public class OAuth2Native {
     if (response == null) {
       try {
         String redirectUrl = receiver.getRedirectUrl();
-        launchInBrowser(browser, redirectUrl, scope);
+        String authorizationUrl =
+            new GoogleAuthorizationRequestUrl(OAuth2ClientCredentials.getClientId(), redirectUrl,
+                scope).build();
+        browse(authorizationUrl, browser);
         response = exchangeCodeForAccessToken(redirectUrl, receiver);
         if (credentialStore != null) {
           credentialStore.write(response);
@@ -79,24 +82,37 @@ public class OAuth2Native {
 
   }
 
-  private static void launchInBrowser(String browser, String redirectUrl, String scope)
-      throws IOException {
-    String authorizationUrl =
-        new GoogleAuthorizationRequestUrl(OAuth2ClientCredentials.getClientId(), redirectUrl, scope)
-            .build();
+  private static void browse(String url, String browser) {
+    // first try the Java Desktop
     if (Desktop.isDesktopSupported()) {
       Desktop desktop = Desktop.getDesktop();
       if (desktop.isSupported(Action.BROWSE)) {
-        desktop.browse(URI.create(authorizationUrl));
-        return;
+        try {
+          desktop.browse(URI.create(url));
+          return;
+        } catch (IOException e) {
+          // handled below
+        }
       }
     }
-    if (browser != null) {
-      Runtime.getRuntime().exec(new String[] {browser, authorizationUrl});
-    } else {
-      System.out.println("Open the following address in your favorite browser:");
-      System.out.println("  " + authorizationUrl);
+    // Next try rundll32 (only works on Windows)
+    try {
+      Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler " + url);
+      return;
+    } catch (IOException e) {
+      // handled below
     }
+    // Next try the requested browser (e.g. "google-chrome")
+    if (browser != null) {
+      try {
+        Runtime.getRuntime().exec(new String[] {browser, url});
+      } catch (IOException e) {
+        // handled below
+      }
+    }
+    // Finally just ask user to open in their browser using copy-paste
+    System.out.println("Please open the following URL in your browser:");
+    System.out.println("  " + url);
   }
 
   private static AccessTokenResponse exchangeCodeForAccessToken(String redirectUrl,
