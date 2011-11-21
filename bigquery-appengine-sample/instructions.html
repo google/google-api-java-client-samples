@@ -1,0 +1,62 @@
+<html>
+<title>Google Bigquery App Engine Dashboard Sample</title>
+<body>
+<h2>Instructions for the Google Bigquery App Engine Dashboard Sample</h2>
+
+<h3>Browse Source Code</h3>
+
+<ul>
+  <li><a
+    href="http://code.google.com/p/google-api-java-client/source/browse/bigquery-appengine-sample/?repo=samples">bigquery-appengine-sample</a>
+  or <a
+    href="http://code.google.com/p/google-api-java-client/source/browse/bigquery-appengine-sample/src/com/google/api/client/sample/bigquery/appengine/dashboard/ApplicationSettings.java?repo=samples">ApplicationSettings.java</a></li>
+</ul>
+
+<h3>Checkout Instructions</h3>
+
+<p><b>Prerequisites:</b> install <a href="http://java.com">Java 6</a>, <a
+  href="http://code.google.com/appengine/downloads.html">Google App Engine
+1.4.0</a>, <a href="http://mercurial.selenic.com/">Mercurial</a>, and <a
+  href="http://maven.apache.org/download.html">Maven</a>. You may need
+to set your <code>JAVA_HOME</code>.</p>
+
+<pre><code>cd <i>[someDirectory]</i>
+hg clone https://samples.google-api-java-client.googlecode.com/hg/ google-api-java-client-samples
+cd google-api-java-client-samples/bigquery-appengine-sample
+mvn clean package</code></pre>
+
+<h3>Setup Project in Eclipse 3.7</h3>
+
+<p><b>Prerequisites:</b> install <a href="http://www.eclipse.org/downloads/">Eclipse</a>,
+<a href="http://code.google.com/eclipse/">Google Plugin for Eclipse</a>, and the
+<a href="http://javaforge.com/project/HGE">Mercurial plugin</a>.</p>
+
+<ul>
+  <li>Import <code>bigquery-appengine-sample</code> project
+  <ul>
+    <li>File &gt; Import...</li>
+    <li>Select "General &gt; Existing Project into Workspace" and click
+    "Next"</li>
+    <li>Click "Browse" next to "Select root directory", find <code><i>[someDirectory]</i>/google-api-java-client-samples/bigquery-appengine-sample</code>
+    and click "Next"</li>
+    <li>Click "Finish"</li>
+  </ul>
+  </li>
+  <li>Settings
+  <ul>
+    <li>Add your Bigquery project ID as a system property to <code>bigquery-appengine-sample/src/main/webapp/WEB-INF/appengine-web.xml</code></li>
+    <li>Add the client ID and client secret of your project to <code>shared/shared-sample-appengine/src/main/resources/client_secrets.json</code>.  You can find your client id and secret on your <a href="https://code.google.com/apis/console">API console</a> for your Bigquery project</li>
+    <li>Run <code>mvn source:jar install</code> in <code>shared/shared-sample-appengine/</code></li>
+    <li>Run <code>mvn clean package</code> in <code>bigquery-appengine-sample/</code></li>
+  </ul>
+  </li>
+  <li>Run
+  <ul>
+    <li>Right-click on project bigquery-appengine-sample</li>
+    <li>Run As &gt; Web Application</li>
+  </ul>
+  </li>
+</ul>
+
+</body>
+</html>
