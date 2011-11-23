@@ -25,7 +25,15 @@ mvn source:jar install
 cd ../../bigquery-appengine-sample
 mvn clean package</code></pre>
 
-<h3>Setup Project in Eclipse 3.7</h3>
+<h3>Settings</h3>
+<ul>
+  <li>Add the client ID and client secret of your project to <code>shared/shared-sample-appengine/src/main/resources/client_secrets.json</code>.  You can find your client id and secret on your <a href="https://code.google.com/apis/console">API console</a> for your Bigquery project under API Access</li>
+  <li>Run <code>mvn source:jar install</code> in <code>shared/shared-sample-appengine/</code></li>
+  <li>Add your Bigquery project ID as a system property to <code>bigquery-appengine-sample/src/main/webapp/WEB-INF/appengine-web.xml</code>.  If deploying to App Engine, also add your App Engine application ID at the top of the file.</li>
+  <li>Run <code>mvn clean package</code> in <code>bigquery-appengine-sample/</code></li>
+</ul>
+
+<h3>Setup project in Eclipse 3.7</h3>
 
 <p><b>Prerequisites:</b> install <a href="http://www.eclipse.org/downloads/">Eclipse</a>,
 <a href="http://code.google.com/eclipse/">Google Plugin for Eclipse</a>, and the
@@ -42,20 +50,18 @@ mvn clean package</code></pre>
     <li>Click "Finish"</li>
   </ul>
   </li>
-  <li>Settings
-  <ul>
-    <li>Add your Bigquery project ID as a system property to <code>bigquery-appengine-sample/src/main/webapp/WEB-INF/appengine-web.xml</code></li>
-    <li>Add the client ID and client secret of your project to <code>shared/shared-sample-appengine/src/main/resources/client_secrets.json</code>.  You can find your client id and secret on your <a href="https://code.google.com/apis/console">API console</a> for your Bigquery project</li>
-    <li>Run <code>mvn source:jar install</code> in <code>shared/shared-sample-appengine/</code></li>
-    <li>Run <code>mvn clean package</code> in <code>bigquery-appengine-sample/</code></li>
-  </ul>
-  </li>
   <li>Run
   <ul>
     <li>Right-click on project bigquery-appengine-sample</li>
     <li>Run As &gt; Web Application</li>
   </ul>
   </li>
+</ul>
+
+<h3>FAQ</h3>
+<ul>
+  <li>I keep getting redirected to /denied!  What do I do?<br/>Make sure your client secret/ID are correctly set and that you re-installed samples/shared-sample-appengine.</li>
+  <li>I get a 404 when I run my query.  What could be wrong?<br/>Make sure you've added your </li>
 </ul>
 
 </body>
