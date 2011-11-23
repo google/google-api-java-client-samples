@@ -20,7 +20,9 @@ to set your <code>JAVA_HOME</code>.</p>
 
 <pre><code>cd <i>[someDirectory]</i>
 hg clone https://samples.google-api-java-client.googlecode.com/hg/ google-api-java-client-samples
-cd google-api-java-client-samples/bigquery-appengine-sample
+cd google-api-java-client-samples/samples/shared-sample-appengine
+mvn source:jar install
+cd ../../bigquery-appengine-sample
 mvn clean package</code></pre>
 
 <h3>Setup Project in Eclipse 3.7</h3>
