@@ -21,8 +21,8 @@ package com.google.api.services.samples.shared.cmdline.oauth2;
  */
 public interface VerificationCodeReceiver {
 
-  /** Returns the redirect URL. */
-  String getRedirectUrl() throws Exception;
+  /** Returns the redirect URI. */
+  String getRedirectUri() throws Exception;
 
   /** Waits for a verification code. */
   String waitForCode();

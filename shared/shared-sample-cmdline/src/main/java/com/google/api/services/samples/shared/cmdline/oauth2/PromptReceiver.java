@@ -14,7 +14,7 @@
 
 package com.google.api.services.samples.shared.cmdline.oauth2;
 
-import com.google.api.client.auth.oauth2.draft10.InstalledApp;
+import com.google.api.client.googleapis.auth.oauth2.GoogleOAuthConstants;
 
 import java.util.Scanner;
 
@@ -36,8 +36,8 @@ public class PromptReceiver implements VerificationCodeReceiver {
   }
 
   @Override
-  public String getRedirectUrl() {
-    return InstalledApp.OOB_REDIRECT_URI;
+  public String getRedirectUri() {
+    return GoogleOAuthConstants.OOB_REDIRECT_URI;
   }
 
   @Override

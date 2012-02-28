@@ -7,9 +7,9 @@
     <version>5</version>
   </parent>
   <groupId>com.google.apis-samples</groupId>
-  <artifactId>plus-cmdline-sample</artifactId>
+  <artifactId>oauth2-cmdline-sample</artifactId>
   <version>1.0.0</version>
-  <name>Example for the Google+ API using JSON and OAuth 2.0</name>
+  <name>Example for the OAuth2 API using JSON and OAuth 2.0</name>
 
   <url>http://code.google.com/p/google-api-java-client/</url>
 
@@ -18,7 +18,7 @@
     <url>http://code.google.com/p/google-api-java-client/issues/list</url>
   </issueManagement>
 
-  <inceptionYear>2010</inceptionYear>
+  <inceptionYear>2012</inceptionYear>
 
   <prerequisites>
     <maven>2.0.9</maven>
@@ -76,7 +76,7 @@
           </execution>
         </executions>
         <configuration>
-          <mainClass>com.google.api.services.samples.plus.cmdline.PlusSample</mainClass>
+          <mainClass>com.google.api.services.samples.oauth2.cmdline.OAuth2Sample</mainClass>
           <systemProperties>
             <systemProperty>
               <key>java.util.logging.config.file</key>
@@ -122,8 +122,8 @@
   <dependencies>
     <dependency>
       <groupId>com.google.apis</groupId>
-      <artifactId>google-api-services-plus</artifactId>
-      <version>v1-head</version>
+      <artifactId>google-api-services-oauth2</artifactId>
+      <version>v2-head</version>
     </dependency>
     <dependency>
       <groupId>com.google.apis-samples</groupId>

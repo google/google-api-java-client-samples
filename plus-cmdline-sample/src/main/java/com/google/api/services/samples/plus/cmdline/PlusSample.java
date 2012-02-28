@@ -14,26 +14,32 @@
 
 package com.google.api.services.samples.plus.cmdline;
 
-import com.google.api.client.googleapis.auth.oauth2.draft10.GoogleAccessProtectedResource;
-import com.google.api.client.googleapis.json.GoogleJsonResponseException;
-import com.google.api.client.http.HttpResponseException;
+import com.google.api.client.auth.oauth2.Credential;
+import com.google.api.client.http.HttpTransport;
+import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.jackson.JacksonFactory;
 import com.google.api.services.plus.Plus;
+import com.google.api.services.plus.PlusScopes;
 import com.google.api.services.plus.model.Activity;
 import com.google.api.services.plus.model.ActivityFeed;
 import com.google.api.services.plus.model.Person;
-import com.google.api.services.samples.shared.cmdline.CmdlineUtils;
 import com.google.api.services.samples.shared.cmdline.oauth2.LocalServerReceiver;
 import com.google.api.services.samples.shared.cmdline.oauth2.OAuth2Native;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 /**
  * @author Yaniv Inbar
  */
 public class PlusSample {
 
-  /** OAuth 2 scope. */
-  private static final String SCOPE = "https://www.googleapis.com/auth/plus.me";
+  /** Global instance of the HTTP transport. */
+  private static final HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
+
+  /** Global instance of the JSON factory. */
+  private static final JsonFactory JSON_FACTORY = new JacksonFactory();
 
   private static Plus plus;
 
@@ -41,26 +47,21 @@ public class PlusSample {
     try {
       try {
         // authorization
-        GoogleAccessProtectedResource accessProtectedResource =
-            OAuth2Native.authorize(new LocalServerReceiver(), null, "google-chrome", SCOPE);
+        Credential credential = OAuth2Native.authorize(
+            HTTP_TRANSPORT, JSON_FACTORY, new LocalServerReceiver(),
+            Arrays.asList(PlusScopes.PLUS_ME));
         // set up global Plus instance
-        plus =
-            Plus.builder(CmdlineUtils.getHttpTransport(), CmdlineUtils.getJsonFactory())
-                .setApplicationName("Google-PlusSample/1.0")
-                .setHttpRequestInitializer(accessProtectedResource).build();
+        plus = Plus.builder(HTTP_TRANSPORT, JSON_FACTORY)
+            .setApplicationName("Google-PlusSample/1.0").setHttpRequestInitializer(credential)
+            .build();
         // run commands
         listActivities();
         getActivity();
         getProfile();
         // success!
         return;
-      } catch (GoogleJsonResponseException e) {
-        // message already includes parsed response
+      } catch (IOException e) {
         System.err.println(e.getMessage());
-      } catch (HttpResponseException e) {
-        // message doesn't include parsed response
-        System.err.println(e.getMessage());
-        System.err.println(e.getResponse().parseAsString());
       }
     } catch (Throwable t) {
       t.printStackTrace();
