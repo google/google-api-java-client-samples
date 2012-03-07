@@ -73,10 +73,13 @@ public class PredictionSample {
         HttpResponse response = prediction.trainedmodels().get(MODEL_ID).executeUnparsed();
         if (response.getStatusCode() == 200) {
           training = jsonHttpParser.parse(response, Training.class);
-          System.out.println();
-          System.out.println("Training completed.");
-          System.out.println(training.getModelInfo());
-          return;
+          String trainingStatus = training.getTrainingStatus();
+          if (trainingStatus.equals("DONE")) {
+            System.out.println();
+            System.out.println("Training completed.");
+            System.out.println(training.getModelInfo());
+            return;
+          }
         }
         response.ignore();
       } catch (HttpResponseException e) {
