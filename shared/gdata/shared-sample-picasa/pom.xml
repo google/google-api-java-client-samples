@@ -8,7 +8,7 @@
   </parent>
   <groupId>com.google.apis-samples</groupId>
   <artifactId>shared-sample-picasa</artifactId>
-  <version>v2-1.1.0</version>
+  <version>v2-1.2.0</version>
   <name>Example shared code for the Picasa Web Albums Data API v2 samples</name>
 
   <url>http://code.google.com/p/google-api-java-client/</url>
@@ -85,7 +85,7 @@
     <dependency>
       <groupId>com.google.apis-samples</groupId>
       <artifactId>shared-sample-gdata</artifactId>
-      <version>1.1.0</version>
+      <version>1.2.0</version>
     </dependency>
   </dependencies>
   <properties>

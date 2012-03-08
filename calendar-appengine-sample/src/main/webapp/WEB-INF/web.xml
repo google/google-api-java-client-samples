@@ -35,16 +35,6 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
     <url-pattern>/</url-pattern>
   </servlet-mapping>
 
-  <servlet>
-    <servlet-name>denied</servlet-name>
-    <servlet-class>com.google.api.services.samples.calendar.appengine.server.DeniedAuth</servlet-class>
-  </servlet>
-
-  <servlet-mapping>
-    <servlet-name>denied</servlet-name>
-    <url-pattern>/denied</url-pattern>
-  </servlet-mapping>
-
   <security-constraint>
     <web-resource-collection>
       <web-resource-name>any</web-resource-name>

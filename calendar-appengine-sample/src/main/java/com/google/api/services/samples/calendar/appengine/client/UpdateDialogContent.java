@@ -70,10 +70,9 @@ public class UpdateDialogContent extends Composite {
   void handleUpdate(ClickEvent e) {
     dialogBox.hide();
     GwtCalendar updated = new GwtCalendar();
-    updated.editLink = calendar.editLink;
+    updated.id = calendar.id;
     updated.title = textBox.getText();
-    updated.updated = calendar.updated;
-    CalendarGwtSample.SERVICE.update(calendar, updated, new AsyncCallback<GwtCalendar>() {
+    CalendarGwtSample.SERVICE.update(updated, new AsyncCallback<GwtCalendar>() {
 
       @Override
       public void onFailure(Throwable caught) {

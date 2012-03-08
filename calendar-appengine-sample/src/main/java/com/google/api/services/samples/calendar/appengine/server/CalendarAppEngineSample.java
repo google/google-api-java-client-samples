@@ -14,21 +14,14 @@
 
 package com.google.api.services.samples.calendar.appengine.server;
 
-import com.google.api.client.extensions.auth.helpers.ThreeLeggedFlow;
-import com.google.api.client.extensions.servlet.auth.AbstractFlowUserServlet;
-import com.google.api.client.googleapis.extensions.auth.helpers.oauth2.draft10.GoogleOAuth2ThreeLeggedFlow;
-import com.google.api.client.http.HttpTransport;
-import com.google.api.client.json.JsonFactory;
-import com.google.api.services.calendar.CalendarUrl;
-import com.google.api.services.samples.shared.appengine.AppEngineUtils;
-import com.google.api.services.samples.shared.appengine.OAuth2ClientCredentials;
+import com.google.api.client.auth.oauth2.AuthorizationCodeFlow;
+import com.google.api.client.extensions.appengine.auth.oauth2.AbstractAppEngineAuthorizationCodeServlet;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import javax.jdo.PersistenceManagerFactory;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -38,7 +31,8 @@ import javax.servlet.http.HttpServletResponse;
  * 
  * @author Yaniv Inbar
  */
-public class CalendarAppEngineSample extends AbstractFlowUserServlet {
+public class CalendarAppEngineSample extends AbstractAppEngineAuthorizationCodeServlet {
+
   static final String APP_NAME = "Google Calendar Data API Sample Web Client";
 
   static final String GWT_MODULE_NAME = "calendar";
@@ -46,58 +40,37 @@ public class CalendarAppEngineSample extends AbstractFlowUserServlet {
   private static final long serialVersionUID = 1L;
 
   @Override
-  protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+  protected void doGet(HttpServletRequest request, HttpServletResponse response)
+      throws IOException {
     response.setContentType("text/html");
     response.setCharacterEncoding("UTF-8");
     PrintWriter writer = response.getWriter();
     writer.println("<!doctype html><html><head>");
     writer.println("<meta http-equiv=\"content-type\" content=\"text/html; charset=UTF-8\">");
     writer.println("<title>" + APP_NAME + "</title>");
-    writer.println("<link type=\"text/css\" rel=\"stylesheet\" href=\"" + GWT_MODULE_NAME
-        + ".css\">");
+    writer.println(
+        "<link type=\"text/css\" rel=\"stylesheet\" href=\"" + GWT_MODULE_NAME + ".css\">");
     writer.println("<script type=\"text/javascript\" language=\"javascript\" " + "src=\""
         + GWT_MODULE_NAME + "/" + GWT_MODULE_NAME + ".nocache.js\"></script>");
     writer.println("</head><body>");
     UserService userService = UserServiceFactory.getUserService();
     writer.println("<div class=\"header\"><b>" + request.getUserPrincipal().getName() + "</b> | "
-        + "<a href=\"" + userService.createLogoutURL(Utils.getFullURL(request))
+        + "<a href=\"" + userService.createLogoutURL(request.getRequestURL().toString())
         + "\">Log out</a> | "
-        + "<a href=\"http://code.google.com/p/google-api-java-client/source/browse?repo="
-        + "samples#hg/calendar-appengine-sample\">See source code for " + "this sample</a></div>");
+        + "<a href=\"http://code.google.com/p/google-api-java-client/source/browse"
+        + "/calendar-appengine-sample?repo=samples\">See source code for "
+        + "this sample</a></div>");
     writer.println("<div id=\"main\"/>");
     writer.println("</body></html>");
   }
 
   @Override
-  protected PersistenceManagerFactory getPersistenceManagerFactory() {
-    return AppEngineUtils.getPersistenceManagerFactory();
+  protected String getRedirectUri(HttpServletRequest req) throws ServletException, IOException {
+    return Utils.getRedirectUri(req);
   }
 
   @Override
-  protected ThreeLeggedFlow newFlow(String userId) throws IOException {
-    return new GoogleOAuth2ThreeLeggedFlow(userId, OAuth2ClientCredentials.getClientId(),
-        OAuth2ClientCredentials.getClientSecret(), CalendarUrl.ROOT_URL, Utils.getCallbackUrl());
-  }
-
-  @Override
-  protected void service(HttpServletRequest req, HttpServletResponse resp) throws IOException,
-      ServletException {
-    Utils.setCallbackUrl(req);
-    super.service(req, resp);
-  }
-
-  @Override
-  protected String getUserId() {
-    return Utils.getUserId();
-  }
-
-  @Override
-  protected HttpTransport newHttpTransportInstance() {
-    return AppEngineUtils.getHttpTransport();
-  }
-
-  @Override
-  protected JsonFactory newJsonFactoryInstance() {
-    return AppEngineUtils.getJsonFactory();
+  protected AuthorizationCodeFlow initializeFlow() throws IOException {
+    return Utils.newFlow();
   }
 }

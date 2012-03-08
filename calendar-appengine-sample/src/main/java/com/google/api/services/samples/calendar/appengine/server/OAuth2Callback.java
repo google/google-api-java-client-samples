@@ -14,44 +14,50 @@
 
 package com.google.api.services.samples.calendar.appengine.server;
 
-import com.google.api.client.extensions.appengine.auth.AbstractAppEngineCallbackServlet;
-import com.google.api.client.extensions.auth.helpers.ThreeLeggedFlow;
-import com.google.api.client.googleapis.extensions.auth.helpers.oauth2.draft10.GoogleOAuth2ThreeLeggedFlow;
-import com.google.api.services.samples.shared.appengine.AppEngineUtils;
+import com.google.api.client.auth.oauth2.AuthorizationCodeFlow;
+import com.google.api.client.auth.oauth2.AuthorizationCodeResponseUrl;
+import com.google.api.client.auth.oauth2.Credential;
+import com.google.api.client.extensions.appengine.auth.oauth2.AbstractAppEngineAuthorizationCodeCallbackServlet;
+import com.google.appengine.api.users.UserServiceFactory;
 
-import javax.jdo.PersistenceManagerFactory;
+import java.io.IOException;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * HTTP servlet to process access granted from user.
  * 
  * @author Yaniv Inbar
  */
-public class OAuth2Callback extends AbstractAppEngineCallbackServlet {
+public class OAuth2Callback extends AbstractAppEngineAuthorizationCodeCallbackServlet {
 
   private static final long serialVersionUID = 1L;
 
   @Override
-  protected Class<? extends ThreeLeggedFlow> getConcreteFlowType() {
-    return GoogleOAuth2ThreeLeggedFlow.class;
+  protected void onSuccess(HttpServletRequest req, HttpServletResponse resp, Credential credential)
+      throws ServletException, IOException {
+    resp.sendRedirect("/");
   }
 
   @Override
-  protected String getCompletionCodeQueryParam() {
-    return "code";
+  protected void onError(
+      HttpServletRequest req, HttpServletResponse resp, AuthorizationCodeResponseUrl errorResponse)
+      throws ServletException, IOException {
+    String nickname = UserServiceFactory.getUserService().getCurrentUser().getNickname();
+    resp.getWriter().print("<h3>" + nickname + ", why don't you want to play with me?</h1>");
+    resp.setStatus(200);
+    resp.addHeader("Content-Type", "text/html");
   }
 
   @Override
-  protected String getDeniedRedirectUrl() {
-    return "/denied";
+  protected String getRedirectUri(HttpServletRequest req) throws ServletException, IOException {
+    return Utils.getRedirectUri(req);
   }
 
   @Override
-  protected String getSuccessRedirectUrl() {
-    return "/";
-  }
-
-  @Override
-  protected PersistenceManagerFactory getPersistenceManagerFactory() {
-    return AppEngineUtils.getPersistenceManagerFactory();
+  protected AuthorizationCodeFlow initializeFlow() throws IOException {
+    return Utils.newFlow();
   }
 }

@@ -34,14 +34,8 @@ INVALID_CLIENT</code> error in the browser.</p>
 
 <pre><code>cd <i>[someDirectory]</i>
 hg clone https://code.google.com/p/google-api-java-client.samples/ google-api-java-client-samples
-cd google-api-java-client-samples/shared/shared-sample-appengine
+cd google-api-java-client-samples/calendar-appengine-sample
 <i>[editor]</i> src/main/resources/client_secrets.json
-mvn source:jar install
-cd ../gdata/shared-sample-gdata
-mvn source:jar install
-cd ../shared-sample-calendar
-mvn source:jar install
-cd ../../../calendar-appengine-sample
 mvn clean package</code></pre>
 
 <h3>Setup Project in Eclipse 3.5/3.6</h3>

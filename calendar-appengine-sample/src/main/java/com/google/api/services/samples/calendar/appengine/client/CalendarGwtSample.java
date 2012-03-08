@@ -66,14 +66,11 @@ public class CalendarGwtSample implements EntryPoint {
     FlexTable calendarsTable = calendarsFrame.calendarsTable;
     calendarsTable.removeAllRows();
     calendarsTable.setText(0, 1, "Calendar Title");
-    calendarsTable.setText(0, 2, "Updated");
     calendarsTable.getCellFormatter().addStyleName(0, 1, "methodsHeaderRow");
-    calendarsTable.getCellFormatter().addStyleName(0, 2, "methodsHeaderRow");
     for (int i = 0; i < calendars.size(); i++) {
       GwtCalendar calendar = calendars.get(i);
       calendarsTable.setWidget(i + 1, 0, new CalendarButtons(this, calendar, i));
       calendarsTable.setText(i + 1, 1, calendar.title);
-      calendarsTable.setText(i + 1, 2, calendar.updated);
     }
   }
 
