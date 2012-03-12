@@ -4,7 +4,7 @@
   <classpathentry kind="src" path="gen" />
   <classpathentry kind="con"
     path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK" />
+  <classpathentry kind="output" path="bin/classes" />
   <classpathentry kind="con"
     path="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER" />
-  <classpathentry kind="output" path="bin/classes" />
 </classpath>

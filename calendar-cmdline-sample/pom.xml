@@ -9,7 +9,7 @@
   <groupId>com.google.apis-samples</groupId>
   <artifactId>calendar-cmdline-sample</artifactId>
   <version>1.1.0</version>
-  <name>Example for the Google Calendar Data API version 2 using Atom and OAuth 2.</name>
+  <name>Example for the Google Calendar API v3 using OAuth 2.0.</name>
 
   <url>http://code.google.com/p/google-api-java-client/</url>
 
@@ -29,6 +29,16 @@
     <developerConnection>scm:hg:https://samples.google-api-java-client.googlecode.com/hg/</developerConnection>
     <url>http://code.google.com/p/google-api-java-client/source/browse/?repo=samples</url>
   </scm>
+
+  <repositories>
+    <repository>
+      <id>googleapis</id>
+      <url>http://mavenrepo.google-api-java-client.googlecode.com/hg/</url>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </repository>
+  </repositories>
 
   <developers>
     <developer>
@@ -113,12 +123,12 @@
     <dependency>
       <groupId>com.google.apis-samples</groupId>
       <artifactId>shared-sample-cmdline</artifactId>
-      <version>1.1.0</version>
+      <version>1.2.0</version>
     </dependency>
     <dependency>
-      <groupId>com.google.apis-samples</groupId>
-      <artifactId>shared-sample-calendar</artifactId>
-      <version>v2-1.1.0</version>
+      <groupId>com.google.apis</groupId>
+      <artifactId>google-api-services-calendar</artifactId>
+      <version>v3-rev2-1.4.0-beta</version>
     </dependency>
   </dependencies>
   <properties>
