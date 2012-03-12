@@ -20,7 +20,7 @@
       href="http://mercurial.selenic.com/">Mercurial</a> (requires 1.6 or
     higher) and <a href="http://maven.apache.org/download.html">Maven</a>
     (requires 3.0 or higher). You may need to set your
-    <code>JAVA_HOME</code>
+    <code>JAVA_HOME</code> and <code>ANDROID_HOME</code>.
     .
   </p>
 
@@ -29,20 +29,20 @@
     running it, you need to edit
     <code>ClientCredentials.java</code>
     to enter the required API key generated from <a
-      href="https://code.google.com/apis/console/">Google APIs Console</a>.
-    Without a valid key, you will only be able to make a limited number of
-    queries per second. When you exceed this limit, you will receive a
+      href="https://code.google.com/apis/console/?api=tasks">Google APIs Console</a>.
+    Otherwise, without a valid key, you will only be able to make a small number of
+    queries. When you exceed this limit, you will receive a
     <code>403 Forbidden</code>
     error with the message
     <code>Daily Limit Exceeded. Please sign up</code>
-    . You will then have to wait a period of time while the limited quota
-    regenerates.
+    .
+   </p>
   <pre>
     <code>cd <i>[someDirectory]</i>
 hg clone https://code.google.com/p/google-api-java-client.samples/ google-api-java-client-samples
-cd google-api-java-client-samples/shared/shared-sample-android
-<i>[editor]</i> src/main/java/com/google/api/services/samples/shared/android/ClientCredentials.java
-mvn source:jar install</code>
+cd google-api-java-client-samples/tasks-android-sample
+<i>[editor]</i> src/main/java/com/google/api/services/samples/tasks/android/ClientCredentials.java
+</code>
   </pre>
 
   <h3>Setup Project in Eclipse 3.7 (Indigo)</h3>
