@@ -14,22 +14,22 @@
 
 package com.google.api.services.samples.adsense.cmdline;
 
-import com.google.api.client.googleapis.auth.oauth2.draft10.GoogleAccessProtectedResource;
-import com.google.api.client.googleapis.json.GoogleJsonResponseException;
-import com.google.api.client.http.HttpResponseException;
+import com.google.api.client.auth.oauth2.Credential;
+import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
-import com.google.api.client.http.json.JsonHttpRequest;
-import com.google.api.client.http.json.JsonHttpRequestInitializer;
+import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson.JacksonFactory;
 import com.google.api.services.adsense.Adsense;
-import com.google.api.services.adsense.AdsenseRequest;
+import com.google.api.services.adsense.AdsenseScopes;
 import com.google.api.services.adsense.model.Accounts;
 import com.google.api.services.adsense.model.AdClients;
 import com.google.api.services.adsense.model.AdUnits;
 import com.google.api.services.adsense.model.CustomChannels;
-import com.google.api.services.samples.shared.cmdline.ClientCredentials;
 import com.google.api.services.samples.shared.cmdline.oauth2.LocalServerReceiver;
 import com.google.api.services.samples.shared.cmdline.oauth2.OAuth2Native;
+
+import java.io.IOException;
+import java.util.Arrays;
 
 /**
  * A sample application that runs multiple requests against the AdSense Management API.
@@ -50,8 +50,12 @@ import com.google.api.services.samples.shared.cmdline.oauth2.OAuth2Native;
  */
 public class AdSenseSample {
 
-  private static final String SCOPE = "https://www.googleapis.com/auth/adsense.readonly";
-
+  /** Global instance of the HTTP transport. */
+  private static final HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
+  
+  /** Global instance of the JSON factory. */
+  private static final JsonFactory JSON_FACTORY = new JacksonFactory();
+  
   // Request parameters.
   private static final int MAX_LIST_PAGE_SIZE = 50;
   private static final int MAX_REPORT_PAGE_SIZE = 50;
@@ -63,13 +67,14 @@ public class AdSenseSample {
    */
   private static Adsense initializeAdsense() throws Exception {
     // Authorization.
-    GoogleAccessProtectedResource accessProtectedResource =
-        OAuth2Native.authorize(new LocalServerReceiver(), null, "google-chrome", SCOPE);
+    Credential credential = OAuth2Native.authorize(
+        HTTP_TRANSPORT, JSON_FACTORY, new LocalServerReceiver(),
+        Arrays.asList(AdsenseScopes.ADSENSE_READONLY));
 
     // Set up AdSense Management API client.
     Adsense adsense = Adsense.builder(new NetHttpTransport(), new JacksonFactory())
         .setApplicationName("Google-AdSenseSample/1.1")
-        .setHttpRequestInitializer(accessProtectedResource)
+        .setHttpRequestInitializer(credential)
         .build();
 
     return adsense;
@@ -120,13 +125,8 @@ public class AdSenseSample {
         } else {
           System.out.println("No ad clients found, unable to run remaining methods.");
         }
-      } catch (GoogleJsonResponseException e) {
-        // Message already includes parsed response.
+      } catch (IOException e) {
         System.err.println(e.getMessage());
-      } catch (HttpResponseException e) {
-        // Message doesn't include parsed response.
-        System.err.println(e.getMessage());
-        System.err.println(e.getResponse().parseAsString());
       }
     } catch (Throwable t) {
       t.printStackTrace();

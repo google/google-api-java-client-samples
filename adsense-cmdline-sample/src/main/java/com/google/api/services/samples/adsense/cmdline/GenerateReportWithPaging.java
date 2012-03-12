@@ -17,7 +17,6 @@ package com.google.api.services.samples.adsense.cmdline;
 import com.google.api.services.adsense.Adsense;
 import com.google.api.services.adsense.Adsense.Reports.Generate;
 import com.google.api.services.adsense.model.AdsenseReportsGenerateResponse;
-import com.google.api.services.adsense.model.AdsenseReportsGenerateResponseHeaders;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -124,8 +123,8 @@ public class GenerateReportWithPaging {
    * Displays the headers for the report.
    * @param headers The list of headers to be displayed.
    */
-  private static void displayHeaders(List<AdsenseReportsGenerateResponseHeaders> headers) {
-    for (AdsenseReportsGenerateResponseHeaders header : headers) {
+  private static void displayHeaders(List<AdsenseReportsGenerateResponse.Headers> headers) {
+    for (AdsenseReportsGenerateResponse.Headers header : headers) {
       System.out.printf("%25s", header.getName());
     }
     System.out.println();

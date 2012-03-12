@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2010 Google Inc.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied. See the License for the specific language governing permissions and limitations under
@@ -14,7 +14,7 @@
 
 package com.google.api.services.samples.discovery.cmdline;
 
-import com.google.api.client.googleapis.auth.oauth2.draft10.GoogleAccessProtectedResource;
+import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.http.FileContent;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpContent;
@@ -23,16 +23,18 @@ import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestFactory;
 import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpResponseException;
+import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.UriTemplate;
+import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.http.json.JsonHttpParser;
+import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.jackson.JacksonFactory;
 import com.google.api.services.discovery.Discovery;
 import com.google.api.services.discovery.model.DirectoryList;
-import com.google.api.services.discovery.model.DirectoryListItems;
-import com.google.api.services.discovery.model.Jsonschema;
 import com.google.api.services.discovery.model.RestDescription;
-import com.google.api.services.discovery.model.Restmethod;
-import com.google.api.services.discovery.model.Restresource;
-import com.google.api.services.samples.shared.cmdline.CmdlineUtils;
+import com.google.api.services.discovery.model.RestDescription.JsonSchema;
+import com.google.api.services.discovery.model.RestDescription.RestMethod;
+import com.google.api.services.discovery.model.RestDescription.RestResource;
 import com.google.api.services.samples.shared.cmdline.oauth2.LocalServerReceiver;
 import com.google.api.services.samples.shared.cmdline.oauth2.OAuth2Native;
 import com.google.common.base.Joiner;
@@ -44,6 +46,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -55,8 +58,13 @@ import java.util.regex.Pattern;
  */
 public class DiscoverySample {
 
-  static final Discovery DISCOVERY = new Discovery(CmdlineUtils.getHttpTransport(),
-      CmdlineUtils.getJsonFactory());
+  /** Global instance of the HTTP transport. */
+  private static final HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
+
+  /** Global instance of the JSON factory. */
+  private static final JsonFactory JSON_FACTORY = new JacksonFactory();
+
+  static final Discovery DISCOVERY = new Discovery(HTTP_TRANSPORT, JSON_FACTORY);
 
   private static final String APP_NAME = "Google Discovery API Client 1.2.0";
 
@@ -94,13 +102,11 @@ public class DiscoverySample {
         System.out.println("Usage: google call apiName apiVersion methodName [parameters]");
         System.out.println();
         System.out.println("Examples:");
-        System.out.println("  google call discovery v1 apis.getRest buzz v1");
-        System.out.println("  google call buzz v1 activities.list @me @self "
-            + "--max-results 3 --alt json --prettyPrint true");
-        System.out.println("  echo {\\\"data\\\":{\\\"object\\\":{\\\"content\\\":"
-            + "\\\"Posting using Google command-line tool based on "
-            + "Discovery \\(http://goo.gl/ojuXq\\)\\\"}}} > "
-            + "buzzpost.json && google call buzz v1 activities.insert @me buzzpost.json");
+        System.out.println("  google call discovery v1 apis.getRest plus v1");
+        System.out.println("  google call plus v1 activities.list me public --max-results 3");
+        System.out.println("  google call calendar v3 calendarList.list");
+        System.out.println("  echo {\"summary\":\"temporary calendar\"} > post.json && google call "
+            + "calendar v3 calendars.insert post.json");
       } else if (helpCommand.equals("discover")) {
         System.out.println("Usage");
         System.out.println("List all APIs: google discover");
@@ -108,7 +114,7 @@ public class DiscoverySample {
         System.out.println();
         System.out.println("Examples:");
         System.out.println("  google discover");
-        System.out.println("  google discover buzz v1");
+        System.out.println("  google discover plus v1");
         System.out.println("  google discover moderator v1");
       } else {
         error(null, "unknown command: " + helpCommand);
@@ -132,7 +138,7 @@ public class DiscoverySample {
   }
 
   private static void putParameter(String argName, Map<String, Object> parameters,
-      String parameterName, Jsonschema parameter, String parameterValue) {
+      String parameterName, JsonSchema parameter, String parameterValue) {
     Object value = parameterValue;
     if (parameter != null) {
       if ("boolean".equals(parameter.getType())) {
@@ -168,15 +174,15 @@ public class DiscoverySample {
       error("call", "invalid method name: " + fullMethodName);
     }
     RestDescription restDescription = loadGoogleAPI("call", apiName, apiVersion);
-    Map<String, Restmethod> methodMap = null;
+    Map<String, RestMethod> methodMap = null;
     int curIndex = 0;
     int nextIndex = fullMethodName.indexOf('.');
     if (nextIndex == -1) {
       methodMap = restDescription.getMethods();
     } else {
-      Map<String, Restresource> resources = restDescription.getResources();
+      Map<String, RestResource> resources = restDescription.getResources();
       while (true) {
-        Restresource resource = resources.get(fullMethodName.substring(curIndex, nextIndex));
+        RestResource resource = resources.get(fullMethodName.substring(curIndex, nextIndex));
         if (resource == null) {
           break;
         }
@@ -189,7 +195,7 @@ public class DiscoverySample {
         resources = resource.getResources();
       }
     }
-    Restmethod method =
+    RestMethod method =
         methodMap == null ? null : methodMap.get(fullMethodName.substring(curIndex));
     if (method == null) {
       error("call", "method not found: " + fullMethodName);
@@ -199,13 +205,15 @@ public class DiscoverySample {
     String contentType = "application/json";
     int i = 4;
     // required parameters
-    for (String parameterName : method.getParameterOrder()) {
-      Jsonschema parameter = method.getParameters().get(parameterName);
-      if (Boolean.TRUE.equals(parameter.getRequired())) {
-        if (i == args.length) {
-          error("call", "missing required parameter: " + parameter);
-        } else {
-          putParameter(null, parameters, parameterName, parameter, args[i++]);
+    if (method.getParameterOrder() != null) {
+      for (String parameterName : method.getParameterOrder()) {
+        JsonSchema parameter = method.getParameters().get(parameterName);
+        if (Boolean.TRUE.equals(parameter.getRequired())) {
+          if (i == args.length) {
+            error("call", "missing required parameter: " + parameter);
+          } else {
+            putParameter(null, parameters, parameterName, parameter, args[i++]);
+          }
         }
       }
     }
@@ -233,7 +241,7 @@ public class DiscoverySample {
           error("call", "HTTP content type cannot be specified for this method: " + argName);
         }
       } else {
-        Jsonschema parameter = null;
+        JsonSchema parameter = null;
         if (restDescription.getParameters() != null) {
           parameter = restDescription.getParameters().get(parameterName);
         }
@@ -243,10 +251,9 @@ public class DiscoverySample {
         putParameter(argName, parameters, parameterName, parameter, parameterValue);
       }
     }
-    GenericUrl url =
-        new GenericUrl(UriTemplate.expand(
-            "https://www.googleapis.com" + restDescription.getBasePath() + method.getPath(),
-            parameters, true));
+    GenericUrl url = new GenericUrl(UriTemplate.expand(
+        "https://www.googleapis.com" + restDescription.getBasePath() + method.getPath(), parameters,
+        true));
     HttpContent content = null;
     if (requestBodyFile != null) {
       content = new FileContent(contentType, requestBodyFile);
@@ -254,20 +261,19 @@ public class DiscoverySample {
     try {
       HttpRequestFactory requestFactory;
       if (method.getScopes() != null) {
-        String scope = method.getScopes().get(0);
-        GoogleAccessProtectedResource accessProtectedResource =
-            OAuth2Native.authorize(new LocalServerReceiver(), null, "google-chrome", scope);
-        requestFactory =
-            CmdlineUtils.getHttpTransport().createRequestFactory(accessProtectedResource);
+        String scope = method.getScopes().get(0).toString();
+        Credential credential = OAuth2Native.authorize(
+            HTTP_TRANSPORT, JSON_FACTORY, new LocalServerReceiver(), Arrays.asList(scope));
+        requestFactory = HTTP_TRANSPORT.createRequestFactory(credential);
       } else {
-        requestFactory = CmdlineUtils.getHttpTransport().createRequestFactory();
+        requestFactory = HTTP_TRANSPORT.createRequestFactory();
       }
       HttpRequest request =
           requestFactory.buildRequest(HttpMethod.valueOf(method.getHttpMethod()), url, content);
       String response = request.execute().parseAsString();
       System.out.println(response);
-    } catch (HttpResponseException e) {
-      System.err.println(e.getResponse().parseAsString());
+    } catch (IOException e) {
+      System.err.println(e.getMessage());
       System.exit(1);
     } catch (Throwable t) {
       t.printStackTrace();
@@ -285,10 +291,10 @@ public class DiscoverySample {
     }
     try {
       HttpResponse response = DISCOVERY.apis().getRest(apiName, apiVersion).executeUnparsed();
-      response.getRequest().addParser(new JsonHttpParser(CmdlineUtils.getJsonFactory()));
+      response.getRequest().addParser(new JsonHttpParser(JSON_FACTORY));
       return response.parseAs(RestDescription.class);
     } catch (HttpResponseException e) {
-      if (e.getResponse().getStatusCode() == 404) {
+      if (e.getStatusCode() == 404) {
         error(command, "API not found: " + apiName);
         return null;
       }
@@ -296,33 +302,33 @@ public class DiscoverySample {
     }
   }
 
-  private static void processMethods(ArrayList<MethodDetails> result, String resourceName,
-      Map<String, Restmethod> methodMap) {
+  private static void processMethods(
+      ArrayList<MethodDetails> result, String resourceName, Map<String, RestMethod> methodMap) {
     if (methodMap == null) {
       return;
     }
-    for (Map.Entry<String, Restmethod> methodEntry : methodMap.entrySet()) {
+    for (Map.Entry<String, RestMethod> methodEntry : methodMap.entrySet()) {
       MethodDetails details = new MethodDetails();
       String methodName = methodEntry.getKey();
-      Restmethod method = methodEntry.getValue();
+      RestMethod method = methodEntry.getValue();
       details.name = (resourceName.isEmpty() ? "" : resourceName + ".") + methodName;
       details.hasContent =
           !method.getHttpMethod().equals("GET") && !method.getHttpMethod().equals("DELETE");
       // required parameters
       if (method.getParameterOrder() != null) {
         for (String parameterName : method.getParameterOrder()) {
-          Jsonschema parameter = method.getParameters().get(parameterName);
+          JsonSchema parameter = method.getParameters().get(parameterName);
           if (Boolean.TRUE.equals(parameter.getRequired())) {
             details.requiredParameters.add(parameterName);
           }
         }
       }
       // optional parameters
-      Map<String, Jsonschema> parameters = method.getParameters();
+      Map<String, JsonSchema> parameters = method.getParameters();
       if (parameters != null) {
-        for (Map.Entry<String, Jsonschema> parameterEntry : parameters.entrySet()) {
+        for (Map.Entry<String, JsonSchema> parameterEntry : parameters.entrySet()) {
           String parameterName = parameterEntry.getKey();
-          Jsonschema parameter = parameterEntry.getValue();
+          JsonSchema parameter = parameterEntry.getValue();
           if (!Boolean.TRUE.equals(parameter.getRequired())) {
             details.optionalParameters.add(parameterName);
           }
@@ -332,13 +338,13 @@ public class DiscoverySample {
     }
   }
 
-  private static void processResources(ArrayList<MethodDetails> result, String resourceName,
-      Map<String, Restresource> resourceMap) {
+  private static void processResources(
+      ArrayList<MethodDetails> result, String resourceName, Map<String, RestResource> resourceMap) {
     if (resourceMap == null) {
       return;
     }
-    for (Map.Entry<String, Restresource> entry : resourceMap.entrySet()) {
-      Restresource resource = entry.getValue();
+    for (Map.Entry<String, RestResource> entry : resourceMap.entrySet()) {
+      RestResource resource = entry.getValue();
       String curResourceName = (resourceName.isEmpty() ? "" : resourceName + ".") + entry.getKey();
       processMethods(result, curResourceName, resource.getMethods());
       processResources(result, curResourceName, resource.getResources());
@@ -349,10 +355,10 @@ public class DiscoverySample {
     System.out.println(APP_NAME);
     if (args.length == 1) {
       DirectoryList directoryList = DISCOVERY.apis().list().execute();
-      for (DirectoryListItems item : directoryList.getItems()) {
+      for (DirectoryList.Items item : directoryList.getItems()) {
         System.out.println();
         System.out.print(item.getTitle() + " " + item.getVersion());
-        if (!item.getLabels().isEmpty()) {
+        if (item.getLabels() != null) {
           System.out.print(" (" + Joiner.on(", ").join(item.getLabels()) + ")");
         }
         System.out.println();

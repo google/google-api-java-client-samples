@@ -8,15 +8,16 @@
 
 Examples using <b><code>google call</code></b>:
 
-<pre><code>  google call discovery v1 apis.getRest buzz v1
-  google call buzz v1 activities.list @me @self --max-results 3 --alt json --prettyPrint true
-  echo {\"data\":{\"object\":{\"content\":\"Posting using Google command-line tool based on Discovery \(http://goo.gl/ojuXq\)\"}}} > buzzpost.json && google call buzz v1 activities.insert @me buzzpost.json
+<pre><code>  google call discovery v1 apis.getRest plus v1
+  google call plus v1 activities.list me public --max-results 3
+  google call calendar v3 calendarList.list
+  echo {\"summary\":\"temporary calendar\"} > post.json && google call calendar v3 calendars.insert post.json
 </code></pre>
 
 Examples using <b><code>google discover</code></b>:
 
 <pre><code>  google discover
-  google discover buzz v1
+  google discover plus v1
   google discover moderator v1</code></pre>
 
 <h3>Browse Online</h3>

@@ -17,7 +17,6 @@ package com.google.api.services.samples.adsense.cmdline;
 import com.google.api.services.adsense.Adsense;
 import com.google.api.services.adsense.Adsense.Reports.Generate;
 import com.google.api.services.adsense.model.AdsenseReportsGenerateResponse;
-import com.google.api.services.adsense.model.AdsenseReportsGenerateResponseHeaders;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -75,7 +74,7 @@ public class GenerateReport {
 
     if ((response.getRows() != null) && !response.getRows().isEmpty()) {
       // Display headers.
-      for (AdsenseReportsGenerateResponseHeaders header : response.getHeaders()) {
+      for (AdsenseReportsGenerateResponse.Headers header : response.getHeaders()) {
         System.out.printf("%25s", header.getName());
       }
       System.out.println();
