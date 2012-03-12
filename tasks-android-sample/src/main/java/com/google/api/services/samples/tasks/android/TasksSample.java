@@ -15,15 +15,14 @@ package com.google.api.services.samples.tasks.android;
 
 
 import com.google.api.client.extensions.android2.AndroidHttp;
-import com.google.api.client.googleapis.auth.oauth2.draft10.GoogleAccessProtectedResource;
+import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.client.googleapis.extensions.android2.auth.GoogleAccountManager;
-import com.google.api.client.http.HttpResponse;
-import com.google.api.client.http.HttpResponseException;
+import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.json.JsonHttpRequest;
 import com.google.api.client.http.json.JsonHttpRequestInitializer;
+import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson.JacksonFactory;
-import com.google.api.services.samples.shared.android.ClientCredentials;
 import com.google.api.services.tasks.Tasks;
 import com.google.api.services.tasks.TasksRequest;
 import com.google.api.services.tasks.model.Task;
@@ -32,10 +31,9 @@ import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.accounts.AccountManagerCallback;
 import android.accounts.AccountManagerFuture;
-import android.app.AlertDialog;
-import android.app.Dialog;
+import android.accounts.AuthenticatorException;
+import android.accounts.OperationCanceledException;
 import android.app.ListActivity;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -58,11 +56,13 @@ import java.util.logging.Logger;
  * {@link Level#CONFIG} or {@link Level#ALL} and run this command:
  * </p>
  * 
- * <pre>adb shell setprop log.tag.HttpTransport DEBUG * </pre>
+ * <pre>
+adb shell setprop log.tag.HttpTransport DEBUG
+ * </pre>
  * 
- * @author Johan Euphrosine (based on Yaniv Inbar Buzz sample)
+ * @author Johan Euphrosine
  */
-public class TasksSample extends ListActivity {
+public final class TasksSample extends ListActivity {
 
   /** Logging level for HTTP requests/responses. */
   private static final Level LOGGING_LEVEL = Level.OFF;
@@ -73,81 +73,62 @@ public class TasksSample extends ListActivity {
   // "https://www.googleapis.com/auth/tasks"
   private static final String AUTH_TOKEN_TYPE = "Manage your tasks";
 
-  private static final String PREF = "MyPrefs";
-  private static final int DIALOG_ACCOUNTS = 0;
   private static final int MENU_ACCOUNTS = 0;
-  public static final int REQUEST_AUTHENTICATE = 0;
 
-  private final HttpTransport transport = AndroidHttp.newCompatibleTransport();
+  private static final int REQUEST_AUTHENTICATE = 0;
+
+  final HttpTransport transport = AndroidHttp.newCompatibleTransport();
+
+  final JsonFactory jsonFactory = new JacksonFactory();
+
+  static final String PREF_ACCOUNT_NAME = "accountName";
+
+  static final String PREF_AUTH_TOKEN = "authToken";
+
+  GoogleAccountManager accountManager;
+
+  SharedPreferences settings;
+
+  String accountName;
+
+  GoogleCredential credential = new GoogleCredential();
 
   Tasks service;
-  GoogleAccessProtectedResource accessProtectedResource = new GoogleAccessProtectedResource(null);
-
-  // TODO(yanivi): save auth token in preferences?
-  GoogleAccountManager accountManager;
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    service =
-        Tasks.builder(transport, new JacksonFactory()).setApplicationName("Google-TasksSample/1.0")
-            .setHttpRequestInitializer(accessProtectedResource)
-            .setJsonHttpRequestInitializer(new JsonHttpRequestInitializer() {
+    service = Tasks.builder(transport, jsonFactory)
+        .setApplicationName("Google-TasksAndroidSample/1.0")
+        .setHttpRequestInitializer(credential)
+        .setJsonHttpRequestInitializer(new JsonHttpRequestInitializer() {
 
-              public void initialize(JsonHttpRequest request) throws IOException {
-                TasksRequest tasksRequest = (TasksRequest) request;
-                tasksRequest.setKey(ClientCredentials.KEY);
-              }
-            }).build();
-    accountManager = new GoogleAccountManager(this);
-    Logger.getLogger("com.google.api.client").setLevel(LOGGING_LEVEL);
-    gotAccount(false);
-  }
-
-  @Override
-  protected Dialog onCreateDialog(int id) {
-    switch (id) {
-      case DIALOG_ACCOUNTS:
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Select a Google account");
-        final Account[] accounts = accountManager.getAccounts();
-        final int size = accounts.length;
-        String[] names = new String[size];
-        for (int i = 0; i < size; i++) {
-          names[i] = accounts[i].name;
-        }
-        builder.setItems(names, new DialogInterface.OnClickListener() {
-          public void onClick(DialogInterface dialog, int which) {
-            gotAccount(accounts[which]);
+          public void initialize(JsonHttpRequest request) throws IOException {
+            TasksRequest tasksRequest = (TasksRequest) request;
+            tasksRequest.setKey(ClientCredentials.KEY);
           }
-        });
-        return builder.create();
-    }
-    return null;
+        })
+        .build();
+    settings = getSharedPreferences(TAG, 0);
+    accountName = settings.getString(PREF_ACCOUNT_NAME, null);
+    credential.setAccessToken(settings.getString(PREF_AUTH_TOKEN, null));
+    Logger.getLogger("com.google.api.client").setLevel(LOGGING_LEVEL);
+    accountManager = new GoogleAccountManager(this);
+    gotAccount();
   }
 
-  void gotAccount(boolean tokenExpired) {
-    SharedPreferences settings = getSharedPreferences(PREF, 0);
-    String accountName = settings.getString("accountName", null);
+  void gotAccount() {
     Account account = accountManager.getAccountByName(accountName);
-    if (account != null) {
-      if (tokenExpired) {
-        accountManager.invalidateAuthToken(accessProtectedResource.getAccessToken());
-        accessProtectedResource.setAccessToken(null);
-      }
-      gotAccount(account);
+    if (account == null) {
+      chooseAccount();
       return;
     }
-    showDialog(DIALOG_ACCOUNTS);
-  }
-
-  void gotAccount(final Account account) {
-    SharedPreferences settings = getSharedPreferences(PREF, 0);
-    SharedPreferences.Editor editor = settings.edit();
-    editor.putString("accountName", account.name);
-    editor.commit();
-    accountManager.manager.getAuthToken(account, AUTH_TOKEN_TYPE, true,
-        new AccountManagerCallback<Bundle>() {
+    if (credential.getAccessToken() != null) {
+      onAuthToken();
+      return;
+    }
+    accountManager.manager.getAuthToken(
+        account, AUTH_TOKEN_TYPE, true, new AccountManagerCallback<Bundle>() {
 
           public void run(AccountManagerFuture<Bundle> future) {
             try {
@@ -157,15 +138,56 @@ public class TasksSample extends ListActivity {
                 intent.setFlags(intent.getFlags() & ~Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivityForResult(intent, REQUEST_AUTHENTICATE);
               } else if (bundle.containsKey(AccountManager.KEY_AUTHTOKEN)) {
-                accessProtectedResource.setAccessToken(bundle
-                    .getString(AccountManager.KEY_AUTHTOKEN));
+                credential.setAccessToken(bundle.getString(AccountManager.KEY_AUTHTOKEN));
                 onAuthToken();
               }
             } catch (Exception e) {
-              handleException(e);
+              Log.e(TAG, e.getMessage(), e);
             }
           }
         }, null);
+  }
+
+  private void chooseAccount() {
+    accountManager.manager.getAuthTokenByFeatures(GoogleAccountManager.ACCOUNT_TYPE,
+        AUTH_TOKEN_TYPE,
+        null,
+        TasksSample.this,
+        null,
+        null,
+        new AccountManagerCallback<Bundle>() {
+
+          public void run(AccountManagerFuture<Bundle> future) {
+            Bundle bundle;
+            try {
+              bundle = future.getResult();
+              setAccountName(bundle.getString(AccountManager.KEY_ACCOUNT_NAME));
+              setAuthToken(bundle.getString(AccountManager.KEY_AUTHTOKEN));
+              onAuthToken();
+            } catch (OperationCanceledException e) {
+              // user canceled
+            } catch (AuthenticatorException e) {
+              Log.e(TAG, e.getMessage(), e);
+            } catch (IOException e) {
+              Log.e(TAG, e.getMessage(), e);
+            }
+          }
+        },
+        null);
+  }
+
+  void setAccountName(String accountName) {
+    SharedPreferences.Editor editor = settings.edit();
+    editor.putString(PREF_ACCOUNT_NAME, accountName);
+    editor.commit();
+    this.accountName = accountName;
+  }
+
+  void setAuthToken(String authToken) {
+    SharedPreferences.Editor editor = settings.edit();
+    editor.putString(PREF_AUTH_TOKEN, authToken);
+    editor.commit();
+    credential.setAccessToken(authToken);
   }
 
   @Override
@@ -174,9 +196,9 @@ public class TasksSample extends ListActivity {
     switch (requestCode) {
       case REQUEST_AUTHENTICATE:
         if (resultCode == RESULT_OK) {
-          gotAccount(false);
+          gotAccount();
         } else {
-          showDialog(DIALOG_ACCOUNTS);
+          chooseAccount();
         }
         break;
     }
@@ -184,7 +206,9 @@ public class TasksSample extends ListActivity {
 
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
-    menu.add(0, MENU_ACCOUNTS, 0, "Switch Account");
+    if (accountManager.getAccounts().length >= 2) {
+      menu.add(0, MENU_ACCOUNTS, 0, "Switch Account");
+    }
     return true;
   }
 
@@ -192,34 +216,15 @@ public class TasksSample extends ListActivity {
   public boolean onOptionsItemSelected(MenuItem item) {
     switch (item.getItemId()) {
       case MENU_ACCOUNTS:
-        showDialog(DIALOG_ACCOUNTS);
+        chooseAccount();
         return true;
     }
     return false;
   }
 
-  void handleException(Exception e) {
-    e.printStackTrace();
-    if (e instanceof HttpResponseException) {
-      HttpResponse response = ((HttpResponseException) e).getResponse();
-      int statusCode = response.getStatusCode();
-      try {
-        response.ignore();
-      } catch (IOException e1) {
-        e1.printStackTrace();
-      }
-      // TODO(yanivi): should only try this once to avoid infinite loop
-      if (statusCode == 401) {
-        gotAccount(true);
-        return;
-      }
-    }
-    Log.e(TAG, e.getMessage(), e);
-  }
-
   void onAuthToken() {
+    List<String> taskTitles = new ArrayList<String>();
     try {
-      List<String> taskTitles = new ArrayList<String>();
       List<Task> tasks = service.tasks().list("@default").execute().getItems();
       if (tasks != null) {
         for (Task task : tasks) {
@@ -228,10 +233,26 @@ public class TasksSample extends ListActivity {
       } else {
         taskTitles.add("No tasks.");
       }
-      setListAdapter(new ArrayAdapter<String>(this, R.layout.list_item, taskTitles));
     } catch (IOException e) {
-      handleException(e);
+      handleGoogleException(e);
     }
-    setContentView(R.layout.main);
+    setListAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, taskTitles));
+  }
+
+  void handleGoogleException(IOException e) {
+    if (e instanceof GoogleJsonResponseException) {
+      GoogleJsonResponseException exception = (GoogleJsonResponseException) e;
+      // TODO(yanivi): should only try this once to avoid infinite loop
+      if (exception.getStatusCode() == 401) {
+        accountManager.invalidateAuthToken(credential.getAccessToken());
+        credential.setAccessToken(null);
+        SharedPreferences.Editor editor2 = settings.edit();
+        editor2.remove(PREF_AUTH_TOKEN);
+        editor2.commit();
+        gotAccount();
+        return;
+      }
+    }
+    Log.e(TAG, e.getMessage(), e);
   }
 }
