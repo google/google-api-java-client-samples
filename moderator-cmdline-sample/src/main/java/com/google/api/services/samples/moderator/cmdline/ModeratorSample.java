@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2010 Google Inc.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied. See the License for the specific language governing permissions and limitations under
@@ -14,50 +14,54 @@
 
 package com.google.api.services.samples.moderator.cmdline;
 
-import com.google.api.client.googleapis.auth.oauth2.draft10.GoogleAccessProtectedResource;
-import com.google.api.client.googleapis.json.GoogleJsonResponseException;
-import com.google.api.client.http.HttpResponseException;
+import com.google.api.client.auth.oauth2.Credential;
+import com.google.api.client.http.HttpTransport;
+import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.http.json.JsonHttpRequest;
 import com.google.api.client.http.json.JsonHttpRequestInitializer;
+import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.jackson.JacksonFactory;
 import com.google.api.services.moderator.Moderator;
 import com.google.api.services.moderator.ModeratorRequest;
+import com.google.api.services.moderator.ModeratorScopes;
 import com.google.api.services.moderator.model.Series;
 import com.google.api.services.moderator.model.Submission;
-import com.google.api.services.moderator.model.SubmissionAttribution;
 import com.google.api.services.moderator.model.Topic;
 import com.google.api.services.moderator.model.Vote;
 import com.google.api.services.moderator.model.VoteList;
-import com.google.api.services.samples.shared.cmdline.CmdlineUtils;
 import com.google.api.services.samples.shared.cmdline.oauth2.LocalServerReceiver;
 import com.google.api.services.samples.shared.cmdline.oauth2.OAuth2Native;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 /**
  * @author Yaniv Inbar
  */
 public class ModeratorSample {
 
-  /** OAuth 2 scope. */
-  private static final String SCOPE = "https://www.googleapis.com/auth/moderator";
+  /** Global instance of the HTTP transport. */
+  private static final HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
+
+  /** Global instance of the JSON factory. */
+  private static final JsonFactory JSON_FACTORY = new JacksonFactory();
 
   private static void run() throws Exception {
     // authorization
-    GoogleAccessProtectedResource accessProtectedResource =
-        OAuth2Native.authorize(new LocalServerReceiver(), null, "google-chrome", SCOPE);
+    Credential credential = OAuth2Native.authorize(
+        HTTP_TRANSPORT, JSON_FACTORY, new LocalServerReceiver(),
+        Arrays.asList(ModeratorScopes.MODERATOR));
 
     // set up Moderator
-    Moderator moderator =
-        Moderator.builder(CmdlineUtils.getHttpTransport(), CmdlineUtils.getJsonFactory())
-            .setApplicationName("Google-ModeratorSample/1.0")
-            .setHttpRequestInitializer(accessProtectedResource)
-            .setJsonHttpRequestInitializer(new JsonHttpRequestInitializer() {
-              @Override
-              public void initialize(JsonHttpRequest request) {
-                ModeratorRequest moderatorRequest = (ModeratorRequest) request;
-                moderatorRequest.setPrettyPrint(true);
-              }
-            }).build();
+    Moderator moderator = Moderator.builder(HTTP_TRANSPORT, JSON_FACTORY)
+        .setApplicationName("Google-ModeratorSample/1.0").setHttpRequestInitializer(credential)
+        .setJsonHttpRequestInitializer(new JsonHttpRequestInitializer() {
+            @Override
+          public void initialize(JsonHttpRequest request) {
+            ModeratorRequest moderatorRequest = (ModeratorRequest) request;
+            moderatorRequest.setPrettyPrint(true);
+          }
+        }).build();
 
     Series series = createSeries(moderator);
     long seriesId = series.getId().getSeriesId();
@@ -76,13 +80,8 @@ public class ModeratorSample {
         run();
         // success!
         return;
-      } catch (GoogleJsonResponseException e) {
-        // message already includes parsed response
+      } catch (IOException e) {
         System.err.println(e.getMessage());
-      } catch (HttpResponseException e) {
-        // message doesn't include parsed response
-        System.err.println(e.getMessage());
-        System.err.println(e.getResponse().parseAsString());
       }
     } catch (Throwable t) {
       t.printStackTrace();
@@ -118,7 +117,7 @@ public class ModeratorSample {
     submission.setAttachmentUrl("http://www.youtube.com/watch?v=1a1wyc5Xxpg");
     submission.setText("Charlie Ayers @ Google");
     // setup attribution
-    SubmissionAttribution attribution = new SubmissionAttribution();
+    Submission.Attribution attribution = new Submission.Attribution();
     attribution.setDisplayName("Bashan");
     attribution.setLocation("Bainbridge Island, WA");
     submission.setAttribution(attribution);
@@ -138,7 +137,7 @@ public class ModeratorSample {
     return request.execute();
   }
 
-  private static Vote updateVote(Moderator moderator, Long seriesId, Long submissionId, Vote vote)
+  private static Vote updateVote(Moderator moderator, long seriesId, long submissionId, Vote vote)
       throws IOException {
     vote.setVote("MINUS");
     // update the vote

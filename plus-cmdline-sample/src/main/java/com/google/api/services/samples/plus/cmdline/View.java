@@ -46,7 +46,7 @@ public class View {
   static void show(Activity activity) {
     System.out.println("id: " + activity.getId());
     System.out.println("url: " + activity.getUrl());
-    System.out.println("content: " + activity.getPlusObject().getContent());
+    System.out.println("content: " + activity.getObject().getContent());
   }
 
   static void separator() {

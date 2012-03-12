@@ -14,24 +14,24 @@
 
 package com.google.api.services.samples.calendar.appengine.server;
 
-import com.google.api.client.extensions.auth.helpers.Credential;
-import com.google.api.client.extensions.auth.helpers.ThreeLeggedFlow;
-import com.google.api.client.googleapis.extensions.auth.helpers.oauth2.draft10.GoogleOAuth2ThreeLeggedFlow;
+import com.google.api.client.auth.oauth2.Credential;
+import com.google.api.client.extensions.appengine.auth.oauth2.AppEngineCredentialStore;
+import com.google.api.client.extensions.appengine.http.urlfetch.UrlFetchTransport;
+import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
+import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
 import com.google.api.client.http.GenericUrl;
-import com.google.api.client.http.HttpResponseException;
-import com.google.api.services.calendar.CalendarClient;
-import com.google.api.services.calendar.CalendarUrl;
-import com.google.api.services.samples.shared.appengine.AppEngineUtils;
-import com.google.api.services.samples.shared.appengine.OAuth2ClientCredentials;
-import com.google.appengine.api.users.User;
-import com.google.appengine.api.users.UserService;
+import com.google.api.client.http.HttpTransport;
+import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.jackson.JacksonFactory;
+import com.google.api.services.calendar.Calendar;
+import com.google.api.services.calendar.CalendarScopes;
 import com.google.appengine.api.users.UserServiceFactory;
+import com.google.common.base.Preconditions;
 
 import java.io.IOException;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
+import java.io.InputStream;
+import java.util.Collections;
 
-import javax.jdo.PersistenceManager;
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -41,80 +41,57 @@ import javax.servlet.http.HttpServletRequest;
  */
 class Utils {
 
-  private static Lock lock = new ReentrantLock();
-  private static String callbackUrl;
+  /** Global instance of the HTTP transport. */
+  static final HttpTransport HTTP_TRANSPORT = new UrlFetchTransport();
 
-  /**
-   * Return the user id for the currently logged in user.
-   */
-  static final String getUserId() {
-    UserService userService = UserServiceFactory.getUserService();
-    User loggedIn = userService.getCurrentUser();
-    return loggedIn.getUserId();
-  }
+  /** Global instance of the JSON factory. */
+  static final JsonFactory JSON_FACTORY = new JacksonFactory();
 
-  static String getCallbackUrl() {
-    lock.lock();
-    try {
-      return callbackUrl;
-    } finally {
-      lock.unlock();
+  private static final String RESOURCE_LOCATION = "/client_secrets.json";
+
+  private static GoogleClientSecrets clientSecrets = null;
+
+  static GoogleClientSecrets getClientCredential() throws IOException {
+    if (clientSecrets == null) {
+      InputStream inputStream = Utils.class.getResourceAsStream(RESOURCE_LOCATION);
+      Preconditions.checkNotNull(inputStream, "missing resource %s", RESOURCE_LOCATION);
+      clientSecrets = GoogleClientSecrets.load(JSON_FACTORY, inputStream);
+      Preconditions.checkArgument(!clientSecrets.getDetails().getClientId().startsWith("[[")
+          && !clientSecrets.getDetails().getClientSecret().startsWith("[["),
+          "Please enter your client ID and secret from the Google APIs Console in %s from the "
+          + "root samples directory", RESOURCE_LOCATION);
     }
+    return clientSecrets;
   }
 
-  static void setCallbackUrl(HttpServletRequest req) {
-    GenericUrl url = new GenericUrl(getFullURL(req));
+  static String getRedirectUri(HttpServletRequest req) {
+    GenericUrl url = new GenericUrl(req.getRequestURL().toString());
     url.setRawPath("/oauth2callback");
-    lock.lock();
-    try {
-      callbackUrl = url.build();
-    } finally {
-      lock.unlock();
-    }
+    return url.build();
+  }
+
+  static GoogleAuthorizationCodeFlow newFlow() throws IOException {
+    return new GoogleAuthorizationCodeFlow.Builder(HTTP_TRANSPORT, JSON_FACTORY,
+        getClientCredential(), Collections.singleton(CalendarScopes.CALENDAR)).setCredentialStore(
+        new AppEngineCredentialStore()).build();
+  }
+
+  static Calendar loadCalendarClient() throws IOException {
+    String userId = UserServiceFactory.getUserService().getCurrentUser().getUserId();
+    Credential credential = newFlow().loadCredential(userId);
+    return Calendar.builder(HTTP_TRANSPORT, JSON_FACTORY)
+        .setHttpRequestInitializer(credential).build();
   }
 
   /**
-   * Returns the full URL of the request including the query parameters.
+   * Returns an {@link IOException} (but not a subclass) in order to work around restrictive GWT
+   * serialization policy.
    */
-  static String getFullURL(HttpServletRequest request) {
-    StringBuffer buf = request.getRequestURL();
-    if (request.getQueryString() != null) {
-      buf.append('?').append(request.getQueryString());
+  static IOException wrappedIOException(IOException e) {
+    if (e.getClass() == IOException.class) {
+      return e;
     }
-    return buf.toString();
-  }
-
-  private static ThreeLeggedFlow newFlow(String userId) throws IOException {
-    return new GoogleOAuth2ThreeLeggedFlow(userId, OAuth2ClientCredentials.getClientId(),
-        OAuth2ClientCredentials.getClientSecret(), CalendarUrl.ROOT_URL, callbackUrl);
-  }
-
-  private static Credential loadCredential() throws IOException {
-    PersistenceManager pm = Utils.getPersistenceManager();
-
-    ThreeLeggedFlow oauthFlow = Utils.newFlow(Utils.getUserId());
-    oauthFlow.setJsonFactory(AppEngineUtils.getJsonFactory());
-    oauthFlow.setHttpTransport(AppEngineUtils.getHttpTransport());
-
-    try {
-      return oauthFlow.loadCredential(pm);
-    } finally {
-      pm.close();
-    }
-  }
-
-  static CalendarClient loadCalendarClient() throws IOException {
-    Credential credential = Utils.loadCredential();
-    return new CalendarClient(
-        new CalendarAppEngineRequestInitializer(credential).createRequestFactory());
-  }
-
-  private static PersistenceManager getPersistenceManager() {
-    return AppEngineUtils.getPersistenceManagerFactory().getPersistenceManager();
-  }
-
-  static IOException newIOException(HttpResponseException e) throws IOException {
-    return new IOException(e.getResponse().parseAsString());
+    return new IOException(e.getMessage());
   }
 
   private Utils() {

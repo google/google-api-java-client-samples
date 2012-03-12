@@ -26,10 +26,8 @@ quota.</p>
 
 <pre><code>cd <i>[someDirectory]</i>
 hg clone https://code.google.com/p/google-api-java-client.samples/ google-api-java-client-samples
-cd google-api-java-client-samples/shared/shared-sample-cmdline
-<i>[editor]</i> src/main/java/com/google/api/services/samples/shared/cmdline/ClientCredentials.java
-mvn source:jar install
-cd ../../books-cmdline-sample
+cd google-api-java-client-samples/books-cmdline-sample
+<i>[editor]</i> src/main/java/com/google/api/services/samples/books/cmdline/ClientCredentials.java
 mvn compile
 mvn -q exec:java -Dexec.args=Google</code></pre>
 

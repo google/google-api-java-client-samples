@@ -31,5 +31,5 @@ public interface CalendarServiceAsync {
 
   void insert(GwtCalendar calendar, AsyncCallback<GwtCalendar> callback);
 
-  void update(GwtCalendar original, GwtCalendar updated, AsyncCallback<GwtCalendar> callback);
+  void update(GwtCalendar updated, AsyncCallback<GwtCalendar> callback);
 }

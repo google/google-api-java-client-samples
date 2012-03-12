@@ -31,11 +31,7 @@ hg clone https://code.google.com/p/google-api-java-client.samples/ google-api-ja
 cd google-api-java-client-samples/shared/shared-sample-cmdline
 <i>[editor]</i> src/main/resources/client_secrets.json
 mvn source:jar install
-cd ../gdata/shared-sample-gdata
-mvn source:jar install
-cd ../shared-sample-calendar
-mvn source:jar install
-cd ../../../calendar-cmdline-sample
+cd ../../calendar-cmdline-sample
 mvn compile
 mvn -q exec:java</code></pre>
 

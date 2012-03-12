@@ -35,5 +35,5 @@ public interface CalendarService extends RemoteService {
 
   GwtCalendar insert(GwtCalendar calendar) throws IOException;
 
-  GwtCalendar update(GwtCalendar original, GwtCalendar updated) throws IOException;
+  GwtCalendar update(GwtCalendar updated) throws IOException;
 }

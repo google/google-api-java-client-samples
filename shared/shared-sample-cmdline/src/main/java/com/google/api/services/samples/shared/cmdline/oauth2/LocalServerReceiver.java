@@ -39,14 +39,14 @@ public final class LocalServerReceiver implements VerificationCodeReceiver {
 
   private static final String CALLBACK_PATH = "/Callback";
 
-  /** Server or {@code null} before {@link #getRedirectUrl()}. */
+  /** Server or {@code null} before {@link #getRedirectUri()}. */
   private Server server;
 
   /** Verification code or {@code null} before received. */
   volatile String code;
 
   @Override
-  public String getRedirectUrl() throws Exception {
+  public String getRedirectUri() throws Exception {
     int port = getUnusedPort();
     server = new Server(port);
     for (Connector c : server.getConnectors()) {

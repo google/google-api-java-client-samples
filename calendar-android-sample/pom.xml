@@ -10,7 +10,7 @@
   <artifactId>calendar-android-sample</artifactId>
   <version>1.0.0</version>
   <packaging>apk</packaging>
-  <name>Example for the Google Calendar Data API Atom XML for Android</name>
+  <name>Android example for the Google Calendar API.</name>
 
   <url>http://code.google.com/p/google-api-java-client/</url>
 
@@ -30,6 +30,19 @@
     <developerConnection>scm:hg:https://samples.google-api-java-client.googlecode.com/hg/</developerConnection>
     <url>http://code.google.com/p/google-api-java-client/source/browse/?repo=samples</url>
   </scm>
+
+  <repositories>
+    <repository>
+      <id>googleapis</id>
+      <url>http://mavenrepo.google-api-java-client.googlecode.com/hg/</url>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+    </repository>
+  </repositories>
 
   <developers>
     <developer>
@@ -109,7 +122,7 @@
       <plugin>
         <groupId>com.jayway.maven.plugins.android.generation2</groupId>
         <artifactId>android-maven-plugin</artifactId>
-        <version>3.0.0-alpha-13</version>
+        <version>3.1.1</version>
         <extensions>true</extensions>
         <configuration>
           <run>
@@ -143,10 +156,26 @@
                       com.jayway.maven.plugins.android.generation2
                     </groupId>
                     <artifactId>android-maven-plugin</artifactId>
-                    <versionRange>[3.0.0-alpha-13,)</versionRange>
+                    <versionRange>[3.1.1,)</versionRange>
                     <goals>
                       <goal>generate-sources</goal>
                       <goal>unpack</goal>
+                      <goal>proguard</goal>
+                    </goals>
+                  </pluginExecutionFilter>
+                  <action>
+                    <ignore></ignore>
+                  </action>
+                </pluginExecution>
+                <pluginExecution>
+                  <pluginExecutionFilter>
+                    <groupId>
+                      org.apache.maven.plugins
+                    </groupId>
+                    <artifactId>maven-enforcer-plugin</artifactId>
+                    <versionRange>[1.0.1,)</versionRange>
+                    <goals>
+                      <goal>enforce</goal>
                     </goals>
                   </pluginExecutionFilter>
                   <action>
@@ -199,8 +228,8 @@
     -->
     <dependency>
       <groupId>com.google.http-client</groupId>
-      <artifactId>google-http-client-extensions-android2</artifactId>
-      <version>1.6.0-beta</version>
+      <artifactId>google-http-client-android2</artifactId>
+      <version>1.7.0-beta</version>
       <exclusions>
         <exclusion>
           <artifactId>xpp3</artifactId>
@@ -222,16 +251,12 @@
     </dependency>
     <dependency>
       <groupId>com.google.api-client</groupId>
-      <artifactId>google-api-client-extensions-android2</artifactId>
-      <version>1.6.0-beta</version>
+      <artifactId>google-api-client-android2</artifactId>
+      <version>1.7.0-beta</version>
       <exclusions>
         <exclusion>
           <artifactId>xpp3</artifactId>
           <groupId>xpp3</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>commons-codec</artifactId>
-          <groupId>commons-codec</groupId>
         </exclusion>
         <exclusion>
           <artifactId>commons-logging</artifactId>
@@ -256,9 +281,9 @@
       </exclusions>
     </dependency>
     <dependency>
-      <groupId>com.google.apis-samples</groupId>
-      <artifactId>shared-sample-calendar</artifactId>
-      <version>v2-1.1.0</version>
+      <groupId>com.google.apis</groupId>
+      <artifactId>google-api-services-calendar</artifactId>
+      <version>v3-rev2-1.4.0-beta</version>
       <exclusions>
         <exclusion>
           <artifactId>junit</artifactId>

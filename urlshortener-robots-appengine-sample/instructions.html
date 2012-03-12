@@ -1,0 +1,78 @@
+<html>
+<title>Google UrlShortener API Robots App Engine Sample</title>
+<body>
+  <h2>Instructions for the Google UrlShortener API Robots App Engine Sample</h2>
+
+  <h3>Browse Source Code</h3>
+
+  <ul>
+    <li><a
+      href="http://code.google.com/p/google-api-java-client/source/browse/urlshortener-robots-appengine-sample/?repo=samples">urlshortener-robots-appengine-sample</a>
+      or <a
+      href="http://code.google.com/p/google-api-java-client/source/browse/urlshortener-robots-appengine-sample/src/main/java/com/google/api/client/sample/urlshortener/appengine/robots/SampleApp.java?repo=samples">SampleApp.java</a></li>
+  </ul>
+
+  <h3>Checkout Instructions</h3>
+
+  <p>
+    <b>Prerequisites:</b> install <a href="http://java.com">Java 6</a>, <a
+      href="http://code.google.com/appengine/downloads.html">Google App
+      Engine</a>, <a href="http://mercurial.selenic.com/">Mercurial</a>, and <a
+      href="http://maven.apache.org/download.html">Maven</a>. You may need to
+    set your
+    <code>JAVA_HOME</code>
+    .
+  </p>
+
+  <pre>
+cd <i>[someDirectory]</i>
+hg clone https://code.google.com/p/google-api-java-client.samples/ google-api-java-client-samples
+cd google-api-java-client-samples/urlshortener-robots-appengine-sample
+mvn clean package
+  </pre>
+
+  <h3>Setup Project in Eclipse 3.5/3.6</h3>
+
+  <p>
+    <b>Prerequisites:</b> install <a href="http://www.eclipse.org/downloads/">Eclipse</a>,
+    <a href="http://code.google.com/eclipse/">Google Plugin for Eclipse</a>, and
+    the <a href="http://javaforge.com/project/HGE">Mercurial plugin</a>.
+  </p>
+
+  <ul>
+    <li>Setup Eclipse Preferences
+      <ul>
+        <li>Window &gt; Preferences... (or on Mac, Eclipse &gt;
+          Preferences...)</li>
+        <li>Select Maven
+          <ul>
+            <li>check on "Download Artifact Sources"</li>
+            <li>check on "Download Artifact JavaDoc"</li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li>Import <code>urlshortener-robots-appengine-sample</code> project
+      <ul>
+        <li>File &gt; Import...</li>
+        <li>Select "General &gt; Existing Project into Workspace" and click
+          "Next"</li>
+        <li>Click "Browse" next to "Select root directory", find <code>
+            <i>[someDirectory]</i>/google-api-java-client-samples/urlshortener-robots-appengine-sample
+          </code> and click "Next"
+        </li>
+        <li>Click "Finish"</li>
+        <li>NOTE: please ignore the 4 "The App Engine SDK JAR * is missing
+          in the WEB-INF/lib directory" error messages.</li>
+      </ul>
+    </li>
+    <li>Run
+      <ul>
+        <li><b>This application must be deployed to App Engine to work
+            properly!</b></li>
+      </ul>
+    </li>
+  </ul>
+
+</body>
+</html>

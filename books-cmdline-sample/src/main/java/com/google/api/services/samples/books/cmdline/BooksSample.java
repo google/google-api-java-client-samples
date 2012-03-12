@@ -14,8 +14,6 @@
 
 package com.google.api.services.samples.books.cmdline;
 
-import com.google.api.client.googleapis.json.GoogleJsonResponseException;
-import com.google.api.client.http.HttpResponseException;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.http.json.JsonHttpRequest;
 import com.google.api.client.http.json.JsonHttpRequestInitializer;
@@ -25,11 +23,9 @@ import com.google.api.services.books.Books;
 import com.google.api.services.books.Books.Volumes.List;
 import com.google.api.services.books.BooksRequest;
 import com.google.api.services.books.model.Volume;
-import com.google.api.services.books.model.VolumeSaleInfo;
-import com.google.api.services.books.model.VolumeVolumeInfo;
 import com.google.api.services.books.model.Volumes;
-import com.google.api.services.samples.shared.cmdline.ClientCredentials;
 
+import java.io.IOException;
 import java.net.URLEncoder;
 import java.text.NumberFormat;
 
@@ -74,8 +70,8 @@ public class BooksSample {
 
     // Output results.
     for (Volume volume : volumes.getItems()) {
-      VolumeVolumeInfo volumeInfo = volume.getVolumeInfo();
-      VolumeSaleInfo saleInfo = volume.getSaleInfo();
+      Volume.VolumeInfo volumeInfo = volume.getVolumeInfo();
+      Volume.SaleInfo saleInfo = volume.getSaleInfo();
       System.out.println("==========");
       // Title.
       System.out.println("Title: " + volumeInfo.getTitle());
@@ -170,13 +166,8 @@ public class BooksSample {
         queryGoogleBooks(jsonFactory, query);
         // Success!
         return;
-      } catch (GoogleJsonResponseException e) {
-        // message already includes parsed response
+      } catch (IOException e) {
         System.err.println(e.getMessage());
-      } catch (HttpResponseException e) {
-        // message doesn't include parsed response
-        System.err.println(e.getMessage());
-        System.err.println(e.getResponse().parseAsString());
       }
     } catch (Throwable t) {
       t.printStackTrace();

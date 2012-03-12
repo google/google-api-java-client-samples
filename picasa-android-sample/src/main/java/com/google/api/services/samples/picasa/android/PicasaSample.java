@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2010 Google Inc.
- *
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
- *
+ * 
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software distributed under the License
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied. See the License for the specific language governing permissions and limitations under
@@ -17,7 +17,6 @@ package com.google.api.services.samples.picasa.android;
 import com.google.api.client.extensions.android2.AndroidHttp;
 import com.google.api.client.googleapis.auth.clientlogin.ClientLogin;
 import com.google.api.client.googleapis.extensions.android2.auth.GoogleAccountManager;
-import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpResponseException;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.InputStreamContent;
@@ -67,18 +66,17 @@ import java.util.logging.Logger;
  * To enable logging of HTTP requests/responses, change {@link #LOGGING_LEVEL} to
  * {@link Level#CONFIG} or {@link Level#ALL} and run this command:
  * </p>
- *
+ * 
  * <pre>
 adb shell setprop log.tag.HttpTransport DEBUG
  * </pre>
- *
+ * 
  * @author Yaniv Inbar
  */
 public final class PicasaSample extends ListActivity {
 
   /** Logging level for HTTP requests/responses. */
-  // private static Level LOGGING_LEVEL = Level.OFF;
-  private static Level LOGGING_LEVEL = Level.CONFIG;
+  private static Level LOGGING_LEVEL = Level.OFF;
 
   private static final String AUTH_TOKEN_TYPE = "lh2";
 
@@ -181,7 +179,7 @@ public final class PicasaSample extends ListActivity {
     editor.commit();
     new Thread() {
 
-      @Override
+        @Override
       public void run() {
         try {
           final Bundle bundle =
@@ -376,23 +374,12 @@ public final class PicasaSample extends ListActivity {
   }
 
   void handleException(Exception e) {
-    e.printStackTrace();
     if (e instanceof HttpResponseException) {
-      HttpResponse response = ((HttpResponseException) e).getResponse();
-      int statusCode = response.getStatusCode();
-      try {
-        response.ignore();
-      } catch (IOException e1) {
-        e1.printStackTrace();
-      }
+      HttpResponseException exception = (HttpResponseException) e;
+      int statusCode = exception.getStatusCode();
       if (statusCode == 401 || statusCode == 403) {
         gotAccount(true);
         return;
-      }
-      try {
-        Log.e(TAG, response.parseAsString());
-      } catch (IOException parseException) {
-        parseException.printStackTrace();
       }
     }
     Log.e(TAG, e.getMessage(), e);
