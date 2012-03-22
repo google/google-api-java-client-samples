@@ -23,7 +23,6 @@ import com.google.api.client.http.json.JsonHttpRequest;
 import com.google.api.client.http.json.JsonHttpRequestInitializer;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson.JacksonFactory;
-import com.google.api.services.tasks.Tasks;
 import com.google.api.services.tasks.TasksRequest;
 import com.google.api.services.tasks.model.Task;
 
@@ -93,12 +92,12 @@ public final class TasksSample extends ListActivity {
 
   GoogleCredential credential = new GoogleCredential();
 
-  Tasks service;
+  com.google.api.services.tasks.Tasks service;
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    service = Tasks.builder(transport, jsonFactory)
+    service = com.google.api.services.tasks.Tasks.builder(transport, jsonFactory)
         .setApplicationName("Google-TasksAndroidSample/1.0")
         .setHttpRequestInitializer(credential)
         .setJsonHttpRequestInitializer(new JsonHttpRequestInitializer() {
@@ -109,7 +108,7 @@ public final class TasksSample extends ListActivity {
           }
         })
         .build();
-    settings = getSharedPreferences(TAG, 0);
+    settings = getPreferences(MODE_PRIVATE);
     accountName = settings.getString(PREF_ACCOUNT_NAME, null);
     credential.setAccessToken(settings.getString(PREF_AUTH_TOKEN, null));
     Logger.getLogger("com.google.api.client").setLevel(LOGGING_LEVEL);
@@ -138,7 +137,7 @@ public final class TasksSample extends ListActivity {
                 intent.setFlags(intent.getFlags() & ~Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivityForResult(intent, REQUEST_AUTHENTICATE);
               } else if (bundle.containsKey(AccountManager.KEY_AUTHTOKEN)) {
-                credential.setAccessToken(bundle.getString(AccountManager.KEY_AUTHTOKEN));
+                setAuthToken(bundle.getString(AccountManager.KEY_AUTHTOKEN));
                 onAuthToken();
               }
             } catch (Exception e) {

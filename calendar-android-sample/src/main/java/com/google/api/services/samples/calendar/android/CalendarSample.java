@@ -130,7 +130,7 @@ public final class CalendarSample extends ListActivity {
           }
         })
         .build();
-    settings = getSharedPreferences(TAG, 0);
+    settings = getPreferences(MODE_PRIVATE);
     accountName = settings.getString(PREF_ACCOUNT_NAME, null);
     authToken = settings.getString(PREF_AUTH_TOKEN, null);
     Logger.getLogger("com.google.api.client").setLevel(LOGGING_LEVEL);

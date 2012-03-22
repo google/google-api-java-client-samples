@@ -92,8 +92,6 @@ public final class PicasaSample extends ListActivity {
 
   private static final int REQUEST_AUTHENTICATE = 0;
 
-  private static final String PREF = "MyPrefs";
-
   private static final int DIALOG_ACCOUNTS = 0;
 
   private final HttpTransport transport = AndroidHttp.newCompatibleTransport();
@@ -152,7 +150,7 @@ public final class PicasaSample extends ListActivity {
   }
 
   private void gotAccount(boolean tokenExpired) {
-    SharedPreferences settings = getSharedPreferences(PREF, 0);
+    SharedPreferences settings = getPreferences(MODE_PRIVATE);
     String accountName = settings.getString("accountName", null);
     if (accountName != null) {
       AccountManager manager = AccountManager.get(this);
@@ -173,7 +171,7 @@ public final class PicasaSample extends ListActivity {
   }
 
   void gotAccount(final AccountManager manager, final Account account) {
-    SharedPreferences settings = getSharedPreferences(PREF, 0);
+    SharedPreferences settings = getPreferences(MODE_PRIVATE);
     SharedPreferences.Editor editor = settings.edit();
     editor.putString("accountName", account.name);
     editor.commit();
