@@ -1,0 +1,80 @@
+<html>
+<title>Google Cloud Storage Service Account App Engine Sample</title>
+<body>
+  <h2>Instructions for Google Cloud Storage Service Account App Engine Sample</h2>
+
+  <h3>Browse Source Code</h3>
+
+  <ul>
+    <li><a
+      href="http://code.google.com/p/google-api-java-client/source/browse/storage-serviceaccount-appengine-sample/?repo=samples">storage-serviceaccount-appengine-sample</a>
+      or <a
+      href="http://code.google.com/p/google-api-java-client/source/browse/storage-serviceaccount-appengine-sample/src/main/java/com/google/api/client/sample/storage/appengine/serviceaccount/StorageSample.java?repo=samples">StorageSample.java</a></li>
+  </ul>
+
+  <h3>Checkout Instructions</h3>
+
+  <p>
+    <b>Prerequisites:</b> install <a href="http://java.com">Java 6</a>, <a
+      href="http://code.google.com/appengine/downloads.html">Google App
+      Engine</a>, <a href="http://mercurial.selenic.com/">Mercurial</a>, and <a
+      href="http://maven.apache.org/download.html">Maven</a>. You may need to
+    set your
+    <code>JAVA_HOME</code>
+    .
+  </p>
+
+  <pre>
+cd <i>[someDirectory]</i>
+hg clone https://code.google.com/p/google-api-java-client.samples/ google-api-java-client-samples
+cd google-api-java-client-samples/storage-serviceaccount-appengine-sample
+mvn clean 
+mvn gae:unpack
+mvn gae:deploy
+  </pre>
+
+  <h3>Setup Project in Eclipse 3.5/3.6</h3>
+
+  <p>
+    <b>Prerequisites:</b> install <a href="http://www.eclipse.org/downloads/">Eclipse</a>,
+    <a href="http://code.google.com/eclipse/">Google Plugin for Eclipse</a>, and
+    the <a href="http://javaforge.com/project/HGE">Mercurial plugin</a>.
+  </p>
+
+  <ul>
+    <li>Setup Eclipse Preferences
+      <ul>
+        <li>Window &gt; Preferences... (or on Mac, Eclipse &gt;
+          Preferences...)</li>
+        <li>Select Maven
+          <ul>
+            <li>check on "Download Artifact Sources"</li>
+            <li>check on "Download Artifact JavaDoc"</li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li>Import <code>storage-serviceaccount-appengine-sample</code> project
+      <ul>
+        <li>File &gt; Import...</li>
+        <li>Select "General &gt; Existing Project into Workspace" and click
+          "Next"</li>
+        <li>Click "Browse" next to "Select root directory", find <code>
+            <i>[someDirectory]</i>/google-api-java-client-samples/storage-serviceaccount-appengine-sample
+          </code> and click "Next"
+        </li>
+        <li>Click "Finish"</li>
+        <li>NOTE: please ignore the 4 "The App Engine SDK JAR * is missing
+          in the WEB-INF/lib directory" error messages.</li>
+      </ul>
+    </li>
+    <li>Run
+      <ul>
+        <li><b>This application must be deployed to App Engine to work
+            properly!</b></li>
+      </ul>
+    </li>
+  </ul>
+
+</body>
+</html>
