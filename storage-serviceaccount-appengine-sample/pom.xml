@@ -197,15 +197,14 @@
         </executions>
       </plugin>
 
-
-			<!--
-				The actual maven-gae-plugin. Type "mvn gae:run" to run project, "mvn
-				gae:deploy" to upload to GAE.
-			-->
-			<plugin>
-				<groupId>net.kindleit</groupId>
-				<artifactId>maven-gae-plugin</artifactId>
-				<version>0.9.0</version>
+      <!--
+        The actual maven-gae-plugin. Type "mvn gae:run" to run project, "mvn
+        gae:deploy" to upload to GAE.
+      -->
+      <plugin>
+        <groupId>net.kindleit</groupId>
+        <artifactId>maven-gae-plugin</artifactId>
+        <version>0.9.0</version>
         <dependencies>
           <dependency>
             <groupId>net.kindleit</groupId>
@@ -214,18 +213,18 @@
             <type>pom</type>
           </dependency>
         </dependencies>
-			</plugin>
+      </plugin>
 
-			<!--
-				Upload application to the appspot automatically, during
-				release:perform
-			-->
-			<plugin>
-				<artifactId>maven-release-plugin</artifactId>
-				<configuration>
-					<goals>gae:deploy</goals>
-				</configuration>
-			</plugin>
+      <!--
+        Upload application to the appspot automatically, during
+        release:perform
+      -->
+      <plugin>
+        <artifactId>maven-release-plugin</artifactId>
+        <configuration>
+          <goals>gae:deploy</goals>
+        </configuration>
+      </plugin>
     </plugins>
 
     <pluginManagement>
@@ -334,51 +333,51 @@
       <type>jar</type>
       <scope>runtime</scope>
     </dependency>
-                <!-- These dependencies are here just for enabling logging -->
-                <dependency>
-                        <groupId>org.slf4j</groupId>
-                        <artifactId>slf4j-api</artifactId>
-                        <version>1.6.1</version>
-                </dependency>
+    <!-- These dependencies are here just for enabling logging -->
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <version>1.6.1</version>
+    </dependency>
 
-                <dependency>
-                        <groupId>ch.qos.logback</groupId>
-                        <artifactId>logback-classic</artifactId>
-                        <version>0.9.24</version>
-                </dependency>
+    <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-classic</artifactId>
+      <version>0.9.24</version>
+    </dependency>
 
-                <!-- Test scope -->
-                <dependency>
-                        <groupId>junit</groupId>
-                        <artifactId>junit</artifactId>
-                        <version>4.5</version>
-                        <scope>test</scope>
-                </dependency>
+    <!-- Test scope -->
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.5</version>
+      <scope>test</scope>
+    </dependency>
 
-                <!--
-                        GAE libraries for local testing as described here:
-                        http://code.google.com/appengine/docs/java/howto/unittesting.html
-                -->
-                <dependency>
-                        <groupId>com.google.appengine</groupId>
-                        <artifactId>appengine-api-labs</artifactId>
-                        <version>${gae.version}</version>
-                        <scope>test</scope>
-                </dependency>
+    <!--
+      GAE libraries for local testing as described here:
+      http://code.google.com/appengine/docs/java/howto/unittesting.html
+    -->
+    <dependency>
+      <groupId>com.google.appengine</groupId>
+      <artifactId>appengine-api-labs</artifactId>
+      <version>${gae.version}</version>
+      <scope>test</scope>
+    </dependency>
 
-                <dependency>
-                        <groupId>com.google.appengine</groupId>
-                        <artifactId>appengine-api-stubs</artifactId>
-                        <version>${gae.version}</version>
-                        <scope>test</scope>
-                </dependency>
+    <dependency>
+      <groupId>com.google.appengine</groupId>
+      <artifactId>appengine-api-stubs</artifactId>
+      <version>${gae.version}</version>
+      <scope>test</scope>
+    </dependency>
 
-                <dependency>
-                        <groupId>com.google.appengine</groupId>
-                        <artifactId>appengine-testing</artifactId>
-                        <version>${gae.version}</version>
-                        <scope>test</scope>
-                </dependency>
+    <dependency>
+      <groupId>com.google.appengine</groupId>
+      <artifactId>appengine-testing</artifactId>
+      <version>${gae.version}</version>
+      <scope>test</scope>
+    </dependency>
 
   </dependencies>
 </project>

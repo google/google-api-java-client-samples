@@ -15,21 +15,14 @@
 package com.google.api.client.sample.storage.appengine.serviceaccount;
 
 import com.google.api.client.googleapis.extensions.appengine.auth.oauth2.AppIdentityCredential;
-import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpRequestFactory;
-import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.HttpTransport;
-import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.jackson.JacksonFactory;
 import com.google.api.client.http.javanet.NetHttpTransport;
 
 import java.io.*;
-import javax.xml.transform.*;
-import javax.xml.transform.stream.*;
-import java.nio.charset.Charset;
 import java.util.Arrays;
 
 import javax.servlet.http.HttpServlet;
@@ -52,9 +45,6 @@ public class StorageSample extends HttpServlet {
 
   /** Global instance of the HTTP transport. */
   private static final HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
-
-  /** Global instance of the JSON factory. */
-  private static final JsonFactory JSON_FACTORY = new JacksonFactory();
 
   /** Global instance of HTML reference to XSL style sheet. */
   String XSL = 
