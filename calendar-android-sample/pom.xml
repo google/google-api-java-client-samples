@@ -229,7 +229,7 @@
     <dependency>
       <groupId>com.google.http-client</groupId>
       <artifactId>google-http-client-android2</artifactId>
-      <version>1.7.0-beta</version>
+      <version>1.8.3-beta</version>
       <exclusions>
         <exclusion>
           <artifactId>xpp3</artifactId>
@@ -252,7 +252,7 @@
     <dependency>
       <groupId>com.google.api-client</groupId>
       <artifactId>google-api-client-android2</artifactId>
-      <version>1.7.0-beta</version>
+      <version>1.8.0-beta</version>
       <exclusions>
         <exclusion>
           <artifactId>xpp3</artifactId>
@@ -283,7 +283,7 @@
     <dependency>
       <groupId>com.google.apis</groupId>
       <artifactId>google-api-services-calendar</artifactId>
-      <version>v3-rev2-1.4.0-beta</version>
+      <version>v3-rev3-1.5.0-beta</version>
       <exclusions>
         <exclusion>
           <artifactId>junit</artifactId>
