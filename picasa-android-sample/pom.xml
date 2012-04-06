@@ -324,11 +324,13 @@
     <dependency>
       <groupId>com.google.apis-samples</groupId>
       <artifactId>shared-sample-picasa</artifactId>
-      <version>v2-1.1.0</version>
-      <exclusion>
-        <artifactId>android</artifactId>
-        <groupId>com.google.android</groupId>
-      </exclusion>
+      <version>v2-1.2.0</version>
+      <exclusions>
+        <exclusion>
+          <artifactId>android</artifactId>
+          <groupId>com.google.android</groupId>
+        </exclusion>
+      </exclusions>
     </dependency>
   </dependencies>
   <properties>
