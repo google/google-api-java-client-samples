@@ -14,14 +14,12 @@
 
 package com.google.api.services.samples.books.cmdline;
 
+import com.google.api.client.googleapis.services.GoogleKeyInitializer;
 import com.google.api.client.http.javanet.NetHttpTransport;
-import com.google.api.client.http.json.JsonHttpRequest;
-import com.google.api.client.http.json.JsonHttpRequestInitializer;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson.JacksonFactory;
 import com.google.api.services.books.Books;
 import com.google.api.services.books.Books.Volumes.List;
-import com.google.api.services.books.BooksRequest;
 import com.google.api.services.books.model.Volume;
 import com.google.api.services.books.model.Volumes;
 
@@ -48,13 +46,7 @@ public class BooksSample {
     // Set up Books client.
     final Books books = Books.builder(new NetHttpTransport(), jsonFactory)
         .setApplicationName("Google-BooksSample/1.0")
-        .setJsonHttpRequestInitializer(new JsonHttpRequestInitializer() {
-          @Override
-          public void initialize(JsonHttpRequest request) {
-            BooksRequest booksRequest = (BooksRequest) request;
-            booksRequest.setKey(ClientCredentials.KEY);
-          }
-        })
+        .setJsonHttpRequestInitializer(new GoogleKeyInitializer(ClientCredentials.KEY))
         .build();
     // Set query string and filter only Google eBooks.
     System.out.println("Query: [" + query + "]");

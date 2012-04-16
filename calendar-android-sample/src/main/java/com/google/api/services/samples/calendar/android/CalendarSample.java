@@ -18,15 +18,13 @@ import com.google.api.client.extensions.android2.AndroidHttp;
 import com.google.api.client.googleapis.GoogleHeaders;
 import com.google.api.client.googleapis.extensions.android2.auth.GoogleAccountManager;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
+import com.google.api.client.googleapis.services.GoogleKeyInitializer;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.HttpTransport;
-import com.google.api.client.http.json.JsonHttpRequest;
-import com.google.api.client.http.json.JsonHttpRequestInitializer;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson.JacksonFactory;
 import com.google.api.client.util.DateTime;
-import com.google.api.services.calendar.CalendarRequest;
 import com.google.api.services.calendar.model.Calendar;
 import com.google.api.services.calendar.model.CalendarList;
 import com.google.api.services.calendar.model.CalendarListEntry;
@@ -122,13 +120,7 @@ public final class CalendarSample extends ListActivity {
             request.getHeaders().setAuthorization(GoogleHeaders.getGoogleLoginValue(authToken));
           }
         })
-        .setJsonHttpRequestInitializer(new JsonHttpRequestInitializer() {
-
-          public void initialize(JsonHttpRequest request) throws IOException {
-            CalendarRequest calendarRequest = (CalendarRequest) request;
-            calendarRequest.setKey(ClientCredentials.KEY);
-          }
-        })
+        .setJsonHttpRequestInitializer(new GoogleKeyInitializer(ClientCredentials.KEY))
         .build();
     settings = getPreferences(MODE_PRIVATE);
     accountName = settings.getString(PREF_ACCOUNT_NAME, null);
@@ -149,7 +141,7 @@ public final class CalendarSample extends ListActivity {
       onAuthToken();
       return;
     }
-    accountManager.manager.getAuthToken(
+    accountManager.getAccountManager().getAuthToken(
         account, AUTH_TOKEN_TYPE, true, new AccountManagerCallback<Bundle>() {
 
           public void run(AccountManagerFuture<Bundle> future) {
@@ -171,7 +163,7 @@ public final class CalendarSample extends ListActivity {
   }
 
   private void chooseAccount() {
-    accountManager.manager.getAuthTokenByFeatures(GoogleAccountManager.ACCOUNT_TYPE,
+    accountManager.getAccountManager().getAuthTokenByFeatures(GoogleAccountManager.ACCOUNT_TYPE,
         AUTH_TOKEN_TYPE,
         null,
         CalendarSample.this,
