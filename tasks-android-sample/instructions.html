@@ -18,8 +18,7 @@
   <p>
     <b>Prerequisites:</b> install <a href="http://java.com">Java 6</a>, <a
       href="http://mercurial.selenic.com/">Mercurial</a> (requires 1.6 or
-    higher) and <a href="http://maven.apache.org/download.html">Maven</a>
-    (requires 3.0 or higher). You may need to set your
+    higher). You may need to set your
     <code>JAVA_HOME</code> and <code>ANDROID_HOME</code>.
     .
   </p>
@@ -38,7 +37,8 @@
     .
    </p>
   <pre>
-    <code>cd <i>[someDirectory]</i>
+    <code>
+cd <i>[someDirectory]</i>
 hg clone https://code.google.com/p/google-api-java-client.samples/ google-api-java-client-samples
 cd google-api-java-client-samples/tasks-android-sample
 <i>[editor]</i> src/main/java/com/google/api/services/samples/tasks/android/ClientCredentials.java
@@ -49,8 +49,7 @@ cd google-api-java-client-samples/tasks-android-sample
 
   <p>
     <b>Prerequisites:</b> install <a href="http://www.eclipse.org/downloads/">Eclipse</a>,
-    the <a href="http://javaforge.com/project/HGE">Mercurial plugin</a>, the <a
-      href="http://eclipse.org/m2e/">Maven plugin</a>, and the <a
+    the <a href="http://javaforge.com/project/HGE">Mercurial plugin</a> (optional), and the <a
       href="http://developer.android.com/sdk/eclipse-adt.html#installing">Android
       plugin</a>.
   </p>
@@ -94,16 +93,6 @@ cd google-api-java-client-samples/tasks-android-sample
         <li>Right-click on project tasks-android-sample</li>
         <li>Run As &gt; Android Application</li>
       </ul></li>
-  </ul>
-
-  <h3>Setup Project with Maven</h3>
-
-  <ul>
-    <li><code>cd google-api-java-client-samples/tasks-android-sample</code>
-    </li>
-    <li>Uncomment the dependency on android in <code>pom.xml</code>
-    </li>
-    <li><code>mvn install android:deploy android:run</code></li>
   </ul>
 
 </body>

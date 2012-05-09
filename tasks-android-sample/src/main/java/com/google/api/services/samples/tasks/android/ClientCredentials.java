@@ -14,6 +14,9 @@
 
 package com.google.api.services.samples.tasks.android;
 
+import com.google.common.base.Preconditions;
+
+
 /**
  * API key found in the <a href="https://code.google.com/apis/console/?api=tasks">Google apis
  * console</a>.
@@ -33,9 +36,8 @@ public class ClientCredentials {
   public static final String KEY = null;
 
   public static void errorIfNotSpecified() {
-    if (KEY == null) {
-      System.err.println("Please enter your API key in " + ClientCredentials.class);
-      System.exit(1);
-    }
+    Preconditions.checkNotNull(KEY,
+        "Please enter your API key from https://code.google.com/apis/console/?api=tasks in "
+        + ClientCredentials.class);
   }
 }

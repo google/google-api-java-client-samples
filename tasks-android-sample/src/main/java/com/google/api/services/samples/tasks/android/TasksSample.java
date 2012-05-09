@@ -21,8 +21,7 @@ import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.googleapis.services.GoogleKeyInitializer;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.jackson.JacksonFactory;
-import com.google.api.services.tasks.model.Task;
+import com.google.api.client.json.gson.GsonFactory;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
@@ -37,11 +36,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ArrayAdapter;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -76,7 +72,7 @@ public final class TasksSample extends ListActivity {
 
   final HttpTransport transport = AndroidHttp.newCompatibleTransport();
 
-  final JsonFactory jsonFactory = new JacksonFactory();
+  final JsonFactory jsonFactory = new GsonFactory();
 
   static final String PREF_ACCOUNT_NAME = "accountName";
 
@@ -92,9 +88,12 @@ public final class TasksSample extends ListActivity {
 
   com.google.api.services.tasks.Tasks service;
 
+  private boolean received401;
+
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    ClientCredentials.errorIfNotSpecified();
     service = com.google.api.services.tasks.Tasks.builder(transport, jsonFactory)
         .setApplicationName("Google-TasksAndroidSample/1.0")
         .setHttpRequestInitializer(credential)
@@ -118,8 +117,8 @@ public final class TasksSample extends ListActivity {
       onAuthToken();
       return;
     }
-    accountManager.getAccountManager().getAuthToken(
-        account, AUTH_TOKEN_TYPE, true, new AccountManagerCallback<Bundle>() {
+    accountManager.getAccountManager()
+        .getAuthToken(account, AUTH_TOKEN_TYPE, true, new AccountManagerCallback<Bundle>() {
 
           public void run(AccountManagerFuture<Bundle> future) {
             try {
@@ -214,27 +213,18 @@ public final class TasksSample extends ListActivity {
   }
 
   void onAuthToken() {
-    List<String> taskTitles = new ArrayList<String>();
-    try {
-      List<Task> tasks = service.tasks().list("@default").execute().getItems();
-      if (tasks != null) {
-        for (Task task : tasks) {
-          taskTitles.add(task.getTitle());
-        }
-      } else {
-        taskTitles.add("No tasks.");
-      }
-    } catch (IOException e) {
-      handleGoogleException(e);
-    }
-    setListAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, taskTitles));
+    new AsyncLoadTasks(this).execute();
+  }
+
+  void onRequestCompleted() {
+    received401 = false;
   }
 
   void handleGoogleException(IOException e) {
     if (e instanceof GoogleJsonResponseException) {
       GoogleJsonResponseException exception = (GoogleJsonResponseException) e;
-      // TODO(yanivi): should only try this once to avoid infinite loop
-      if (exception.getStatusCode() == 401) {
+      if (exception.getStatusCode() == 401 && !received401) {
+        received401 = true;
         accountManager.invalidateAuthToken(credential.getAccessToken());
         credential.setAccessToken(null);
         SharedPreferences.Editor editor2 = settings.edit();
