@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2010 Google Inc.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied. See the License for the specific language governing permissions and limitations under
@@ -23,10 +23,9 @@ import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.jackson.JacksonFactory;
+import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.client.util.DateTime;
 import com.google.api.services.calendar.model.Calendar;
-import com.google.api.services.calendar.model.CalendarList;
 import com.google.api.services.calendar.model.CalendarListEntry;
 import com.google.common.collect.Lists;
 
@@ -47,10 +46,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView.AdapterContextMenuInfo;
-import android.widget.ArrayAdapter;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
@@ -59,16 +56,16 @@ import java.util.logging.Logger;
 /**
  * Sample for Google Calendar API v3. It shows how to authenticate, get calendars, add a new
  * calendar, update it, and delete it.
- * 
+ *
  * <p>
  * To enable logging of HTTP requests/responses, change {@link #LOGGING_LEVEL} to
  * {@link Level#CONFIG} or {@link Level#ALL} and run this command:
  * </p>
- * 
+ *
  * <pre>
 adb shell setprop log.tag.HttpTransport DEBUG
  * </pre>
- * 
+ *
  * @author Yaniv Inbar
  */
 public final class CalendarSample extends ListActivity {
@@ -92,7 +89,7 @@ public final class CalendarSample extends ListActivity {
 
   final HttpTransport transport = AndroidHttp.newCompatibleTransport();
 
-  final JsonFactory jsonFactory = new JacksonFactory();
+  final JsonFactory jsonFactory = new GsonFactory();
 
   static final String PREF_ACCOUNT_NAME = "accountName";
 
@@ -108,7 +105,9 @@ public final class CalendarSample extends ListActivity {
 
   com.google.api.services.calendar.Calendar client;
 
-  private final List<CalendarListEntry> calendars = Lists.newArrayList();
+  final List<CalendarListEntry> calendars = Lists.newArrayList();
+
+  private boolean received401;
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
@@ -141,8 +140,8 @@ public final class CalendarSample extends ListActivity {
       onAuthToken();
       return;
     }
-    accountManager.getAccountManager().getAuthToken(
-        account, AUTH_TOKEN_TYPE, true, new AccountManagerCallback<Bundle>() {
+    accountManager.getAccountManager()
+        .getAuthToken(account, AUTH_TOKEN_TYPE, true, new AccountManagerCallback<Bundle>() {
 
           public void run(AccountManagerFuture<Bundle> future) {
             try {
@@ -233,12 +232,7 @@ public final class CalendarSample extends ListActivity {
       case MENU_ADD:
         Calendar entry = new Calendar();
         entry.setSummary("Calendar " + new DateTime(new Date()));
-        try {
-          client.calendars().insert(entry).execute();
-        } catch (IOException e) {
-          handleGoogleException(e);
-        }
-        onAuthToken();
+        new AsyncInsertCalendar(this, entry).execute();
         return true;
       case MENU_ACCOUNTS:
         chooseAccount();
@@ -258,50 +252,33 @@ public final class CalendarSample extends ListActivity {
   public boolean onContextItemSelected(MenuItem item) {
     AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
     CalendarListEntry calendar = calendars.get((int) info.id);
-    try {
-      switch (item.getItemId()) {
-        case CONTEXT_EDIT:
-          Calendar entry = new Calendar();
-          entry.setSummary(calendar.getSummary() + " UPDATED " + new DateTime(new Date()));
-          client.calendars().patch(calendar.getId(), entry).execute();
-          onAuthToken();
-          return true;
-        case CONTEXT_DELETE:
-          client.calendars().delete(calendar.getId()).execute();
-          onAuthToken();
-          return true;
-        default:
-          return super.onContextItemSelected(item);
-      }
-    } catch (IOException e) {
-      handleGoogleException(e);
+    switch (item.getItemId()) {
+      case CONTEXT_EDIT:
+        Calendar entry = new Calendar();
+        entry.setSummary(calendar.getSummary() + " UPDATED " + new DateTime(new Date()));
+        new AsyncUpdateCalendar(this, calendar.getId(), entry).execute();
+        return true;
+      case CONTEXT_DELETE:
+        new AsyncDeleteCalendar(this, calendar.getId()).execute();
+        return true;
+      default:
+        return super.onContextItemSelected(item);
     }
-    return false;
   }
 
   void onAuthToken() {
-    List<String> calendarNames = new ArrayList<String>();
-    calendars.clear();
-    try {
-      CalendarList feed = client.calendarList().list().execute();
-      if (feed.getItems() != null) {
-        for (CalendarListEntry calendar : feed.getItems()) {
-          calendars.add(calendar);
-          calendarNames.add(calendar.getSummary());
-        }
-      }
-    } catch (IOException e) {
-      handleGoogleException(e);
-    }
-    setListAdapter(
-        new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, calendarNames));
+    new AsyncLoadCalendars(this).execute();
+  }
+
+  void onRequestCompleted() {
+    received401 = false;
   }
 
   void handleGoogleException(IOException e) {
     if (e instanceof GoogleJsonResponseException) {
       GoogleJsonResponseException exception = (GoogleJsonResponseException) e;
-      // TODO(yanivi): should only try this once to avoid infinite loop
-      if (exception.getStatusCode() == 401) {
+      if (exception.getStatusCode() == 401 && !received401) {
+        received401 = true;
         accountManager.invalidateAuthToken(authToken);
         authToken = null;
         SharedPreferences.Editor editor2 = settings.edit();
