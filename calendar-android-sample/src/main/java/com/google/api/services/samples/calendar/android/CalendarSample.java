@@ -26,7 +26,6 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.client.util.DateTime;
 import com.google.api.services.calendar.model.Calendar;
-import com.google.api.services.calendar.model.CalendarListEntry;
 import com.google.common.collect.Lists;
 
 import android.accounts.Account;
@@ -35,6 +34,7 @@ import android.accounts.AccountManagerCallback;
 import android.accounts.AccountManagerFuture;
 import android.accounts.AuthenticatorException;
 import android.accounts.OperationCanceledException;
+import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -46,8 +46,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView.AdapterContextMenuInfo;
+import android.widget.ArrayAdapter;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
@@ -105,7 +107,7 @@ public final class CalendarSample extends ListActivity {
 
   com.google.api.services.calendar.Calendar client;
 
-  final List<CalendarListEntry> calendars = Lists.newArrayList();
+  List<CalendarInfo> calendars = Lists.newArrayList();
 
   private boolean received401;
 
@@ -251,15 +253,17 @@ public final class CalendarSample extends ListActivity {
   @Override
   public boolean onContextItemSelected(MenuItem item) {
     AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
-    CalendarListEntry calendar = calendars.get((int) info.id);
+    int calendarIndex = (int) info.id;
+    CalendarInfo calendarInfo = calendars.get(calendarIndex);
+
     switch (item.getItemId()) {
       case CONTEXT_EDIT:
         Calendar entry = new Calendar();
-        entry.setSummary(calendar.getSummary() + " UPDATED " + new DateTime(new Date()));
-        new AsyncUpdateCalendar(this, calendar.getId(), entry).execute();
+        entry.setSummary(calendarInfo.summary + " UPDATED " + new DateTime(new Date()));
+        new AsyncUpdateCalendar(this, calendarIndex, entry).execute();
         return true;
       case CONTEXT_DELETE:
-        new AsyncDeleteCalendar(this, calendar.getId()).execute();
+        new AsyncDeleteCalendar(this, calendarIndex).execute();
         return true;
       default:
         return super.onContextItemSelected(item);
@@ -274,7 +278,7 @@ public final class CalendarSample extends ListActivity {
     received401 = false;
   }
 
-  void handleGoogleException(IOException e) {
+  void handleGoogleException(final IOException e) {
     if (e instanceof GoogleJsonResponseException) {
       GoogleJsonResponseException exception = (GoogleJsonResponseException) e;
       if (exception.getStatusCode() == 401 && !received401) {
@@ -285,9 +289,20 @@ public final class CalendarSample extends ListActivity {
         editor2.remove(PREF_AUTH_TOKEN);
         editor2.commit();
         gotAccount();
-        return;
       }
     }
     Log.e(TAG, e.getMessage(), e);
+    runOnUiThread(new Runnable() {
+      public void run() {
+        new AlertDialog.Builder(CalendarSample.this).setTitle("Exception").setMessage(
+            e.getMessage()).setNeutralButton("ok", null).create().show();
+      }
+    });
+  }
+
+  void refresh() {
+    Collections.sort(calendars);
+    setListAdapter(
+        new ArrayAdapter<CalendarInfo>(this, android.R.layout.simple_list_item_1, calendars));
   }
 }

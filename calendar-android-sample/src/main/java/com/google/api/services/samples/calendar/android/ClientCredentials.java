@@ -32,7 +32,7 @@ import com.google.common.base.Preconditions;
 public class ClientCredentials {
 
   /** Value of the "API key" shown under "Simple API Access". */
-  public static final String KEY = "AIzaSyDVORSH1SKAgGBLWCvAQH4o8h-73Zqc_28";
+  public static final String KEY = null;
 
   public static void errorIfNotSpecified() {
     Preconditions.checkNotNull(KEY,

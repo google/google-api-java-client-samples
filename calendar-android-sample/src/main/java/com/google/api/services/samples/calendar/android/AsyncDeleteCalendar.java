@@ -28,13 +28,13 @@ class AsyncDeleteCalendar extends AsyncTask<Void, Void, Void> {
 
   private final CalendarSample calendarSample;
   private final ProgressDialog dialog;
-  private final String calendarId;
+  private final int calendarIndex;
   private com.google.api.services.calendar.Calendar client;
 
-  AsyncDeleteCalendar(CalendarSample calendarSample, String calendarId) {
+  AsyncDeleteCalendar(CalendarSample calendarSample, int calendarIndex) {
     this.calendarSample = calendarSample;
     client = calendarSample.client;
-    this.calendarId = calendarId;
+    this.calendarIndex = calendarIndex;
     dialog = new ProgressDialog(calendarSample);
   }
 
@@ -46,8 +46,10 @@ class AsyncDeleteCalendar extends AsyncTask<Void, Void, Void> {
 
   @Override
   protected Void doInBackground(Void... arg0) {
+    String calendarId = calendarSample.calendars.get(calendarIndex).id;
     try {
       client.calendars().delete(calendarId).execute();
+      calendarSample.calendars.remove(calendarIndex);
     } catch (IOException e) {
       calendarSample.handleGoogleException(e);
     } finally {
@@ -59,6 +61,6 @@ class AsyncDeleteCalendar extends AsyncTask<Void, Void, Void> {
   @Override
   protected void onPostExecute(Void result) {
     dialog.dismiss();
-    calendarSample.onAuthToken();
+    calendarSample.refresh();
   }
 }

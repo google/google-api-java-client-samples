@@ -19,27 +19,23 @@ import com.google.api.services.calendar.model.CalendarListEntry;
 
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
-import android.widget.ArrayAdapter;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * Asynchronously load the calendars with a progress dialog.
  *
  * @author Ravi Mistry
  */
-class AsyncLoadCalendars extends AsyncTask<Void, Void, List<String>> {
+class AsyncLoadCalendars extends AsyncTask<Void, Void, Void> {
 
   private final CalendarSample calendarSample;
   private final ProgressDialog dialog;
-  private com.google.api.services.calendar.Calendar service;
+  private com.google.api.services.calendar.Calendar client;
 
   AsyncLoadCalendars(CalendarSample calendarSample) {
     this.calendarSample = calendarSample;
-    service = calendarSample.client;
+    client = calendarSample.client;
     dialog = new ProgressDialog(calendarSample);
   }
 
@@ -50,30 +46,30 @@ class AsyncLoadCalendars extends AsyncTask<Void, Void, List<String>> {
   }
 
   @Override
-  protected List<String> doInBackground(Void... arg0) {
+  protected Void doInBackground(Void... arg0) {
     try {
-      List<String> calendarNames = new ArrayList<String>();
       calendarSample.calendars.clear();
-      CalendarList feed = service.calendarList().list().execute();
+      com.google.api.services.calendar.Calendar.CalendarList.List list =
+          client.calendarList().list();
+      list.setFields("items");
+      CalendarList feed = list.execute();
       if (feed.getItems() != null) {
         for (CalendarListEntry calendar : feed.getItems()) {
-          calendarSample.calendars.add(calendar);
-          calendarNames.add(calendar.getSummary());
+          CalendarInfo info = new CalendarInfo(calendar.getId(), calendar.getSummary());
+          calendarSample.calendars.add(info);
         }
       }
-      return calendarNames;
     } catch (IOException e) {
       calendarSample.handleGoogleException(e);
-      return Collections.singletonList(e.getMessage());
     } finally {
       calendarSample.onRequestCompleted();
     }
+    return null;
   }
 
   @Override
-  protected void onPostExecute(List<String> result) {
+  protected void onPostExecute(Void result) {
     dialog.dismiss();
-    calendarSample.setListAdapter(
-        new ArrayAdapter<String>(calendarSample, android.R.layout.simple_list_item_1, result));
+    calendarSample.refresh();
   }
 }

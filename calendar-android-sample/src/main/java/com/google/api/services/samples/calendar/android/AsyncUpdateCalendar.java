@@ -14,6 +14,7 @@
 
 package com.google.api.services.samples.calendar.android;
 
+import com.google.api.services.calendar.Calendar.Calendars;
 import com.google.api.services.calendar.model.Calendar;
 
 import android.app.ProgressDialog;
@@ -30,14 +31,14 @@ class AsyncUpdateCalendar extends AsyncTask<Void, Void, Void> {
 
   private final CalendarSample calendarSample;
   private final ProgressDialog dialog;
-  private final String calendarId;
+  private final int calendarIndex;
   private final Calendar entry;
   private com.google.api.services.calendar.Calendar client;
 
-  AsyncUpdateCalendar(CalendarSample calendarSample, String calendarId, Calendar entry) {
+  AsyncUpdateCalendar(CalendarSample calendarSample, int calendarIndex, Calendar entry) {
     this.calendarSample = calendarSample;
+    this.calendarIndex = calendarIndex;
     client = calendarSample.client;
-    this.calendarId = calendarId;
     this.entry = entry;
     dialog = new ProgressDialog(calendarSample);
   }
@@ -50,8 +51,14 @@ class AsyncUpdateCalendar extends AsyncTask<Void, Void, Void> {
 
   @Override
   protected Void doInBackground(Void... arg0) {
+    String calendarId = calendarSample.calendars.get(calendarIndex).id;
     try {
-      client.calendars().patch(calendarId, entry).execute();
+      Calendars.Patch patch = client.calendars().patch(calendarId, entry);
+      patch.setFields("id");
+      Calendar updatedCalendar = patch.execute();
+      calendarSample.calendars.remove(calendarIndex);
+      CalendarInfo info = new CalendarInfo(updatedCalendar.getId(), entry.getSummary());
+      calendarSample.calendars.add(info);
     } catch (IOException e) {
       calendarSample.handleGoogleException(e);
     } finally {
@@ -63,6 +70,6 @@ class AsyncUpdateCalendar extends AsyncTask<Void, Void, Void> {
   @Override
   protected void onPostExecute(Void result) {
     dialog.dismiss();
-    calendarSample.onAuthToken();
+    calendarSample.refresh();
   }
 }

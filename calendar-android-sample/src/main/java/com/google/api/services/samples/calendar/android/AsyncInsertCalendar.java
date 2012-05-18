@@ -14,6 +14,7 @@
 
 package com.google.api.services.samples.calendar.android;
 
+import com.google.api.services.calendar.Calendar.Calendars.Insert;
 import com.google.api.services.calendar.model.Calendar;
 
 import android.app.ProgressDialog;
@@ -49,7 +50,11 @@ class AsyncInsertCalendar extends AsyncTask<Void, Void, Void> {
   @Override
   protected Void doInBackground(Void... arg0) {
     try {
-      client.calendars().insert(entry).execute();
+      Insert insert = client.calendars().insert(entry);
+      insert.setFields("id,summary");
+      Calendar calendar = insert.execute();
+      CalendarInfo info = new CalendarInfo(calendar.getId(), calendar.getSummary());
+      calendarSample.calendars.add(info);
     } catch (IOException e) {
       calendarSample.handleGoogleException(e);
     } finally {
@@ -61,6 +66,6 @@ class AsyncInsertCalendar extends AsyncTask<Void, Void, Void> {
   @Override
   protected void onPostExecute(Void result) {
     dialog.dismiss();
-    calendarSample.onAuthToken();
+    calendarSample.refresh();
   }
 }
