@@ -3,12 +3,12 @@
 	<classpathentry kind="src" path="src/main/java"/>
 	<classpathentry kind="src" path="gen"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
-	<classpathentry kind="lib" path="libs/google-api-tasks-v1-rev2-java-1.5.0-beta.jar" sourcepath="libs-sources/google-api-tasks-v1-rev2-java-1.5.0-beta-sources.jar"/>
-	<classpathentry kind="lib" path="libs/google-api-client-1.8.0-beta.jar" sourcepath="libs-sources/google-api-client-1.8.0-beta-sources.jar"/>
-	<classpathentry kind="lib" path="libs/google-api-client-android2-1.8.0-beta.jar" sourcepath="libs-sources/-sources.jar"/>
-	<classpathentry kind="lib" path="libs/google-http-client-1.8.3-beta.jar" sourcepath="libs-sources/google-api-client-android2-1.8.0-sources.jar"/>
-	<classpathentry kind="lib" path="libs/google-http-client-android2-1.8.3-beta.jar" sourcepath="libs-sources/google-http-client-android2-1.8.3-sources.jar"/>
-	<classpathentry kind="lib" path="libs/google-oauth-client-1.8.0-beta.jar" sourcepath="libs-sources/google-oauth-client-1.8.0-sources.jar"/>
+	<classpathentry kind="lib" path="libs/google-api-services-tasks-v1-rev4-1.6.0-beta.jar" sourcepath="libs-sources/google-api-services-tasks-v1-rev4-1.6.0-beta-sources.jar"/>
+	<classpathentry kind="lib" path="libs/google-api-client-1.9.0-beta.jar" sourcepath="libs-sources/google-api-client-1.9.0-beta-sources.jar"/>
+	<classpathentry kind="lib" path="libs/google-api-client-android2-1.9.0-beta.jar" sourcepath="libs-sources/google-api-client-android2-1.9.0-beta-sources.jar"/>
+	<classpathentry kind="lib" path="libs/google-http-client-1.9.0-beta.jar" sourcepath="libs-sources/google-http-client-1.9.0-sources.jar"/>
+	<classpathentry kind="lib" path="libs/google-http-client-android2-1.9.0-beta.jar" sourcepath="libs-sources/google-http-client-android2-1.9.0-sources.jar"/>
+	<classpathentry kind="lib" path="libs/google-oauth-client-1.9.0-beta.jar" sourcepath="libs-sources/google-oauth-client-1.9.0-sources.jar"/>
 	<classpathentry kind="lib" path="libs/gson-2.1.jar" sourcepath="libs-sources/gson-2.1-sources.jar"/>
 	<classpathentry kind="lib" path="libs/guava-11.0.1.jar" sourcepath="libs-sources/guava-11.0.1-sources.jar"/>
 	<classpathentry kind="lib" path="libs/jackson-core-asl-1.9.4.jar" sourcepath="libs-sources/jackson-core-asl-1.9.4-sources.jar"/>
