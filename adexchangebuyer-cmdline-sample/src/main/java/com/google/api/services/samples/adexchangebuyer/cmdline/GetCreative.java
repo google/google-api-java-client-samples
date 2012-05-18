@@ -51,7 +51,7 @@ public class GetCreative extends BaseSample {
       System.out.println("Height: " + creative.getHeight());
       System.out.println("HTML Snippet: " + creative.getHTMLSnippet());
     } catch (GoogleJsonResponseException e) {
-      if (e.getDetails().code == 404) {
+      if (e.getDetails().getCode() == 404) {
         System.out.println("Can't find this creative, it can take up to 20 minutes after "
             + "submitting a new creative for the status to be available. Check your input "
             + "parameters");

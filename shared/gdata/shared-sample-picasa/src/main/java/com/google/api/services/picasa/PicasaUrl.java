@@ -35,7 +35,7 @@ public class PicasaUrl extends GoogleUrl {
 
   public PicasaUrl(String url) {
     super(url);
-    prettyprint = PRETTY_PRINT;
+    setPrettyPrint(PRETTY_PRINT);
   }
 
   /**

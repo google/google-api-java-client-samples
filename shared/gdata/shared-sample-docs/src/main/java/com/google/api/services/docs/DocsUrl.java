@@ -28,7 +28,7 @@ public class DocsUrl extends GoogleUrl {
 
   public DocsUrl(String url) {
     super(url);
-    prettyprint = PRETTY_PRINT;
+    setPrettyPrint(PRETTY_PRINT);
   }
 
   private static DocsUrl forRoot() {

@@ -26,11 +26,8 @@
 to set your <code>JAVA_HOME</code>.</p>
 
 <p><b>Important:</b> after checking out the project, and before compiling
-and running it, you need to edit <code>client_secrets.json</code> to
-enter the required credentials information (see <a
-href="http://code.google.com/p/google-api-java-client/source/browse/shared/shared-sample-appengine/src/main/java/com/google/api/services/samples/shared/appengine/OAuth2ClientCredentials.java?repo=samples"
->instructions</a>). Otherwise, you will get a <code>400
-INVALID_CLIENT</code> error in the browser.</p>
+and running it, you need to edit <code>src/main/resources/client_secrets.json</code> to
+enter the required credentials information. You can find your client id and secret on your <a href="https://code.google.com/apis/console/?api=calendar">API console</a> for your Calendar project under API Access</li>. Otherwise, you will get a <code>400 INVALID_CLIENT</code> error in the browser.</p>
 
 <pre><code>cd <i>[someDirectory]</i>
 hg clone https://code.google.com/p/google-api-java-client.samples/ google-api-java-client-samples

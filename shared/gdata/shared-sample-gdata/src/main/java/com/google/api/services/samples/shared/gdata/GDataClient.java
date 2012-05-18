@@ -73,7 +73,7 @@ public abstract class GDataClient {
   }
 
   protected void prepareUrl(GoogleUrl url, Class<?> parseAsType) {
-    url.prettyprint = this.prettyPrint;
+    url.setPrettyPrint(this.prettyPrint);
   }
 
   protected void prepare(HttpRequest request) {

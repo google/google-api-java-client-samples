@@ -92,12 +92,12 @@
     <dependency>
       <groupId>com.google.api-client</groupId>
       <artifactId>google-api-client</artifactId>
-      <version>1.8.0-beta</version>
+      <version>1.9.0-beta</version>
     </dependency>
     <dependency>
       <groupId>com.google.api-client</groupId>
       <artifactId>google-api-client-appengine</artifactId>
-      <version>1.8.0-beta</version>
+      <version>1.9.0-beta</version>
     </dependency>
   </dependencies>
   <properties>

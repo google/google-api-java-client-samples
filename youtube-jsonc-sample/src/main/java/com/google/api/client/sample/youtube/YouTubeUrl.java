@@ -35,8 +35,8 @@ public class YouTubeUrl extends GoogleUrl {
 
   YouTubeUrl(String encodedUrl) {
     super(encodedUrl);
-    this.alt = "jsonc";
-    this.prettyprint = PRETTY_PRINT;
+    setAlt("jsonc");
+    setPrettyPrint(PRETTY_PRINT);
   }
 
   private static YouTubeUrl root() {

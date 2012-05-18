@@ -128,7 +128,7 @@
     <dependency>
       <groupId>com.google.apis</groupId>
       <artifactId>google-api-services-calendar</artifactId>
-      <version>v3-rev20120423-head</version>
+      <version>v3-rev7-1.6.0-beta</version>
     </dependency>
   </dependencies>
   <properties>

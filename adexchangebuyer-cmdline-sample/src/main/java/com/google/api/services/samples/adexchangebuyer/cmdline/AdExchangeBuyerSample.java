@@ -14,15 +14,19 @@
 
 package com.google.api.services.samples.adexchangebuyer.cmdline;
 
-import com.google.api.client.googleapis.auth.oauth2.draft10.GoogleAccessProtectedResource;
+import com.google.api.client.auth.oauth2.Credential;
+import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson.JacksonFactory;
 import com.google.api.services.adexchangebuyer.Adexchangebuyer;
+import com.google.api.services.adexchangebuyer.AdexchangebuyerScopes;
 import com.google.api.services.samples.shared.cmdline.oauth2.LocalServerReceiver;
 import com.google.api.services.samples.shared.cmdline.oauth2.OAuth2Native;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * A sample application that runs multiple requests against the Ad Exchange Buyer API. These
@@ -37,7 +41,12 @@ import java.util.ArrayList;
  */
 public class AdExchangeBuyerSample {
 
-  private static final String SCOPE = "https://www.googleapis.com/auth/adexchange.buyer";
+  /** Global instance of the HTTP transport. */
+  private static final HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
+
+  /** Global instance of the JSON factory. */
+  private static final JsonFactory JSON_FACTORY = new JacksonFactory();
+  
   private static ArrayList<BaseSample> samples;
 
   /**
@@ -48,13 +57,14 @@ public class AdExchangeBuyerSample {
    */
   private static Adexchangebuyer initClient() throws Exception {
     // Authorization.
-    GoogleAccessProtectedResource accessProtectedResource =
-        OAuth2Native.authorize(new LocalServerReceiver(), null, "google-chrome", SCOPE);
+    Credential credential = OAuth2Native.authorize(
+        HTTP_TRANSPORT, JSON_FACTORY, new LocalServerReceiver(),
+        Arrays.asList(AdexchangebuyerScopes.ADEXCHANGE_BUYER));
 
     // Set up API client.
-    Adexchangebuyer client = Adexchangebuyer.builder(new NetHttpTransport(), new JacksonFactory())
+    Adexchangebuyer client = Adexchangebuyer.builder(HTTP_TRANSPORT, JSON_FACTORY)
         .setApplicationName("Google-AdExchangeBuyerSample/1.0")
-        .setHttpRequestInitializer(accessProtectedResource).build();
+        .setHttpRequestInitializer(credential).build();
 
     return client;
   }
