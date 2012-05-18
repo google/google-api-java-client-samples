@@ -9,7 +9,7 @@
   <groupId>com.google.apis-samples</groupId>
   <artifactId>calendar-cmdline-sample</artifactId>
   <version>1.1.0</version>
-  <name>Example for the Google Calendar API v3 using OAuth 2.0.</name>
+  <name>Example for the Google Calendar API v3 using OAuth 2.0 and Batch.</name>
 
   <url>http://code.google.com/p/google-api-java-client/</url>
 
@@ -128,7 +128,7 @@
     <dependency>
       <groupId>com.google.apis</groupId>
       <artifactId>google-api-services-calendar</artifactId>
-      <version>v3-rev3-1.5.0-beta</version>
+      <version>v3-rev20120423-head</version>
     </dependency>
   </dependencies>
   <properties>
