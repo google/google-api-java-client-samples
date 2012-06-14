@@ -2,19 +2,16 @@
 
 package com.google.api.client.sample.bigquery.appengine.dashboard;
 
-import com.google.api.client.googleapis.auth.oauth2.draft10.GoogleAccessProtectedResource;
-import com.google.api.client.http.HttpTransport;
-import com.google.api.client.json.JsonFactory;
 import com.google.api.services.bigquery.Bigquery;
-import com.google.api.services.bigquery.model.Bigqueryfield;
 import com.google.api.services.bigquery.model.Job;
-import com.google.api.services.bigquery.model.Jobconfiguration;
-import com.google.api.services.bigquery.model.Jobconfigurationquery;
-import com.google.api.services.bigquery.model.Jobreference;
-import com.google.api.services.bigquery.model.Row;
+import com.google.api.services.bigquery.model.JobConfiguration;
+import com.google.api.services.bigquery.model.JobConfigurationQuery;
+import com.google.api.services.bigquery.model.JobReference;
 import com.google.api.services.bigquery.model.Table;
 import com.google.api.services.bigquery.model.TableDataList;
-import com.google.api.services.bigquery.model.Tablereference;
+import com.google.api.services.bigquery.model.TableFieldSchema;
+import com.google.api.services.bigquery.model.TableReference;
+import com.google.api.services.bigquery.model.TableRow;
 import com.google.appengine.api.taskqueue.Queue;
 import com.google.appengine.api.taskqueue.QueueFactory;
 import com.google.appengine.api.taskqueue.RetryOptions;
@@ -43,21 +40,15 @@ public class BigqueryUtils {
   private final String userId;
   private final Bigquery bigquery;
   private Job job;
-  private final AuthUtils authUtils;
-  private final GoogleAccessProtectedResource gapr;
 
-  public BigqueryUtils(String userId, HttpTransport transport, JsonFactory jsonFactory)
-      throws SampleDashboardException {
-    this(userId, transport, jsonFactory, null);
+  public BigqueryUtils(String userId) throws IOException {
+    this(userId, null);
   }
 
-  public BigqueryUtils(String userId, HttpTransport transport, JsonFactory jsonFactory,
-      final String jobId) throws SampleDashboardException {
+  public BigqueryUtils(String userId, final String jobId) throws IOException {
     this.userId = userId;
 
-    authUtils = new AuthUtils(userId, transport, jsonFactory);
-    gapr = new GoogleAccessProtectedResource(authUtils.getAccessToken());
-    bigquery = Bigquery.builder(transport, jsonFactory).setHttpRequestInitializer(gapr).build();
+    bigquery = ServiceUtils.loadBigqueryClient(userId);
 
     if (jobId != null) {
       job = tryToDo(new Callable<Job>() {
@@ -78,7 +69,7 @@ public class BigqueryUtils {
 
     job = tryToDo(new Callable<Job>() {
       public Job call() throws Exception {
-        return bigquery.jobs().insert(queryJob).setProjectId(projectId).execute();
+        return bigquery.jobs().insert(projectId, queryJob).execute();
       }
     });
 
@@ -107,15 +98,13 @@ public class BigqueryUtils {
     return (job != null) ? job.getStatus().getState() : null;
   }
 
-  public List<Bigqueryfield> getSchemaFieldNames() throws SampleDashboardException {
+  public List<TableFieldSchema> getSchemaFieldNames() throws SampleDashboardException {
     if (job != null) {
-      final Tablereference tableReference =
-          job.getConfiguration().getQuery().getDestinationTable();
+      final TableReference tableReference = job.getConfiguration().getQuery().getDestinationTable();
 
       Table table = tryToDo(new Callable<Table>() {
         public Table call() throws IOException {
-          return bigquery.tables().get(tableReference.getProjectId(),
-              tableReference.getDatasetId(),
+          return bigquery.tables().get(tableReference.getProjectId(), tableReference.getDatasetId(),
               tableReference.getTableId()).execute();
         }
       });
@@ -128,16 +117,14 @@ public class BigqueryUtils {
     return null;
   }
 
-  public List<Row> getTableData() throws SampleDashboardException {
+  public List<TableRow> getTableData() throws SampleDashboardException {
     if (job != null) {
-      final Tablereference tableReference =
-          job.getConfiguration().getQuery().getDestinationTable();
+      final TableReference tableReference = job.getConfiguration().getQuery().getDestinationTable();
 
       TableDataList tableDataList = tryToDo(new Callable<TableDataList>() {
         public TableDataList call() throws IOException {
           return bigquery.tabledata().list(tableReference.getProjectId(),
-              tableReference.getDatasetId(),
-              tableReference.getTableId()).execute();
+              tableReference.getDatasetId(), tableReference.getTableId()).execute();
         }
       });
 
@@ -149,8 +136,8 @@ public class BigqueryUtils {
   }
 
   /**
-   * Constructs a task with necessary parameters and options and puts it in
-   * App Engine's default task queue.
+   * Constructs a task with necessary parameters and options and puts it in App Engine's default
+   * task queue.
    */
   public void enqueueWaitingTask() {
     TaskOptions options = TaskOptions.Builder.withDefaults();
@@ -167,16 +154,16 @@ public class BigqueryUtils {
   public static String buildExampleQuery() {
     String[] west = {"WA", "OR", "CA", "AK", "HI", "ID", "MT", "WY", "NV", "UT", "CO", "AZ", "NM"};
     String[] south = {"OK", "TX", "AR", "LA", "TN", "MS", "AL", "KY", "GA", "FL", "SC", "NC", "VA",
-        "WV", "MD", "DC", "DE"};
+                "WV", "MD", "DC", "DE"};
     String[] midwest = {"ND", "SD", "NE", "KS", "MN", "IA", "MO", "WI", "IL", "IN", "MI", "OH"};
     String[] northeast = {"NY", "PA", "NJ", "CT", "RI", "MA", "VT", "NH", "ME"};
 
     Joiner joiner = Joiner.on("', '");
 
     String query = "SELECT IF (state IN ('" + joiner.join(west) + "'), 'West', \n\t"
-        + "IF (state IN ('" + joiner.join(south) + "'), 'South', \n\t"
-        + "IF (state IN ('" + joiner.join(midwest) + "'), 'Midwest', \n\t"
-        + "IF (state IN ('" + joiner.join(northeast) + "'), 'Northeast', 'None')))) "
+        + "IF (state IN ('" + joiner.join(south) + "'), 'South', \n\t" + "IF (state IN ('"
+        + joiner.join(midwest) + "'), 'Midwest', \n\t" + "IF (state IN ('" + joiner.join(northeast)
+        + "'), 'Northeast', 'None')))) "
         + "as region, \naverage_mother_age, \naverage_father_age, \nstate, \nyear \n"
         + "FROM (SELECT year, \n\t\tstate, \n\t\tSUM(mother_age)/COUNT(mother_age) as "
         + "average_mother_age, \n\t\tSUM(father_age)/COUNT(father_age) as average_father_age \n\t"
@@ -190,15 +177,15 @@ public class BigqueryUtils {
    * Instantiates an example job and sets required fields.
    */
   private Job makeJob(String query) {
-    Jobconfigurationquery jobconfigurationquery = new Jobconfigurationquery();
+    JobConfigurationQuery jobconfigurationquery = new JobConfigurationQuery();
 
     jobconfigurationquery.setQuery(query);
     jobconfigurationquery.setCreateDisposition("CREATE_IF_NEEDED");
 
-    Jobconfiguration jobconfiguration = new Jobconfiguration();
+    JobConfiguration jobconfiguration = new JobConfiguration();
     jobconfiguration.setQuery(jobconfigurationquery);
 
-    Jobreference jobreference = new Jobreference();
+    JobReference jobreference = new JobReference();
     jobreference.setProjectId(projectId);
 
     Job newJob = new Job();
@@ -209,8 +196,9 @@ public class BigqueryUtils {
   }
 
   /**
-   * Attempts to run the given callback with a number of retries. If the callback
-   * responds with SC_UNAUTHORIZED, the tokens are refreshed.
+   * Attempts to run the given callback with a number of retries. If the callback responds with
+   * SC_UNAUTHORIZED, the tokens are refreshed.
+   *
    * @throws SampleDashboardException
    */
   private <T> T tryToDo(Callable<T> callback) throws SampleDashboardException {
@@ -218,24 +206,14 @@ public class BigqueryUtils {
     int currentTry = 0;
     SampleDashboardException sdex = null;
     while (currentTry < retries) {
-      currentTry ++;
+      currentTry++;
       try {
         return callback.call();
       } catch (Exception ex) {
         sdex = new SampleDashboardException(ex);
-        log.warning("Caught exception (" + sdex.getStatusCode() + "): " + sdex.getMessage());
-
-        if (sdex.getStatusCode() == HttpServletResponse.SC_UNAUTHORIZED) {
-          updateAccess(authUtils.refreshAccessToken());
-        }
+        log.warning("Caught exception (" + sdex.getStatusCode() + "): " + ex);
       }
     }
     throw Preconditions.checkNotNull(sdex);
-  }
-
-  private void updateAccess(String access) {
-    if (access != null) {
-      gapr.setAccessToken(access);
-    }
   }
 }

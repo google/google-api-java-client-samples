@@ -113,8 +113,11 @@ public class OAuth2Native {
       String redirectUri = receiver.getRedirectUri();
       GoogleClientSecrets clientSecrets = loadClientSecrets(jsonFactory);
       // redirect to an authorization page
+      // TODO(mlinder, 1.11.0-beta): Use setAccessType("offline").setApprovalPrompt("force") with
+      // FileCredentialStore.
       GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
-          transport, jsonFactory, clientSecrets, scopes).build();
+          transport, jsonFactory, clientSecrets, scopes).setAccessType("online")
+          .setApprovalPrompt("auto").build();
       browse(flow.newAuthorizationUrl().setRedirectUri(redirectUri).build());
       // receive authorization code and exchange it for an access token
       String code = receiver.waitForCode();

@@ -63,9 +63,8 @@ public class PlusServiceAccountSample {
             // .setServiceAccountUser("user@example.com")
             .build();
         // set up global Plus instance
-        plus = Plus.builder(HTTP_TRANSPORT, JSON_FACTORY)
-            .setApplicationName("Google-PlusServiceAccountSample/1.0")
-            .setHttpRequestInitializer(credential).build();
+        plus = new Plus.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential).setApplicationName(
+            "Google-PlusServiceAccountSample/1.0").build();
         // run commands
         getActivity();
         // success!

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Google Inc.
+ * Copyright (c) 2012 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.google.api.services.samples.calendar.appengine.server;
+package com.google.api.client.sample.bigquery.appengine.dashboard;
 
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.extensions.appengine.auth.oauth2.AppEngineCredentialStore;
@@ -23,45 +23,38 @@ import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson.JacksonFactory;
-import com.google.api.services.calendar.Calendar;
-import com.google.api.services.calendar.CalendarScopes;
-import com.google.appengine.api.users.UserServiceFactory;
-import com.google.common.base.Preconditions;
-
+import com.google.api.services.bigquery.Bigquery;
+import com.google.api.services.bigquery.BigqueryScopes;
+import com.google.api.services.samples.shared.appengine.OAuth2ClientCredentials;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Collections;
 
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * Utility class for JDO persistence, OAuth flow helpers, and others.
+ * Utility class for Google service related tasks, for example JDO persistence, OAuth flow helpers,
+ * and others.
  *
- * @author Yaniv Inbar
+ * @author Matthias Linder (mlinder)
  */
-class Utils {
+class ServiceUtils {
 
   /** Global instance of the HTTP transport. */
   static final HttpTransport HTTP_TRANSPORT = new UrlFetchTransport();
 
   /** Global instance of the JSON factory. */
   static final JsonFactory JSON_FACTORY = new JacksonFactory();
-
-  private static final String RESOURCE_LOCATION = "/client_secrets.json";
-
-  private static GoogleClientSecrets clientSecrets = null;
+  
+  /** Global instance of the Credential store. */
+  static final AppEngineCredentialStore CREDENTIAL_STORE = new AppEngineCredentialStore();
 
   static GoogleClientSecrets getClientCredential() throws IOException {
-    if (clientSecrets == null) {
-      InputStream inputStream = Utils.class.getResourceAsStream(RESOURCE_LOCATION);
-      Preconditions.checkNotNull(inputStream, "missing resource %s", RESOURCE_LOCATION);
-      clientSecrets = GoogleClientSecrets.load(JSON_FACTORY, inputStream);
-      Preconditions.checkArgument(!clientSecrets.getDetails().getClientId().startsWith("[[")
-          && !clientSecrets.getDetails().getClientSecret().startsWith("[["),
-          "Please enter your client ID and secret from the Google APIs Console in %s from the "
-          + "root samples directory", RESOURCE_LOCATION);
-    }
-    return clientSecrets;
+    GoogleClientSecrets gcs = new GoogleClientSecrets();
+    GoogleClientSecrets.Details details = new GoogleClientSecrets.Details();
+    details.setClientId(OAuth2ClientCredentials.getClientId());
+    details.setClientSecret(OAuth2ClientCredentials.getClientSecret());
+    gcs.setWeb(details);
+    return gcs;
   }
 
   static String getRedirectUri(HttpServletRequest req) {
@@ -69,30 +62,24 @@ class Utils {
     url.setRawPath("/oauth2callback");
     return url.build();
   }
+  
+  static void deleteCredentials(String userId) throws IOException {
+    Credential credential = newFlow().loadCredential(userId);
+    if (credential != null) {
+      CREDENTIAL_STORE.delete(userId, credential);
+    }
+  }
 
   static GoogleAuthorizationCodeFlow newFlow() throws IOException {
     return new GoogleAuthorizationCodeFlow.Builder(HTTP_TRANSPORT, JSON_FACTORY,
-        getClientCredential(), Collections.singleton(CalendarScopes.CALENDAR)).setCredentialStore(
-        new AppEngineCredentialStore()).setAccessType("offline").build();
+        getClientCredential(), Collections.singleton(BigqueryScopes.BIGQUERY)).setCredentialStore(
+        CREDENTIAL_STORE).setAccessType("offline").build();
   }
 
-  static Calendar loadCalendarClient() throws IOException {
-    String userId = UserServiceFactory.getUserService().getCurrentUser().getUserId();
+  static Bigquery loadBigqueryClient(String userId) throws IOException {
     Credential credential = newFlow().loadCredential(userId);
-    return new Calendar.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential).build();
+    return new Bigquery.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential).build();
   }
-
-  /**
-   * Returns an {@link IOException} (but not a subclass) in order to work around restrictive GWT
-   * serialization policy.
-   */
-  static IOException wrappedIOException(IOException e) {
-    if (e.getClass() == IOException.class) {
-      return e;
-    }
-    return new IOException(e.getMessage());
-  }
-
-  private Utils() {
-  }
+  
+  private ServiceUtils() {}
 }

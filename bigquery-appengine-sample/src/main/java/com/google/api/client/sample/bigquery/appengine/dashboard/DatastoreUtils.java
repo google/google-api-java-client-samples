@@ -2,9 +2,8 @@
 
 package com.google.api.client.sample.bigquery.appengine.dashboard;
 
-import com.google.api.services.bigquery.model.Bigqueryfield;
-import com.google.api.services.bigquery.model.Row;
-import com.google.api.services.bigquery.model.RowF;
+import com.google.api.services.bigquery.model.TableFieldSchema;
+import com.google.api.services.bigquery.model.TableRow;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
@@ -129,16 +128,16 @@ public class DatastoreUtils {
    * Copies each row of the given data into an entity, then puts all the entities
    * to the datastore with the user's entity as their ancestor.
    */
-  public void copyQueryResultsToDatastore(List<Bigqueryfield> fields,
-      List<Row> rows) {
+  public void copyQueryResultsToDatastore(List<TableFieldSchema> fields,
+      List<TableRow> rows) {
     ArrayList<Entity> entities = new ArrayList<Entity>();
-    Iterator<Row> rowsIterator = rows.iterator();
+    Iterator<TableRow> rowsIterator = rows.iterator();
     while (rowsIterator.hasNext()) {
       Entity entity = new Entity(resultKind, userEntityKey);
 
       // Copy the row into the entity -- fields become properties.
-      Iterator<Bigqueryfield> fieldsIterator = fields.iterator();
-      Iterator<RowF> dataIterator = rowsIterator.next().getF().iterator();
+      Iterator<TableFieldSchema> fieldsIterator = fields.iterator();
+      Iterator<TableRow.F> dataIterator = rowsIterator.next().getF().iterator();
 
       Preconditions.checkState(fieldsIterator.hasNext() == dataIterator.hasNext());
       while (fieldsIterator.hasNext() && dataIterator.hasNext()) {

@@ -101,9 +101,8 @@ public class CoreReportingApiReferenceSample {
         Arrays.asList(AnalyticsScopes.ANALYTICS_READONLY));
 
     // Set up and return Google Analytics API client.
-    return Analytics.builder(HTTP_TRANSPORT, JSON_FACTORY)
+    return new Analytics.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential)
         .setApplicationName("Google-Analytics-Core-Reporting-API-Sample")
-        .setHttpRequestInitializer(credential)
         .build();
   }
 

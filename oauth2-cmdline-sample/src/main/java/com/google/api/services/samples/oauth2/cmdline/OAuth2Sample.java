@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2010 Google Inc.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied. See the License for the specific language governing permissions and limitations under
@@ -33,7 +33,7 @@ import java.util.List;
  * Command-line sample for the Google OAuth2 API described at <a
  * href="http://code.google.com/apis/accounts/docs/OAuth2Login.html">Using OAuth 2.0 for Login
  * (Experimental)</a>.
- * 
+ *
  * @author Yaniv Inbar
  */
 public class OAuth2Sample {
@@ -58,9 +58,8 @@ public class OAuth2Sample {
         Credential credential =
             OAuth2Native.authorize(HTTP_TRANSPORT, JSON_FACTORY, new LocalServerReceiver(), SCOPES);
         // set up global Oauth2 instance
-        oauth2 = Oauth2.builder(HTTP_TRANSPORT, JSON_FACTORY)
-            .setApplicationName("Google-OAuth2Sample/1.0").setHttpRequestInitializer(credential)
-            .build();
+        oauth2 = new Oauth2.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential).setApplicationName(
+            "Google-OAuth2Sample/1.0").build();
         // run commands
         tokenInfo(credential.getAccessToken());
         userInfo();

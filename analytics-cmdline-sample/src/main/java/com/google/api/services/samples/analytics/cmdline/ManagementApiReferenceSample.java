@@ -92,7 +92,7 @@ public class ManagementApiReferenceSample {
         Arrays.asList(AnalyticsScopes.ANALYTICS_READONLY));
 
     // Set up and return Google Analytics API client.
-    return Analytics.builder(HTTP_TRANSPORT, JSON_FACTORY)
+    return new Analytics.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential)
         .setApplicationName("Google-Analytics-Management-API-Sample")
         .setHttpRequestInitializer(credential)
         .build();
@@ -143,7 +143,7 @@ public class ManagementApiReferenceSample {
           Goals goals = analytics.management().goals()
               .list(firstAccountId, firstWebpropertyId, firstProfileId).execute();
 
-          if (goals.getItems().isEmpty()) {
+          if (goals.getItems() == null || goals.getItems().isEmpty()) {
             System.err.println("No goals found");
           } else {
             printGoals(goals);
@@ -313,7 +313,7 @@ public class ManagementApiReferenceSample {
   /**
    * Prints details for EVENT type goals.
    *
-   * @param goalEventDetails the details of an EVENT type goal.
+   * @param eventDetails the details of an EVENT type goal.
    */
   private static void printGoalEventDetails(EventDetails eventDetails) {
     System.out.println("Goal Type:  EVENT");

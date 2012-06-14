@@ -70,11 +70,16 @@ public class PicasaSample {
     }
   }
 
-  public static void run(PicasaClient client) throws IOException {
+  public static void run(PicasaClient client) throws IOException, InterruptedException {
     UserFeed feed = showAlbums(client);
     AlbumEntry album = postAlbum(client, feed);
     postPhoto(client, album);
     // postVideo(client, album);
+
+    // The server will update the e-tag of the album multiple times
+    // Wait for the latest version ...
+    Thread.sleep(1000);
+
     album = getUpdatedAlbum(client, album);
     album = updateTitle(client, album);
     deleteAlbum(client, album);

@@ -53,8 +53,8 @@ public class ModeratorSample {
         Arrays.asList(ModeratorScopes.MODERATOR));
 
     // set up Moderator
-    Moderator moderator = Moderator.builder(HTTP_TRANSPORT, JSON_FACTORY)
-        .setApplicationName("Google-ModeratorSample/1.0").setHttpRequestInitializer(credential)
+    Moderator moderator = new Moderator.Builder(
+        HTTP_TRANSPORT, JSON_FACTORY, credential).setApplicationName("Google-ModeratorSample/1.0")
         .setJsonHttpRequestInitializer(new JsonHttpRequestInitializer() {
             @Override
           public void initialize(JsonHttpRequest request) {

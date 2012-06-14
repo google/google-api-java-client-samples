@@ -72,10 +72,9 @@ public class AdSenseSample {
         Arrays.asList(AdsenseScopes.ADSENSE_READONLY));
 
     // Set up AdSense Management API client.
-    Adsense adsense = Adsense.builder(new NetHttpTransport(), new JacksonFactory())
-        .setApplicationName("Google-AdSenseSample/1.1")
-        .setHttpRequestInitializer(credential)
-        .build();
+    Adsense adsense = new Adsense.Builder(
+        new NetHttpTransport(), new JacksonFactory(), credential).setApplicationName(
+        "Google-AdSenseSample/1.1").build();
 
     return adsense;
   }

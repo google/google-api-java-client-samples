@@ -51,8 +51,8 @@ public class LatitudeSample {
         HTTP_TRANSPORT, JSON_FACTORY, new LocalServerReceiver(), Arrays.asList(SCOPE));
 
     // set up Latitude
-    Latitude latitude = Latitude.builder(HTTP_TRANSPORT, JSON_FACTORY)
-        .setApplicationName("Google-LatitudeSample/1.0").setHttpRequestInitializer(credential)
+    Latitude latitude = new Latitude.Builder(
+        HTTP_TRANSPORT, JSON_FACTORY, credential).setApplicationName("Google-LatitudeSample/1.0")
         .setJsonHttpRequestInitializer(new JsonHttpRequestInitializer() {
             @Override
           public void initialize(JsonHttpRequest request) {

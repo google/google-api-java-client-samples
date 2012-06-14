@@ -19,7 +19,6 @@ import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpResponseException;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
-import com.google.api.client.http.json.JsonHttpParser;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson.JacksonFactory;
 import com.google.api.services.prediction.Prediction;
@@ -54,8 +53,8 @@ public class PredictionSample {
     Credential credential = OAuth2Native.authorize(
         HTTP_TRANSPORT, JSON_FACTORY, new LocalServerReceiver(),
         Arrays.asList(PredictionScopes.PREDICTION));
-    Prediction prediction = Prediction.builder(HTTP_TRANSPORT, JSON_FACTORY)
-        .setApplicationName("Google-PredictionSample/1.0").setHttpRequestInitializer(credential)
+    Prediction prediction = new Prediction.Builder(
+        HTTP_TRANSPORT, JSON_FACTORY, credential).setApplicationName("Google-PredictionSample/1.0")
         .build();
     train(prediction);
     predict(prediction, "Is this sentence in English?");
@@ -72,14 +71,13 @@ public class PredictionSample {
     System.out.print("Waiting for training to complete");
     System.out.flush();
 
-    JsonHttpParser jsonHttpParser = new JsonHttpParser(JSON_FACTORY);
     int triesCounter = 0;
     while (triesCounter < 100) {
       // NOTE: if model not found, it will throw an HttpResponseException with a 404 error
       try {
         HttpResponse response = prediction.trainedmodels().get(MODEL_ID).executeUnparsed();
         if (response.getStatusCode() == 200) {
-          training = jsonHttpParser.parse(response, Training.class);
+          training = response.parseAs(Training.class);
           String trainingStatus = training.getTrainingStatus();
           if (trainingStatus.equals("DONE")) {
             System.out.println();

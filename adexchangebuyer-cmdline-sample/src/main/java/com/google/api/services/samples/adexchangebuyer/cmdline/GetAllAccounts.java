@@ -61,7 +61,7 @@ public class GetAllAccounts extends BaseSample {
   public void execute(Adexchangebuyer client) throws IOException {
     List<Account> allAccounts = client.accounts().list().execute().getItems();
 
-    if (allAccounts.size() > 0) {
+    if (allAccounts != null && allAccounts.size() > 0) {
       System.out.printf("========================================\n");
       System.out.printf("Listing of user associated accounts\n");
       System.out.printf("========================================\n");

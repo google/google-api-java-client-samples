@@ -21,12 +21,10 @@ import com.google.api.client.http.HttpContent;
 import com.google.api.client.http.HttpMethod;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestFactory;
-import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpResponseException;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.UriTemplate;
 import com.google.api.client.http.javanet.NetHttpTransport;
-import com.google.api.client.http.json.JsonHttpParser;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson.JacksonFactory;
 import com.google.api.services.discovery.Discovery;
@@ -64,7 +62,7 @@ public class DiscoverySample {
   /** Global instance of the JSON factory. */
   private static final JsonFactory JSON_FACTORY = new JacksonFactory();
 
-  static final Discovery DISCOVERY = new Discovery(HTTP_TRANSPORT, JSON_FACTORY);
+  static final Discovery DISCOVERY = new Discovery(HTTP_TRANSPORT, JSON_FACTORY, null);
 
   private static final String APP_NAME = "Google Discovery API Client 1.2.0";
 
@@ -290,9 +288,7 @@ public class DiscoverySample {
       error(command, "invalid API version: " + apiVersion);
     }
     try {
-      HttpResponse response = DISCOVERY.apis().getRest(apiName, apiVersion).executeUnparsed();
-      response.getRequest().addParser(new JsonHttpParser(JSON_FACTORY));
-      return response.parseAs(RestDescription.class);
+      return DISCOVERY.apis().getRest(apiName, apiVersion).execute();
     } catch (HttpResponseException e) {
       if (e.getStatusCode() == 404) {
         error(command, "API not found: " + apiName);

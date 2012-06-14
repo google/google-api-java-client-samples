@@ -63,9 +63,9 @@ public class CalendarSample {
             Arrays.asList(CalendarScopes.CALENDAR));
 
         // set up global Calendar instance
-        client = com.google.api.services.calendar.Calendar.builder(HTTP_TRANSPORT, JSON_FACTORY)
-            .setApplicationName("Google-CalendarSample/1.0").setHttpRequestInitializer(credential)
-            .build();
+        client = new com.google.api.services.calendar.Calendar.Builder(
+            HTTP_TRANSPORT, JSON_FACTORY, credential).setApplicationName(
+            "Google-CalendarSample/1.0").build();
 
         // run commands
         showCalendars();

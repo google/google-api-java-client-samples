@@ -62,9 +62,9 @@ public class AdExchangeBuyerSample {
         Arrays.asList(AdexchangebuyerScopes.ADEXCHANGE_BUYER));
 
     // Set up API client.
-    Adexchangebuyer client = Adexchangebuyer.builder(HTTP_TRANSPORT, JSON_FACTORY)
-        .setApplicationName("Google-AdExchangeBuyerSample/1.0")
-        .setHttpRequestInitializer(credential).build();
+    Adexchangebuyer client = new Adexchangebuyer.Builder(
+        HTTP_TRANSPORT, JSON_FACTORY, credential).setApplicationName(
+        "Google-AdExchangeBuyerSample/1.0").build();
 
     return client;
   }

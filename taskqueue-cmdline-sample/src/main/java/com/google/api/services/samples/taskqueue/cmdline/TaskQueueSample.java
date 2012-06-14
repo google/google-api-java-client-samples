@@ -64,8 +64,8 @@ public class TaskQueueSample {
         Arrays.asList(TaskqueueScopes.TASKQUEUE));
 
     // set up Taskqueue
-    Taskqueue taskQueue = Taskqueue.builder(HTTP_TRANSPORT, JSON_FACTORY)
-        .setApplicationName("Google-TaskQueueSample/1.0").setHttpRequestInitializer(credential)
+    Taskqueue taskQueue = new Taskqueue.Builder(
+        HTTP_TRANSPORT, JSON_FACTORY, credential).setApplicationName("Google-TaskQueueSample/1.0")
         .setJsonHttpRequestInitializer(new JsonHttpRequestInitializer() {
             @Override
           public void initialize(JsonHttpRequest request) {
@@ -140,7 +140,7 @@ public class TaskQueueSample {
    * Method that sends a get request to get the queue.
    *
    * @param taskQueue The task queue that should be used to get the queue from.
-   * @return {@link com.google.api.services.taskqueue.model.Taskqueue}
+   * @return {@link com.google.api.services.taskqueue.model.TaskQueue}
    * @throws IOException if the request fails.
    */
   private static com.google.api.services.taskqueue.model.TaskQueue getQueue(Taskqueue taskQueue)

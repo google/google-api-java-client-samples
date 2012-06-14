@@ -46,9 +46,9 @@ public class YouTubeClient {
         // headers
         GoogleHeaders headers = new GoogleHeaders();
         headers.setApplicationName("Google-YouTubeSample/1.0");
-        headers.gdataVersion = "2";
+        headers.setGDataVersion("2");
         request.setHeaders(headers);
-        request.addParser(parser);
+        request.setParser(parser);
       }
     });
   }

@@ -6,26 +6,14 @@
          xmlns="http://java.sun.com/xml/ns/javaee">
 
   <!-- Servlets -->
-
   <servlet>
-    <servlet-name>denied</servlet-name>
-    <servlet-class>com.google.api.client.sample.bigquery.appengine.dashboard.DeniedAuth</servlet-class>
-  </servlet>
-
-  <servlet-mapping>
-    <servlet-name>denied</servlet-name>
-    <url-pattern>/denied</url-pattern>
-  </servlet-mapping>
-
-
-  <servlet>
-    <servlet-name>oAuthCallback</servlet-name>
+    <servlet-name>oauth2Callback</servlet-name>
     <servlet-class>com.google.api.client.sample.bigquery.appengine.dashboard.OAuth2Callback</servlet-class>
   </servlet>
 
   <servlet-mapping>
-    <servlet-name>oAuthCallback</servlet-name>
-    <url-pattern>/oauth2callback</url-pattern>
+    <servlet-name>oauth2Callback</servlet-name>
+    <url-pattern>/oauth2callback/*</url-pattern>
   </servlet-mapping>
 
   <servlet>

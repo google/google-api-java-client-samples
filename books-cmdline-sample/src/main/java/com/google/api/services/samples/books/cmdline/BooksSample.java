@@ -16,6 +16,7 @@ package com.google.api.services.samples.books.cmdline;
 
 import com.google.api.client.googleapis.services.GoogleKeyInitializer;
 import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.http.json.JsonHttpRequestInitializer;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson.JacksonFactory;
 import com.google.api.services.books.Books;
@@ -43,10 +44,12 @@ public class BooksSample {
   private static final NumberFormat PERCENT_FORMATTER = NumberFormat.getPercentInstance();
 
   private static void queryGoogleBooks(JsonFactory jsonFactory, String query) throws Exception {
+    JsonHttpRequestInitializer credential = new GoogleKeyInitializer(ClientCredentials.KEY);
+    
     // Set up Books client.
-    final Books books = Books.builder(new NetHttpTransport(), jsonFactory)
+    final Books books = new Books.Builder(new NetHttpTransport(), jsonFactory, null)
         .setApplicationName("Google-BooksSample/1.0")
-        .setJsonHttpRequestInitializer(new GoogleKeyInitializer(ClientCredentials.KEY))
+        .setJsonHttpRequestInitializer(credential)
         .build();
     // Set query string and filter only Google eBooks.
     System.out.println("Query: [" + query + "]");
