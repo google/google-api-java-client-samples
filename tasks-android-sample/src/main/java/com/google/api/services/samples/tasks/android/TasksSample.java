@@ -94,9 +94,8 @@ public final class TasksSample extends ListActivity {
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     ClientCredentials.errorIfNotSpecified();
-    service = com.google.api.services.tasks.Tasks.builder(transport, jsonFactory)
+    service = new com.google.api.services.tasks.Tasks.Builder(transport, jsonFactory, credential)
         .setApplicationName("Google-TasksAndroidSample/1.0")
-        .setHttpRequestInitializer(credential)
         .setJsonHttpRequestInitializer(new GoogleKeyInitializer(ClientCredentials.KEY))
         .build();
     settings = getPreferences(MODE_PRIVATE);

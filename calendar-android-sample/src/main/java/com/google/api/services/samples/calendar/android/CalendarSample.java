@@ -114,15 +114,16 @@ public final class CalendarSample extends ListActivity {
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    client = com.google.api.services.calendar.Calendar.builder(transport, jsonFactory)
-        .setApplicationName("Google-CalendarAndroidSample/1.0")
-        .setHttpRequestInitializer(new HttpRequestInitializer() {
-          public void initialize(HttpRequest request) throws IOException {
-            request.getHeaders().setAuthorization(GoogleHeaders.getGoogleLoginValue(authToken));
-          }
-        })
-        .setJsonHttpRequestInitializer(new GoogleKeyInitializer(ClientCredentials.KEY))
-        .build();
+    HttpRequestInitializer requestInitializer = new HttpRequestInitializer() {
+      public void initialize(HttpRequest request) throws IOException {
+        request.getHeaders().setAuthorization(GoogleHeaders.getGoogleLoginValue(authToken));
+      }
+    };
+    client = new com.google.api.services.calendar.
+        Calendar.Builder(transport, jsonFactory, requestInitializer)
+          .setApplicationName("Google-CalendarAndroidSample/1.0")
+          .setJsonHttpRequestInitializer(new GoogleKeyInitializer(ClientCredentials.KEY))
+          .build();
     settings = getPreferences(MODE_PRIVATE);
     accountName = settings.getString(PREF_ACCOUNT_NAME, null);
     authToken = settings.getString(PREF_AUTH_TOKEN, null);
