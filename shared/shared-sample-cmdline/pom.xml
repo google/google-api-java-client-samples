@@ -8,7 +8,7 @@
   </parent>
   <groupId>com.google.apis-samples</groupId>
   <artifactId>shared-sample-cmdline</artifactId>
-  <version>1.3.0</version>
+  <version>1.3.1</version>
   <name>Example shared code for the command-line samples</name>
 
   <url>http://code.google.com/p/google-api-java-client/</url>
@@ -93,7 +93,7 @@
     <dependency>
       <groupId>com.google.api-client</groupId>
       <artifactId>google-api-client</artifactId>
-      <version>1.10.1-beta</version>
+      <version>1.10.2-beta</version>
     </dependency>
     <dependency>
       <groupId>org.mortbay.jetty</groupId>
