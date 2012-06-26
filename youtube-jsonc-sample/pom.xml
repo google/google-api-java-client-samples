@@ -113,7 +113,7 @@
     <dependency>
       <groupId>com.google.api-client</groupId>
       <artifactId>google-api-client</artifactId>
-      <version>1.10.1-beta</version>
+      <version>1.10.3-beta</version>
     </dependency>
   </dependencies>
   <properties>
