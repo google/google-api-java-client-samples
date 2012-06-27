@@ -123,7 +123,7 @@
     <dependency>
       <groupId>com.google.apis</groupId>
       <artifactId>google-api-services-plus</artifactId>
-      <version>v1-rev16-1.7.1-beta</version>
+      <version>v1-rev17-1.7.2-beta</version>
     </dependency>
   </dependencies>
   <properties>

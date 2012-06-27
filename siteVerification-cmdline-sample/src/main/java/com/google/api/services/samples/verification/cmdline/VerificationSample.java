@@ -27,9 +27,11 @@ import com.google.api.services.samples.shared.cmdline.oauth2.OAuth2Native;
 import com.google.api.services.siteVerification.SiteVerification;
 import com.google.api.services.siteVerification.SiteVerificationRequest;
 import com.google.api.services.siteVerification.SiteVerificationScopes;
-import com.google.api.services.siteVerification.model.SiteverificationWebResourceGettokenResponse;
-import com.google.api.services.siteVerification.model.SiteverificationWebResourceListResponse;
-import com.google.api.services.siteVerification.model.SiteverificationWebResourceResource;
+import com.google.api.services.siteVerification.model.SiteVerificationWebResourceGettokenRequest;
+import com.google.api.services.siteVerification.model.SiteVerificationWebResourceGettokenRequest.Site;
+import com.google.api.services.siteVerification.model.SiteVerificationWebResourceGettokenResponse;
+import com.google.api.services.siteVerification.model.SiteVerificationWebResourceListResponse;
+import com.google.api.services.siteVerification.model.SiteVerificationWebResourceResource;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -43,7 +45,7 @@ import java.util.List;
 public class VerificationSample {
 
   private static final String META_VERIFICATION_METHOD = "meta";
-  private static final String SITE_TYPE = "site";
+  private static final String SITE_TYPE = "SITE";
 
   /** Global instance of the HTTP transport. */
   private static final HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
@@ -85,7 +87,7 @@ public class VerificationSample {
     System.out.println("Place this META tag on your site:\n\t" + token
         + "\nWhen you are finished, press ENTER to proceed with " + "verification.");
     in.readLine();
-    SiteverificationWebResourceResource verifiedSite = verifySite(siteUrl, siteVerification);
+    SiteVerificationWebResourceResource verifiedSite = verifySite(siteUrl, siteVerification);
     System.out.println("Verification successful.");
 
     System.out.println("Congratulations, you're now a verified owner of this site!\n"
@@ -99,9 +101,9 @@ public class VerificationSample {
     }
 
     System.out.println("\n\nHere are all of the sites you own:");
-    List<SiteverificationWebResourceResource> resources = listOwnedSites(siteVerification);
+    List<SiteVerificationWebResourceResource> resources = listOwnedSites(siteVerification);
     if (!resources.isEmpty()) {
-      for (SiteverificationWebResourceResource nextResource : resources) {
+      for (SiteVerificationWebResourceResource nextResource : resources) {
         System.out.println(nextResource);
       }
     } else {
@@ -154,11 +156,12 @@ public class VerificationSample {
    */
   private static String getToken(String siteUrl, SiteVerification siteVerification)
       throws IOException {
-    SiteVerification.WebResource.GetToken request = siteVerification.webResource().getToken();
+    SiteVerificationWebResourceGettokenRequest request =
+        new SiteVerificationWebResourceGettokenRequest();
     request.setVerificationMethod(META_VERIFICATION_METHOD);
-    request.setIdentifier(siteUrl);
-    request.setType(SITE_TYPE);
-    SiteverificationWebResourceGettokenResponse response = request.execute();
+    request.setSite(new Site().setIdentifier(siteUrl).setType(SITE_TYPE));
+    SiteVerificationWebResourceGettokenResponse response =
+        siteVerification.webResource().getToken(request).execute();
     return response.getToken();
   }
 
@@ -167,11 +170,11 @@ public class VerificationSample {
    * 'https://code.google.com/apis/siteverification/v1/reference.html#method_siteVerification_webResource_insert'>Insert</a>
    * call.
    */
-  private static SiteverificationWebResourceResource verifySite(
+  private static SiteVerificationWebResourceResource verifySite(
       String siteUrl, SiteVerification siteVerification) throws IOException {
-    SiteverificationWebResourceResource resource = new SiteverificationWebResourceResource();
-    SiteverificationWebResourceResource.Site resourceSite =
-        new SiteverificationWebResourceResource.Site();
+    SiteVerificationWebResourceResource resource = new SiteVerificationWebResourceResource();
+    SiteVerificationWebResourceResource.Site resourceSite =
+        new SiteVerificationWebResourceResource.Site();
     resourceSite.setIdentifier(siteUrl);
     resourceSite.setType(SITE_TYPE);
     resource.setSite(resourceSite);
@@ -198,7 +201,7 @@ public class VerificationSample {
    * call.
    */
   private static void addDelegatedOwner(String delegatedOwner, String siteUrl,
-      SiteVerification siteVerification, SiteverificationWebResourceResource verifiedSite)
+      SiteVerification siteVerification, SiteVerificationWebResourceResource verifiedSite)
       throws IOException {
     verifiedSite.getOwners().add(delegatedOwner);
     SiteVerification.WebResource.Update updateRequest =
@@ -212,7 +215,7 @@ public class VerificationSample {
    * call.
    */
   private static void removeDelegatedOwner(String delegatedOwner, String siteUrl,
-      SiteVerification siteVerification, SiteverificationWebResourceResource verifiedSite)
+      SiteVerification siteVerification, SiteVerificationWebResourceResource verifiedSite)
       throws IOException {
     verifiedSite.getOwners().remove(delegatedOwner);
     SiteVerification.WebResource.Update updateRequest =
@@ -225,10 +228,10 @@ public class VerificationSample {
    * 'https://code.google.com/apis/siteverification/v1/reference.html#method_siteVerification_webResource_list'>List</a>
    * call.
    */
-  private static List<SiteverificationWebResourceResource> listOwnedSites(
+  private static List<SiteVerificationWebResourceResource> listOwnedSites(
       SiteVerification siteVerification) throws IOException {
     SiteVerification.WebResource.List listRequest = siteVerification.webResource().list();
-    SiteverificationWebResourceListResponse listResponse = listRequest.execute();
+    SiteVerificationWebResourceListResponse listResponse = listRequest.execute();
     return listResponse.getItems();
   }
 }
