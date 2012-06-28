@@ -14,7 +14,6 @@
 
 package com.google.samples.cloudnotes;
 
-import com.cloudnotes.R;
 import com.google.android.gms.auth.GoogleAuthException;
 import com.google.api.client.googleapis.json.GoogleJsonError;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;

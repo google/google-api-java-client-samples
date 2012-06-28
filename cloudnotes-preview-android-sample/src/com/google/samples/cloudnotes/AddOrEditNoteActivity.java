@@ -13,8 +13,6 @@
  */
 package com.google.samples.cloudnotes;
 
-import com.cloudnotes.R;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;

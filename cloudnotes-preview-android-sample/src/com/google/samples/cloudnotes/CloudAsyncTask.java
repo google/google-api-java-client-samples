@@ -14,14 +14,13 @@
 
 package com.google.samples.cloudnotes;
 
-import java.io.IOException;
+import com.appspot.api.services.noteendpoint.Noteendpoint;
+import com.google.android.gms.auth.UserRecoverableAuthException;
 
 import android.os.AsyncTask;
 import android.view.View;
 
-import com.appspot.api.services.noteendpoint.Noteendpoint;
-import com.cloudnotes.R;
-import com.google.android.gms.auth.UserRecoverableAuthException;
+import java.io.IOException;
 
 /**
  * Asynchronous task that also takes care of common needs, such as showing a progress dialog,

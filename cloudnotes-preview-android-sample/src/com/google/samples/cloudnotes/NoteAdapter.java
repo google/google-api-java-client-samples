@@ -14,7 +14,6 @@
 package com.google.samples.cloudnotes;
 
 import com.appspot.api.services.noteendpoint.model.Note;
-import com.cloudnotes.R;
 
 import android.content.Context;
 import android.view.LayoutInflater;

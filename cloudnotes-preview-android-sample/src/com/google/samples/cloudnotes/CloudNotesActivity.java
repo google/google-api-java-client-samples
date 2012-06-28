@@ -15,7 +15,6 @@ package com.google.samples.cloudnotes;
 
 import com.appspot.api.services.noteendpoint.Noteendpoint;
 import com.appspot.api.services.noteendpoint.model.Note;
-import com.cloudnotes.R;
 import com.google.api.client.extensions.android2.AndroidHttp;
 import com.google.api.client.json.gson.GsonFactory;
 import com.google.samples.cloudnotes.NoteApplication.TaskListener;

@@ -83,12 +83,9 @@ public final class GoogleAccountCredential implements HttpRequestInitializer {
    * , or {@code null} for none.
    */
   public GoogleAccountCredential setAccountName(String accountName) {
-    this.accountName = accountName;
     account = accountManager.getAccountByName(accountName);
     // check if account has been deleted
-    if (account == null) {
-      accountName = null;
-    }
+    this.accountName = account == null ? null : accountName;
     return this;
   }
 
