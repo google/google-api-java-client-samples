@@ -54,18 +54,6 @@ public class Utils {
   }
 
   /**
-   * Logs the given message and shows an error alert dialog with it.
-   * 
-   * @param activity activity
-   * @param tag log tag to use
-   * @param message message to log and show or {@code null} for none
-   */
-  public static void logAndShow(Activity activity, String tag, String message) {
-    Log.e(tag, message);
-    showError(activity, message);
-  }
-
-  /**
    * Logs the given throwable and shows an error alert dialog with its message.
    * 
    * @param activity activity
@@ -87,17 +75,41 @@ public class Utils {
   }
 
   /**
+   * Logs the given message and shows an error alert dialog with it.
+   * 
+   * @param activity activity
+   * @param tag log tag to use
+   * @param message message to log and show or {@code null} for none
+   */
+  public static void logAndShowError(Activity activity, String tag, String message) {
+    String errorMessage = getErrorMessage(message);
+    Log.e(tag, errorMessage);
+    showErrorInternal(activity, errorMessage);
+  }
+
+  /**
    * Shows an error alert dialog with the given message.
    * 
    * @param activity activity
    * @param message message to show or {@code null} for none
    */
-  public static void showError(final Activity activity, final String errorMessage) {
-    final String message = errorMessage == null ? "Error" : "[Error]:" + errorMessage;
+  public static void showError(Activity activity, String message) {
+    String errorMessage = getErrorMessage(message);
+    showErrorInternal(activity, errorMessage);
+  }
+
+  private static void showErrorInternal(final Activity activity, final String errorMessage) {
     activity.runOnUiThread(new Runnable() {
       public void run() {
-        Toast.makeText(activity, message, Toast.LENGTH_LONG).show();
+        Toast.makeText(activity, errorMessage, Toast.LENGTH_LONG).show();
       }
     });
+  }
+
+  private static String getErrorMessage(String message) {
+    if (message == null) {
+      return "Error";
+    }
+    return "[Error]:" + message;
   }
 }

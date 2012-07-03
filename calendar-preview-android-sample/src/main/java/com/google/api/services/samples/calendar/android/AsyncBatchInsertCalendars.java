@@ -50,7 +50,7 @@ class AsyncBatchInsertCalendars extends CalendarAsyncTask {
 
             @Override
             public void onFailure(GoogleJsonError err, GoogleHeaders headers) throws IOException {
-              Utils.logAndShow(activity, CalendarSampleActivity.TAG, err.getMessage());
+              Utils.logAndShowError(activity, CalendarSampleActivity.TAG, err.getMessage());
             }
           });
     }

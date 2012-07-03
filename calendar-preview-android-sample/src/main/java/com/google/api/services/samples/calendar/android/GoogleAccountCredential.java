@@ -50,7 +50,7 @@ public final class GoogleAccountCredential implements HttpRequestInitializer {
 
   /**
    * @param context context
-   * @param scope scope to use on {@link GoogleAuthUtil#authenticate}
+   * @param scope scope to use on {@link GoogleAuthUtil#getToken}
    */
   private GoogleAccountCredential(Context context, String scope) {
     accountManager = new GoogleAccountManager(context);
@@ -123,8 +123,14 @@ public final class GoogleAccountCredential implements HttpRequestInitializer {
    * </p>
    */
   public Intent newChooseAccountIntent() {
-    return AccountPicker.newChooseAccountIntent(account, null,
-        new String[] {GoogleAccountManager.ACCOUNT_TYPE}, true, null, null, null, null);
+    return AccountPicker.newChooseAccountIntent(account,
+        null,
+        new String[] {GoogleAccountManager.ACCOUNT_TYPE},
+        true,
+        null,
+        null,
+        null,
+        null);
   }
 
   /**
@@ -141,7 +147,7 @@ public final class GoogleAccountCredential implements HttpRequestInitializer {
         try {
           return GoogleAuthUtil.getToken(context, accountName, scope);
         } catch (TransientAuthException e) {
-          // network or server error, so retry use
+          // network or server error, so retry using exponential backoff
           long backOffMillis = backOffPolicy.getNextBackOffMillis();
           if (backOffMillis == BackOffPolicy.STOP) {
             throw e;
@@ -172,7 +178,8 @@ public final class GoogleAccountCredential implements HttpRequestInitializer {
       request.getHeaders().setAuthorization("Bearer " + token);
     }
 
-    public boolean handleResponse(HttpRequest request, HttpResponse response, boolean supportsRetry) {
+    public boolean handleResponse(
+        HttpRequest request, HttpResponse response, boolean supportsRetry) {
       if (response.getStatusCode() == 401 && !received401) {
         received401 = true;
         GoogleAuthUtil.invalidateToken(context, token);
