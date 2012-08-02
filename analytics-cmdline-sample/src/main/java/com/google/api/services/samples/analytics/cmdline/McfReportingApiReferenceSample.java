@@ -46,7 +46,7 @@ import com.google.api.services.samples.shared.cmdline.oauth2.OAuth2Native;
  * @author nafi@google.com
  * @author api.nickm@gmail.com
  */
-public class McfApiReferenceSample {
+public class McfReportingApiReferenceSample {
 
   /** Global instance of the HTTP transport. */
   private static final HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
