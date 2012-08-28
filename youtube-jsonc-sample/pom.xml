@@ -113,10 +113,16 @@
     <dependency>
       <groupId>com.google.api-client</groupId>
       <artifactId>google-api-client</artifactId>
-      <version>1.10.3-beta</version>
+      <version>1.11.0-beta-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>com.google.http-client</groupId>
+      <artifactId>google-http-client-jackson2</artifactId>
+      <version>${project.http.version}</version>
     </dependency>
   </dependencies>
   <properties>
+    <project.http.version>1.11.0-beta-SNAPSHOT</project.http.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 </project>

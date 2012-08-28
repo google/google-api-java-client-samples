@@ -20,14 +20,13 @@
         apis console</a>
     </li>
     <li>If this is your first time, click "Create project..."</li>
-    <li>Activate the Google+ API and agree to the terms of service</li>
     <li>Click on "API Access", and then on "Create an OAuth 2.0 Client
       ID...".</li>
     <li>Enter a product name and click "Next".</li>
     <li>Select "Installed application" and click "Create client ID".</li>
     <li>Enter the "Client ID" and "Client secret" shown under "Client ID
-      for installed applications" into the <a
-      href="../shared/shared-sample-cmdline/src/main/resources/client_secrets.json">../shared/shared-sample-cmdline/src/main/resources/client_secrets.json</a>
+      for installed applications" into <a
+      href="src/main/resources/client_secrets.json">src/main/resources/client_secrets.json</a>
       file after checking out the code (otherwise you will get a <code>400
         INVALID_CLIENT</code> error in the browser when running the sample).</li>
   </ul>
@@ -36,7 +35,7 @@
 
   <p>
     <b>Prerequisites:</b> install <a href="http://java.com">Java 6</a>, <a
-      href="http://mercurial.selenic.com/">Mercurial</a> and <a
+      href="http://mercurial.selenic.com/">Mercurial</a>, and <a
       href="http://maven.apache.org/download.html">Maven</a>. You may need to
     set your
     <code>JAVA_HOME</code>
@@ -46,10 +45,8 @@
   <pre>
 cd <i>[someDirectory]</i>
 hg clone https://code.google.com/p/google-api-java-client.samples/ google-api-java-client-samples
-cd google-api-java-client-samples/shared/shared-sample-cmdline
+cd google-api-java-client-samples/plus-cmdline-sample
 <i>[editor]</i> src/main/resources/client_secrets.json
-mvn source:jar install
-cd ../../plus-cmdline-sample
 mvn compile
 mvn -q exec:java
   </pre>
@@ -92,16 +89,6 @@ mvn -q exec:java
         <li>Right-click on project plus-cmdline-sample</li>
         <li>Run As &gt; Java Application</li>
         <li>If asked, type "PlusSample" and click OK</li>
-      </ul>
-    </li>
-    <li>To enable logging:
-      <ul>
-        <li>Run &gt; Run Configurations...</li>
-        <li>Click on "Java Application &gt; PlusSample"</li>
-        <li>Click on "Arguments" tab</li>
-        <li>VM arguments: <code>-Djava.util.logging.config.file=${project_loc}/logging.properties</code>
-        </li>
-        <li>Click "Run"</li>
       </ul>
     </li>
   </ul>
