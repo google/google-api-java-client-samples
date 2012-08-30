@@ -15,21 +15,25 @@
 package com.google.api.services.samples.adsense.cmdline;
 
 import com.google.api.client.auth.oauth2.Credential;
+import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
+import com.google.api.client.extensions.java6.auth.oauth2.FileCredentialStore;
+import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
+import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
+import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.jackson.JacksonFactory;
+import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.adsense.Adsense;
 import com.google.api.services.adsense.AdsenseScopes;
 import com.google.api.services.adsense.model.Accounts;
 import com.google.api.services.adsense.model.AdClients;
 import com.google.api.services.adsense.model.AdUnits;
 import com.google.api.services.adsense.model.CustomChannels;
-import com.google.api.services.samples.shared.cmdline.oauth2.LocalServerReceiver;
-import com.google.api.services.samples.shared.cmdline.oauth2.OAuth2Native;
 
+import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
+import java.util.Collections;
 
 /**
  * A sample application that runs multiple requests against the AdSense Management API.
@@ -60,20 +64,43 @@ public class AdSenseSample {
   private static final int MAX_LIST_PAGE_SIZE = 50;
   private static final int MAX_REPORT_PAGE_SIZE = 50;
 
+  /** Authorizes the installed application to access user's protected data. */
+  private static Credential authorize() throws Exception {
+    // load client secrets
+    GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(
+        JSON_FACTORY, AdSenseSample.class.getResourceAsStream("/client_secrets.json"));
+    if (clientSecrets.getDetails().getClientId().startsWith("Enter")
+        || clientSecrets.getDetails().getClientSecret().startsWith("Enter ")) {
+      System.out.println("Enter Client ID and Secret from "
+          + "https://code.google.com/apis/console/?api=adsense into "
+          + "adsense-cmdline-sample/src/main/resources/client_secrets.json");
+      System.exit(1);
+    }
+    // set up file credential store
+    FileCredentialStore credentialStore = new FileCredentialStore(
+        new File(System.getProperty("user.home"), ".credentials/adsense.json"),
+        JSON_FACTORY);
+    // set up authorization code flow
+    GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
+        HTTP_TRANSPORT, JSON_FACTORY, clientSecrets,
+        Collections.singleton(AdsenseScopes.ADSENSE_READONLY)).setCredentialStore(
+        credentialStore).build();
+    // authorize
+    return new AuthorizationCodeInstalledApp(flow, new LocalServerReceiver()).authorize("user");
+  }
+
   /**
    * Performs all necessary setup steps for running requests against the API.
-   * @return An initialized Adsense service object.
+   * @return An initialized AdSense service object.
    * @throws Exception
    */
   private static Adsense initializeAdsense() throws Exception {
     // Authorization.
-    Credential credential = OAuth2Native.authorize(
-        HTTP_TRANSPORT, JSON_FACTORY, new LocalServerReceiver(),
-        Arrays.asList(AdsenseScopes.ADSENSE_READONLY));
+    Credential credential = authorize();
 
     // Set up AdSense Management API client.
     Adsense adsense = new Adsense.Builder(
-        new NetHttpTransport(), new JacksonFactory(), credential).setApplicationName(
+        new NetHttpTransport(), JSON_FACTORY, credential).setApplicationName(
         "Google-AdSenseSample/1.1").build();
 
     return adsense;
