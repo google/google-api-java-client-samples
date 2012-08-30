@@ -18,11 +18,10 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.jackson.JacksonFactory;
+import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.plus.Plus;
 import com.google.api.services.plus.PlusScopes;
 import com.google.api.services.plus.model.Activity;
-import com.google.common.base.Preconditions;
 import com.google.common.io.Files;
 
 import java.io.File;
@@ -35,7 +34,9 @@ import java.nio.charset.Charset;
 public class PlusServiceAccountSample {
 
   /** E-mail address of the service account. */
-  private static final String SERVICE_ACCOUNT_EMAIL = "[[INSERT SERVICE ACCOUNT EMAIL HERE]]";
+  private static final String SERVICE_ACCOUNT_EMAIL = "Enter service account e-mail from "
+      + "https://code.google.com/apis/console/?api=plus into SERVICE_ACCOUNT_EMAIL in "
+      + PlusServiceAccountSample.class;
 
   /** Global instance of the HTTP transport. */
   private static final HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
@@ -49,11 +50,15 @@ public class PlusServiceAccountSample {
     try {
       try {
         // check for valid setup
-        Preconditions.checkArgument(!SERVICE_ACCOUNT_EMAIL.startsWith("[["),
-            "Please enter your service account e-mail from the Google APIs Console to the "
-            + "SERVICE_ACCOUNT_EMAIL constant in %s", PlusServiceAccountSample.class.getName());
+        if (SERVICE_ACCOUNT_EMAIL.startsWith("Enter ")) {
+          System.err.println(SERVICE_ACCOUNT_EMAIL);
+          System.exit(1);
+        }
         String p12Content = Files.readFirstLine(new File("key.p12"), Charset.defaultCharset());
-        Preconditions.checkArgument(!p12Content.startsWith("Please"), p12Content);
+        if (p12Content.startsWith("Please")) {
+          System.err.println(p12Content);
+          System.exit(1);
+        }
         // service account credential (uncomment setServiceAccountUser for domain-wide delegation)
         GoogleCredential credential = new GoogleCredential.Builder().setTransport(HTTP_TRANSPORT)
             .setJsonFactory(JSON_FACTORY)
