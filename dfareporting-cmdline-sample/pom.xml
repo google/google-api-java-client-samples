@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.google.apis-samples</groupId>
   <artifactId>dfareporting-cmdline-sample</artifactId>
@@ -24,7 +25,7 @@
     <url>http://code.google.com/p/google-api-java-client/source/browse/?repo=samples</url>
   </scm>
 
- <repositories>
+  <repositories>
     <repository>
       <id>googleapis</id>
       <url>http://mavenrepo.google-api-java-client.googlecode.com/hg/</url>
@@ -117,15 +118,22 @@
     <dependency>
       <groupId>com.google.apis</groupId>
       <artifactId>google-api-services-dfareporting</artifactId>
-      <version>v1-rev1-1.7.1-beta</version>
+      <version>v1-rev20120519-1.8.0-beta</version>
     </dependency>
     <dependency>
-      <groupId>com.google.apis-samples</groupId>
-      <artifactId>shared-sample-cmdline</artifactId>
-      <version>1.3.1</version>
+      <groupId>com.google.http-client</groupId>
+      <artifactId>google-http-client-jackson2</artifactId>
+      <version>${project.http.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.google.oauth-client</groupId>
+      <artifactId>google-oauth-client-jetty</artifactId>
+      <version>${project.oauth.version}</version>
     </dependency>
   </dependencies>
   <properties>
+    <project.http.version>1.11.0-beta</project.http.version>
+    <project.oauth.version>1.11.0-beta</project.oauth.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 </project>

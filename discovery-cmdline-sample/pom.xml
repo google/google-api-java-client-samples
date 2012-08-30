@@ -8,7 +8,7 @@
   </parent>
   <groupId>com.google.apis-samples</groupId>
   <artifactId>discovery-cmdline-sample</artifactId>
-  <version>1.2.0</version>
+  <version>1</version>
   <name>Example for the Google APIs Discovery Service v1 using JSON and OAuth 2</name>
   <description>
     This is a command-line tool that can discover and execute authenticated Google API methods.
@@ -88,9 +88,9 @@
         <configuration>
           <mainClass>com.google.api.services.samples.discovery.cmdline.DiscoverySample</mainClass>
           <arguments>
-              <argument>discover</argument>
-              <argument>calendar</argument>
-              <argument>v3</argument>
+            <argument>discover</argument>
+            <argument>calendar</argument>
+            <argument>v3</argument>
           </arguments>
           <systemProperties>
             <systemProperty>
@@ -145,15 +145,22 @@
     <dependency>
       <groupId>com.google.apis</groupId>
       <artifactId>google-api-services-discovery</artifactId>
-      <version>v1-rev6-1.7.2-beta</version>
+      <version>v1-revsnapshot-1.8.0-beta</version>
     </dependency>
     <dependency>
-      <groupId>com.google.apis-samples</groupId>
-      <artifactId>shared-sample-cmdline</artifactId>
-      <version>1.3.2</version>
+      <groupId>com.google.http-client</groupId>
+      <artifactId>google-http-client-jackson2</artifactId>
+      <version>${project.http.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.google.oauth-client</groupId>
+      <artifactId>google-oauth-client-jetty</artifactId>
+      <version>${project.oauth.version}</version>
     </dependency>
   </dependencies>
   <properties>
+    <project.http.version>1.11.0-beta</project.http.version>
+    <project.oauth.version>1.11.0-beta</project.oauth.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 </project>
