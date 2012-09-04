@@ -121,7 +121,7 @@
     <dependency>
       <groupId>com.google.apis</groupId>
       <artifactId>google-api-services-fusiontables</artifactId>
-      <version>v1-rev20120806-1.8.0-beta</version>
+      <version>v1-rev5-1.8.0-beta</version>
     </dependency>
     <dependency>
       <groupId>com.google.http-client</groupId>

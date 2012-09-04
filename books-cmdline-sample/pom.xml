@@ -126,7 +126,7 @@
     <dependency>
       <groupId>com.google.apis</groupId>
       <artifactId>google-api-services-books</artifactId>
-      <version>v1-rev20120822-1.8.0-beta</version>
+      <version>v1-rev11-1.8.0-beta</version>
     </dependency>
     <dependency>
       <groupId>com.google.http-client</groupId>

@@ -126,7 +126,7 @@
     <dependency>
       <groupId>com.google.apis</groupId>
       <artifactId>google-api-services-analytics</artifactId>
-      <version>v3-rev20120808-1.8.0-beta</version>
+      <version>v3-rev15-1.8.0-beta</version>
     </dependency>
     <dependency>
       <groupId>com.google.http-client</groupId>
