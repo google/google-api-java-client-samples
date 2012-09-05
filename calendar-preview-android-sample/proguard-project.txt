@@ -12,16 +12,9 @@
 
 # Add any project specific keep options here:
 
--keepattributes Signature,RuntimeVisibleAnnotations,AnnotationDefault
-
-# Needed by google-http-client to keep generic types and @Key annotations accessed via reflection
-
--keepclassmembers class * {
-  @com.google.api.client.util.Key <fields>;
-}
-
-# Needed by Guava
-# See https://groups.google.com/forum/#!topic/guava-discuss/YCZzeCiIVoI
-
--dontwarn sun.misc.Unsafe
--dontwarn com.google.common.collect.MinMaxPriorityQueue
+# If your project uses WebView with JS, uncomment the following
+# and specify the fully qualified class name to the JavaScript interface
+# class:
+#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
+#   public *;
+#}

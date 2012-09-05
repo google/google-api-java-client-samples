@@ -14,7 +14,7 @@
 
 package com.google.api.services.samples.calendar.android;
 
-import com.google.api.client.extensions.android2.AndroidHttp;
+import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.gson.GsonFactory;
@@ -66,7 +66,7 @@ public final class CalendarSampleActivity extends Activity {
 adb shell setprop log.tag.HttpTransport DEBUG
    * </pre>
    */
-  private static final Level LOGGING_LEVEL = Level.OFF;
+  private static final Level LOGGING_LEVEL = Level.CONFIG;
 
   private static final String PREF_ACCOUNT_NAME = "accountName";
 
@@ -114,9 +114,9 @@ adb shell setprop log.tag.HttpTransport DEBUG
     SharedPreferences settings = getPreferences(Context.MODE_PRIVATE);
     credential.setAccountName(settings.getString(PREF_ACCOUNT_NAME, null));
     // Calendar client
-    client =
-        new com.google.api.services.calendar.Calendar.Builder(transport, jsonFactory, credential)
-            .setApplicationName("Google-CalendarAndroidSample/1.0").build();
+    client = new com.google.api.services.calendar.Calendar.Builder(
+        transport, jsonFactory, credential).setApplicationName("Google-CalendarAndroidSample/1.0")
+        .build();
     // if we already have an account, go ahead and fetch calendars now
     if (credential.getAccountName() != null) {
       AsyncLoadCalendars.run(this);
@@ -124,19 +124,18 @@ adb shell setprop log.tag.HttpTransport DEBUG
   }
 
   void refreshView() {
-    adapter =
-        new ArrayAdapter<CalendarInfo>(this, android.R.layout.simple_list_item_1,
-            model.toSortedArray()) {
+    adapter = new ArrayAdapter<CalendarInfo>(
+        this, android.R.layout.simple_list_item_1, model.toSortedArray()) {
 
-          @Override
-          public View getView(int position, View convertView, ViewGroup parent) {
-            // by default it uses toString; override to use summary instead
-            TextView view = (TextView) super.getView(position, convertView, parent);
-            CalendarInfo calendarInfo = getItem(position);
-            view.setText(calendarInfo.summary);
-            return view;
-          }
-        };
+        @Override
+      public View getView(int position, View convertView, ViewGroup parent) {
+        // by default it uses toString; override to use summary instead
+        TextView view = (TextView) super.getView(position, convertView, parent);
+        CalendarInfo calendarInfo = getItem(position);
+        view.setText(calendarInfo.summary);
+        return view;
+      }
+    };
     listView.setAdapter(adapter);
   }
 
@@ -229,13 +228,17 @@ adb shell setprop log.tag.HttpTransport DEBUG
           return true;
         case CONTEXT_DELETE:
           new AlertDialog.Builder(this).setTitle(R.string.delete_title)
-              .setMessage(calendarInfo.summary).setCancelable(false)
+              .setMessage(calendarInfo.summary)
+              .setCancelable(false)
               .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
 
                 public void onClick(DialogInterface dialog, int which) {
                   new AsyncDeleteCalendar(CalendarSampleActivity.this, calendarInfo).execute();
                 }
-              }).setNegativeButton(R.string.no, null).create().show();
+              })
+              .setNegativeButton(R.string.no, null)
+              .create()
+              .show();
           return true;
         case CONTEXT_BATCH_ADD:
           List<Calendar> calendars = new ArrayList<Calendar>();
