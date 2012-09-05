@@ -18,7 +18,7 @@ import com.google.api.client.googleapis.services.GoogleKeyInitializer;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.http.json.JsonHttpRequestInitializer;
 import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.jackson.JacksonFactory;
+import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.books.Books;
 import com.google.api.services.books.Books.Volumes.List;
 import com.google.api.services.books.model.Volume;
@@ -44,7 +44,8 @@ public class BooksSample {
   private static final NumberFormat PERCENT_FORMATTER = NumberFormat.getPercentInstance();
 
   private static void queryGoogleBooks(JsonFactory jsonFactory, String query) throws Exception {
-    JsonHttpRequestInitializer credential = new GoogleKeyInitializer(ClientCredentials.KEY);
+    ClientCredentials.errorIfNotSpecified();
+    JsonHttpRequestInitializer credential = new GoogleKeyInitializer(ClientCredentials.API_KEY);
     
     // Set up Books client.
     final Books books = new Books.Builder(new NetHttpTransport(), jsonFactory, null)
@@ -96,7 +97,7 @@ public class BooksSample {
         System.out.println(" (" + volumeInfo.getRatingsCount() + " rating(s))");
       }
       // Price (if any).
-      if ("FOR_SALE".equals(saleInfo.getSaleability())) {
+      if (saleInfo != null && "FOR_SALE".equals(saleInfo.getSaleability())) {
         double save = saleInfo.getListPrice().getAmount() - saleInfo.getRetailPrice().getAmount();
         if (save > 0.0) {
           System.out.print("List: " + CURRENCY_FORMATTER.format(saleInfo.getListPrice().getAmount())

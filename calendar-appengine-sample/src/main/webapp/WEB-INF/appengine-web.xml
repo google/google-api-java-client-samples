@@ -3,6 +3,8 @@
   <application>calendar-v2-atom-sample</application>
   <version>1</version>
 
+  <threadsafe>true</threadsafe>
+  
   <!-- Configure serving/caching of GWT files -->
   <static-files>
     <include path="**" />

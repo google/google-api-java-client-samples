@@ -29,7 +29,6 @@ import com.google.appengine.api.users.UserServiceFactory;
 import com.google.common.base.Preconditions;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Collections;
 
 import javax.servlet.http.HttpServletRequest;
@@ -47,19 +46,16 @@ class Utils {
   /** Global instance of the JSON factory. */
   static final JsonFactory JSON_FACTORY = new JacksonFactory();
 
-  private static final String RESOURCE_LOCATION = "/client_secrets.json";
-
   private static GoogleClientSecrets clientSecrets = null;
 
   static GoogleClientSecrets getClientCredential() throws IOException {
     if (clientSecrets == null) {
-      InputStream inputStream = Utils.class.getResourceAsStream(RESOURCE_LOCATION);
-      Preconditions.checkNotNull(inputStream, "missing resource %s", RESOURCE_LOCATION);
-      clientSecrets = GoogleClientSecrets.load(JSON_FACTORY, inputStream);
-      Preconditions.checkArgument(!clientSecrets.getDetails().getClientId().startsWith("[[")
-          && !clientSecrets.getDetails().getClientSecret().startsWith("[["),
-          "Please enter your client ID and secret from the Google APIs Console in %s from the "
-          + "root samples directory", RESOURCE_LOCATION);
+      clientSecrets = GoogleClientSecrets.load(
+          JSON_FACTORY, Utils.class.getResourceAsStream("/client_secrets.json"));
+      Preconditions.checkArgument(!clientSecrets.getDetails().getClientId().startsWith("Enter ")
+          && !clientSecrets.getDetails().getClientSecret().startsWith("Enter "),
+          "Enter Client ID and Secret from https://code.google.com/apis/console/?api=calendar "
+          + "into calendar-appengine-sample/src/main/resources/client_secrets.json");
     }
     return clientSecrets;
   }

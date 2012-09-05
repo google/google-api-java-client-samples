@@ -15,22 +15,28 @@
 package com.google.api.services.samples.fusiontables.cmdline;
 
 import com.google.api.client.auth.oauth2.Credential;
+import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
+import com.google.api.client.extensions.java6.auth.oauth2.FileCredentialStore;
+import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
+import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
+import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.jackson.JacksonFactory;
+import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.util.DateTime;
 import com.google.api.services.fusiontables.Fusiontables;
 import com.google.api.services.fusiontables.Fusiontables.Query.Sql;
 import com.google.api.services.fusiontables.Fusiontables.Table.Delete;
+import com.google.api.services.fusiontables.FusiontablesScopes;
 import com.google.api.services.fusiontables.model.Column;
 import com.google.api.services.fusiontables.model.Table;
 import com.google.api.services.fusiontables.model.TableList;
-import com.google.api.services.samples.shared.cmdline.oauth2.LocalServerReceiver;
-import com.google.api.services.samples.shared.cmdline.oauth2.OAuth2Native;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.UUID;
 
@@ -48,17 +54,39 @@ public class FusionTablesSample {
 
   private static Fusiontables fusiontables;
 
+  /** Authorizes the installed application to access user's protected data. */
+  private static Credential authorize() throws Exception {
+    // load client secrets
+    GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(
+        JSON_FACTORY, FusionTablesSample.class.getResourceAsStream("/client_secrets.json"));
+    if (clientSecrets.getDetails().getClientId().startsWith("Enter")
+        || clientSecrets.getDetails().getClientSecret().startsWith("Enter ")) {
+      System.out.println(
+          "Enter Client ID and Secret from https://code.google.com/apis/console/?api=fusiontables "
+          + "into fusiontables-cmdline-sample/src/main/resources/client_secrets.json");
+      System.exit(1);
+    }
+    // set up file credential store
+    FileCredentialStore credentialStore = new FileCredentialStore(
+        new File(System.getProperty("user.home"), ".credentials/fusiontables.json"), JSON_FACTORY);
+    // set up authorization code flow
+    GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
+        HTTP_TRANSPORT, JSON_FACTORY, clientSecrets,
+        Collections.singleton(FusiontablesScopes.FUSIONTABLES)).setCredentialStore(credentialStore)
+        .build();
+    // authorize
+    return new AuthorizationCodeInstalledApp(flow, new LocalServerReceiver()).authorize("user");
+  }
+
   public static void main(String[] args) {
     try {
       try {
         // authorization
-        Credential credential =
-            OAuth2Native.authorize(HTTP_TRANSPORT, JSON_FACTORY, new LocalServerReceiver(),
-                Arrays.asList("https://www.googleapis.com/auth/fusiontables"));
+        Credential credential = authorize();
         // set up global FusionTables instance
-        fusiontables =
-            new Fusiontables.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential).setApplicationName(
-                "Google-FusionTablesSample/1.0").build();
+        fusiontables = new Fusiontables.Builder(
+            HTTP_TRANSPORT, JSON_FACTORY, credential).setApplicationName(
+            "Google-FusionTablesSample/1.0").build();
         // run commands
         listTables();
         String tableId = createTable();
@@ -125,8 +153,9 @@ public class FusionTablesSample {
     table.setDescription("Sample Table");
 
     // Set columns for new table
-    table.setColumns(Arrays.asList(new Column().setName("Text").setType("STRING"), new Column()
-        .setName("Number").setType("NUMBER"), new Column().setName("Location").setType("LOCATION"),
+    table.setColumns(Arrays.asList(new Column().setName("Text").setType("STRING"),
+        new Column().setName("Number").setType("NUMBER"),
+        new Column().setName("Location").setType("LOCATION"),
         new Column().setName("Date").setType("DATETIME")));
 
     // Adds a new column to the table.
@@ -140,11 +169,9 @@ public class FusionTablesSample {
 
   /** Inserts a row in the newly created table for the authenticated user. */
   private static void insertData(String tableId) throws IOException {
-    Sql sql =
-        fusiontables.query().sql(
-            "INSERT INTO " + tableId + " (Text,Number,Location,Date) " + "VALUES ("
-                + "'Google Inc', " + "1, " + "'1600 Amphitheatre Parkway Mountain View, "
-                + "CA 94043, USA','" + new DateTime(new Date()) + "')");
+    Sql sql = fusiontables.query().sql("INSERT INTO " + tableId + " (Text,Number,Location,Date) "
+        + "VALUES (" + "'Google Inc', " + "1, " + "'1600 Amphitheatre Parkway Mountain View, "
+        + "CA 94043, USA','" + new DateTime(new Date()) + "')");
 
     try {
       sql.execute();

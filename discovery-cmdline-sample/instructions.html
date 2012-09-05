@@ -1,56 +1,78 @@
 <html>
 <title>Google Discovery API Sample</title>
 <body>
-<h2>Instructions for the Google API Discovery Service Sample (<a
-  href="http://goo.gl/cKxzB">http://goo.gl/cKxzB</a>)</h2>
+  <h2>
+    Instructions for the Google API Discovery Service Sample (<a
+      href="http://goo.gl/cKxzB">http://goo.gl/cKxzB</a>)
+  </h2>
 
-<h3>Usage</h3>
+  <h3>Usage</h3>
 
-Examples using <b><code>google call</code></b>:
+  Examples using
+  <b><code>google call</code></b>:
 
-<pre><code>  google call discovery v1 apis.getRest plus v1
-  google call plus v1 activities.list me public --max-results 3
-  google call calendar v3 calendarList.list
-  echo {\"summary\":\"temporary calendar\"} > post.json && google call calendar v3 calendars.insert post.json
-</code></pre>
+  <pre>
+google call discovery v1 apis.getRest plus v1
+google call plus v1 activities.list me public --max-results 3
+google call calendar v3 calendarList.list
+echo {\"summary\":\"temporary calendar\"} > /tmp/post.json && google call calendar v3 calendars.insert /tmp/post.json
+  </pre>
 
-Examples using <b><code>google discover</code></b>:
+  Examples using
+  <b><code>google discover</code></b>:
 
-<pre><code>  google discover
-  google discover plus v1
-  google discover moderator v1</code></pre>
+  <pre>
+google discover
+google discover plus v1
+google discover calendar v3
+</pre>
 
-<h3>Browse Online</h3>
+  <h3>Browse Online</h3>
 
-<ul>
-  <li><a
-    href="http://code.google.com/p/google-api-java-client/source/browse?repo=samples#hg/discovery-cmdline-sample">Browse
-  Source</a>, or main file <a
-    href="http://code.google.com/p/google-api-java-client/source/browse/discovery-cmdline-sample/src/main/java/com/google/api/services/samples/discovery/cmdline/DiscoverySample.java?repo=samples">DiscoverySample.java</a></li>
-</ul>
+  <ul>
+    <li><a
+      href="http://code.google.com/p/google-api-java-client/source/browse?repo=samples#hg/discovery-cmdline-sample">Browse
+        Source</a>, or main file <a
+      href="http://code.google.com/p/google-api-java-client/source/browse/discovery-cmdline-sample/src/main/java/com/google/api/services/samples/discovery/cmdline/DiscoverySample.java?repo=samples">DiscoverySample.java</a></li>
+  </ul>
 
-<h3>Installation Instructions</h3>
+  <h3>Register Your Application</h3>
 
-<p><b>Prerequisites:</b> install <a href="http://java.com">Java 6</a>, <a
-  href="http://mercurial.selenic.com/">Mercurial</a> and <a
-  href="http://maven.apache.org/download.html">Maven</a>. You may need to set
-your <code>JAVA_HOME</code>.</p>
+  <ul>
+    <li>Visit the <a href="https://code.google.com/apis/console/">Google
+        apis console</a>
+    </li>
+    <li>If this is your first time, click "Create project..."</li>
+    <li>Click on "API Access", and then on "Create an OAuth 2.0 Client
+      ID...".</li>
+    <li>Enter a product name and click "Next".</li>
+    <li>Select "Installed application" and click "Create client ID".</li>
+    <li>Enter the "Client ID" and "Client secret" shown under "Client ID
+      for installed applications" into <a
+      href="src/main/resources/client_secrets.json">src/main/resources/client_secrets.json</a>
+      file after checking out the code (otherwise you will get a <code>400
+        INVALID_CLIENT</code> error in the browser when running the sample).</li>
+  </ul>
 
-<p><b>Important:</b> after checking out the project, and before compiling
-and running it, you need to edit <code>client_secrets.json</code> to
-enter the required credentials information (see <a
-href="http://code.google.com/p/google-api-java-client/source/browse/shared/shared-sample-cmdline/src/main/java/com/google/api/services/samples/shared/cmdline/oauth2/OAuth2Native.java?repo=samples"
->instructions</a>). Otherwise, you will get a <code>400
-INVALID_CLIENT</code> error in the browser.</p>
+  <h3>Checkout Instructions</h3>
 
-<pre><code>cd <i>[someDirectory]</i>
+  <p>
+    <b>Prerequisites:</b> install <a href="http://java.com">Java 6</a>, <a
+      href="http://mercurial.selenic.com/">Mercurial</a>, and <a
+      href="http://maven.apache.org/download.html">Maven</a>. You may need to
+    set your
+    <code>JAVA_HOME</code>
+    .
+  </p>
+
+  <pre>
+    <code>cd <i>[someDirectory]</i>
 hg clone https://code.google.com/p/google-api-java-client.samples/ google-api-java-client-samples
-cd google-api-java-client-samples/shared/shared-sample-cmdline
+cd google-api-java-client-samples/discovery-cmdline-sample
 <i>[editor]</i> src/main/resources/client_secrets.json
-mvn source:jar install
-cd ../../discovery-cmdline-sample
 mvn assembly:assembly
-alias google="<i>[someDirectory]</i>/google-api-java-client-samples/discovery-cmdline-sample/run_sample"</code></pre>
+alias google="<i>[someDirectory]</i>/google-api-java-client-samples/discovery-cmdline-sample/run_sample"</code>
+  </pre>
 
 </body>
 </html>
