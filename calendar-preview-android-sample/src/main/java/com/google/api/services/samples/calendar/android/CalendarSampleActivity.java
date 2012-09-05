@@ -66,7 +66,7 @@ public final class CalendarSampleActivity extends Activity {
 adb shell setprop log.tag.HttpTransport DEBUG
    * </pre>
    */
-  private static final Level LOGGING_LEVEL = Level.CONFIG;
+  private static final Level LOGGING_LEVEL = Level.OFF;
 
   private static final String PREF_ACCOUNT_NAME = "accountName";
 
