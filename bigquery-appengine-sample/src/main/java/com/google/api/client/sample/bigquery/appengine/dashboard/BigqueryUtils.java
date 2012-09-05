@@ -34,11 +34,11 @@ import javax.servlet.http.HttpServletResponse;
 public class BigqueryUtils {
 
   private static final Logger log = Logger.getLogger(BigqueryUtils.class.getName());
-  private static final String projectId =
+  static final String projectId =
       System.getProperty("com.google.api.client.sample.bigquery.appengine.dashboard.projectId");
 
   private final String userId;
-  private final Bigquery bigquery;
+  final Bigquery bigquery;
   private Job job;
 
   public BigqueryUtils(String userId) throws IOException {
@@ -52,6 +52,7 @@ public class BigqueryUtils {
 
     if (jobId != null) {
       job = tryToDo(new Callable<Job>() {
+        @Override
         public Job call() throws Exception {
           return bigquery.jobs().get(projectId, jobId).execute();
         }
@@ -68,6 +69,7 @@ public class BigqueryUtils {
     final Job queryJob = makeJob(buildExampleQuery());
 
     job = tryToDo(new Callable<Job>() {
+      @Override
       public Job call() throws Exception {
         return bigquery.jobs().insert(projectId, queryJob).execute();
       }
@@ -84,9 +86,8 @@ public class BigqueryUtils {
   public String getJobErrorMessage() {
     if (job != null && job.getStatus().getErrorResult() != null) {
       return job.getStatus().getErrorResult().getMessage();
-    } else {
-      return "";
     }
+    return "";
   }
 
   public boolean jobIsDone() {
@@ -103,6 +104,7 @@ public class BigqueryUtils {
       final TableReference tableReference = job.getConfiguration().getQuery().getDestinationTable();
 
       Table table = tryToDo(new Callable<Table>() {
+        @Override
         public Table call() throws IOException {
           return bigquery.tables().get(tableReference.getProjectId(), tableReference.getDatasetId(),
               tableReference.getTableId()).execute();
@@ -122,6 +124,7 @@ public class BigqueryUtils {
       final TableReference tableReference = job.getConfiguration().getQuery().getDestinationTable();
 
       TableDataList tableDataList = tryToDo(new Callable<TableDataList>() {
+        @Override
         public TableDataList call() throws IOException {
           return bigquery.tabledata().list(tableReference.getProjectId(),
               tableReference.getDatasetId(), tableReference.getTableId()).execute();
