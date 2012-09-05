@@ -16,9 +16,9 @@ package com.google.api.services.samples.calendar.android;
 
 import com.google.android.gms.auth.GoogleAuthException;
 import com.google.android.gms.auth.GoogleAuthUtil;
-import com.google.android.gms.auth.TransientAuthException;
+import com.google.android.gms.auth.UserRecoverableAuthException;
 import com.google.android.gms.common.AccountPicker;
-import com.google.api.client.googleapis.extensions.android2.auth.GoogleAccountManager;
+import com.google.api.client.googleapis.extensions.android.accounts.GoogleAccountManager;
 import com.google.api.client.http.BackOffPolicy;
 import com.google.api.client.http.ExponentialBackOffPolicy;
 import com.google.api.client.http.HttpExecuteInterceptor;
@@ -146,7 +146,7 @@ public final class GoogleAccountCredential implements HttpRequestInitializer {
       try {
         try {
           return GoogleAuthUtil.getToken(context, accountName, scope);
-        } catch (TransientAuthException e) {
+        } catch (UserRecoverableAuthException e) {
           // network or server error, so retry using exponential backoff
           long backOffMillis = backOffPolicy.getNextBackOffMillis();
           if (backOffMillis == BackOffPolicy.STOP) {

@@ -91,19 +91,17 @@ public class DatastoreUtils {
     String timestamp = getUserEntityProperty("timestamp");
     if (timestamp == null) {
       return "never";
-    } else {
-      SimpleDateFormat format = new SimpleDateFormat("k:mm:ss 'on' MMMM d, yyyy zzz");
-      Date date = new Date(Long.valueOf(timestamp));
-      return format.format(date);
     }
+    SimpleDateFormat format = new SimpleDateFormat("k:mm:ss 'on' MMMM d, yyyy zzz");
+    Date date = new Date(Long.valueOf(timestamp));
+    return format.format(date);
   }
 
   private String getUserEntityProperty(String propertyName) {
     if (userEntity != null && userEntity.hasProperty(propertyName)) {
       return String.valueOf(userEntity.getProperty(propertyName));
-    } else {
-      return null;
     }
+    return null;
   }
 
   public List<Entity> getResults() {

@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>com.google</groupId>
     <artifactId>google</artifactId>
     <version>5</version>
   </parent>
-  <groupId>com.google.api.client</groupId>
+  <groupId>com.google.apis-samples</groupId>
   <artifactId>bigquery-appengine-sample</artifactId>
-  <packaging>war</packaging>
-  <version>1.0.0-SNAPSHOT</version>
+  <version>1</version>
   <name>bigquery-appengine-sample</name>
+  <packaging>war</packaging>
 
   <repositories>
     <repository>
@@ -29,10 +29,10 @@
   </pluginRepositories>
 
   <properties>
-    <bigquery.version>v2-rev18-1.7.2-beta</bigquery.version>
+    <bigquery.version>v2-rev28-1.8.0-beta</bigquery.version>
     <datanucleus.version>1.1.5</datanucleus.version>
-    <gae.version>1.6.4</gae.version>
-    <google-api-client.version>1.10.3-beta</google-api-client.version>
+    <gae.version>1.7.0</gae.version>
+    <google-api-client.version>1.11.0-beta</google-api-client.version>
     <webappDirectory>${project.build.directory}/${project.build.finalName}</webappDirectory>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
@@ -218,16 +218,6 @@
       <type>pom</type>
     </dependency>
     <dependency>
-      <groupId>com.google.apis-samples</groupId>
-      <artifactId>shared-sample-appengine</artifactId>
-      <version>1.3.2</version>
-    </dependency>
-    <dependency>
-      <groupId>com.google.api-client</groupId>
-      <artifactId>google-api-client</artifactId>
-      <version>${google-api-client.version}</version>
-    </dependency>
-    <dependency>
       <groupId>com.google.api-client</groupId>
       <artifactId>google-api-client-appengine</artifactId>
       <version>${google-api-client.version}</version>
@@ -236,6 +226,11 @@
       <groupId>com.google.apis</groupId>
       <artifactId>google-api-services-bigquery</artifactId>
       <version>${bigquery.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.google.code.gson</groupId>
+      <artifactId>gson</artifactId>
+      <version>2.1</version>
     </dependency>
     <dependency>
       <groupId>net.sf.jsr107cache</groupId>

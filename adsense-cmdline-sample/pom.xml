@@ -126,15 +126,22 @@
     <dependency>
       <groupId>com.google.apis</groupId>
       <artifactId>google-api-services-adsense</artifactId>
-      <version>v1.1-rev17-1.7.2-beta</version>
+      <version>v1.1-rev25-1.8.0-beta</version>
     </dependency>
     <dependency>
-      <groupId>com.google.apis-samples</groupId>
-      <artifactId>shared-sample-cmdline</artifactId>
-      <version>1.3.2</version>
+      <groupId>com.google.http-client</groupId>
+      <artifactId>google-http-client-jackson2</artifactId>
+      <version>${project.http.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.google.oauth-client</groupId>
+      <artifactId>google-oauth-client-jetty</artifactId>
+      <version>${project.oauth.version}</version>
     </dependency>
   </dependencies>
   <properties>
+    <project.http.version>1.11.0-beta</project.http.version>
+    <project.oauth.version>1.11.0-beta</project.oauth.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 </project>

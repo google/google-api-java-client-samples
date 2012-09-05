@@ -26,9 +26,8 @@ public class SampleDashboardException extends HttpResponseException {
       com.google.api.client.http.HttpResponseException hrex =
           (com.google.api.client.http.HttpResponseException) ex;
       return "The server encountered an exception: " + hrex.getStatusMessage();
-    } else {
-      return "The server encountered an exception: " + ex.getMessage();
     }
+    return "The server encountered an exception: " + ex.getMessage();
   }
 
   private static int getStatusFromException(Exception ex) {
@@ -36,8 +35,7 @@ public class SampleDashboardException extends HttpResponseException {
       com.google.api.client.http.HttpResponseException hrex =
           (com.google.api.client.http.HttpResponseException) ex;
       return hrex.getStatusCode();
-    } else {
-      return HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
     }
+    return HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
   }
 }

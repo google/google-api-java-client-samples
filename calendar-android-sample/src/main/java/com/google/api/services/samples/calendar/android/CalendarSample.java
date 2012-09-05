@@ -14,9 +14,9 @@
 
 package com.google.api.services.samples.calendar.android;
 
-import com.google.api.client.extensions.android2.AndroidHttp;
+import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.GoogleHeaders;
-import com.google.api.client.googleapis.extensions.android2.auth.GoogleAccountManager;
+import com.google.api.client.googleapis.extensions.android.accounts.GoogleAccountManager;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.googleapis.services.GoogleKeyInitializer;
 import com.google.api.client.http.HttpRequest;

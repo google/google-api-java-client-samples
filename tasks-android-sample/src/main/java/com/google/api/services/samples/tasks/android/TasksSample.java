@@ -14,9 +14,9 @@
 package com.google.api.services.samples.tasks.android;
 
 
-import com.google.api.client.extensions.android2.AndroidHttp;
+import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
-import com.google.api.client.googleapis.extensions.android2.auth.GoogleAccountManager;
+import com.google.api.client.googleapis.extensions.android.accounts.GoogleAccountManager;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.googleapis.services.GoogleKeyInitializer;
 import com.google.api.client.http.HttpTransport;
@@ -94,10 +94,9 @@ public final class TasksSample extends ListActivity {
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     ClientCredentials.errorIfNotSpecified();
-    service = new com.google.api.services.tasks.Tasks.Builder(transport, jsonFactory, credential)
-        .setApplicationName("Google-TasksAndroidSample/1.0")
-        .setJsonHttpRequestInitializer(new GoogleKeyInitializer(ClientCredentials.KEY))
-        .build();
+    service = new com.google.api.services.tasks.Tasks.Builder(
+        transport, jsonFactory, credential).setApplicationName("Google-TasksAndroidSample/1.0")
+        .setJsonHttpRequestInitializer(new GoogleKeyInitializer(ClientCredentials.KEY)).build();
     settings = getPreferences(MODE_PRIVATE);
     accountName = settings.getString(PREF_ACCOUNT_NAME, null);
     credential.setAccessToken(settings.getString(PREF_AUTH_TOKEN, null));

@@ -1,75 +1,107 @@
 <html>
 <title>calendar-appengine-sample</title>
 <body>
-<h2>Instructions for the Calendar App Engine Sample</h2>
+  <h2>Instructions for the Calendar App Engine Sample</h2>
 
-<h3>Try Online</h3>
+  <h3>Try Online</h3>
 
-<a href="http://calendar-v2-atom-sample.appspot.com/">http://calendar-v2-atom-sample.appspot.com/</a>
+  <a href="http://calendar-v2-atom-sample.appspot.com/">http://calendar-v2-atom-sample.appspot.com/</a>
 
-<h3>Browse Source Code</h3>
+  <h3>Browse Source Code</h3>
 
-<ul>
-  <li><a
-    href="http://code.google.com/p/google-api-java-client/source/browse/calendar-appengine-sample/?repo=samples">Browse Source</a>
-  or main file <a
-    href="http://code.google.com/p/google-api-java-client/source/browse/calendar-appengine-sample/src/main/java/com/google/api/services/samples/calendar/appengine/server/CalendarAppEngineSample.java?repo=samples">CalendarAppEngineSample.java</a></li>
-</ul>
+  <ul>
+    <li><a
+      href="http://code.google.com/p/google-api-java-client/source/browse/calendar-appengine-sample/?repo=samples">Browse
+        Source</a> or main file <a
+      href="http://code.google.com/p/google-api-java-client/source/browse/calendar-appengine-sample/src/main/java/com/google/api/services/samples/calendar/appengine/server/CalendarAppEngineSample.java?repo=samples">CalendarAppEngineSample.java</a></li>
+  </ul>
 
-<h3>Checkout Instructions</h3>
+  <h3>Register Your Application</h3>
 
-<p><b>Prerequisites:</b> install <a href="http://java.com">Java 6</a>, <a
-  href="http://code.google.com/webtoolkit/download.html">GWT</a>, <a
-  href="http://code.google.com/appengine/downloads.html">Google App Engine
-</a>, <a href="http://mercurial.selenic.com/">Mercurial</a>, and <a
-  href="http://maven.apache.org/download.html">Maven</a>. You may need
-to set your <code>JAVA_HOME</code>.</p>
+  <ul>
+    <li>Visit the <a
+      href="https://code.google.com/apis/console/?api=calendar">Google apis
+        console</a>
+    </li>
+    <li>If this is your first time, click "Create project..."</li>
+    <li>Click on "API Access", and then on "Create an OAuth 2.0 Client
+      ID...".</li>
+    <li>Enter a product name and click "Next".</li>
+    <li>Select "Web application", select "more options" and enter some
+      redirect URIs, for example
+      "https://calendar-v2-atom-sample.appspot.com/oauth2callback" and
+      "http://localhost:8888/oauth2callback". Click "Create client ID".</li>
+    <li>Enter the "Client ID" and "Client secret" shown under "Client ID
+      for installed applications" into <a
+      href="src/main/resources/client_secrets.json">src/main/resources/client_secrets.json</a>
+      file after checking out the code (otherwise you will get a <code>400
+        INVALID_CLIENT</code> error in the browser when running the sample).
+    </li>
+  </ul>
 
-<p><b>Important:</b> after checking out the project, and before compiling
-and running it, you need to edit <code>src/main/resources/client_secrets.json</code> to
-enter the required credentials information. You can find your client id and secret on your <a href="https://code.google.com/apis/console/?api=calendar">API console</a> for your Calendar project under API Access</li>. Otherwise, you will get a <code>400 INVALID_CLIENT</code> error in the browser.</p>
+  <h3>Checkout Instructions</h3>
 
-<pre><code>cd <i>[someDirectory]</i>
+  <p>
+    <b>Prerequisites:</b> install <a href="http://java.com">Java 6</a>, <a
+      href="http://code.google.com/webtoolkit/download.html">GWT</a>, <a
+      href="http://code.google.com/appengine/downloads.html">Google App
+      Engine</a>, <a href="http://mercurial.selenic.com/">Mercurial</a>, and <a
+      href="http://maven.apache.org/download.html">Maven</a>. You may need to
+    set your
+    <code>JAVA_HOME</code>
+    .
+  </p>
+
+  <pre>
+cd <i>[someDirectory]</i>
 hg clone https://code.google.com/p/google-api-java-client.samples/ google-api-java-client-samples
 cd google-api-java-client-samples/calendar-appengine-sample
 <i>[editor]</i> src/main/resources/client_secrets.json
-mvn clean package</code></pre>
+mvn clean package
+  </pre>
 
-<h3>Setup Project in Eclipse 3.5/3.6</h3>
+  <h3>Setup Project in Eclipse</h3>
 
-<p><b>Prerequisites:</b> install <a href="http://www.eclipse.org/downloads/">Eclipse</a>,
-<a href="http://code.google.com/eclipse/">Google Plugin for Eclipse</a>, and the
-<a href="http://javaforge.com/project/HGE">Mercurial plugin</a>.</p>
+  <p>
+    <b>Prerequisites:</b> install <a href="http://www.eclipse.org/downloads/">Eclipse</a>,
+    <a href="http://code.google.com/eclipse/">Google Plugin for Eclipse</a>, and
+    the <a href="http://javaforge.com/project/HGE">Mercurial plugin</a>.
+  </p>
 
-<ul>
-  <li>Setup Eclipse Preferences
   <ul>
-    <li>Window &gt; Preferences... (or on Mac, Eclipse &gt; Preferences...)</li>
-    <li>Select Maven
-    <ul>
-      <li>check on "Download Artifact Sources"</li>
-      <li>check on "Download Artifact JavaDoc"</li>
-    </ul>
+    <li>Setup Eclipse Preferences
+      <ul>
+        <li>Window &gt; Preferences... (or on Mac, Eclipse &gt;
+          Preferences...)</li>
+        <li>Select Maven
+          <ul>
+            <li>check on "Download Artifact Sources"</li>
+            <li>check on "Download Artifact JavaDoc"</li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li>Import <code>calendar-appengine-sample</code> project
+      <ul>
+        <li>File &gt; Import...</li>
+        <li>Select "General &gt; Existing Project into Workspace" and click
+          "Next"</li>
+        <li>Click "Browse" next to "Select root directory", find <code>
+            <i>[someDirectory]</i>/google-api-java-client-samples/calendar-appengine-sample
+          </code> and click "Next"
+        </li>
+        <li>Click "Finish"</li>
+        <li>NOTE: please ignore the "The App Engine SDK JAR * is missing in
+          the WEB-INF/lib directory" error messages.</li>
+      </ul>
+    </li>
+    <li>Run
+      <ul>
+        <li>Right-click on project calendar-appengine-sample</li>
+        <li>Run As &gt; Web Application</li>
+      </ul>
     </li>
   </ul>
-  </li>
-  <li>Import <code>calendar-appengine-sample</code> project
-  <ul>
-    <li>File &gt; Import...</li>
-    <li>Select "General &gt; Existing Project into Workspace" and click
-    "Next"</li>
-    <li>Click "Browse" next to "Select root directory", find <code><i>[someDirectory]</i>/google-api-java-client-samples/calendar-appengine-sample</code>
-    and click "Next"</li>
-    <li>Click "Finish"</li>
-  </ul>
-  </li>
-  <li>Run
-  <ul>
-    <li>Right-click on project calendar-appengine-sample</li>
-    <li>Run As &gt; Web Application</li>
-  </ul>
-  </li>
-</ul>
 
 </body>
 </html>

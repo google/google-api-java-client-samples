@@ -25,7 +25,8 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson.JacksonFactory;
 import com.google.api.services.bigquery.Bigquery;
 import com.google.api.services.bigquery.BigqueryScopes;
-import com.google.api.services.samples.shared.appengine.OAuth2ClientCredentials;
+import com.google.common.base.Preconditions;
+
 import java.io.IOException;
 import java.util.Collections;
 
@@ -48,13 +49,18 @@ class ServiceUtils {
   /** Global instance of the Credential store. */
   static final AppEngineCredentialStore CREDENTIAL_STORE = new AppEngineCredentialStore();
 
+  private static GoogleClientSecrets clientSecrets = null;
+
   static GoogleClientSecrets getClientCredential() throws IOException {
-    GoogleClientSecrets gcs = new GoogleClientSecrets();
-    GoogleClientSecrets.Details details = new GoogleClientSecrets.Details();
-    details.setClientId(OAuth2ClientCredentials.getClientId());
-    details.setClientSecret(OAuth2ClientCredentials.getClientSecret());
-    gcs.setWeb(details);
-    return gcs;
+    if (clientSecrets == null) {
+      clientSecrets = GoogleClientSecrets.load(
+          JSON_FACTORY, ServiceUtils.class.getResourceAsStream("/client_secrets.json"));
+      Preconditions.checkArgument(!clientSecrets.getDetails().getClientId().startsWith("Enter ")
+          && !clientSecrets.getDetails().getClientSecret().startsWith("Enter "),
+          "Enter Client ID and Secret from https://code.google.com/apis/console/?api=bigquery "
+          + "into bigquery-appengine-sample/src/main/resources/client_secrets.json");
+    }
+    return clientSecrets;
   }
 
   static String getRedirectUri(HttpServletRequest req) {
