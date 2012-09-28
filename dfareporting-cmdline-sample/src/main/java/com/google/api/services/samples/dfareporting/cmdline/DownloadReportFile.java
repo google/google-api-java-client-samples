@@ -47,7 +47,7 @@ public class DownloadReportFile {
     System.out.printf("The ID number of this report file is %s%n", reportFile.getId());
     System.out.println("=================================================================");
 
-    String url = reportFile.getUrls().getCsv().getApiUrl();
+    String url = reportFile.getUrls().getApiUrl();
     GenericUrl genericUrl = new GenericUrl(url);
     HttpRequestFactory httpRequestFactory = reporting.getRequestFactory();
     HttpRequest httpRequest = httpRequestFactory.buildGetRequest(genericUrl);

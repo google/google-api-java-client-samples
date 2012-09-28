@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2012 Google Inc.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied. See the License for the specific language governing permissions and limitations under
@@ -50,7 +50,7 @@ import java.util.List;
  * <li>Generating a new report file from a report</li>
  * <li>Downloading the contents of a report file</li>
  * </ul>
- * 
+ *
  * @author jdilallo@google.com (Joseph DiLallo)
  */
 public class DfaReportingSample {
@@ -90,7 +90,7 @@ public class DfaReportingSample {
 
   /**
    * Performs all necessary setup steps for running requests against the API.
-   * 
+   *
    * @return An initialized Dfareporting service object.
    * @throws Exception
    */
@@ -103,7 +103,7 @@ public class DfaReportingSample {
 
   /**
    * Runs all the DFA Reporting API samples.
-   * 
+   *
    * @param args command-line arguments.
    */
   public static void main(String[] args) {
@@ -125,23 +125,43 @@ public class DfaReportingSample {
         // Get an example user profile ID, so we can run the following samples.
         Long userProfileId = userProfiles.getItems().get(0).getProfileId();
 
-        DimensionValueList advertisers =
-            GetAdvertisers.query(reporting, userProfileId, startDate, endDate, MAX_LIST_PAGE_SIZE);
+        DimensionValueList advertisers = GetDimensionValues.query(reporting, "dfa:advertiser",
+            userProfileId, startDate, endDate, MAX_LIST_PAGE_SIZE);
 
         if ((advertisers.getItems() != null) && !advertisers.getItems().isEmpty()) {
           // Get an advertiser, so we can run the rest of the samples.
           DimensionValue advertiser = advertisers.getItems().get(0);
 
-          Report report =
-              CreateReport.insert(reporting, userProfileId, advertiser, startDate, endDate);
-          GetAllReports.list(reporting, userProfileId, MAX_REPORT_PAGE_SIZE);
-          File file = GenerateReportFile.run(reporting, userProfileId, report);
+          Report standardReport = CreateStandardReport.insert(reporting, userProfileId,
+              advertiser, startDate, endDate);
+          File file = GenerateReportFile.run(reporting, userProfileId, standardReport);
 
           if (file != null) {
             // If the report file generation did not fail, display results.
             DownloadReportFile.run(reporting, file);
           }
         }
+
+        DimensionValueList floodlightConfigIds = GetDimensionValues.query(reporting,
+            "dfa:floodlightConfigId", userProfileId, startDate, endDate, MAX_LIST_PAGE_SIZE);
+
+        if ((floodlightConfigIds.getItems() != null) &&
+            !floodlightConfigIds.getItems().isEmpty()) {
+          // Get a Floodlight Config ID, so we can run the rest of the samples.
+          DimensionValue floodlightConfigId = floodlightConfigIds.getItems().get(0);
+
+          Report floodlightReport =
+              CreateFloodlightReport.insert(reporting, userProfileId, floodlightConfigId,
+                  startDate, endDate);
+          File file = GenerateReportFile.run(reporting, userProfileId, floodlightReport);
+
+          if (file != null) {
+            // If the report file generation did not fail, display results.
+            DownloadReportFile.run(reporting, file);
+          }
+        }
+
+        GetAllReports.list(reporting, userProfileId, MAX_REPORT_PAGE_SIZE);
       } catch (GoogleJsonResponseException e) {
         // Message already includes parsed response.
         System.err.println(e.getMessage());

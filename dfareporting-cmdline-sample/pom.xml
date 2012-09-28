@@ -118,7 +118,7 @@
     <dependency>
       <groupId>com.google.apis</groupId>
       <artifactId>google-api-services-dfareporting</artifactId>
-      <version>v1-rev1-1.8.0-beta</version>
+      <version>v1.1-rev1-1.8.0-beta</version>
     </dependency>
     <dependency>
       <groupId>com.google.http-client</groupId>
