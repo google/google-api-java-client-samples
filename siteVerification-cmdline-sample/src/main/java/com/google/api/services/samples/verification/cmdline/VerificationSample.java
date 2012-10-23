@@ -23,12 +23,11 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
 import com.google.api.client.http.HttpResponseException;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
-import com.google.api.client.http.json.JsonHttpRequest;
-import com.google.api.client.http.json.JsonHttpRequestInitializer;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.siteVerification.SiteVerification;
 import com.google.api.services.siteVerification.SiteVerificationRequest;
+import com.google.api.services.siteVerification.SiteVerificationRequestInitializer;
 import com.google.api.services.siteVerification.SiteVerificationScopes;
 import com.google.api.services.siteVerification.model.SiteVerificationWebResourceGettokenRequest;
 import com.google.api.services.siteVerification.model.SiteVerificationWebResourceGettokenRequest.Site;
@@ -102,11 +101,10 @@ public class VerificationSample {
     SiteVerification siteVerification = new SiteVerification.Builder(
         HTTP_TRANSPORT, JSON_FACTORY, credential).setApplicationName(
         "Google-SiteVerificationSample/1.0")
-        .setJsonHttpRequestInitializer(new JsonHttpRequestInitializer() {
+        .setGoogleClientRequestInitializer(new SiteVerificationRequestInitializer() {
             @Override
-          public void initialize(JsonHttpRequest request) {
-            SiteVerificationRequest verificationRequest = (SiteVerificationRequest) request;
-            verificationRequest.setPrettyPrint(true);
+          public void initializeSiteVerificationRequest(SiteVerificationRequest<?> request) {
+            request.setPrettyPrint(true);
           }
         }).build();
 

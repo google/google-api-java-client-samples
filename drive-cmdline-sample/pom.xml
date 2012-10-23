@@ -123,7 +123,7 @@
     <dependency>
       <groupId>com.google.apis</groupId>
       <artifactId>google-api-services-drive</artifactId>
-      <version>v2-rev9-1.8.0-beta</version>
+      <version>v2-rev20121016-1.9.0-beta</version>
     </dependency>
     <dependency>
       <groupId>com.google.http-client</groupId>
@@ -142,8 +142,8 @@
     </dependency>
   </dependencies>
   <properties>
-    <project.http.version>1.11.0-beta</project.http.version>
-    <project.oauth.version>1.11.0-beta</project.oauth.version>
+    <project.http.version>1.12.0-beta-SNAPSHOT</project.http.version>
+    <project.oauth.version>1.12.0-beta-SNAPSHOT</project.oauth.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 </project>

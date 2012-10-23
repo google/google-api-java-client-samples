@@ -20,16 +20,19 @@
         apis console</a>
     </li>
     <li>If this is your first time, click "Create project..."</li>
+    <li>Otherwise, click on the drop down under the "Google apis" logo at
+      the top left, and click "Create..." under "Other projects"</li>
     <li>Activate the DFA Reporting API and agree to the terms of service</li>
     <li>Click on "API Access", and then on "Create an OAuth 2.0 Client
       ID...".</li>
     <li>Enter a product name and click "Next".</li>
     <li>Select "Installed application" and click "Create client ID".</li>
-    <li>Enter the "Client ID" and "Client secret" shown under "Client ID
-      for installed applications" into <a
-      href="src/main/resources/client_secrets.json">src/main/resources/client_secrets.json</a>
-      file after checking out the code (otherwise you will get a <code>400
-        INVALID_CLIENT</code> error in the browser when running the sample).
+    <li>In the newly created "Client ID for installed applications", click
+      "Download JSON" on the right side. Later on after you check out the sample
+      project, you will copy this downloaded file (e.g. <code>~/Downloads/client_secrets.json</code>)
+      to <a href="src/main/resources/client_secrets.json">src/main/resources/client_secrets.json</a>.
+      If you skip this step, when trying to run the sample you will get a <code>400
+      INVALID_CLIENT</code> error in the browser.
     </li>
   </ul>
 
@@ -48,7 +51,7 @@
 cd <i>[someDirectory]</i>
 hg clone https://code.google.com/p/google-api-java-client.samples/ google-api-java-client-samples
 cd google-api-java-client-samples/dfareporting-cmdline-sample
-<i>[editor]</i> src/main/resources/client_secrets.json
+cp ~/Downloads/client_secrets.json src/main/resources/client_secrets.json
 mvn compile
 mvn -q exec:java
   </pre>
