@@ -1,0 +1,197 @@
+/*
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
+ */
+
+package com.google.api.services.samples.adsensehost.cmdline;
+
+import com.google.api.client.auth.oauth2.Credential;
+import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
+import com.google.api.client.extensions.java6.auth.oauth2.FileCredentialStore;
+import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
+import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
+import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
+import com.google.api.client.http.HttpTransport;
+import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.services.adsensehost.Adsensehost;
+import com.google.api.services.adsensehost.AdsensehostScopes;
+import com.google.api.services.adsensehost.model.AdClients;
+import com.google.api.services.adsensehost.model.AdUnit;
+import com.google.api.services.adsensehost.model.CustomChannel;
+import com.google.api.services.adsensehost.model.UrlChannel;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Collections;
+
+/**
+ * A sample application that runs multiple requests against the AdSense Host API.
+ * These include:
+ * <ul>
+ * <li>Getting a list of all host ad clients</li>
+ * <li>Getting a list of all host custom channels</li>
+ * <li>Adding a new host custom channel</li>
+ * <li>Updating an existing host custom channel</li>
+ * <li>Deleting a host custom channel</li>
+ * <li>Getting a list of all host URL channels</li>
+ * <li>Adding a new host URL channel</li>
+ * <li>Deleting an existing host URL channel</li>
+ * <li>Running a report for a host ad client, for the past 7 days</li>
+ * </ul>
+ *
+ * If you give PUB_ACCOUNT_ID a real account ID, the following requests will also run:
+ * <ul>
+ * <li>Getting a list of all publisher ad clients</li>
+ * <li>Getting a list of all publisher ad units</li>
+ * <li>Adding a new ad unit</li>
+ * <li>Updating an existing ad unit</li>
+ * <li>Deleting an ad unit</li>
+ * <li>Running a report for a publisher ad client, for the past 7 days</li>
+ * </ul>
+ *
+ * Other samples are included for illustration purposes, but won't be run:
+ * <ul>
+ * <li>Getting the account data for an existing publisher, given their ad client ID</li>
+ * <li>Starting an association session</li>
+ * <li>Verifying an association session</li>
+ * </ul>
+ */
+public class AdSenseHostSample {
+
+  // Global instance of the HTTP transport.
+  private static final HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
+
+  // Global instance of the JSON factory.
+  private static final JsonFactory JSON_FACTORY = new JacksonFactory();
+
+  // Maximum page size for list calls.
+  private static final long MAX_LIST_PAGE_SIZE = 50;
+  // Change this constant to an example publisher account ID if you want the
+  // publisher samples to run.
+  private static final String PUB_ACCOUNT_ID = "INSERT_CLIENT_PUB_ID_HERE";
+
+  /** Authorizes the installed application to access user's protected data. */
+  private static Credential authorize() throws Exception {
+    // load client secrets
+    GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(
+        JSON_FACTORY, AdSenseHostSample.class.getResourceAsStream("/client_secrets.json"));
+    if (clientSecrets.getDetails().getClientId().startsWith("Enter")
+        || clientSecrets.getDetails().getClientSecret().startsWith("Enter ")) {
+      System.out.println("Enter Client ID and Secret from "
+          + "https://code.google.com/apis/console/?api=adsensehost into "
+          + "adsensehost-cmdline-sample/src/main/resources/client_secrets.json");
+      System.exit(1);
+    }
+    // set up file credential store
+    FileCredentialStore credentialStore = new FileCredentialStore(
+        new File(System.getProperty("user.home"), ".credentials/adsensehost.json"),
+        JSON_FACTORY);
+    // set up authorization code flow
+    GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
+        HTTP_TRANSPORT, JSON_FACTORY, clientSecrets,
+        Collections.singleton(AdsensehostScopes.ADSENSEHOST)).setCredentialStore(
+        credentialStore).build();
+    // authorize
+    return new AuthorizationCodeInstalledApp(flow, new LocalServerReceiver()).authorize("user");
+  }
+
+  /**
+   * Performs all necessary setup steps for running requests against the API.
+   * @return An initialized Adsensehost service object.
+   * @throws Exception
+   */
+  private static Adsensehost initializeAdsensehost() throws Exception {
+    // Authorization.
+    Credential credential = authorize();
+
+    // Set up AdSense Host API client.
+    Adsensehost adsensehost = new Adsensehost.Builder(
+        new NetHttpTransport(), new JacksonFactory(), credential).setApplicationName(
+        "Google-AdSenseHostSample/1.0").build();
+
+    return adsensehost;
+  }
+
+  /**
+   * Returns a unique value based on the system time.
+   */
+  public static String getUniqueName() {
+    return String.valueOf(System.currentTimeMillis());
+  }
+
+  /**
+   * Runs all the AdSense Host API samples.
+   * @param args command-line arguments.
+   */
+  public static void main(String[] args) {
+    try {
+      try {
+        Adsensehost service = initializeAdsensehost();
+
+        AdClients adClients = GetAllAdClientsForHost.run(service, MAX_LIST_PAGE_SIZE);
+        if ((adClients.getItems() != null) && !adClients.getItems().isEmpty()) {
+          // Get a host ad client ID, so we can run the rest of the samples.
+          String exampleHostAdClientId = adClients.getItems().get(0).getId();
+
+          GetAllCustomChannelsForHost.run(service, exampleHostAdClientId, MAX_LIST_PAGE_SIZE);
+
+          CustomChannel customChannel = AddCustomChannelToHost.run(service,
+              exampleHostAdClientId);
+
+          customChannel = UpdateCustomChannelOnHost.run(service, exampleHostAdClientId,
+              customChannel.getId());
+
+          DeleteCustomChannelOnHost.run(service, exampleHostAdClientId, customChannel.getId());
+
+          GetAllUrlChannelsForHost.run(service, exampleHostAdClientId, MAX_LIST_PAGE_SIZE);
+
+          UrlChannel urlChannel = AddUrlChannelToHost.run(service, exampleHostAdClientId);
+
+          DeleteUrlChannelOnHost.run(service, exampleHostAdClientId, urlChannel.getId());
+
+          GenerateReportForHost.run(service, exampleHostAdClientId);
+        } else {
+          System.out.println("No host ad clients found, unable to run remaining host samples.");
+        }
+
+        if (!PUB_ACCOUNT_ID.equals("INSERT_CLIENT_PUB_ID_HERE")) {
+          AdClients pubAdClients = GetAllAdClientsForPublisher.run(service, PUB_ACCOUNT_ID,
+              MAX_LIST_PAGE_SIZE);
+          if ((pubAdClients.getItems() != null) && !pubAdClients.getItems().isEmpty()) {
+            // Get a publisher ad client ID, so we can run the rest of the samples.
+            String examplePubAdClientId = pubAdClients.getItems().get(0).getId();
+
+            GetAllAdUnitsForPublisher.run(service, PUB_ACCOUNT_ID, examplePubAdClientId,
+                MAX_LIST_PAGE_SIZE);
+
+            AdUnit adUnit = AddAdUnitToPublisher.run(service, PUB_ACCOUNT_ID, examplePubAdClientId);
+
+            UpdateAdUnitOnPublisher.run(service, PUB_ACCOUNT_ID, examplePubAdClientId,
+                adUnit.getId());
+
+            DeleteAdUnitOnPublisher.run(service, PUB_ACCOUNT_ID, examplePubAdClientId,
+                adUnit.getId());
+
+            GenerateReportForPublisher.run(service, PUB_ACCOUNT_ID, examplePubAdClientId);
+          } else {
+            System.out.println(
+                "No publisher ad clients found, unable to run remaining publisher samples.");
+          }
+        }
+      } catch (IOException e) {
+        System.err.println(e.getMessage());
+      }
+    } catch (Throwable t) {
+      t.printStackTrace();
+    }
+  }
+}
