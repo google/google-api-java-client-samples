@@ -2,6 +2,7 @@
 
 package com.google.api.client.sample.bigquery.appengine.dashboard;
 
+import com.google.api.services.bigquery.model.TableCell;
 import com.google.api.services.bigquery.model.TableFieldSchema;
 import com.google.api.services.bigquery.model.TableRow;
 import com.google.appengine.api.datastore.DatastoreService;
@@ -135,7 +136,7 @@ public class DatastoreUtils {
 
       // Copy the row into the entity -- fields become properties.
       Iterator<TableFieldSchema> fieldsIterator = fields.iterator();
-      Iterator<TableRow.F> dataIterator = rowsIterator.next().getF().iterator();
+      Iterator<TableCell> dataIterator = rowsIterator.next().getF().iterator();
 
       Preconditions.checkState(fieldsIterator.hasNext() == dataIterator.hasNext());
       while (fieldsIterator.hasNext() && dataIterator.hasNext()) {
