@@ -31,17 +31,15 @@ public class GetCreative extends BaseSample {
   @Override
   public void execute(Adexchangebuyer client) throws IOException {
     int accountId = getIntInput("AccountId", "Enter the creative account id");
-    long adGroupId = getLongInput("AdGroupId", "Enter the creative ad group id");
     String buyerCreativeId = getStringInput("BuyerCreativeId", "Enter the buyer creative id");
 
     try {
-      Creative creative = client.creatives().get(accountId, buyerCreativeId, adGroupId).execute();
+      Creative creative = client.creatives().get(accountId, buyerCreativeId).execute();
 
       System.out.println("========================================");
       System.out.println("Found creative");
       System.out.println("========================================");
       System.out.println("Account id: " + creative.getAccountId());
-      System.out.println("Ad group id: " + creative.getAdgroupId());
       System.out.println("Buyer Creative id: " + creative.getBuyerCreativeId());
       System.out.println("Advertiser id: " + creative.getAdvertiserId());
       System.out.println("Status: " + creative.getStatus());

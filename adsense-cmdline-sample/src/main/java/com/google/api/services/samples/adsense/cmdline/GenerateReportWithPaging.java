@@ -14,8 +14,8 @@
 
 package com.google.api.services.samples.adsense.cmdline;
 
-import com.google.api.services.adsense.Adsense;
-import com.google.api.services.adsense.Adsense.Reports.Generate;
+import com.google.api.services.adsense.AdSense;
+import com.google.api.services.adsense.AdSense.Reports.Generate;
 import com.google.api.services.adsense.model.AdsenseReportsGenerateResponse;
 
 import java.text.DateFormat;
@@ -52,7 +52,7 @@ public class GenerateReportWithPaging {
    * @param maxReportPageSize the maximum size page to retrieve.
    * @throws Exception
    */
-  public static void run(Adsense adsense, String adClientId, int maxReportPageSize)
+  public static void run(AdSense adsense, String adClientId, int maxReportPageSize)
       throws Exception {
     System.out.println("=================================================================");
     System.out.printf("Running report for ad client %s\n", adClientId);

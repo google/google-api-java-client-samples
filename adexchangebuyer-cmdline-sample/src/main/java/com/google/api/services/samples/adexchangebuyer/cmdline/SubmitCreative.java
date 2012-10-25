@@ -38,7 +38,6 @@ public class SubmitCreative extends BaseSample {
   @Override
   public void execute(Adexchangebuyer client) throws IOException {
     int accountId = getIntInput("AccountId", "Enter the creative account id");
-    long adGroupId = getLongInput("AdGroupId", "Enter the creative ad group id");
     String buyerCreativeId = getStringInput("BuyerCreativeId", "Enter the buyer creative id");
     String advertiserName = getStringInput("AdvertiserName", "Enter the advertiser name");
     String clickThroughUrlsStr = getStringInput(
@@ -51,7 +50,6 @@ public class SubmitCreative extends BaseSample {
 
     Creative testCreative = new Creative();
     testCreative.setAccountId(accountId);
-    testCreative.setAdgroupId(adGroupId);
     testCreative.setAdvertiserName(advertiserName);
     testCreative.setBuyerCreativeId(buyerCreativeId);
     List<String> clickThroughUrls = new ArrayList<String>();
@@ -67,7 +65,6 @@ public class SubmitCreative extends BaseSample {
     System.out.println("Submitted creative");
     System.out.println("========================================");
     System.out.println("Account id: " + response.getAccountId());
-    System.out.println("Ad group id: " + response.getAdgroupId());
     System.out.println("Buyer Creative id: " + response.getBuyerCreativeId());
     System.out.println("Advertiser id: " + response.getAdvertiserId());
     System.out.println("Status: " + response.getStatus());

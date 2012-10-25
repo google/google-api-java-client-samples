@@ -14,7 +14,7 @@
 
 package com.google.api.services.samples.adsense.cmdline;
 
-import com.google.api.services.adsense.Adsense;
+import com.google.api.services.adsense.AdSense;
 import com.google.api.services.adsense.model.CustomChannel;
 import com.google.api.services.adsense.model.CustomChannels;
 
@@ -38,7 +38,7 @@ public class GetAllCustomChannels {
    * @return the last page of custom channels.
    * @throws Exception
    */
-  public static CustomChannels run(Adsense adsense, String adClientId, int maxPageSize)
+  public static CustomChannels run(AdSense adsense, String adClientId, int maxPageSize)
       throws Exception {
     System.out.println("=================================================================");
     System.out.printf("Listing all custom channels for ad client %s\n", adClientId);

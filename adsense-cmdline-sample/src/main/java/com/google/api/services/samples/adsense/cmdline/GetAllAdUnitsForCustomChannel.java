@@ -14,7 +14,7 @@
 
 package com.google.api.services.samples.adsense.cmdline;
 
-import com.google.api.services.adsense.Adsense;
+import com.google.api.services.adsense.AdSense;
 import com.google.api.services.adsense.model.AdUnit;
 import com.google.api.services.adsense.model.AdUnits;
 
@@ -38,7 +38,7 @@ public class GetAllAdUnitsForCustomChannel {
    * @param maxPageSize the maximum page size to retrieve.
    * @throws Exception
    */
-  public static void run(Adsense adsense, String adClientId, String customChannelId,
+  public static void run(AdSense adsense, String adClientId, String customChannelId,
       int maxPageSize) throws Exception {
     System.out.println("=================================================================");
     System.out.printf("Listing all ad units for custom channel %s\n", customChannelId);

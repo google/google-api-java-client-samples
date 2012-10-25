@@ -14,7 +14,7 @@
 
 package com.google.api.services.samples.adsense.cmdline;
 
-import com.google.api.services.adsense.Adsense;
+import com.google.api.services.adsense.AdSense;
 import com.google.api.services.adsense.model.Account;
 import com.google.api.services.adsense.model.Accounts;
 
@@ -37,7 +37,7 @@ public class GetAllAccounts {
    * @return the last page of retrieved accounts.
    * @throws Exception
    */
-  public static Accounts run(Adsense adsense, int maxPageSize) throws Exception {
+  public static Accounts run(AdSense adsense, int maxPageSize) throws Exception {
     System.out.println("=================================================================");
     System.out.println("Listing all AdSense accounts");
     System.out.println("=================================================================");

@@ -14,8 +14,8 @@
 
 package com.google.api.services.samples.adsense.cmdline;
 
-import com.google.api.services.adsense.Adsense;
-import com.google.api.services.adsense.Adsense.Reports.Generate;
+import com.google.api.services.adsense.AdSense;
+import com.google.api.services.adsense.AdSense.Reports.Generate;
 import com.google.api.services.adsense.model.AdsenseReportsGenerateResponse;
 
 import java.text.DateFormat;
@@ -43,7 +43,7 @@ public class GenerateReport {
    * @param adClientId the ad client ID on which to run the report.
    * @throws Exception
    */
-  public static void run(Adsense adsense, String adClientId) throws Exception {
+  public static void run(AdSense adsense, String adClientId) throws Exception {
     System.out.println("=================================================================");
     System.out.printf("Running report for ad client %s\n", adClientId);
     System.out.println("=================================================================");

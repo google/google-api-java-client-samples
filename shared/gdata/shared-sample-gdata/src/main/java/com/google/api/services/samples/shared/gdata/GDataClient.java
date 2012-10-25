@@ -76,7 +76,7 @@ public abstract class GDataClient {
     url.setPrettyPrint(this.prettyPrint);
   }
 
-  protected void prepare(HttpRequest request) {
+  protected void prepare(HttpRequest request) throws IOException {
     request.getHeaders().setUserAgent(applicationName);
     request.getHeaders().put("GData-Version", gdataVersion);
     override.intercept(request);
@@ -111,7 +111,7 @@ public abstract class GDataClient {
       GoogleUrl url, AbstractHttpContent patchContent, Class<T> parseAsType, String etag)
       throws IOException {
     prepareUrl(url, parseAsType);
-    HttpRequest request = getRequestFactory().buildPatchRequest(url, patchContent);
+    HttpRequest request = getRequestFactory().buildRequest("PATCH", url, patchContent);
     setIfMatch(request, etag);
     return execute(request).parseAs(parseAsType);
   }

@@ -48,7 +48,7 @@ public abstract class GDataXmlClient extends GDataClient {
   }
 
   @Override
-  protected void prepare(HttpRequest request) {
+  protected void prepare(HttpRequest request) throws IOException {
     super.prepare(request);
     request.setParser(new XmlObjectParser(namespaceDictionary));
   }

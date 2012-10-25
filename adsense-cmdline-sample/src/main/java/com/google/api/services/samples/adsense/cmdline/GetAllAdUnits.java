@@ -14,7 +14,7 @@
 
 package com.google.api.services.samples.adsense.cmdline;
 
-import com.google.api.services.adsense.Adsense;
+import com.google.api.services.adsense.AdSense;
 import com.google.api.services.adsense.model.AdUnit;
 import com.google.api.services.adsense.model.AdUnits;
 
@@ -38,7 +38,7 @@ public class GetAllAdUnits {
    * @return the last page of ad units.
    * @throws Exception
    */
-  public static AdUnits run(Adsense adsense, String adClientId, int maxPageSize) throws Exception {
+  public static AdUnits run(AdSense adsense, String adClientId, int maxPageSize) throws Exception {
     System.out.println("=================================================================");
     System.out.printf("Listing all ad units for ad client %s\n", adClientId);
     System.out.println("=================================================================");
