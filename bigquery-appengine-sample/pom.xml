@@ -29,7 +29,7 @@
   </pluginRepositories>
 
   <properties>
-    <bigquery.version>v2-rev20121014-1.9.0-beta</bigquery.version>
+    <bigquery.version>v2-rev20121014-1.12.0-beta</bigquery.version>
     <datanucleus.version>1.1.5</datanucleus.version>
     <gae.version>1.7.0</gae.version>
     <google-api-client.version>1.12.0-beta-SNAPSHOT</google-api-client.version>
