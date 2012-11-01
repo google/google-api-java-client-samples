@@ -22,12 +22,11 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
-import com.google.api.client.http.json.JsonHttpRequest;
-import com.google.api.client.http.json.JsonHttpRequestInitializer;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.taskqueue.Taskqueue;
 import com.google.api.services.taskqueue.TaskqueueRequest;
+import com.google.api.services.taskqueue.TaskqueueRequestInitializer;
 import com.google.api.services.taskqueue.TaskqueueScopes;
 import com.google.api.services.taskqueue.model.Task;
 import com.google.api.services.taskqueue.model.Tasks;
@@ -93,11 +92,10 @@ public class TaskQueueSample {
     // set up Taskqueue
     Taskqueue taskQueue = new Taskqueue.Builder(
         HTTP_TRANSPORT, JSON_FACTORY, credential).setApplicationName("Google-TaskQueueSample/1.0")
-        .setJsonHttpRequestInitializer(new JsonHttpRequestInitializer() {
-            @Override
-          public void initialize(JsonHttpRequest request) {
-            TaskqueueRequest taskQueueRequest = (TaskqueueRequest) request;
-            taskQueueRequest.setPrettyPrint(true);
+        .setTaskqueueRequestInitializer(new TaskqueueRequestInitializer() {
+          @Override
+          public void initializeTaskqueueRequest(TaskqueueRequest<?> request) {
+            request.setPrettyPrint(true);
           }
         }).build();
 
