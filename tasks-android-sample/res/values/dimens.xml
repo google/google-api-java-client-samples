@@ -15,11 +15,7 @@
     limitations under the License.
 -->
 <resources>
-    <string name="app_name">Google Tasks Sample</string>
-    <string name="accounts">Accounts</string>
-    <string name="icon_desc">Application icon</string>
-    <string name="title_separator_desc">Title separator</string>
-    <string name="refresh">Refresh</string>
-    <string name="error">Error</string>
-    <string name="error_format">[Error] %s</string>
+    <dimen name="title_height">45dip</dimen>
+    <dimen name="text_size_small">14sp</dimen>
+    <dimen name="text_size_medium">18sp</dimen>
 </resources>

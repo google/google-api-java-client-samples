@@ -15,11 +15,7 @@
     limitations under the License.
 -->
 <resources>
-    <string name="app_name">Google Tasks Sample</string>
-    <string name="accounts">Accounts</string>
-    <string name="icon_desc">Application icon</string>
-    <string name="title_separator_desc">Title separator</string>
-    <string name="refresh">Refresh</string>
-    <string name="error">Error</string>
-    <string name="error_format">[Error] %s</string>
+    <color name="title_background">#ff355689</color>
+    <color name="title_text">#ffffffff</color>
+    <color name="title_separator">#40ffffff</color>
 </resources>

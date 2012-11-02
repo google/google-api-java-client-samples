@@ -13,6 +13,41 @@
     </li>
   </ul>
 
+  <h3>Register Your Application</h3>
+
+  <p>You first need to register your Android application and sign up for
+    access to the Google Tasks API in the Google APIs Console. First, you
+    need the "Signing certificate fingerprint (SHA1)" for the debug and release
+    builds:</p>
+  <pre>
+keytool -exportcert -alias androiddebugkey -keystore ~/.android/debug.keystore | openssl sha1
+Enter keystore password: android
+
+keytool -exportcert -alias androiddebugkey -keystore my-release-key.keystore | openssl sha1
+</pre>
+
+  <p>Next, register in the Google APIs Console:</p>
+
+  <ul>
+    <li>Visit the <a
+      href="https://code.google.com/apis/console/?api=tasks">Google apis
+      console</a> and click OK.  Make sure you click on this URL specifically, which
+      automatically enables the Calendar API. If you don't properly enable the Calendar API
+      when running the sample you would get a 403 error Access Not Configured.</li>
+    <li>If this is your first time, click "Create project..."</li>
+    <li>Otherwise, click on the drop down under the "Google apis" logo at
+      the top left, and click "Create..." under "Other projects"</li>
+    <li>Click on "API Access", and then on "Create an OAuth 2.0 Client
+      ID...".</li>
+    <li>Enter a product name and click "Next".</li>
+    <li>Select "Installed application", select "Android", enter
+      com.google.api.services.samples.calendar.android for "Package name", paste
+      the SHA1 fingerprint for the debug certificate above into "Signing
+      certificate fingerprint (SHA1)", and click "Create client ID".</li>
+    <li>Click "Create an OAuth 2.0 Client ID..." and follow the directions
+      from the previous step for the release certificate.</li>
+  </ul>
+
   <h3>Checkout Instructions</h3>
 
   <p>
@@ -20,32 +55,22 @@
       href="http://mercurial.selenic.com/">Mercurial</a> (requires 1.6 or
     higher). You may need to set your
     <code>JAVA_HOME</code> and <code>ANDROID_HOME</code>.
-    .
   </p>
 
-  <p>
-    <b>Important:</b> after checking out the project, and before compiling and
-    running it, you need to edit
-    <code>ClientCredentials.java</code>
-    to enter the required API key generated from <a
-      href="https://code.google.com/apis/console/?api=tasks">Google APIs Console</a>.
-    Otherwise, without a valid key, you will only be able to make a small number of
-    queries. When you exceed this limit, you will receive a
-    <code>403 Forbidden</code>
-    error with the message
-    <code>Daily Limit Exceeded. Please sign up</code>
-    .
-   </p>
   <pre>
-    <code>
 cd <i>[someDirectory]</i>
 hg clone https://code.google.com/p/google-api-java-client.samples/ google-api-java-client-samples
 cd google-api-java-client-samples/tasks-android-sample
-<i>[editor]</i> src/main/java/com/google/api/services/samples/tasks/android/ClientCredentials.java
-</code>
   </pre>
 
-  <h3>Setup Project in Eclipse 3.7 (Indigo)</h3>
+  <p>To enable logging of HTTP requests and responses (highly recommended
+    when developing):</p>
+
+  <pre>
+adb shell setprop log.tag.HttpTransport DEBUG
+</pre>
+
+  <h3>Setup Project in Eclipse</h3>
 
   <p>
     <b>Prerequisites:</b> install <a href="http://www.eclipse.org/downloads/">Eclipse</a>,
@@ -58,19 +83,15 @@ cd google-api-java-client-samples/tasks-android-sample
     <li>Preferences:
       <ul>
         <li>Android: setup SDK location</li>
-      </ul></li>
-    <li>Window &gt; Android SDK and AVD Manager
+      </ul>
+    </li>
+    <li>Window &gt; Android SDK Manager
       <ul>
-        <li>Follow instructions to install Package "Google API's by Google
-          Inc., Android API 8"</li>
-        <li>Follow instructions to create a new Android Virtual Device
-          based on target "Google API's (Google Inc.) - API Level 8"</li>
-        <li>Click "Start..." (wait a while...)</li>
-        <li>On home screen in emulator, click Menu button, Settings</li>
-        <li>Click on "Accounts and Sync"</li>
-        <li>Click on "Add Account"</li>
-        <li>Click "Google" and follow instructions</li>
-      </ul></li>
+        <li>Check on "Google APIs" under "Android 4.1.6 (API Level 16)"</li>
+        <li>Check on "Google Play services" under "Extras".</li>
+        <li>Click on "Install X packages..."</li>
+      </ul>
+    </li>
     <li>Import <code>tasks-android-sample</code> project
       <ul>
         <li>File &gt; Import...</li>
@@ -78,7 +99,8 @@ cd google-api-java-client-samples/tasks-android-sample
           "Next"</li>
         <li>Click "Browse" next to "Select root directory", find <code>
             <i>[someDirectory]</i>/google-api-java-client-samples/tasks-android-sample
-          </code> and click "Next"</li>
+          </code> and click "Next"
+        </li>
         <li>Click "Finish"</li>
       </ul></li>
     <li>Clean Project (if compile error about missing gen directory)
@@ -87,13 +109,18 @@ cd google-api-java-client-samples/tasks-android-sample
         <li>Project &gt; Clean...</li>
         <li>Select "Clean projects selected below"</li>
         <li>Click on "OK"</li>
-      </ul></li>
+      </ul>
+    </li>
+    <li>NOTE: you must use a physical device for developing and testing
+      because Google Play services cannot be installed on an emulator.</li>
     <li>Run
       <ul>
         <li>Right-click on project tasks-android-sample</li>
         <li>Run As &gt; Android Application</li>
-      </ul></li>
+        <li>Select the physical device and click OK.</li>
+        </li>
+      </ul>
+    </li>
   </ul>
-
 </body>
 </html>

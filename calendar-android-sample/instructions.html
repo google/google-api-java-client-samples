@@ -39,8 +39,9 @@ keytool -exportcert -alias androiddebugkey -keystore my-release-key.keystore | o
   <ul>
     <li>Visit the <a
       href="https://code.google.com/apis/console/?api=calendar">Google apis
-        console</a>
-    </li>
+      console</a> and click OK.  Make sure you click on this URL specifically, which
+      automatically enables the Calendar API. If you don't properly enable the Calendar API
+      when running the sample you would get a 403 error Access Not Configured.</li>
     <li>If this is your first time, click "Create project..."</li>
     <li>Otherwise, click on the drop down under the "Google apis" logo at
       the top left, and click "Create..." under "Other projects"</li>
@@ -61,10 +62,7 @@ keytool -exportcert -alias androiddebugkey -keystore my-release-key.keystore | o
     <b>Prerequisites:</b> install <a href="http://java.com">Java 6</a>, <a
       href="http://mercurial.selenic.com/">Mercurial</a> (requires 1.6 or
     higher). You may need to set your
-    <code>JAVA_HOME</code>
-    and
-    <code>ANDROID_HOME</code>
-    .
+    <code>JAVA_HOME</code> and <code>ANDROID_HOME</code>.
   </p>
 
   <pre>
