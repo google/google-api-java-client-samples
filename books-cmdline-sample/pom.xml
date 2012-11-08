@@ -33,13 +33,7 @@
   <repositories>
     <repository>
       <id>googleapis</id>
-      <url>http://mavenrepo.google-api-java-client.googlecode.com/hg/</url>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-      <releases>
-        <enabled>true</enabled>
-      </releases>
+      <url>https://google-api-client-libraries.appspot.com/mavenrepo</url>
     </repository>
   </repositories>
 
@@ -126,7 +120,7 @@
     <dependency>
       <groupId>com.google.apis</groupId>
       <artifactId>google-api-services-books</artifactId>
-      <version>v1-rev20120822-1.9.0-beta</version>
+      <version>v1-rev13-1.12.0-beta</version>
     </dependency>
     <dependency>
       <groupId>com.google.http-client</groupId>
@@ -135,8 +129,8 @@
     </dependency>
   </dependencies>
   <properties>
-    <project.http.version>1.12.0-beta-SNAPSHOT</project.http.version>
-    <project.oauth.version>1.12.0-beta-SNAPSHOT</project.oauth.version>
+    <project.http.version>1.12.0-beta</project.http.version>
+    <project.oauth.version>1.12.0-beta</project.oauth.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 </project>

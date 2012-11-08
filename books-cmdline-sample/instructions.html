@@ -15,15 +15,16 @@
   <h3>Register Your Application</h3>
 
   <ul>
-    <li>Visit the <a href="https://code.google.com/apis/console/?api=plus">Google
+    <li>Visit the <a href="https://code.google.com/apis/console/?api=books">Google
         apis console</a>
     </li>
     <li>If this is your first time, click "Create project..."</li>
     <li>Otherwise, click on the drop down under the "Google apis" logo at
       the top left, and click "Create..." under "Other projects"</li>
-    <li>Activate the Google+ API and agree to the terms of service</li>
+    <li>Activate the Books API and agree to the terms of service</li>
     <li>Click on "API Access"</li>
-    <li>Enter the "API Key" shown under "Simple API Access" into the API_KEY constant.</li>
+    <li>Enter the "API Key" shown under "Simple API Access" into the API_KEY 
+      constant found in class com.google.api.services.samples.books.cmdline.ClientCredentials</li>
   </ul>
 
   <h3>Checkout Instructions</h3>
@@ -45,6 +46,9 @@ cd google-api-java-client-samples/books-cmdline-sample
 mvn compile
 mvn -q exec:java -Dexec.args=Google</code>
   </pre>
+
+ <p>To enable logging of HTTP requests and responses (highly recommended
+    when developing), please take a look at <a href="logging.properties">logging.properties</a>.</p>
 
   <h3>Setup Project in Eclipse</h3>
 

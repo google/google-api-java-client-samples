@@ -8,7 +8,7 @@
   </parent>
   <groupId>com.google.apis-samples</groupId>
   <artifactId>shared-sample-picasa</artifactId>
-  <version>v2-1.5</version>
+  <version>v2-1.6</version>
   <name>Example shared code for the Picasa Web Albums Data API v2 samples</name>
 
   <url>http://code.google.com/p/google-api-java-client/</url>
@@ -50,8 +50,8 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>2.3.2</version>
         <configuration>
-          <source>1.5</source>
-          <target>1.5</target>
+          <source>1.6</source>
+          <target>1.6</target>
         </configuration>
       </plugin>
       <plugin>
@@ -85,7 +85,7 @@
     <dependency>
       <groupId>com.google.apis-samples</groupId>
       <artifactId>shared-sample-gdata</artifactId>
-      <version>1.5</version>
+      <version>1.6</version>
     </dependency>
   </dependencies>
   <properties>
