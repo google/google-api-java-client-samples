@@ -24,8 +24,8 @@ import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
-import com.google.api.services.adsense.Adsense;
-import com.google.api.services.adsense.AdsenseScopes;
+import com.google.api.services.adsense.AdSense;
+import com.google.api.services.adsense.AdSenseScopes;
 import com.google.api.services.adsense.model.Accounts;
 import com.google.api.services.adsense.model.AdClients;
 import com.google.api.services.adsense.model.AdUnits;
@@ -83,7 +83,7 @@ public class AdSenseSample {
     // set up authorization code flow
     GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
         HTTP_TRANSPORT, JSON_FACTORY, clientSecrets,
-        Collections.singleton(AdsenseScopes.ADSENSE_READONLY)).setCredentialStore(
+        Collections.singleton(AdSenseScopes.ADSENSE_READONLY)).setCredentialStore(
         credentialStore).build();
     // authorize
     return new AuthorizationCodeInstalledApp(flow, new LocalServerReceiver()).authorize("user");
@@ -94,12 +94,12 @@ public class AdSenseSample {
    * @return An initialized AdSense service object.
    * @throws Exception
    */
-  private static Adsense initializeAdsense() throws Exception {
+  private static AdSense initializeAdsense() throws Exception {
     // Authorization.
     Credential credential = authorize();
 
     // Set up AdSense Management API client.
-    Adsense adsense = new Adsense.Builder(
+    AdSense adsense = new AdSense.Builder(
         new NetHttpTransport(), JSON_FACTORY, credential).setApplicationName(
         "Google-AdSenseSample/1.1").build();
 
@@ -113,7 +113,7 @@ public class AdSenseSample {
   public static void main(String[] args) {
     try {
       try {
-        Adsense adsense = initializeAdsense();
+        AdSense adsense = initializeAdsense();
 
         Accounts accounts = GetAllAccounts.run(adsense, MAX_LIST_PAGE_SIZE);
         if ((accounts.getItems() != null) && !accounts.getItems().isEmpty()) {

@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2012 Google Inc.
- *
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
- *
+ * 
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software distributed under the License
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied. See the License for the specific language governing permissions and limitations under
@@ -14,53 +14,34 @@
 
 package com.google.api.services.samples.calendar.android;
 
-import android.app.ProgressDialog;
-import android.os.AsyncTask;
+import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 
 import java.io.IOException;
 
 /**
- * Asynchronously delete a calendar with a progress dialog.
- *
- * @author Ravi Mistry
+ * Asynchronously delete a calendar.
+ * 
+ * @author Yaniv Inbar
  */
-class AsyncDeleteCalendar extends AsyncTask<Void, Void, Void> {
+class AsyncDeleteCalendar extends CalendarAsyncTask {
 
-  private final CalendarSample calendarSample;
-  private final ProgressDialog dialog;
-  private final int calendarIndex;
-  private com.google.api.services.calendar.Calendar client;
+  private final String calendarId;
 
-  AsyncDeleteCalendar(CalendarSample calendarSample, int calendarIndex) {
-    this.calendarSample = calendarSample;
-    client = calendarSample.client;
-    this.calendarIndex = calendarIndex;
-    dialog = new ProgressDialog(calendarSample);
+  AsyncDeleteCalendar(CalendarSampleActivity calendarSample, CalendarInfo calendarInfo) {
+    super(calendarSample);
+    calendarId = calendarInfo.id;
   }
 
   @Override
-  protected void onPreExecute() {
-    dialog.setMessage("Deleting calendar...");
-    dialog.show();
-  }
-
-  @Override
-  protected Void doInBackground(Void... arg0) {
-    String calendarId = calendarSample.calendars.get(calendarIndex).id;
+  protected void doInBackground() throws IOException {
     try {
       client.calendars().delete(calendarId).execute();
-      calendarSample.calendars.remove(calendarIndex);
-    } catch (IOException e) {
-      calendarSample.handleGoogleException(e);
-    } finally {
-      calendarSample.onRequestCompleted();
+    } catch (GoogleJsonResponseException e) {
+      // 404 Not Found would happen if user tries to delete an already deleted calendar
+      if (e.getStatusCode() != 404) {
+        throw e;
+      }
     }
-    return null;
-  }
-
-  @Override
-  protected void onPostExecute(Void result) {
-    dialog.dismiss();
-    calendarSample.refresh();
+    model.remove(calendarId);
   }
 }

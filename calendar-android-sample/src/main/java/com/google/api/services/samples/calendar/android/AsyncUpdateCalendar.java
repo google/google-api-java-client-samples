@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2012 Google Inc.
- *
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
- *
+ * 
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software distributed under the License
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied. See the License for the specific language governing permissions and limitations under
@@ -14,62 +14,39 @@
 
 package com.google.api.services.samples.calendar.android;
 
-import com.google.api.services.calendar.Calendar.Calendars;
+import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.services.calendar.model.Calendar;
-
-import android.app.ProgressDialog;
-import android.os.AsyncTask;
 
 import java.io.IOException;
 
 /**
  * Asynchronously updates a calendar with a progress dialog.
- *
- * @author Ravi Mistry
+ * 
+ * @author Yaniv Inbar
  */
-class AsyncUpdateCalendar extends AsyncTask<Void, Void, Void> {
+class AsyncUpdateCalendar extends CalendarAsyncTask {
 
-  private final CalendarSample calendarSample;
-  private final ProgressDialog dialog;
-  private final int calendarIndex;
+  private final String calendarId;
   private final Calendar entry;
-  private com.google.api.services.calendar.Calendar client;
 
-  AsyncUpdateCalendar(CalendarSample calendarSample, int calendarIndex, Calendar entry) {
-    this.calendarSample = calendarSample;
-    this.calendarIndex = calendarIndex;
-    client = calendarSample.client;
+  AsyncUpdateCalendar(CalendarSampleActivity calendarSample, String calendarId, Calendar entry) {
+    super(calendarSample);
+    this.calendarId = calendarId;
     this.entry = entry;
-    dialog = new ProgressDialog(calendarSample);
   }
 
   @Override
-  protected void onPreExecute() {
-    dialog.setMessage("Updating calendar...");
-    dialog.show();
-  }
-
-  @Override
-  protected Void doInBackground(Void... arg0) {
-    String calendarId = calendarSample.calendars.get(calendarIndex).id;
+  protected void doInBackground() throws IOException {
     try {
-      Calendars.Patch patch = client.calendars().patch(calendarId, entry);
-      patch.setFields("id");
-      Calendar updatedCalendar = patch.execute();
-      calendarSample.calendars.remove(calendarIndex);
-      CalendarInfo info = new CalendarInfo(updatedCalendar.getId(), entry.getSummary());
-      calendarSample.calendars.add(info);
-    } catch (IOException e) {
-      calendarSample.handleGoogleException(e);
-    } finally {
-      calendarSample.onRequestCompleted();
+      Calendar updatedCalendar =
+          client.calendars().patch(calendarId, entry).setFields(CalendarInfo.FIELDS).execute();
+      model.add(updatedCalendar);
+    } catch (GoogleJsonResponseException e) {
+      // 404 Not Found would happen if user tries to delete an already deleted calendar
+      if (e.getStatusCode() != 404) {
+        throw e;
+      }
+      model.remove(calendarId);
     }
-    return null;
-  }
-
-  @Override
-  protected void onPostExecute(Void result) {
-    dialog.dismiss();
-    calendarSample.refresh();
   }
 }

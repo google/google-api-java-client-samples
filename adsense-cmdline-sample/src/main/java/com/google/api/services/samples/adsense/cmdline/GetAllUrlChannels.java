@@ -14,7 +14,7 @@
 
 package com.google.api.services.samples.adsense.cmdline;
 
-import com.google.api.services.adsense.Adsense;
+import com.google.api.services.adsense.AdSense;
 import com.google.api.services.adsense.model.UrlChannel;
 import com.google.api.services.adsense.model.UrlChannels;
 
@@ -37,7 +37,7 @@ public class GetAllUrlChannels {
    * @param maxPageSize the maximum page size to retrieve.
    * @throws Exception
    */
-  public static void run(Adsense adsense, String adClientId, int maxPageSize) throws Exception {
+  public static void run(AdSense adsense, String adClientId, int maxPageSize) throws Exception {
     System.out.println("=================================================================");
     System.out.printf("Listing all URL channels for ad client %s\n", adClientId);
     System.out.println("=================================================================");

@@ -14,7 +14,7 @@
 
 package com.google.api.services.samples.adsense.cmdline;
 
-import com.google.api.services.adsense.Adsense;
+import com.google.api.services.adsense.AdSense;
 import com.google.api.services.adsense.model.Account;
 
 import java.util.List;
@@ -59,7 +59,7 @@ public class GetAccountTree {
    * @param accountId the ID for the account to be used.
    * @throws Exception
    */
-  public static void run(Adsense adsense, String accountId) throws Exception {
+  public static void run(AdSense adsense, String accountId) throws Exception {
     System.out.println("=================================================================");
     System.out.printf("Displaying AdSense account tree for %s\n", accountId);
     System.out.println("=================================================================");

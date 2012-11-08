@@ -19,6 +19,7 @@ import com.google.api.client.googleapis.extensions.appengine.auth.oauth2.AppIden
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.json.jackson.JacksonFactory;
 import com.google.api.services.urlshortener.Urlshortener;
+import com.google.api.services.urlshortener.UrlshortenerScopes;
 import com.google.api.services.urlshortener.model.Url;
 import com.google.api.services.urlshortener.model.UrlHistory;
 
@@ -42,7 +43,7 @@ public class UrlShortenerSample extends HttpServlet {
 
   static Urlshortener newUrlshortener() {
     AppIdentityCredential credential =
-        new AppIdentityCredential(Arrays.asList("https://www.googleapis.com/auth/urlshortener"));
+        new AppIdentityCredential(Arrays.asList(UrlshortenerScopes.URLSHORTENER));
     return new Urlshortener.Builder(new UrlFetchTransport(), new JacksonFactory(), credential)
         .build();
   }

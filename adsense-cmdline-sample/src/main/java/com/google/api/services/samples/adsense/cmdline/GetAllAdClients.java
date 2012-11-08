@@ -14,7 +14,7 @@
 
 package com.google.api.services.samples.adsense.cmdline;
 
-import com.google.api.services.adsense.Adsense;
+import com.google.api.services.adsense.AdSense;
 import com.google.api.services.adsense.model.AdClient;
 import com.google.api.services.adsense.model.AdClients;
 
@@ -37,7 +37,7 @@ public class GetAllAdClients {
    * @return the last page of retrieved ad clients.
    * @throws Exception
    */
-  public static AdClients run(Adsense adsense, int maxPageSize) throws Exception {
+  public static AdClients run(AdSense adsense, int maxPageSize) throws Exception {
     System.out.println("=================================================================");
     System.out.println("Listing all ad clients for default account");
     System.out.println("=================================================================");

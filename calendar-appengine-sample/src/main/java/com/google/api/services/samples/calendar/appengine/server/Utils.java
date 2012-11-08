@@ -54,7 +54,7 @@ class Utils {
           JSON_FACTORY, Utils.class.getResourceAsStream("/client_secrets.json"));
       Preconditions.checkArgument(!clientSecrets.getDetails().getClientId().startsWith("Enter ")
           && !clientSecrets.getDetails().getClientSecret().startsWith("Enter "),
-          "Enter Client ID and Secret from https://code.google.com/apis/console/?api=calendar "
+          "Download client_secrets.json file from https://code.google.com/apis/console/?api=calendar "
           + "into calendar-appengine-sample/src/main/resources/client_secrets.json");
     }
     return clientSecrets;

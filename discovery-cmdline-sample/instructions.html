@@ -43,15 +43,19 @@ google discover calendar v3
         apis console</a>
     </li>
     <li>If this is your first time, click "Create project..."</li>
+    <li>Otherwise, click on the drop down under the "Google apis" logo at
+      the top left, and click "Create..." under "Other projects"</li>
     <li>Click on "API Access", and then on "Create an OAuth 2.0 Client
       ID...".</li>
     <li>Enter a product name and click "Next".</li>
     <li>Select "Installed application" and click "Create client ID".</li>
-    <li>Enter the "Client ID" and "Client secret" shown under "Client ID
-      for installed applications" into <a
-      href="src/main/resources/client_secrets.json">src/main/resources/client_secrets.json</a>
-      file after checking out the code (otherwise you will get a <code>400
-        INVALID_CLIENT</code> error in the browser when running the sample).</li>
+    <li>In the newly created "Client ID for installed applications", click
+      "Download JSON" on the right side. Later on after you check out the sample
+      project, you will copy this downloaded file (e.g. <code>~/Downloads/client_secrets.json</code>)
+      to <a href="src/main/resources/client_secrets.json">src/main/resources/client_secrets.json</a>.
+      If you skip this step, when trying to run the sample you will get a <code>400
+      INVALID_CLIENT</code> error in the browser.
+    </li>
   </ul>
 
   <h3>Checkout Instructions</h3>
@@ -69,10 +73,56 @@ google discover calendar v3
     <code>cd <i>[someDirectory]</i>
 hg clone https://code.google.com/p/google-api-java-client.samples/ google-api-java-client-samples
 cd google-api-java-client-samples/discovery-cmdline-sample
-<i>[editor]</i> src/main/resources/client_secrets.json
+cp ~/Downloads/client_secrets.json src/main/resources/client_secrets.json
 mvn assembly:assembly
 alias google="<i>[someDirectory]</i>/google-api-java-client-samples/discovery-cmdline-sample/run_sample"</code>
   </pre>
 
+  <p>To enable logging of HTTP requests and responses (highly recommended
+    when developing), please take a look at <a href="logging.properties">logging.properties</a>.</p>
+    
+  <h3>Setup Project in Eclipse</h3>
+
+  <p>
+    <b>Prerequisites:</b> install <a href="http://www.eclipse.org/downloads/">Eclipse</a>,
+    the <a href="http://javaforge.com/project/HGE">Mercurial plugin</a>, and the
+    <a href="http://m2eclipse.sonatype.org/installing-m2eclipse.html">Maven
+      plugin</a>.
+  </p>
+
+  <ul>
+    <li>Setup Eclipse Preferences
+      <ul>
+        <li>Window &gt; Preferences... (or on Mac, Eclipse &gt;
+          Preferences...)</li>
+        <li>Select Maven
+          <ul>
+            <li>check on "Download Artifact Sources"</li>
+            <li>check on "Download Artifact JavaDoc"</li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li>Import <code>discovery-cmdline-sample</code> project
+      <ul>
+        <li>File &gt; Import...</li>
+        <li>Select "General &gt; Existing Project into Workspace" and click
+          "Next"</li>
+        <li>Click "Browse" next to "Select root directory", find <code>
+            <i>[someDirectory]</i>/google-api-java-client-samples/discovery-cmdline-sample
+          </code> and click "Next"
+        </li>
+        <li>Click "Finish"</li>
+      </ul>
+    </li>
+    <li>Run
+      <ul>
+        <li>Right-click on project discovery-cmdline-sample</li>
+        <li>Run As &gt; Java Application</li>
+        <li>If asked, type "DiscoverySample" and click OK</li>
+      </ul>
+    </li>
+  </ul>
+    
 </body>
 </html>

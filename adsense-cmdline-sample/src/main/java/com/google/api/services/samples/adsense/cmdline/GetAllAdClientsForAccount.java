@@ -14,7 +14,7 @@
 
 package com.google.api.services.samples.adsense.cmdline;
 
-import com.google.api.services.adsense.Adsense;
+import com.google.api.services.adsense.AdSense;
 import com.google.api.services.adsense.model.AdClient;
 import com.google.api.services.adsense.model.AdClients;
 
@@ -37,7 +37,7 @@ public class GetAllAdClientsForAccount {
    * @param maxPageSize the maximum page size to retrieve.
    * @throws Exception
    */
-  public static void run(Adsense adsense, String accountId, int maxPageSize) throws Exception {
+  public static void run(AdSense adsense, String accountId, int maxPageSize) throws Exception {
     System.out.println("=================================================================");
     System.out.printf("Listing all ad clients for account %s\n", accountId);
     System.out.println("=================================================================");
