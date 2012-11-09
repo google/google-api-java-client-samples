@@ -12,7 +12,7 @@
 
 package com.google.api.services.samples.adsensehost.cmdline;
 
-import com.google.api.services.adsensehost.Adsensehost;
+import com.google.api.services.adsensehost.AdSenseHost;
 import com.google.api.services.adsensehost.model.UrlChannel;
 
 /**
@@ -31,12 +31,12 @@ public class AddUrlChannelToHost {
   /**
    * Runs this sample.
    *
-   * @param service Adsensehost service object on which to run the requests.
+   * @param service AdSenseHost service object on which to run the requests.
    * @param adClientId the ID for the ad client to be used.
    * @return the created URL channel.
    * @throws Exception
    */
-  public static UrlChannel run(Adsensehost service, String adClientId)
+  public static UrlChannel run(AdSenseHost service, String adClientId)
       throws Exception {
     System.out.println("=================================================================");
     System.out.printf("Adding URL channel to ad client %s\n", adClientId);

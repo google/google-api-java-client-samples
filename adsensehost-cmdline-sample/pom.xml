@@ -33,13 +33,7 @@
   <repositories>
     <repository>
       <id>googleapis</id>
-      <url>http://mavenrepo.google-api-java-client.googlecode.com/hg/</url>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-      <releases>
-        <enabled>true</enabled>
-      </releases>
+      <url>https://google-api-client-libraries.appspot.com/mavenrepo</url>
     </repository>
   </repositories>
 
@@ -126,7 +120,7 @@
     <dependency>
       <groupId>com.google.apis</groupId>
       <artifactId>google-api-services-adsensehost</artifactId>
-      <version>v4.1-rev1-1.8.0-beta</version>
+      <version>v4.1-rev6-1.12.0-beta</version>
     </dependency>
     <dependency>
       <groupId>com.google.http-client</groupId>

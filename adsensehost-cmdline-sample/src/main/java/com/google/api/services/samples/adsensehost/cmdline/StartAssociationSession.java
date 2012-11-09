@@ -12,7 +12,7 @@
 
 package com.google.api.services.samples.adsensehost.cmdline;
 
-import com.google.api.services.adsensehost.Adsensehost;
+import com.google.api.services.adsensehost.AdSenseHost;
 import com.google.api.services.adsensehost.model.AssociationSession;
 
 import java.util.List;
@@ -31,12 +31,12 @@ public class StartAssociationSession {
   /**
    * Runs this sample.
    *
-   * @param service Adsensehost service object on which to run the requests.
+   * @param service AdSenseHost service object on which to run the requests.
    * @param productCodes the list of products to associate with.
    * @param websiteUrl the URL of the publisher website.
    * @throws Exception
    */
-  public static void run(Adsensehost service, List<String> productCodes, String websiteUrl)
+  public static void run(AdSenseHost service, List<String> productCodes, String websiteUrl)
       throws Exception {
     System.out.println("=================================================================");
     System.out.println("Creating new association session");

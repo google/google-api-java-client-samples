@@ -12,7 +12,7 @@
 
 package com.google.api.services.samples.adsensehost.cmdline;
 
-import com.google.api.services.adsensehost.Adsensehost;
+import com.google.api.services.adsensehost.AdSenseHost;
 import com.google.api.services.adsensehost.model.Account;
 import com.google.api.services.adsensehost.model.Accounts;
 
@@ -32,12 +32,12 @@ public class GetAccountDataForExistingPublisher {
   /**
    * Runs this sample.
    *
-   * @param service Adsensehost service object on which to run the requests.
+   * @param service AdSenseHost service object on which to run the requests.
    * @param adClientId the publisher ad client ID for which to get account data.
    * @return the retrieved account info.
    * @throws Exception
    */
-  public static Accounts run(Adsensehost service, String adClientId) throws Exception {
+  public static Accounts run(AdSenseHost service, String adClientId) throws Exception {
     System.out.println("=================================================================");
     System.out.printf("Listing publisher account for \"%s\"\n", adClientId);
     System.out.println("=================================================================");

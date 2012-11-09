@@ -12,7 +12,7 @@
 
 package com.google.api.services.samples.adsensehost.cmdline;
 
-import com.google.api.services.adsensehost.Adsensehost;
+import com.google.api.services.adsensehost.AdSenseHost;
 import com.google.api.services.adsensehost.model.CustomChannel;
 import com.google.api.services.adsensehost.model.CustomChannels;
 
@@ -32,12 +32,12 @@ public class GetAllCustomChannelsForHost {
   /**
    * Runs this sample.
    *
-   * @param service Adsensehost service object on which to run the requests.
+   * @param service AdSenseHost service object on which to run the requests.
    * @param adClientId the ID for the ad client to be used.
    * @param maxPageSize the maximum page size to retrieve.
    * @throws Exception
    */
-  public static void run(Adsensehost service, String adClientId, long maxPageSize)
+  public static void run(AdSenseHost service, String adClientId, long maxPageSize)
       throws Exception {
     System.out.println("=================================================================");
     System.out.printf("Listing all custom channels for ad client %s\n", adClientId);

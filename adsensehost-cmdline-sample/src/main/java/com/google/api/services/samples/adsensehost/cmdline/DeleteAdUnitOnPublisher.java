@@ -12,7 +12,7 @@
 
 package com.google.api.services.samples.adsensehost.cmdline;
 
-import com.google.api.services.adsensehost.Adsensehost;
+import com.google.api.services.adsensehost.AdSenseHost;
 import com.google.api.services.adsensehost.model.AdUnit;
 
 /**
@@ -32,13 +32,13 @@ public class DeleteAdUnitOnPublisher {
   /**
    * Runs this sample.
    *
-   * @param service Adsensehost service object on which to run the requests.
+   * @param service AdSenseHost service object on which to run the requests.
    * @param accountId the ID for the publisher account to be used.
    * @param adClientId the ID for the ad client to be used.
    * @param adUnitId the ID of the ad unit to be deleted.
    * @throws Exception
    */
-  public static void run(Adsensehost service, String accountId, String adClientId,
+  public static void run(AdSenseHost service, String accountId, String adClientId,
       String adUnitId) throws Exception {
     System.out.println("=================================================================");
     System.out.printf("Deleting ad unit %s\n", adUnitId);

@@ -12,7 +12,7 @@
 
 package com.google.api.services.samples.adsensehost.cmdline;
 
-import com.google.api.services.adsensehost.Adsensehost;
+import com.google.api.services.adsensehost.AdSenseHost;
 import com.google.api.services.adsensehost.model.UrlChannel;
 
 /**
@@ -32,12 +32,12 @@ public class DeleteUrlChannelOnHost {
   /**
    * Runs this sample.
    *
-   * @param service Adsensehost service object on which to run the requests.
+   * @param service AdSenseHost service object on which to run the requests.
    * @param adClientId the ID for the ad client to be used.
    * @param urlChannelId the ID of the URL channel to be deleted.
    * @throws Exception
    */
-  public static void run(Adsensehost service, String adClientId,
+  public static void run(AdSenseHost service, String adClientId,
       String urlChannelId) throws Exception {
     System.out.println("=================================================================");
     System.out.printf("Deleting URL channel %s\n", urlChannelId);

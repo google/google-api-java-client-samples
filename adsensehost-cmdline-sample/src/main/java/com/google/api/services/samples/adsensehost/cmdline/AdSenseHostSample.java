@@ -22,8 +22,8 @@ import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
-import com.google.api.services.adsensehost.Adsensehost;
-import com.google.api.services.adsensehost.AdsensehostScopes;
+import com.google.api.services.adsensehost.AdSenseHost;
+import com.google.api.services.adsensehost.AdSenseHostScopes;
 import com.google.api.services.adsensehost.model.AdClients;
 import com.google.api.services.adsensehost.model.AdUnit;
 import com.google.api.services.adsensehost.model.CustomChannel;
@@ -91,14 +91,14 @@ public class AdSenseHostSample {
           + "adsensehost-cmdline-sample/src/main/resources/client_secrets.json");
       System.exit(1);
     }
-    // set up file credential store
+    // set up file AdSenseHost store
     FileCredentialStore credentialStore = new FileCredentialStore(
         new File(System.getProperty("user.home"), ".credentials/adsensehost.json"),
         JSON_FACTORY);
     // set up authorization code flow
     GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
         HTTP_TRANSPORT, JSON_FACTORY, clientSecrets,
-        Collections.singleton(AdsensehostScopes.ADSENSEHOST)).setCredentialStore(
+        Collections.singleton(AdSenseHostScopes.ADSENSEHOST)).setCredentialStore(
         credentialStore).build();
     // authorize
     return new AuthorizationCodeInstalledApp(flow, new LocalServerReceiver()).authorize("user");
@@ -106,15 +106,15 @@ public class AdSenseHostSample {
 
   /**
    * Performs all necessary setup steps for running requests against the API.
-   * @return An initialized Adsensehost service object.
+   * @return An initialized AdSenseHost service object.
    * @throws Exception
    */
-  private static Adsensehost initializeAdsensehost() throws Exception {
+  private static AdSenseHost initializeAdsensehost() throws Exception {
     // Authorization.
     Credential credential = authorize();
 
     // Set up AdSense Host API client.
-    Adsensehost adsensehost = new Adsensehost.Builder(
+    AdSenseHost adsensehost = new AdSenseHost.Builder(
         new NetHttpTransport(), new JacksonFactory(), credential).setApplicationName(
         "Google-AdSenseHostSample/1.0").build();
 
@@ -135,7 +135,7 @@ public class AdSenseHostSample {
   public static void main(String[] args) {
     try {
       try {
-        Adsensehost service = initializeAdsensehost();
+        AdSenseHost service = initializeAdsensehost();
 
         AdClients adClients = GetAllAdClientsForHost.run(service, MAX_LIST_PAGE_SIZE);
         if ((adClients.getItems() != null) && !adClients.getItems().isEmpty()) {

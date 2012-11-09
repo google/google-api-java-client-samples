@@ -12,7 +12,7 @@
 
 package com.google.api.services.samples.adsensehost.cmdline;
 
-import com.google.api.services.adsensehost.Adsensehost;
+import com.google.api.services.adsensehost.AdSenseHost;
 import com.google.api.services.adsensehost.model.AdStyle;
 import com.google.api.services.adsensehost.model.AdStyle.Colors;
 import com.google.api.services.adsensehost.model.AdStyle.Font;
@@ -36,13 +36,13 @@ public class AddAdUnitToPublisher {
   /**
    * Runs this sample.
    *
-   * @param service Adsensehost service object on which to run the requests.
+   * @param service AdSensehost service object on which to run the requests.
    * @param accountId the ID for the publisher account to be used.
    * @param adClientId the ID for the ad client to be used.
    * @return the created ad unit.
    * @throws Exception
    */
-  public static AdUnit run(Adsensehost service, String accountId, String adClientId)
+  public static AdUnit run(AdSenseHost service, String accountId, String adClientId)
       throws Exception {
     System.out.println("=================================================================");
     System.out.printf("Adding ad unit to ad client %s\n", adClientId);

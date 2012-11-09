@@ -12,7 +12,7 @@
 
 package com.google.api.services.samples.adsensehost.cmdline;
 
-import com.google.api.services.adsensehost.Adsensehost;
+import com.google.api.services.adsensehost.AdSenseHost;
 import com.google.api.services.adsensehost.model.AdStyle;
 import com.google.api.services.adsensehost.model.AdStyle.Colors;
 import com.google.api.services.adsensehost.model.AdUnit;
@@ -34,14 +34,14 @@ public class UpdateAdUnitOnPublisher {
   /**
    * Runs this sample.
    *
-   * @param service Adsensehost service object on which to run the requests.
+   * @param service AdSenseHost service object on which to run the requests.
    * @param accountId the ID of the pub account on which the ad unit exists.
    * @param adClientId the ID of the ad client on which the ad unit exists.
    * @param adUnitId the ID of the ad unit to be updated.
    * @return the updated ad unit.
    * @throws Exception
    */
-  public static AdUnit run(Adsensehost service, String accountId, String adClientId,
+  public static AdUnit run(AdSenseHost service, String accountId, String adClientId,
       String adUnitId) throws Exception {
     System.out.println("=================================================================");
     System.out.printf("Updating ad unit %s\n", adUnitId);

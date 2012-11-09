@@ -12,7 +12,7 @@
 
 package com.google.api.services.samples.adsensehost.cmdline;
 
-import com.google.api.services.adsensehost.Adsensehost;
+import com.google.api.services.adsensehost.AdSenseHost;
 import com.google.api.services.adsensehost.model.AdClient;
 import com.google.api.services.adsensehost.model.AdClients;
 
@@ -30,12 +30,12 @@ public class GetAllAdClientsForHost {
   /**
    * Runs this sample.
    *
-   * @param service Adsensehost service object on which to run the requests.
+   * @param service AdSenseHost service object on which to run the requests.
    * @param maxPageSize the maximum page size to retrieve.
    * @return the last page of retrieved host ad clients.
    * @throws Exception
    */
-  public static AdClients run(Adsensehost service, long maxPageSize) throws Exception {
+  public static AdClients run(AdSenseHost service, long maxPageSize) throws Exception {
     System.out.println("=================================================================");
     System.out.println("Listing all ad clients for host account");
     System.out.println("=================================================================");

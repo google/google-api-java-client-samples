@@ -12,7 +12,7 @@
 
 package com.google.api.services.samples.adsensehost.cmdline;
 
-import com.google.api.services.adsensehost.Adsensehost;
+import com.google.api.services.adsensehost.AdSenseHost;
 import com.google.api.services.adsensehost.model.CustomChannel;
 
 /**
@@ -32,13 +32,13 @@ public class UpdateCustomChannelOnHost {
   /**
    * Runs this sample.
    *
-   * @param service Adsensehost service object on which to run the requests.
+   * @param service AdSenseHost service object on which to run the requests.
    * @param adClientId the ad client ID that contains the custom channel.
    * @param customChannelId the ID of the custom channel to be updated.
    * @return the updated custom channel.
    * @throws Exception
    */
-  public static CustomChannel run(Adsensehost service, String adClientId, String customChannelId)
+  public static CustomChannel run(AdSenseHost service, String adClientId, String customChannelId)
       throws Exception {
     System.out.println("=================================================================");
     System.out.printf("Updating custom channel %s\n", customChannelId);

@@ -12,8 +12,8 @@
 
 package com.google.api.services.samples.adsensehost.cmdline;
 
-import com.google.api.services.adsensehost.Adsensehost;
-import com.google.api.services.adsensehost.Adsensehost.Accounts.Reports.Generate;
+import com.google.api.services.adsensehost.AdSenseHost;
+import com.google.api.services.adsensehost.AdSenseHost.Accounts.Reports.Generate;
 import com.google.api.services.adsensehost.model.Report;
 
 import java.text.DateFormat;
@@ -44,12 +44,12 @@ public class GenerateReportForPublisher {
   /**
    * Runs this sample.
    *
-   * @param service Adsensehost service object on which to run the requests.
+   * @param service AdSenseHost service object on which to run the requests.
    * @param accountId the ID of the publisher account on which to run the report.
    * @param adClientId the ID of the ad client on which to run the report.
    * @throws Exception
    */
-  public static void run(Adsensehost service, String accountId, String adClientId)
+  public static void run(AdSenseHost service, String accountId, String adClientId)
       throws Exception {
     System.out.println("=================================================================");
     System.out.printf("Running report for ad client %s\n", adClientId);
