@@ -30,6 +30,8 @@ import com.google.api.services.adsense.model.Accounts;
 import com.google.api.services.adsense.model.AdClients;
 import com.google.api.services.adsense.model.AdUnits;
 import com.google.api.services.adsense.model.CustomChannels;
+import com.google.api.services.adsense.model.SavedReports;
+
 
 import java.io.File;
 import java.io.IOException;
@@ -50,6 +52,9 @@ import java.util.Collections;
  * <li>Listing all URL channels for an ad client</li>
  * <li>Running a report for an ad client, for the past 7 days</li>
  * <li>Running a paginated report for an ad client, for the past 7 days</li>
+ * <li>Listing all saved reports for the default account</li>
+ * <li>Running a saved report for the default account</li> 
+ * <li>Listing all saved ad styles for the default account</li>
  * </ul>
  */
 public class AdSenseSample {
@@ -101,7 +106,7 @@ public class AdSenseSample {
     // Set up AdSense Management API client.
     AdSense adsense = new AdSense.Builder(
         new NetHttpTransport(), JSON_FACTORY, credential).setApplicationName(
-        "Google-AdSenseSample/1.1").build();
+        "Google-AdSenseSample/1.2").build();
 
     return adsense;
   }
@@ -151,6 +156,18 @@ public class AdSenseSample {
         } else {
           System.out.println("No ad clients found, unable to run remaining methods.");
         }
+        
+        SavedReports savedReports = GetAllSavedReports.run(adsense, MAX_REPORT_PAGE_SIZE);
+        if ((savedReports.getItems() != null) && !savedReports.getItems().isEmpty()){
+          // Get a saved report ID, so we can generate its report.
+          String exampleSavedReportId = savedReports.getItems().get(0).getId();
+          GenerateSavedReport.run(adsense, exampleSavedReportId);
+        } else {
+          System.out.println("No saved report found.");
+        }
+        
+        GetAllSavedAdStyles.run(adsense, MAX_LIST_PAGE_SIZE);
+        
       } catch (IOException e) {
         System.err.println(e.getMessage());
       }
@@ -159,3 +176,4 @@ public class AdSenseSample {
     }
   }
 }
+
