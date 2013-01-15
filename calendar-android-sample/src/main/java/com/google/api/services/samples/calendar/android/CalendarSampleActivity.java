@@ -96,20 +96,28 @@ adb shell setprop log.tag.HttpTransport DEBUG
 
   private final static int ADD_OR_EDIT_CALENDAR_REQUEST = 3;
 
+  /** HTTP transport. */
   final HttpTransport transport = AndroidHttp.newCompatibleTransport();
 
+  /** JSON factory. */
   final JsonFactory jsonFactory = new GsonFactory();
 
+  /** Credential to manage Google Account. */
   GoogleAccountCredential credential;
 
-  CalendarModel model = new CalendarModel();
-
-  ArrayAdapter<CalendarInfo> adapter;
-
+  /** Google Calendar client. */
   com.google.api.services.calendar.Calendar client;
 
+  /** Local Calendar model. */
+  CalendarModel model = new CalendarModel();
+
+  /** Number of active async tasks. */
   int numAsyncTasks;
 
+  /** Array adapter for the list view. */
+  ArrayAdapter<CalendarInfo> adapter;
+
+  /** List view. */
   private ListView listView;
 
   @Override

@@ -14,6 +14,7 @@
 
 package com.google.api.services.samples.calendar.android;
 
+import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.model.CalendarList;
 
 import java.io.IOException;
@@ -31,7 +32,8 @@ class AsyncLoadCalendars extends CalendarAsyncTask {
 
   @Override
   protected void doInBackground() throws IOException {
-    CalendarList feed = client.calendarList().list().setFields(CalendarInfo.FEED_FIELDS).execute();
+    Calendar.CalendarList.List listRequest = client.calendarList().list();
+    CalendarList feed = listRequest.setFields(CalendarInfo.FEED_FIELDS).execute();
     model.reset(feed.getItems());
   }
 

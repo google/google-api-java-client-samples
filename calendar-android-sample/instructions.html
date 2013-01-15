@@ -96,20 +96,24 @@ adb shell setprop log.tag.HttpTransport DEBUG
     </li>
     <li>Window &gt; Android SDK Manager
       <ul>
-        <li>Check on "Google APIs" under "Android 4.1.6 (API Level 16)"</li>
+        <li>Check on "Tools" at the top</li>
+        <li>Check on "Google APIs" under "Android 4.2 (API Level 17)"</li>
         <li>Check on "Google Play services" under "Extras".</li>
         <li>Click on "Install X packages..."</li>
       </ul>
     </li>
-    <li>Import <code>calendar-android-sample</code> project
+    <li>Install <a href="http://developer.android.com/google/play-services/setup.html">Google Play services</a>,
+    and cp -R &lt;android-sdk-folder&gt;/extras/google/google_play_services/libproject/google-play-services_lib google-api-java-client-samples</li>
+    <li>Import <code>calendar-android-sample</code> and <code>google-play-services_lib</code> projects
       <ul>
         <li>File &gt; Import...</li>
         <li>Select "General &gt; Existing Project into Workspace" and click
           "Next"</li>
         <li>Click "Browse" next to "Select root directory", find <code>
-            <i>[someDirectory]</i>/google-api-java-client-samples/calendar-android-sample
+            <i>[someDirectory]</i>/google-api-java-client-samples
           </code> and click "Next"
         </li>
+        <li>Click "Deselect All" and check on only <code>calendar-android-sample</code> and <code>google-play-services_lib</code> projects.</li>
         <li>Click "Finish"</li>
       </ul></li>
     <li>Clean Project (if compile error about missing gen directory)

@@ -14,6 +14,7 @@
 
 package com.google.api.services.samples.calendar.android;
 
+import com.google.api.services.calendar.Calendar.Calendars.Insert;
 import com.google.api.services.calendar.model.Calendar;
 
 import java.io.IOException;
@@ -34,7 +35,8 @@ class AsyncInsertCalendar extends CalendarAsyncTask {
 
   @Override
   protected void doInBackground() throws IOException {
-    Calendar calendar = client.calendars().insert(entry).setFields(CalendarInfo.FIELDS).execute();
+    Insert insertRequest = client.calendars().insert(entry);
+    Calendar calendar = insertRequest.setFields(CalendarInfo.FIELDS).execute();
     model.add(calendar);
   }
 }

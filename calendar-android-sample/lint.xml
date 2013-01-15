@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <lint>
-    <issue id="IconDensities" severity="ignore"/>
+    <issue id="IconDensities" severity="ignore" />
+    <issue id="MissingTranslation" severity="ignore" />
+    <issue id="OldTargetApi" severity="ignore" />
 </lint>

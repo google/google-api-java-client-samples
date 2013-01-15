@@ -14,6 +14,7 @@
 
 package com.google.api.services.samples.tasks.android;
 
+import com.google.api.services.tasks.Tasks;
 import com.google.api.services.tasks.model.Task;
 
 import java.io.IOException;
@@ -34,8 +35,8 @@ class AsyncLoadTasks extends CommonAsyncTask {
   @Override
   protected void doInBackground() throws IOException {
     List<String> result = new ArrayList<String>();
-    List<Task> tasks =
-        client.tasks().list("@default").setFields("items/title").execute().getItems();
+    Tasks.TasksOperations.List listRequest = client.tasks().list("@default");
+    List<Task> tasks = listRequest.setFields("items/title").execute().getItems();
     if (tasks != null) {
       for (Task task : tasks) {
         result.add(task.getTitle());

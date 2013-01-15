@@ -18,6 +18,7 @@ import com.google.api.client.googleapis.GoogleHeaders;
 import com.google.api.client.googleapis.batch.BatchRequest;
 import com.google.api.client.googleapis.batch.json.JsonBatchCallback;
 import com.google.api.client.googleapis.json.GoogleJsonError;
+import com.google.api.services.calendar.Calendar.Calendars.Insert;
 import com.google.api.services.calendar.model.Calendar;
 
 import java.io.IOException;
@@ -41,18 +42,18 @@ class AsyncBatchInsertCalendars extends CalendarAsyncTask {
   protected void doInBackground() throws IOException {
     BatchRequest batch = client.batch();
     for (Calendar calendar : calendars) {
-      client.calendars().insert(calendar).setFields(CalendarInfo.FIELDS)
-          .queue(batch, new JsonBatchCallback<Calendar>() {
+      Insert insertRequest = client.calendars().insert(calendar);
+      insertRequest.setFields(CalendarInfo.FIELDS).queue(batch, new JsonBatchCallback<Calendar>() {
 
-            public void onSuccess(Calendar calendar, GoogleHeaders headers) {
-              model.add(calendar);
-            }
+        public void onSuccess(Calendar calendar, GoogleHeaders headers) {
+          model.add(calendar);
+        }
 
-            @Override
-            public void onFailure(GoogleJsonError err, GoogleHeaders headers) throws IOException {
-              Utils.logAndShowError(activity, CalendarSampleActivity.TAG, err.getMessage());
-            }
-          });
+        @Override
+        public void onFailure(GoogleJsonError err, GoogleHeaders headers) throws IOException {
+          Utils.logAndShowError(activity, CalendarSampleActivity.TAG, err.getMessage());
+        }
+      });
     }
     batch.execute();
   }

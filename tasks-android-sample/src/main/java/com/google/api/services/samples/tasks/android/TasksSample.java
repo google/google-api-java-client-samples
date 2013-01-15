@@ -70,20 +70,28 @@ adb shell setprop log.tag.HttpTransport DEBUG
 
   static final int REQUEST_ACCOUNT_PICKER = 2;
 
+  /** HTTP transport. */
   final HttpTransport transport = AndroidHttp.newCompatibleTransport();
 
+  /** JSON factory. */
   final JsonFactory jsonFactory = new GsonFactory();
 
+  /** Credential to manage Google Account. */
   GoogleAccountCredential credential;
 
+  /** Google Tasks client. */
+  com.google.api.services.tasks.Tasks client;
+
+  /** List of tasks. */
   List<String> tasksList;
 
-  ArrayAdapter<String> adapter;
-
-  com.google.api.services.tasks.Tasks service;
-
+  /** Number of async tasks. */
   int numAsyncTasks;
 
+  /** Array adapter for the list view. */
+  ArrayAdapter<String> adapter;
+
+  /** List view. */
   private ListView listView;
 
   @Override
@@ -99,7 +107,7 @@ adb shell setprop log.tag.HttpTransport DEBUG
     SharedPreferences settings = getPreferences(Context.MODE_PRIVATE);
     credential.setSelectedAccountName(settings.getString(PREF_ACCOUNT_NAME, null));
     // Tasks client
-    service =
+    client =
         new com.google.api.services.tasks.Tasks.Builder(transport, jsonFactory, credential)
             .setApplicationName("Google-TasksAndroidSample/1.0").build();
   }

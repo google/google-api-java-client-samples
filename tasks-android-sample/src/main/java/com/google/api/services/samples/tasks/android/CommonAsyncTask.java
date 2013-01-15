@@ -36,7 +36,7 @@ abstract class CommonAsyncTask extends AsyncTask<Void, Void, Boolean> {
 
   CommonAsyncTask(TasksSample activity) {
     this.activity = activity;
-    client = activity.service;
+    client = activity.client;
     progressBar = activity.findViewById(R.id.title_refresh_progress);
   }
 

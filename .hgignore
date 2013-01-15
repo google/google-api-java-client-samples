@@ -13,3 +13,5 @@ syntax: regexp
 syntax: regexp
 ^[^/]+/bin$
 
+syntax: regexp
+google-play-services_lib$
