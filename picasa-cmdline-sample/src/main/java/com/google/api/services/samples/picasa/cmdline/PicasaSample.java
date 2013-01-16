@@ -43,6 +43,12 @@ import java.util.Collections;
  */
 public class PicasaSample {
 
+  /**
+   * Be sure to specify the name of your application. If the application name is {@code null} or
+   * blank, the application will log a warning. Suggested format is "MyCompany-ProductName/1.0".
+   */
+  private static final String APPLICATION_NAME = "";
+  
   /** Global instance of the HTTP transport. */
   private static final HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
 
@@ -75,7 +81,7 @@ public class PicasaSample {
     try {
       Credential credential = authorize();
       PicasaClient client = new PicasaClient(HTTP_TRANSPORT.createRequestFactory(credential));
-      client.setApplicationName("Google-PicasaSample/1.0");
+      client.setApplicationName(APPLICATION_NAME);
       try {
         run(client);
       } catch (IOException e) {

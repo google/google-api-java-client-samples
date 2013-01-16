@@ -18,12 +18,12 @@ import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
 import com.google.api.client.extensions.java6.auth.oauth2.FileCredentialStore;
 import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
-import com.google.api.client.googleapis.GoogleHeaders;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
 import com.google.api.client.googleapis.batch.BatchRequest;
 import com.google.api.client.googleapis.batch.json.JsonBatchCallback;
 import com.google.api.client.googleapis.json.GoogleJsonError;
+import com.google.api.client.http.HttpHeaders;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
@@ -48,6 +48,12 @@ import java.util.TimeZone;
  */
 public class CalendarSample {
 
+  /**
+   * Be sure to specify the name of your application. If the application name is {@code null} or
+   * blank, the application will log a warning. Suggested format is "MyCompany-ProductName/1.0".
+   */
+  private static final String APPLICATION_NAME = "";
+  
   /** Global instance of the HTTP transport. */
   private static final HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
 
@@ -90,7 +96,7 @@ public class CalendarSample {
         // set up global Calendar instance
         client = new com.google.api.services.calendar.Calendar.Builder(
             HTTP_TRANSPORT, JSON_FACTORY, credential).setApplicationName(
-            "Google-CalendarSample/1.0").build();
+            APPLICATION_NAME).build();
         // run commands
         showCalendars();
         addCalendarsUsingBatch();
@@ -124,13 +130,13 @@ public class CalendarSample {
     JsonBatchCallback<Calendar> callback = new JsonBatchCallback<Calendar>() {
 
       @Override
-      public void onSuccess(Calendar calendar, GoogleHeaders responseHeaders) {
+      public void onSuccess(Calendar calendar, HttpHeaders responseHeaders) {
         View.display(calendar);
         addedCalendarsUsingBatch.add(calendar);
       }
 
       @Override
-      public void onFailure(GoogleJsonError e, GoogleHeaders responseHeaders) {
+      public void onFailure(GoogleJsonError e, HttpHeaders responseHeaders) {
         System.out.println("Error Message: " + e.getMessage());
       }
     };
@@ -196,12 +202,12 @@ public class CalendarSample {
       client.calendars().delete(calendar.getId()).queue(batch, new JsonBatchCallback<Void>() {
 
         @Override
-        public void onSuccess(Void content, GoogleHeaders responseHeaders) {
+        public void onSuccess(Void content, HttpHeaders responseHeaders) {
           System.out.println("Delete is successful!");
         }
 
         @Override
-        public void onFailure(GoogleJsonError e, GoogleHeaders responseHeaders) {
+        public void onFailure(GoogleJsonError e, HttpHeaders responseHeaders) {
           System.out.println("Error Message: " + e.getMessage());
         }
       });

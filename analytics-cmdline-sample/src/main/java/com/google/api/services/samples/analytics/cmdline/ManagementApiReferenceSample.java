@@ -57,6 +57,12 @@ import java.util.Collections;
  */
 public class ManagementApiReferenceSample {
 
+  /**
+   * Be sure to specify the name of your application. If the application name is {@code null} or
+   * blank, the application will log a warning. Suggested format is "MyCompany-ProductName/1.0".
+   */
+  private static final String APPLICATION_NAME = "";
+  
   /** Global instance of the HTTP transport. */
   private static final HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
 
@@ -119,7 +125,7 @@ public class ManagementApiReferenceSample {
 
     // Set up and return Google Analytics API client.
     return new Analytics.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential)
-        .setApplicationName("Google-Analytics-Management-API-Sample")
+        .setApplicationName(APPLICATION_NAME)
         .setHttpRequestInitializer(credential)
         .build();
   }

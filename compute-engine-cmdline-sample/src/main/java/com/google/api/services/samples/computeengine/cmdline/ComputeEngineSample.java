@@ -40,6 +40,12 @@ import java.util.List;
  */
 public class ComputeEngineSample {
 
+  /**
+   * Be sure to specify the name of your application. If the application name is {@code null} or
+   * blank, the application will log a warning. Suggested format is "MyCompany-ProductName/1.0".
+   */
+  private static final String APPLICATION_NAME = "";
+  
   /** Set projectId to your Project ID from Overview pane in the APIs console */
   private static final String projectId = "YOUR_PROJECT_ID";
 
@@ -62,7 +68,7 @@ public class ComputeEngineSample {
 
         //Create compute engine object for listing instances
         Compute compute = new Compute.Builder(HTTP_TRANSPORT, JSON_FACTORY, null)
-            .setApplicationName("Google-ComputeSample/1.0")
+            .setApplicationName(APPLICATION_NAME)
             .setHttpRequestInitializer(credential)
             .build();
 

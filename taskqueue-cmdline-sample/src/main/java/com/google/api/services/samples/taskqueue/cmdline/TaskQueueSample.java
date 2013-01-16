@@ -43,6 +43,12 @@ import java.util.Collections;
  */
 public class TaskQueueSample {
 
+  /**
+   * Be sure to specify the name of your application. If the application name is {@code null} or
+   * blank, the application will log a warning. Suggested format is "MyCompany-ProductName/1.0".
+   */
+  private static final String APPLICATION_NAME = "";
+ 
   private static String projectName;
   private static String taskQueueName;
   private static int leaseSecs;
@@ -91,7 +97,7 @@ public class TaskQueueSample {
 
     // set up Taskqueue
     Taskqueue taskQueue = new Taskqueue.Builder(
-        HTTP_TRANSPORT, JSON_FACTORY, credential).setApplicationName("Google-TaskQueueSample/1.0")
+        HTTP_TRANSPORT, JSON_FACTORY, credential).setApplicationName(APPLICATION_NAME)
         .setTaskqueueRequestInitializer(new TaskqueueRequestInitializer() {
           @Override
           public void initializeTaskqueueRequest(TaskqueueRequest<?> request) {

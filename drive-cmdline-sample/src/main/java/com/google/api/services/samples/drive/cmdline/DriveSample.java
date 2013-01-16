@@ -55,6 +55,12 @@ import java.util.Collections;
  */
 public class DriveSample {
 
+  /**
+   * Be sure to specify the name of your application. If the application name is {@code null} or
+   * blank, the application will log a warning. Suggested format is "MyCompany-ProductName/1.0".
+   */
+  private static final String APPLICATION_NAME = "";
+  
   private static final String UPLOAD_FILE_PATH = "Enter File Path";
   private static final String DIR_FOR_DOWNLOADS = "Enter Download Directory";
   private static final java.io.File UPLOAD_FILE = new java.io.File(UPLOAD_FILE_PATH);
@@ -81,8 +87,8 @@ public class DriveSample {
       System.exit(1);
     }
     // set up file credential store
-    FileCredentialStore credentialStore = new FileCredentialStore(new java.io.File(
-        System.getProperty("user.home"), ".credentials/drive.json"), JSON_FACTORY);
+    FileCredentialStore credentialStore = new FileCredentialStore(
+        new java.io.File(System.getProperty("user.home"), ".credentials/drive.json"), JSON_FACTORY);
     // set up authorization code flow
     GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
         HTTP_TRANSPORT, JSON_FACTORY, clientSecrets,
@@ -92,8 +98,8 @@ public class DriveSample {
   }
 
   public static void main(String[] args) {
-    Preconditions.checkArgument(!UPLOAD_FILE_PATH.startsWith("Enter ")
-        && !DIR_FOR_DOWNLOADS.startsWith("Enter "),
+    Preconditions.checkArgument(
+        !UPLOAD_FILE_PATH.startsWith("Enter ") && !DIR_FOR_DOWNLOADS.startsWith("Enter "),
         "Please enter the upload file path and download directory in %s", DriveSample.class);
 
     try {
@@ -101,8 +107,8 @@ public class DriveSample {
         // authorization
         Credential credential = authorize();
         // set up the global Drive instance
-        drive = new Drive.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential).setApplicationName(
-            "Google-DriveSample/1.0").build();
+        drive = new Drive.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential)
+            .setApplicationName(APPLICATION_NAME).build();
 
         // run commands
 
@@ -137,8 +143,8 @@ public class DriveSample {
     File fileMetadata = new File();
     fileMetadata.setTitle(UPLOAD_FILE.getName());
 
-    InputStreamContent mediaContent = new InputStreamContent("image/jpeg", new BufferedInputStream(
-        new FileInputStream(UPLOAD_FILE)));
+    InputStreamContent mediaContent = new InputStreamContent(
+        "image/jpeg", new BufferedInputStream(new FileInputStream(UPLOAD_FILE)));
     mediaContent.setLength(UPLOAD_FILE.length());
 
     Drive.Files.Insert insert = drive.files().insert(fileMetadata, mediaContent);

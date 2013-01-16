@@ -31,6 +31,12 @@ import java.io.IOException;
  */
 public class YouTubeClient {
 
+  /**
+   * Be sure to specify the name of your application. Suggested format is
+   * "MyCompany-ProductName/1.0".
+   */
+  private static final String APPLICATION_NAME = "";
+  
   private final JsonFactory jsonFactory = new JacksonFactory();
 
   private final HttpTransport transport = new NetHttpTransport();
@@ -45,7 +51,7 @@ public class YouTubeClient {
       public void initialize(HttpRequest request) {
         // headers
         GoogleHeaders headers = new GoogleHeaders();
-        headers.setApplicationName("Google-YouTubeSample/1.0");
+        headers.setApplicationName(APPLICATION_NAME);
         headers.setGDataVersion("2");
         request.setHeaders(headers);
         request.setParser(parser);

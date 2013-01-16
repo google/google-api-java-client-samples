@@ -14,10 +14,10 @@
 
 package com.google.api.services.samples.calendar.android;
 
-import com.google.api.client.googleapis.GoogleHeaders;
 import com.google.api.client.googleapis.batch.BatchRequest;
 import com.google.api.client.googleapis.batch.json.JsonBatchCallback;
 import com.google.api.client.googleapis.json.GoogleJsonError;
+import com.google.api.client.http.HttpHeaders;
 import com.google.api.services.calendar.model.Calendar;
 
 import java.io.IOException;
@@ -44,12 +44,12 @@ class AsyncBatchInsertCalendars extends CalendarAsyncTask {
       client.calendars().insert(calendar).setFields(CalendarInfo.FIELDS)
           .queue(batch, new JsonBatchCallback<Calendar>() {
 
-            public void onSuccess(Calendar calendar, GoogleHeaders headers) {
+            public void onSuccess(Calendar calendar, HttpHeaders headers) {
               model.add(calendar);
             }
 
             @Override
-            public void onFailure(GoogleJsonError err, GoogleHeaders headers) throws IOException {
+            public void onFailure(GoogleJsonError err, HttpHeaders headers) throws IOException {
               Utils.logAndShowError(activity, CalendarSampleActivity.TAG, err.getMessage());
             }
           });

@@ -66,7 +66,13 @@ import java.util.Collections;
  * </ul>
  */
 public class AdSenseHostSample {
-
+  
+  /**
+   * Be sure to specify the name of your application. If the application name is {@code null} or
+   * blank, the application will log a warning. Suggested format is "MyCompany-ProductName/1.0".
+   */
+  private static final String APPLICATION_NAME = "";
+  
   // Global instance of the HTTP transport.
   private static final HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
 
@@ -115,8 +121,8 @@ public class AdSenseHostSample {
 
     // Set up AdSense Host API client.
     AdSenseHost adsensehost = new AdSenseHost.Builder(
-        new NetHttpTransport(), new JacksonFactory(), credential).setApplicationName(
-        "Google-AdSenseHostSample/1.0").build();
+        new NetHttpTransport(), new JacksonFactory(), credential)
+        .setApplicationName(APPLICATION_NAME).build();
 
     return adsensehost;
   }

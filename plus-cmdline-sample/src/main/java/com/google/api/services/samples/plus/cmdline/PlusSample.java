@@ -39,6 +39,12 @@ import java.util.Collections;
  */
 public class PlusSample {
 
+  /**
+   * Be sure to specify the name of your application. If the application name is {@code null} or
+   * blank, the application will log a warning. Suggested format is "MyCompany-ProductName/1.0".
+   */
+  private static final String APPLICATION_NAME = "";
+  
   /** Global instance of the HTTP transport. */
   private static final HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
 
@@ -76,8 +82,8 @@ public class PlusSample {
         // authorization
         Credential credential = authorize();
         // set up global Plus instance
-        plus = new Plus.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential).setApplicationName(
-            "Google-PlusSample/1.0").build();
+        plus = new Plus.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential)
+            .setApplicationName(APPLICATION_NAME).build();
         // run commands
         listActivities();
         getActivity();

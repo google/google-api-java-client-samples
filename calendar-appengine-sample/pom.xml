@@ -55,7 +55,7 @@
     <datanucleus.version>1.1.5</datanucleus.version>
     <gae.version>1.7.3</gae.version>
     <gwt.version>2.4.0</gwt.version>
-    <google-api-client.version>1.12.0-beta</google-api-client.version>
+    <google-api-client.version>1.13.2-beta</google-api-client.version>
     <webappDirectory>${project.build.directory}/${project.build.finalName}
     </webappDirectory>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -271,7 +271,7 @@
     <dependency>
       <groupId>com.google.apis</groupId>
       <artifactId>google-api-services-calendar</artifactId>
-      <version>v3-rev19-1.12.0-beta</version>
+      <version>v3-rev22-1.13.2-beta</version>
     </dependency>
     <dependency>
       <groupId>net.kindleit</groupId>

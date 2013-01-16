@@ -15,37 +15,44 @@
 
   <h3>Register Your Application</h3>
 
+ 
   <p>You first need to register your Android application and sign up for
-    access to the Google Tasks API in the Google APIs Console. First, you
-    need the "Signing certificate fingerprint (SHA1)" for the debug and release
-    builds:</p>
+    access to the Google Calendar API in the Google APIs Console. First, you
+    need the "Signing certificate fingerprint (SHA1)" for the debug build:</p>
   <pre>
 keytool -exportcert -alias androiddebugkey -keystore ~/.android/debug.keystore | openssl sha1
 Enter keystore password: android
-
+</pre>
+  <p> And for the release build: </p>
+  <pre>
 keytool -exportcert -alias androiddebugkey -keystore my-release-key.keystore | openssl sha1
 </pre>
 
   <p>Next, register in the Google APIs Console:</p>
 
   <ul>
-    <li>Visit the <a
-      href="https://code.google.com/apis/console/?api=tasks">Google apis
-      console</a> and click OK.  Make sure you click on this URL specifically, which
-      automatically enables the Calendar API. If you don't properly enable the Calendar API
-      when running the sample you would get a 403 error Access Not Configured.</li>
-    <li>If this is your first time, click "Create project..."</li>
-    <li>Otherwise, click on the drop down under the "Google apis" logo at
-      the top left, and click "Create..." under "Other projects"</li>
+     <li>Visit the <a
+      href="https://code.google.com/apis/console/">Google apis
+      console</a> </li>
+    <li>If this is your first time, click "Create project..." Otherwise, click
+     on the drop down under the "Google apis" logo at the top left, and click
+     "Create..." under "Other projects"</li>
+    <li>Click on "Services", and change the Tasks API status to "ON".</li>
     <li>Click on "API Access", and then on "Create an OAuth 2.0 Client
       ID...".</li>
     <li>Enter a product name and click "Next".</li>
     <li>Select "Installed application", select "Android", enter
-      com.google.api.services.samples.calendar.android for "Package name", paste
-      the SHA1 fingerprint for the debug certificate above into "Signing
+      com.google.api.services.samples.tasks.android for "Package name".
+      <ul><li><b>Note:</b> The package name must be universally unique to
+        actually register an application. If you try
+        to register a package name in use, you may get an error reading "An
+        unexpected error has occurred." This sample has already been
+        registered, so you will need to change the package name. </li></ul></li>
+    <li>Paste the SHA1 fingerprint for the debug certificate above into "Signing
       certificate fingerprint (SHA1)", and click "Create client ID".</li>
-    <li>Click "Create an OAuth 2.0 Client ID..." and follow the directions
-      from the previous step for the release certificate.</li>
+    <li>Click "Create another client ID..." and follow the directions
+      from the previous steps, but use the release certificate instead of the
+      debug certificate.</li>
   </ul>
 
   <h3>Checkout Instructions</h3>

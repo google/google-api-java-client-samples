@@ -52,6 +52,12 @@ import java.util.Map;
 public class CoreReportingApiReferenceSample {
 
   /**
+   * Be sure to specify the name of your application. If the application name is {@code null} or
+   * blank, the application will log a warning. Suggested format is "MyCompany-ProductName/1.0".
+   */
+  private static final String APPLICATION_NAME = "";
+  
+  /**
    * Used to identify from which reporting profile to retrieve data.
    * Format is ga:xxx where xxx is your profile ID.
    */
@@ -128,7 +134,7 @@ public class CoreReportingApiReferenceSample {
 
     // Set up and return Google Analytics API client.
     return new Analytics.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential)
-        .setApplicationName("Google-Analytics-Core-Reporting-API-Sample")
+        .setApplicationName(APPLICATION_NAME)
         .build();
   }
 

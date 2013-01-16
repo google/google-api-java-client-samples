@@ -47,6 +47,12 @@ import java.util.List;
  */
 public class VerificationSample {
 
+  /**
+   * Be sure to specify the name of your application. If the application name is {@code null} or
+   * blank, the application will log a warning. Suggested format is "MyCompany-ProductName/1.0".
+   */
+  private static final String APPLICATION_NAME = "";
+  
   private static final String META_VERIFICATION_METHOD = "meta";
   private static final String SITE_TYPE = "SITE";
 
@@ -99,8 +105,7 @@ public class VerificationSample {
 
     // set up SiteVerification
     SiteVerification siteVerification = new SiteVerification.Builder(
-        HTTP_TRANSPORT, JSON_FACTORY, credential).setApplicationName(
-        "Google-SiteVerificationSample/1.0")
+        HTTP_TRANSPORT, JSON_FACTORY, credential).setApplicationName(APPLICATION_NAME)
         .setGoogleClientRequestInitializer(new SiteVerificationRequestInitializer() {
             @Override
           public void initializeSiteVerificationRequest(SiteVerificationRequest<?> request) {

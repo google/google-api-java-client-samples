@@ -33,6 +33,12 @@ import java.nio.charset.Charset;
  */
 public class PlusServiceAccountSample {
 
+  /**
+   * Be sure to specify the name of your application. If the application name is {@code null} or
+   * blank, the application will log a warning. Suggested format is "MyCompany-ProductName/1.0".
+   */
+  private static final String APPLICATION_NAME = "";
+  
   /** E-mail address of the service account. */
   private static final String SERVICE_ACCOUNT_EMAIL = "Enter service account e-mail from "
       + "https://code.google.com/apis/console/?api=plus into SERVICE_ACCOUNT_EMAIL in "
@@ -68,8 +74,8 @@ public class PlusServiceAccountSample {
             // .setServiceAccountUser("user@example.com")
             .build();
         // set up global Plus instance
-        plus = new Plus.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential).setApplicationName(
-            "Google-PlusServiceAccountSample/1.0").build();
+        plus = new Plus.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential)
+            .setApplicationName(APPLICATION_NAME).build();
         // run commands
         getActivity();
         // success!

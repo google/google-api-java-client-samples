@@ -45,6 +45,12 @@ import java.util.Collections;
  */
 public class AdExchangeBuyerSample {
 
+  /**
+   * Be sure to specify the name of your application. If the application name is {@code null} or
+   * blank, the application will log a warning. Suggested format is "MyCompany-ProductName/1.0".
+   */
+  private static final String APPLICATION_NAME = "";
+  
   /** Global instance of the HTTP transport. */
   private static final HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
 
@@ -90,8 +96,8 @@ public class AdExchangeBuyerSample {
 
     // Set up API client.
     Adexchangebuyer client = new Adexchangebuyer.Builder(
-        HTTP_TRANSPORT, JSON_FACTORY, credential).setApplicationName(
-        "Google-AdExchangeBuyerSample/1.0").build();
+        HTTP_TRANSPORT, JSON_FACTORY, credential)
+        .setApplicationName(APPLICATION_NAME).build();
 
     return client;
   }

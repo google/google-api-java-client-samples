@@ -39,6 +39,12 @@ import java.text.NumberFormat;
  */
 public class BooksSample {
 
+  /**
+   * Be sure to specify the name of your application. If the application name is {@code null} or
+   * blank, the application will log a warning. Suggested format is "MyCompany-ProductName/1.0".
+   */
+  private static final String APPLICATION_NAME = "";
+  
   private static final NumberFormat CURRENCY_FORMATTER = NumberFormat.getCurrencyInstance();
   private static final NumberFormat PERCENT_FORMATTER = NumberFormat.getPercentInstance();
 
@@ -47,7 +53,7 @@ public class BooksSample {
     
     // Set up Books client.
     final Books books = new Books.Builder(new NetHttpTransport(), jsonFactory, null)
-        .setApplicationName("Google-BooksSample/1.0")
+        .setApplicationName(APPLICATION_NAME)
         .setGoogleClientRequestInitializer(new BooksRequestInitializer(ClientCredentials.API_KEY))
         .build();
     // Set query string and filter only Google eBooks.

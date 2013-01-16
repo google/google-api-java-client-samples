@@ -42,6 +42,12 @@ import java.util.Collections;
  */
 public class PredictionSample {
 
+  /**
+   * Be sure to specify the name of your application. If the application name is {@code null} or
+   * blank, the application will log a warning. Suggested format is "MyCompany-ProductName/1.0".
+   */
+  private static final String APPLICATION_NAME = "";
+  
   static final String MODEL_ID = "mymodel";
   static final String STORAGE_DATA_LOCATION = "enter_bucket/language_id.txt";
 
@@ -79,8 +85,7 @@ public class PredictionSample {
     // authorization
     Credential credential = authorize();
     Prediction prediction = new Prediction.Builder(
-        HTTP_TRANSPORT, JSON_FACTORY, credential).setApplicationName("Google-PredictionSample/1.0")
-        .build();
+        HTTP_TRANSPORT, JSON_FACTORY, credential).setApplicationName(APPLICATION_NAME).build();
     train(prediction);
     predict(prediction, "Is this sentence in English?");
     predict(prediction, "¿Es esta frase en Español?");
