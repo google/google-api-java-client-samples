@@ -83,7 +83,7 @@ public class StorageServiceAccountSample {
             .build();
 
         // Set up and execute Google Cloud Storage request.
-        String URI = "http://commondatastorage.googleapis.com/" + BUCKET_NAME;
+        String URI = "https://storage.googleapis.com/" + BUCKET_NAME;
         HttpRequestFactory requestFactory = HTTP_TRANSPORT.createRequestFactory(credential);
         GenericUrl url = new GenericUrl(URI);
         HttpRequest request = requestFactory.buildGetRequest(url);
