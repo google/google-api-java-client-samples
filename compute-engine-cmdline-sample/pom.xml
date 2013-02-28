@@ -130,7 +130,7 @@
     <dependency>
       <groupId>com.google.apis</groupId>
       <artifactId>google-api-services-compute</artifactId>
-      <version>v1beta13-rev4-1.13.2-beta</version>
+      <version>v1beta14-rev1-1.13.2-beta</version>
     </dependency>
   </dependencies>
   <properties>

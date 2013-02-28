@@ -45,9 +45,12 @@ public class ComputeEngineSample {
    * blank, the application will log a warning. Suggested format is "MyCompany-ProductName/1.0".
    */
   private static final String APPLICATION_NAME = "";
-  
+
   /** Set projectId to your Project ID from Overview pane in the APIs console */
   private static final String projectId = "YOUR_PROJECT_ID";
+
+  /** Set Compute Engine zone  */
+  private static final String zoneName = "us-central1-a";
 
   /** Global instance of the HTTP transport. */
   private static final HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
@@ -117,7 +120,7 @@ public class ComputeEngineSample {
   */
   public static void printInstances(Compute compute, String projectId) throws IOException {
     System.out.println("================== Listing Compute Engine Instances ==================");
-    Compute.Instances.List instances = compute.instances().list(projectId);
+    Compute.Instances.List instances = compute.instances().list(projectId, zoneName);
     InstanceList list = instances.execute();
     if (list.getItems() == null) {
       System.out.println("No instances found. Sign in to the Google APIs Console and create "
