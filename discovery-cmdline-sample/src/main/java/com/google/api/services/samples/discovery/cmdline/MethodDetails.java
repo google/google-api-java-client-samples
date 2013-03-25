@@ -14,8 +14,8 @@
 
 package com.google.api.services.samples.discovery.cmdline;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
+import com.google.api.client.util.Lists;
+import com.google.api.client.util.Sets;
 
 import java.util.ArrayList;
 import java.util.SortedSet;

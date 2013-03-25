@@ -20,18 +20,19 @@ import com.google.api.client.extensions.java6.auth.oauth2.FileCredentialStore;
 import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
+import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.http.FileContent;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpContent;
-import com.google.api.client.http.HttpMethod;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestFactory;
 import com.google.api.client.http.HttpResponseException;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.UriTemplate;
-import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.client.util.Lists;
+import com.google.api.client.util.Maps;
 import com.google.api.services.discovery.Discovery;
 import com.google.api.services.discovery.model.DirectoryList;
 import com.google.api.services.discovery.model.JsonSchema;
@@ -39,8 +40,6 @@ import com.google.api.services.discovery.model.RestDescription;
 import com.google.api.services.discovery.model.RestMethod;
 import com.google.api.services.discovery.model.RestResource;
 import com.google.common.base.Joiner;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 
 import java.io.File;
 import java.io.IOException;
@@ -60,12 +59,12 @@ import java.util.regex.Pattern;
 public class DiscoverySample {
 
   /** Global instance of the HTTP transport. */
-  private static final HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
+  private static HttpTransport HTTP_TRANSPORT;
 
   /** Global instance of the JSON factory. */
   private static final JsonFactory JSON_FACTORY = new JacksonFactory();
 
-  static final Discovery DISCOVERY = new Discovery(HTTP_TRANSPORT, JSON_FACTORY, null);
+  static Discovery DISCOVERY;
 
   private static final String APP_NAME = "Google Discovery API Client";
 
@@ -156,6 +155,9 @@ public class DiscoverySample {
   }
 
   private static void call(String[] args) throws Exception {
+    HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
+    DISCOVERY = new Discovery(HTTP_TRANSPORT, JSON_FACTORY, null);
+    
     // load discovery document
     if (args.length == 1) {
       error("call", "missing api name");
@@ -271,7 +273,7 @@ public class DiscoverySample {
         requestFactory = HTTP_TRANSPORT.createRequestFactory();
       }
       HttpRequest request =
-          requestFactory.buildRequest(HttpMethod.valueOf(method.getHttpMethod()), url, content);
+          requestFactory.buildRequest(method.getHttpMethod(), url, content);
       String response = request.execute().parseAsString();
       System.out.println(response);
     } catch (IOException e) {
@@ -374,7 +376,9 @@ public class DiscoverySample {
     }
   }
 
-  private static void discover(String[] args) throws IOException {
+  private static void discover(String[] args) throws Exception {
+    HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
+    DISCOVERY = new Discovery(HTTP_TRANSPORT, JSON_FACTORY, null);
     System.out.println(APP_NAME);
     if (args.length == 1) {
       DirectoryList directoryList = DISCOVERY.apis().list().execute();

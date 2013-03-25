@@ -15,15 +15,15 @@
 package com.google.api.services.samples.storage.serviceaccount.cmdline;
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
+import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestFactory;
 import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpTransport;
-import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
-import com.google.common.base.Preconditions;
+import com.google.api.client.util.Preconditions;
 import com.google.common.io.Files;
 
 import java.io.File;
@@ -55,7 +55,7 @@ public class StorageServiceAccountSample {
       "https://www.googleapis.com/auth/devstorage.read_write";
 
   /** Global instance of the HTTP transport. */
-  private static final HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
+  private static HttpTransport HTTP_TRANSPORT;
 
   /** Global instance of the JSON factory. */
   private static final JsonFactory JSON_FACTORY = new JacksonFactory();
@@ -63,6 +63,7 @@ public class StorageServiceAccountSample {
   public static void main(String[] args) {
     try {
       try {
+        HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
         // check for valid setup
         Preconditions.checkArgument(!SERVICE_ACCOUNT_EMAIL.startsWith("[["),
             "Please enter your service account e-mail from the Google APIs "

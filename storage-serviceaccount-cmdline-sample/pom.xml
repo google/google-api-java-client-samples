@@ -127,10 +127,15 @@
       <artifactId>google-http-client-jackson2</artifactId>
       <version>${project.http.version}</version>
     </dependency>
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+      <version>14.0</version>
+    </dependency>
     </dependencies>
   <properties>
-    <project.http.version>1.13.1-beta</project.http.version>
-    <project.api.version>1.13.1-beta</project.api.version>
+    <project.http.version>1.14.1-beta</project.http.version>
+    <project.api.version>1.14.1-beta</project.api.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 </project>

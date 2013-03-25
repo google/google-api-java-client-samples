@@ -14,9 +14,9 @@
 
 package com.google.api.services.samples.calendar.android;
 
+import com.google.api.client.util.Objects;
 import com.google.api.services.calendar.model.Calendar;
 import com.google.api.services.calendar.model.CalendarListEntry;
-import com.google.common.base.Objects;
 
 /**
  * Class that holds information about a calendar.

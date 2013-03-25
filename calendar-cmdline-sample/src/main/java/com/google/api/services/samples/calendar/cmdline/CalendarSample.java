@@ -22,20 +22,20 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
 import com.google.api.client.googleapis.batch.BatchRequest;
 import com.google.api.client.googleapis.batch.json.JsonBatchCallback;
+import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.googleapis.json.GoogleJsonError;
 import com.google.api.client.http.HttpHeaders;
 import com.google.api.client.http.HttpTransport;
-import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.util.DateTime;
+import com.google.api.client.util.Lists;
 import com.google.api.services.calendar.CalendarScopes;
 import com.google.api.services.calendar.model.Calendar;
 import com.google.api.services.calendar.model.CalendarList;
 import com.google.api.services.calendar.model.Event;
 import com.google.api.services.calendar.model.EventDateTime;
 import com.google.api.services.calendar.model.Events;
-import com.google.common.collect.Lists;
 
 import java.io.File;
 import java.io.IOException;
@@ -55,7 +55,7 @@ public class CalendarSample {
   private static final String APPLICATION_NAME = "";
   
   /** Global instance of the HTTP transport. */
-  private static final HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
+  private static HttpTransport HTTP_TRANSPORT;
 
   /** Global instance of the JSON factory. */
   private static final JsonFactory JSON_FACTORY = new JacksonFactory();
@@ -90,6 +90,7 @@ public class CalendarSample {
   public static void main(String[] args) {
     try {
       try {
+        HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
         // authorization
         Credential credential = authorize();
 

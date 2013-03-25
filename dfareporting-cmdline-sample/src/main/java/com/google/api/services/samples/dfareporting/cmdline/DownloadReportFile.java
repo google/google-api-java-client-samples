@@ -18,9 +18,9 @@ import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestFactory;
 import com.google.api.client.http.HttpResponse;
+import com.google.api.client.util.Charsets;
 import com.google.api.services.dfareporting.Dfareporting;
 import com.google.api.services.dfareporting.model.File;
-import com.google.common.base.Charsets;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;

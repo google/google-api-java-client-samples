@@ -15,14 +15,15 @@
 
 package com.google.api.services.picasa;
 
-import com.google.api.client.googleapis.GoogleHeaders;
 import com.google.api.client.http.AbstractInputStreamContent;
+import com.google.api.client.http.HttpHeaders;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestFactory;
 import com.google.api.client.http.InputStreamContent;
-import com.google.api.client.http.MultipartRelatedContent;
+import com.google.api.client.http.MultipartContent;
 import com.google.api.client.http.xml.atom.AtomContent;
 import com.google.api.client.xml.XmlNamespaceDictionary;
+import com.google.api.client.xml.atom.Atom;
 import com.google.api.services.picasa.model.AlbumEntry;
 import com.google.api.services.picasa.model.AlbumFeed;
 import com.google.api.services.picasa.model.Entry;
@@ -32,6 +33,7 @@ import com.google.api.services.picasa.model.UserFeed;
 import com.google.api.services.samples.shared.gdata.xml.GDataXmlClient;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 /**
  * Client for the Picasa Web Albums Data API.
@@ -40,17 +42,17 @@ import java.io.IOException;
  */
 public final class PicasaClient extends GDataXmlClient {
 
-  static final XmlNamespaceDictionary DICTIONARY = new XmlNamespaceDictionary()
-      .set("", "http://www.w3.org/2005/Atom")
-      .set("exif", "http://schemas.google.com/photos/exif/2007")
-      .set("gd", "http://schemas.google.com/g/2005")
-      .set("geo", "http://www.w3.org/2003/01/geo/wgs84_pos#")
-      .set("georss", "http://www.georss.org/georss")
-      .set("gml", "http://www.opengis.net/gml")
-      .set("gphoto", "http://schemas.google.com/photos/2007")
-      .set("media", "http://search.yahoo.com/mrss/")
-      .set("openSearch", "http://a9.com/-/spec/opensearch/1.1/")
-      .set("xml", "http://www.w3.org/XML/1998/namespace");
+  static final XmlNamespaceDictionary DICTIONARY =
+      new XmlNamespaceDictionary().set("", "http://www.w3.org/2005/Atom")
+          .set("exif", "http://schemas.google.com/photos/exif/2007")
+          .set("gd", "http://schemas.google.com/g/2005")
+          .set("geo", "http://www.w3.org/2003/01/geo/wgs84_pos#")
+          .set("georss", "http://www.georss.org/georss")
+          .set("gml", "http://www.opengis.net/gml")
+          .set("gphoto", "http://schemas.google.com/photos/2007")
+          .set("media", "http://search.yahoo.com/mrss/")
+          .set("openSearch", "http://a9.com/-/spec/opensearch/1.1/")
+          .set("xml", "http://www.w3.org/XML/1998/namespace");
 
   public PicasaClient(HttpRequestFactory requestFactory) {
     super("2", requestFactory, DICTIONARY);
@@ -103,8 +105,8 @@ public final class PicasaClient extends GDataXmlClient {
   public PhotoEntry executeInsertPhotoEntry(
       PicasaUrl albumFeedUrl, InputStreamContent content, String fileName) throws IOException {
     HttpRequest request = getRequestFactory().buildPostRequest(albumFeedUrl, content);
-    GoogleHeaders headers = new GoogleHeaders();
-    headers.setSlugFromFileName(fileName);
+    HttpHeaders headers = new HttpHeaders();
+    Atom.setSlugHeader(headers, fileName);
     request.setHeaders(headers);
     return execute(request).parseAs(PhotoEntry.class);
   }
@@ -114,7 +116,8 @@ public final class PicasaClient extends GDataXmlClient {
       throws IOException {
     HttpRequest request = getRequestFactory().buildPostRequest(albumFeedUrl, null);
     AtomContent atomContent = AtomContent.forEntry(DICTIONARY, photo);
-    new MultipartRelatedContent(atomContent, content).forRequest(request);
+    request.setContent(new MultipartContent().setContentParts(Arrays.asList(atomContent, content)));
+    request.getHeaders().setMimeVersion("1.0");
     return execute(request).parseAs(PhotoEntry.class);
   }
 }

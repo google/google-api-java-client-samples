@@ -14,9 +14,9 @@
 
 package com.google.api.services.samples.shared.gdata.xml;
 
-import com.google.api.client.googleapis.GoogleUrl;
 import com.google.api.client.googleapis.xml.atom.AtomPatchRelativeToOriginalContent;
 import com.google.api.client.googleapis.xml.atom.GoogleAtom;
+import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestFactory;
 import com.google.api.client.http.xml.atom.AtomContent;
@@ -62,15 +62,15 @@ public abstract class GDataXmlClient extends GDataClient {
   }
 
   @Override
-  protected void prepareUrl(GoogleUrl url, Class<?> parseAsType) {
+  protected void prepareUrl(GenericUrl url, Class<?> parseAsType) {
     super.prepareUrl(url, parseAsType);
     if (partialResponse && parseAsType != null) {
-      url.setFields(GoogleAtom.getFieldsFor(parseAsType));
+      url.put("fields", GoogleAtom.getFieldsFor(parseAsType));
     }
   }
 
   protected final <T> T executePatchRelativeToOriginal(
-      GoogleUrl url, T original, T updated, String etag) throws IOException {
+      GenericUrl url, T original, T updated, String etag) throws IOException {
     AtomPatchRelativeToOriginalContent content =
         new AtomPatchRelativeToOriginalContent(namespaceDictionary, original, updated);
     @SuppressWarnings("unchecked")
@@ -78,7 +78,7 @@ public abstract class GDataXmlClient extends GDataClient {
     return executePatchRelativeToOriginal(url, content, parseAsType, etag);
   }
 
-  protected final <T> T executePost(GoogleUrl url, boolean isFeed, T content) throws IOException {
+  protected final <T> T executePost(GenericUrl url, boolean isFeed, T content) throws IOException {
     AtomContent atomContent = isFeed ? AtomContent.forFeed(namespaceDictionary, content)
         : AtomContent.forEntry(namespaceDictionary, content);
     @SuppressWarnings("unchecked")

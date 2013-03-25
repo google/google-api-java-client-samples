@@ -18,6 +18,7 @@ import com.google.api.client.extensions.java6.auth.oauth2.FileCredentialStore;
 import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
+import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
@@ -74,7 +75,7 @@ public class AdSenseHostSample {
   private static final String APPLICATION_NAME = "";
   
   // Global instance of the HTTP transport.
-  private static final HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
+  private static HttpTransport HTTP_TRANSPORT;
 
   // Global instance of the JSON factory.
   private static final JsonFactory JSON_FACTORY = new JacksonFactory();
@@ -141,6 +142,7 @@ public class AdSenseHostSample {
   public static void main(String[] args) {
     try {
       try {
+        HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
         AdSenseHost service = initializeAdsensehost();
 
         AdClients adClients = GetAllAdClientsForHost.run(service, MAX_LIST_PAGE_SIZE);

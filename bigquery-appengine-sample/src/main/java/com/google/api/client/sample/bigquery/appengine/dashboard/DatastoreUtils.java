@@ -2,6 +2,7 @@
 
 package com.google.api.client.sample.bigquery.appengine.dashboard;
 
+import com.google.api.client.util.Preconditions;
 import com.google.api.services.bigquery.model.TableCell;
 import com.google.api.services.bigquery.model.TableFieldSchema;
 import com.google.api.services.bigquery.model.TableRow;
@@ -13,7 +14,6 @@ import com.google.appengine.api.datastore.FetchOptions;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.Query;
-import com.google.common.base.Preconditions;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

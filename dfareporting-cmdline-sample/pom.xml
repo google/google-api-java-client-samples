@@ -115,7 +115,7 @@
     <dependency>
       <groupId>com.google.apis</groupId>
       <artifactId>google-api-services-dfareporting</artifactId>
-      <version>v1.1-rev5-1.13.2-beta</version>
+      <version>v1.1-rev9-1.14.1-beta</version>
     </dependency>
     <dependency>
       <groupId>com.google.http-client</groupId>
@@ -127,10 +127,15 @@
       <artifactId>google-oauth-client-jetty</artifactId>
       <version>${project.oauth.version}</version>
     </dependency>
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+      <version>14.0</version>
+    </dependency>
   </dependencies>
   <properties>
-    <project.http.version>1.13.1-beta</project.http.version>
-    <project.oauth.version>1.13.1-beta</project.oauth.version>
+    <project.http.version>1.14.1-beta</project.http.version>
+    <project.oauth.version>1.14.1-beta</project.oauth.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 </project>

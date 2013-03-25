@@ -14,17 +14,17 @@
 
 package com.google.api.services.picasa;
 
-import com.google.api.client.googleapis.GoogleUrl;
+import com.google.api.client.http.GenericUrl;
 import com.google.api.client.util.Key;
 
 /**
  * @author Yaniv Inbar
  */
-public class PicasaUrl extends GoogleUrl {
+public class PicasaUrl extends GenericUrl {
 
-  /** Whether to pretty print HTTP requests and responses. */
+  /** Whether to pretty print HTTP requests and responses. */   
   private static final boolean PRETTY_PRINT = true;
-
+  
   public static final String ROOT_URL = "https://picasaweb.google.com/data/";
 
   @Key("max-results")
@@ -35,7 +35,7 @@ public class PicasaUrl extends GoogleUrl {
 
   public PicasaUrl(String url) {
     super(url);
-    setPrettyPrint(PRETTY_PRINT);
+    this.set("prettyPrint", PRETTY_PRINT);
   }
 
   /**

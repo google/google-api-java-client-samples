@@ -15,8 +15,8 @@
 package com.google.api.services.samples.plus.serviceaccount.cmdline;
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
+import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.http.HttpTransport;
-import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.plus.Plus;
@@ -45,7 +45,7 @@ public class PlusServiceAccountSample {
       + PlusServiceAccountSample.class;
 
   /** Global instance of the HTTP transport. */
-  private static final HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
+  private static HttpTransport HTTP_TRANSPORT;
 
   /** Global instance of the JSON factory. */
   private static final JsonFactory JSON_FACTORY = new JacksonFactory();
@@ -55,6 +55,7 @@ public class PlusServiceAccountSample {
   public static void main(String[] args) {
     try {
       try {
+        HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
         // check for valid setup
         if (SERVICE_ACCOUNT_EMAIL.startsWith("Enter ")) {
           System.err.println(SERVICE_ACCOUNT_EMAIL);

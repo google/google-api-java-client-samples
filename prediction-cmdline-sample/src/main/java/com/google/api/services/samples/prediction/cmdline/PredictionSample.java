@@ -20,10 +20,10 @@ import com.google.api.client.extensions.java6.auth.oauth2.FileCredentialStore;
 import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
+import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpResponseException;
 import com.google.api.client.http.HttpTransport;
-import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.prediction.Prediction;
@@ -52,7 +52,7 @@ public class PredictionSample {
   static final String STORAGE_DATA_LOCATION = "enter_bucket/language_id.txt";
 
   /** Global instance of the HTTP transport. */
-  private static final HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
+  private static HttpTransport HTTP_TRANSPORT;
 
   /** Global instance of the JSON factory. */
   private static final JsonFactory JSON_FACTORY = new JacksonFactory();
@@ -82,6 +82,7 @@ public class PredictionSample {
   }
 
   private static void run() throws Exception {
+    HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
     // authorization
     Credential credential = authorize();
     Prediction prediction = new Prediction.Builder(

@@ -14,10 +14,10 @@
 
 package com.google.api.services.samples.dfareporting.cmdline;
 
+import com.google.api.client.util.Preconditions;
 import com.google.api.services.dfareporting.Dfareporting;
 import com.google.api.services.dfareporting.model.UserProfile;
 import com.google.api.services.dfareporting.model.UserProfileList;
-import com.google.common.base.Preconditions;
 
 /**
  * This example gets all DFA user profiles associated with the user's Google Account.

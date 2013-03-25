@@ -14,7 +14,7 @@
 
 package com.google.api.services.samples.books.cmdline;
 
-import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.books.Books;
@@ -52,7 +52,7 @@ public class BooksSample {
     ClientCredentials.errorIfNotSpecified();
     
     // Set up Books client.
-    final Books books = new Books.Builder(new NetHttpTransport(), jsonFactory, null)
+    final Books books = new Books.Builder(GoogleNetHttpTransport.newTrustedTransport(), jsonFactory, null)
         .setApplicationName(APPLICATION_NAME)
         .setGoogleClientRequestInitializer(new BooksRequestInitializer(ClientCredentials.API_KEY))
         .build();

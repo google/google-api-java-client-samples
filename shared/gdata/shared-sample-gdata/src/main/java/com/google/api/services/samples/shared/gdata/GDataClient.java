@@ -14,9 +14,9 @@
 
 package com.google.api.services.samples.shared.gdata;
 
-import com.google.api.client.googleapis.GoogleUrl;
 import com.google.api.client.googleapis.MethodOverride;
 import com.google.api.client.http.AbstractHttpContent;
+import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestFactory;
 import com.google.api.client.http.HttpResponse;
@@ -72,8 +72,8 @@ public abstract class GDataClient {
     return getRequestFactory().getTransport();
   }
 
-  protected void prepareUrl(GoogleUrl url, Class<?> parseAsType) {
-    url.setPrettyPrint(this.prettyPrint);
+  protected void prepareUrl(GenericUrl url, Class<?> parseAsType){
+    url.set("prettyPrint", this.prettyPrint);
   }
 
   protected void prepare(HttpRequest request) throws IOException {
@@ -87,13 +87,13 @@ public abstract class GDataClient {
     return request.execute();
   }
 
-  protected final <T> T executeGet(GoogleUrl url, Class<T> parseAsType) throws IOException {
+  protected final <T> T executeGet(GenericUrl url, Class<T> parseAsType) throws IOException {
     prepareUrl(url, parseAsType);
     HttpRequest request = getRequestFactory().buildGetRequest(url);
     return execute(request).parseAs(parseAsType);
   }
 
-  protected final void executeDelete(GoogleUrl url, String etag) throws IOException {
+  protected final void executeDelete(GenericUrl url, String etag) throws IOException {
     prepareUrl(url, null);
     HttpRequest request = getRequestFactory().buildDeleteRequest(url);
     setIfMatch(request, etag);
@@ -101,14 +101,14 @@ public abstract class GDataClient {
   }
 
   protected final <T> T executePost(
-      GoogleUrl url, AbstractHttpContent content, Class<T> parseAsType) throws IOException {
+      GenericUrl url, AbstractHttpContent content, Class<T> parseAsType) throws IOException {
     prepareUrl(url, parseAsType);
     HttpRequest request = getRequestFactory().buildPostRequest(url, content);
     return execute(request).parseAs(parseAsType);
   }
 
   protected final <T> T executePatchRelativeToOriginal(
-      GoogleUrl url, AbstractHttpContent patchContent, Class<T> parseAsType, String etag)
+      GenericUrl url, AbstractHttpContent patchContent, Class<T> parseAsType, String etag)
       throws IOException {
     prepareUrl(url, parseAsType);
     HttpRequest request = getRequestFactory().buildRequest("PATCH", url, patchContent);

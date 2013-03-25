@@ -2,6 +2,7 @@
 
 package com.google.api.client.sample.bigquery.appengine.dashboard;
 
+import com.google.api.client.util.Preconditions;
 import com.google.api.services.bigquery.Bigquery;
 import com.google.api.services.bigquery.model.Job;
 import com.google.api.services.bigquery.model.JobConfiguration;
@@ -17,7 +18,6 @@ import com.google.appengine.api.taskqueue.QueueFactory;
 import com.google.appengine.api.taskqueue.RetryOptions;
 import com.google.appengine.api.taskqueue.TaskOptions;
 import com.google.common.base.Joiner;
-import com.google.common.base.Preconditions;
 
 import java.io.IOException;
 import java.util.List;

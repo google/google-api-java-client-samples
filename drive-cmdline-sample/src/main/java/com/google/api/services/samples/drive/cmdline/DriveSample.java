@@ -20,21 +20,19 @@ import com.google.api.client.extensions.java6.auth.oauth2.FileCredentialStore;
 import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
+import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.googleapis.media.MediaHttpDownloader;
 import com.google.api.client.googleapis.media.MediaHttpUploader;
+import com.google.api.client.http.FileContent;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpTransport;
-import com.google.api.client.http.InputStreamContent;
-import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.client.util.Preconditions;
 import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.DriveScopes;
 import com.google.api.services.drive.model.File;
-import com.google.common.base.Preconditions;
 
-import java.io.BufferedInputStream;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -60,13 +58,13 @@ public class DriveSample {
    * blank, the application will log a warning. Suggested format is "MyCompany-ProductName/1.0".
    */
   private static final String APPLICATION_NAME = "";
-  
+
   private static final String UPLOAD_FILE_PATH = "Enter File Path";
   private static final String DIR_FOR_DOWNLOADS = "Enter Download Directory";
   private static final java.io.File UPLOAD_FILE = new java.io.File(UPLOAD_FILE_PATH);
 
   /** Global instance of the HTTP transport. */
-  private static final HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
+  private static HttpTransport HTTP_TRANSPORT;
 
   /** Global instance of the JSON factory. */
   private static final JsonFactory JSON_FACTORY = new JacksonFactory();
@@ -104,11 +102,12 @@ public class DriveSample {
 
     try {
       try {
+        HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
         // authorization
         Credential credential = authorize();
         // set up the global Drive instance
-        drive = new Drive.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential)
-            .setApplicationName(APPLICATION_NAME).build();
+        drive = new Drive.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential).setApplicationName(
+            APPLICATION_NAME).build();
 
         // run commands
 
@@ -143,9 +142,7 @@ public class DriveSample {
     File fileMetadata = new File();
     fileMetadata.setTitle(UPLOAD_FILE.getName());
 
-    InputStreamContent mediaContent = new InputStreamContent(
-        "image/jpeg", new BufferedInputStream(new FileInputStream(UPLOAD_FILE)));
-    mediaContent.setLength(UPLOAD_FILE.length());
+    FileContent mediaContent = new FileContent("image/jpeg", UPLOAD_FILE);
 
     Drive.Files.Insert insert = drive.files().insert(fileMetadata, mediaContent);
     MediaHttpUploader uploader = insert.getMediaHttpUploader();
@@ -173,8 +170,8 @@ public class DriveSample {
     }
     OutputStream out = new FileOutputStream(new java.io.File(parentDir, uploadedFile.getTitle()));
 
-    Drive.Files.Get get = drive.files().get(uploadedFile.getId());
-    MediaHttpDownloader downloader = get.getMediaHttpDownloader();
+    MediaHttpDownloader downloader =
+        new MediaHttpDownloader(HTTP_TRANSPORT, drive.getRequestFactory().getInitializer());
     downloader.setDirectDownloadEnabled(useDirectDownload);
     downloader.setProgressListener(new FileDownloadProgressListener());
     downloader.download(new GenericUrl(uploadedFile.getDownloadUrl()), out);
