@@ -47,6 +47,7 @@ public class SubmitCreative extends BaseSample {
         "<html><body><a href='http://www.google.com'>Hi there!</a></body></html>");
     long width = getLongInput("AdWidth", "Enter the creative width", 300L);
     long height = getLongInput("AdHeight", "Enter the creative height", 250L);
+    Long agencyId = getOptionalLongInput("AgencyId", "Enter the agency id (optional)");
 
     Creative testCreative = new Creative();
     testCreative.setAccountId(accountId);
@@ -58,6 +59,7 @@ public class SubmitCreative extends BaseSample {
     testCreative.setHTMLSnippet(htmlSnippet);
     testCreative.setHeight((int) height);
     testCreative.setWidth((int) width);
+    testCreative.setAgencyId(agencyId);
 
     Creative response = client.creatives().insert(testCreative).execute();
 
@@ -67,6 +69,7 @@ public class SubmitCreative extends BaseSample {
     System.out.println("Account id: " + response.getAccountId());
     System.out.println("Buyer Creative id: " + response.getBuyerCreativeId());
     System.out.println("Advertiser id: " + response.getAdvertiserId());
+    System.out.println("Agency id: " + response.getAgencyId());
     System.out.println("Status: " + response.getStatus());
     System.out.println("Product categories: " + response.getProductCategories());
     System.out.println("Sensitive categories: " + response.getSensitiveCategories());
