@@ -17,6 +17,7 @@ package com.google.api.services.samples.adexchangebuyer.cmdline;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.services.adexchangebuyer.Adexchangebuyer;
 import com.google.api.services.adexchangebuyer.model.Creative;
+import com.google.api.services.adexchangebuyer.model.Creative.DisapprovalReasons;
 
 import java.io.IOException;
 
@@ -42,7 +43,16 @@ public class GetCreative extends BaseSample {
       System.out.println("Account id: " + creative.getAccountId());
       System.out.println("Buyer Creative id: " + creative.getBuyerCreativeId());
       System.out.println("Advertiser id: " + creative.getAdvertiserId());
+      System.out.println("Agency id: " + creative.getAgencyId());
       System.out.println("Status: " + creative.getStatus());
+      if (creative.getDisapprovalReasons() != null) {
+        for (DisapprovalReasons disapprovalReason : creative.getDisapprovalReasons()) {
+          System.out.println("\tDisapproval Reason: " + disapprovalReason.getReason());
+          for (String disapprovalReasonDetail : disapprovalReason.getDetails()) {
+            System.out.println("\t\tDetail: " + disapprovalReasonDetail);
+          }
+        }
+      }
       System.out.println("Product categories: " + creative.getProductCategories());
       System.out.println("Sensitive categories: " + creative.getSensitiveCategories());
       System.out.println("Width: " + creative.getWidth());

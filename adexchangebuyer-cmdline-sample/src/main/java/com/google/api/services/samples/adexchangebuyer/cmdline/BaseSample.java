@@ -89,6 +89,29 @@ public abstract class BaseSample {
   }
 
   /**
+   * Prompts the user to enter an optional numeric value.
+   *
+   * @param propertyKey Key of the value, used to store it for future use
+   * @param message Message to print out to the user in request of input
+   * @return The parsed numeric value entered by the user
+   * @throws IOException
+   */
+  protected Long getOptionalLongInput(String propertyKey, String message)
+      throws IOException {
+    while (true) {
+      try {
+        String userInput = getOptionalStringInput(propertyKey, message);
+        if (userInput == null) {
+          return null;
+        }
+        return Long.parseLong(userInput);
+      } catch (NumberFormatException e) {
+        System.out.printf("Invalid numeric input provided, please try again\n");
+      }
+    }
+  }
+
+  /**
    * Prompts the user to enter a numeric value.
    *
    * @param propertyKey Key of the value, used to store it for future use
@@ -155,7 +178,7 @@ public abstract class BaseSample {
       System.out.printf("%s:\n", message);
     }
     String input = Utils.readInputLine();
-    if (input != null && !input.equals("")) {
+    if (input != null && !input.isEmpty()) {
       cachedValues.put(propertyKey, input);
       return input;
     }
@@ -164,6 +187,30 @@ public abstract class BaseSample {
     }
     if (defaultValue != null) {
       return defaultValue;
+    }
+    return null;
+  }
+
+  /**
+   * Prompts the user to enter an optional value.
+   *
+   * @param propertyKey Key of the value, used to store it for future use
+   * @param message Message to print out to the user in request of input
+   * @return The captured value entered by the user
+   * @throws IOException
+   */
+  protected String getOptionalStringInput(String propertyKey, String message)
+      throws IOException {
+    String lastValue = cachedValues.get(propertyKey);
+    if (lastValue != null) {
+      System.out.printf("%s (last value was %s):\n", message, lastValue);
+    } else {
+      System.out.printf("%s:\n", message);
+    }
+    String input = Utils.readInputLine();
+    if (input != null && !input.isEmpty()) {
+      cachedValues.put(propertyKey, input);
+      return input;
     }
     return null;
   }
