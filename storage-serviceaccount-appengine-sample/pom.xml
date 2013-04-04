@@ -37,10 +37,6 @@
       <url>http://www.datanucleus.org/downloads/maven2/</url>
       <name>DataNucleus</name>
     </repository>
-    <repository>
-      <id>googleapis</id>
-      <url>https://google-api-client-libraries.appspot.com/mavenrepo</url>
-    </repository>
   </repositories>
 
   <pluginRepositories>

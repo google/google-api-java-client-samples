@@ -13,13 +13,6 @@
   <name>bigquery-appengine-sample</name>
   <packaging>war</packaging>
 
-  <repositories>
-    <repository>
-      <id>google-api-services</id>
-      <url>https://google-api-client-libraries.appspot.com/mavenrepo</url>
-    </repository>
-  </repositories>
-
   <pluginRepositories>
     <pluginRepository>
       <id>maven-gae-plugin-repo</id>
@@ -29,7 +22,7 @@
   </pluginRepositories>
 
   <properties>
-    <bigquery.version>v2-rev69-1.14.1-beta</bigquery.version>
+    <bigquery.version>v2-rev75-1.14.1-beta</bigquery.version>
     <datanucleus.version>1.1.5</datanucleus.version>
     <gae.version>1.7.0</gae.version>
     <google-api-client.version>1.14.1-beta</google-api-client.version>

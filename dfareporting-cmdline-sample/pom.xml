@@ -25,13 +25,6 @@
     <url>http://code.google.com/p/google-api-java-client/source/browse/?repo=samples</url>
   </scm>
 
-  <repositories>
-    <repository>
-      <id>googleapis</id>
-      <url>https://google-api-client-libraries.appspot.com/mavenrepo</url>
-    </repository>
-  </repositories>
-
   <developers>
     <developer>
       <id>jdilallo</id>
@@ -115,7 +108,7 @@
     <dependency>
       <groupId>com.google.apis</groupId>
       <artifactId>google-api-services-dfareporting</artifactId>
-      <version>v1.1-rev9-1.14.1-beta</version>
+      <version>v1.1-rev10-1.14.1-beta</version>
     </dependency>
     <dependency>
       <groupId>com.google.http-client</groupId>

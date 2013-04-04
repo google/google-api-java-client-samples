@@ -30,13 +30,6 @@
     <url>http://code.google.com/p/google-api-java-client/source/browse/?repo=samples</url>
   </scm>
 
-  <repositories>
-    <repository>
-      <id>googleapis</id>
-      <url>https://google-api-client-libraries.appspot.com/mavenrepo</url>
-    </repository>
-  </repositories>
-
   <developers>
     <developer>
       <id>jsimonweb</id>
@@ -130,7 +123,7 @@
     <dependency>
       <groupId>com.google.apis</groupId>
       <artifactId>google-api-services-compute</artifactId>
-      <version>v1beta14-rev10-1.14.1-beta</version>
+      <version>v1beta14-rev11-1.14.1-beta</version>
     </dependency>
   </dependencies>
   <properties>

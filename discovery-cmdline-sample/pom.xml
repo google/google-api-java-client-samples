@@ -33,13 +33,6 @@
     <url>http://code.google.com/p/google-api-java-client/source/browse/?repo=samples</url>
   </scm>
 
-  <repositories>
-    <repository>
-      <id>googleapis</id>
-      <url>https://google-api-client-libraries.appspot.com/mavenrepo</url>
-    </repository>
-  </repositories>
-
   <developers>
     <developer>
       <id>yanivi</id>
@@ -99,6 +92,7 @@
       </plugin>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
+        <version>2.3.2</version>
         <configuration>
           <source>1.6</source>
           <target>1.6</target>
@@ -142,7 +136,7 @@
     <dependency>
       <groupId>com.google.apis</groupId>
       <artifactId>google-api-services-discovery</artifactId>
-      <version>v1-rev18-1.14.1-beta</version>
+      <version>v1-rev19-1.14.1-beta</version>
     </dependency>
     <dependency>
       <groupId>com.google.http-client</groupId>

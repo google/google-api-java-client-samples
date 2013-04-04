@@ -38,10 +38,6 @@
       <url>http://www.datanucleus.org/downloads/maven2/</url>
       <name>DataNucleus</name>
     </repository>
-    <repository>
-      <id>googleapis</id>
-      <url>https://google-api-client-libraries.appspot.com/mavenrepo</url>
-    </repository>
   </repositories>
 
   <pluginRepositories>
@@ -271,7 +267,7 @@
     <dependency>
       <groupId>com.google.apis</groupId>
       <artifactId>google-api-services-calendar</artifactId>
-      <version>v3-rev32-1.14.1-beta</version>
+      <version>v3-rev35-1.14.1-beta</version>
     </dependency>
     <dependency>
       <groupId>net.kindleit</groupId>

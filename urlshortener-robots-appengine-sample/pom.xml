@@ -38,10 +38,6 @@
       <url>http://www.datanucleus.org/downloads/maven2/</url>
       <name>DataNucleus</name>
     </repository>
-    <repository>
-      <id>googleapis</id>
-      <url>https://google-api-client-libraries.appspot.com/mavenrepo</url>
-    </repository>
   </repositories>
 
   <pluginRepositories>
@@ -258,7 +254,7 @@
     <dependency>
       <groupId>com.google.apis</groupId>
       <artifactId>google-api-services-urlshortener</artifactId>
-      <version>v1-rev9-1.14.1-beta</version>
+      <version>v1-rev10-1.14.1-beta</version>
     </dependency>
     <dependency>
       <groupId>net.kindleit</groupId>

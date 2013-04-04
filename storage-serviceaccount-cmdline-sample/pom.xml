@@ -30,13 +30,6 @@
     <url>http://code.google.com/p/google-api-java-client/source/browse/?repo=samples</url>
   </scm>
 
-  <repositories>
-    <repository>
-      <id>googleapis</id>
-      <url>https://google-api-client-libraries.appspot.com/mavenrepo</url>
-    </repository>
-  </repositories>
-
   <developers>
     <developer>
       <id>yanivi</id>
