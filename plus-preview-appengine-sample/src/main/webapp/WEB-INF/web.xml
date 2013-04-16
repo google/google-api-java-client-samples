@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee"
+  xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+  xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+  version="2.5">
+  <servlet>
+    <servlet-name>PlusSampleServlet</servlet-name>
+    <servlet-class>com.google.api.services.samples.plus.PlusSampleServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>PlusSampleServlet</servlet-name>
+    <url-pattern>/plussampleservlet</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>PlusSampleAuthCallbackServlet</servlet-name>
+    <servlet-class>com.google.api.services.samples.plus.PlusSampleAuthCallbackServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>PlusSampleAuthCallbackServlet</servlet-name>
+    <url-pattern>/oauth2callback</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>PlusBasicServlet</servlet-name>
+    <servlet-class>com.google.api.services.samples.plus.PlusBasicServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>PlusBasicServlet</servlet-name>
+    <url-pattern>/plusbasicservlet</url-pattern>
+  </servlet-mapping>
+  <welcome-file-list>
+    <welcome-file>index.html</welcome-file>
+  </welcome-file-list>
+  <!-- The following ensures the user will be logged in to a Google Account by redirecting 
+    them to the sign-in page if not. 
+    For more information, see https://developers.google.com/appengine/docs/java/config/webxml -->
+  <security-constraint>
+    <web-resource-collection>
+      <web-resource-name>any</web-resource-name>
+      <url-pattern>/*</url-pattern>
+    </web-resource-collection>
+    <auth-constraint>
+      <role-name>*</role-name>
+    </auth-constraint>
+  </security-constraint>
+</web-app>
