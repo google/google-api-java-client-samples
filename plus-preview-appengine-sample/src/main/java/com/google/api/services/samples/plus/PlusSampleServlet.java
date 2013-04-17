@@ -27,10 +27,15 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * Sample Google+ servlet that loads user credentials and then shows their profile link.
+ *
+ * @author Nick Miceli
+ */
 public class PlusSampleServlet extends HttpServlet {
 
   private static final long serialVersionUID = 1;
-  
+
   @Override
   public void doGet(HttpServletRequest req, HttpServletResponse resp)
       throws IOException, ServletException {

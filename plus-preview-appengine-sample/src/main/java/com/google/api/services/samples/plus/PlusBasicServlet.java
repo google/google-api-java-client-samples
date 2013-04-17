@@ -31,21 +31,27 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * Sample Google+ servlet that does a search on public activities.
+ *
+ * @author Nick Miceli
+ */
 public class PlusBasicServlet extends HttpServlet {
 
+  /**
+   * Enter your API key here from https://code.google.com/apis/console/?api=plus under "API Access".
+   */
+  private static final String API_KEY = "";
+
   private static final long serialVersionUID = 1;
-  
+
   @Override
   public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
     HttpTransport httpTransport = new UrlFetchTransport();
     JsonFactory jsonFactory = new JacksonFactory();
 
-    String API_KEY = ""; // Enter your API key here from
-                         // https://code.google.com/apis/console/?api=plus, under "API Access".
-
-    Plus plus = new Plus.Builder(
-        httpTransport, jsonFactory, null).setGoogleClientRequestInitializer(
-        new PlusRequestInitializer(API_KEY)).build();
+    Plus plus = new Plus.Builder(httpTransport, jsonFactory, null).setApplicationName("")
+        .setGoogleClientRequestInitializer(new PlusRequestInitializer(API_KEY)).build();
 
     ActivityFeed myActivityFeed = plus.activities().search("Google").execute();
     List<Activity> myActivities = myActivityFeed.getItems();

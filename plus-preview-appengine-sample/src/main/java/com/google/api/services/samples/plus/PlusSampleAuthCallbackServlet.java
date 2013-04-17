@@ -24,10 +24,16 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * Sample servlet that exchanges the authorization code for user credentials and then redirects back
+ * to the main servlet.
+ *
+ * @author Nick Miceli
+ */
 public class PlusSampleAuthCallbackServlet extends HttpServlet {
 
   private static final long serialVersionUID = 1;
-  
+
   @Override
   public void doGet(HttpServletRequest req, HttpServletResponse resp)
       throws IOException, ServletException {
