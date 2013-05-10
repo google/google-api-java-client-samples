@@ -27,6 +27,7 @@ import com.google.common.io.Files;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.util.Collections;
 
 /**
  * @author Yaniv Inbar
@@ -70,7 +71,7 @@ public class PlusServiceAccountSample {
         GoogleCredential credential = new GoogleCredential.Builder().setTransport(HTTP_TRANSPORT)
             .setJsonFactory(JSON_FACTORY)
             .setServiceAccountId(SERVICE_ACCOUNT_EMAIL)
-            .setServiceAccountScopes(PlusScopes.PLUS_ME)
+            .setServiceAccountScopes(Collections.singleton(PlusScopes.PLUS_ME))
             .setServiceAccountPrivateKeyFromP12File(new File("key.p12"))
             // .setServiceAccountUser("user@example.com")
             .build();

@@ -28,6 +28,7 @@ import com.google.api.services.bigquery.Bigquery;
 import com.google.api.services.bigquery.BigqueryScopes;
 
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Collections;
 
 import javax.servlet.http.HttpServletRequest;
@@ -45,7 +46,7 @@ class ServiceUtils {
 
   /** Global instance of the JSON factory. */
   static final JsonFactory JSON_FACTORY = new JacksonFactory();
-  
+
   /** Global instance of the Credential store. */
   static final AppEngineCredentialStore CREDENTIAL_STORE = new AppEngineCredentialStore();
 
@@ -53,8 +54,8 @@ class ServiceUtils {
 
   static GoogleClientSecrets getClientCredential() throws IOException {
     if (clientSecrets == null) {
-      clientSecrets = GoogleClientSecrets.load(
-          JSON_FACTORY, ServiceUtils.class.getResourceAsStream("/client_secrets.json"));
+      clientSecrets = GoogleClientSecrets.load(JSON_FACTORY,
+          new InputStreamReader(ServiceUtils.class.getResourceAsStream("/client_secrets.json")));
       Preconditions.checkArgument(!clientSecrets.getDetails().getClientId().startsWith("Enter ")
           && !clientSecrets.getDetails().getClientSecret().startsWith("Enter "),
           "Enter Client ID and Secret from https://code.google.com/apis/console/?api=bigquery "
@@ -68,7 +69,7 @@ class ServiceUtils {
     url.setRawPath("/oauth2callback");
     return url.build();
   }
-  
+
   static void deleteCredentials(String userId) throws IOException {
     Credential credential = newFlow().loadCredential(userId);
     if (credential != null) {
@@ -86,6 +87,7 @@ class ServiceUtils {
     Credential credential = newFlow().loadCredential(userId);
     return new Bigquery.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential).build();
   }
-  
-  private ServiceUtils() {}
+
+  private ServiceUtils() {
+  }
 }

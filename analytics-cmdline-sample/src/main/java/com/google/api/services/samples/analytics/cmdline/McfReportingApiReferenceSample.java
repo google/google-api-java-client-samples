@@ -33,6 +33,7 @@ import com.google.api.services.analytics.model.McfData.Query;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -120,7 +121,8 @@ public class McfReportingApiReferenceSample {
   private static Credential authorize() throws Exception {
     // load client secrets
     GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(
-        JSON_FACTORY, HelloAnalyticsApiSample.class.getResourceAsStream("/client_secrets.json"));
+        JSON_FACTORY, new InputStreamReader(
+            HelloAnalyticsApiSample.class.getResourceAsStream("/client_secrets.json")));
     if (clientSecrets.getDetails().getClientId().startsWith("Enter")
         || clientSecrets.getDetails().getClientSecret().startsWith("Enter ")) {
       System.out.println(

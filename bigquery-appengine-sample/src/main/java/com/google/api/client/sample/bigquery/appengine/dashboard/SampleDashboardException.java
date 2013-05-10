@@ -13,6 +13,8 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class SampleDashboardException extends HttpResponseException {
 
+  private static final long serialVersionUID = 1L;
+
   public SampleDashboardException(int statusCode, String s) {
     super(statusCode, s);
   }

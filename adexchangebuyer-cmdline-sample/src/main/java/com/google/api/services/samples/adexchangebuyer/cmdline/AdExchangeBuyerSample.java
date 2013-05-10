@@ -29,6 +29,7 @@ import com.google.api.services.adexchangebuyer.AdexchangebuyerScopes;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -63,7 +64,8 @@ public class AdExchangeBuyerSample {
   private static Credential authorize() throws Exception {
     // load client secrets
     GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(
-        JSON_FACTORY, AdExchangeBuyerSample.class.getResourceAsStream("/client_secrets.json"));
+        JSON_FACTORY, new InputStreamReader(
+            AdExchangeBuyerSample.class.getResourceAsStream("/client_secrets.json")));
     if (clientSecrets.getDetails().getClientId().startsWith("Enter")
         || clientSecrets.getDetails().getClientSecret().startsWith("Enter ")) {
       System.out.println("Enter Client ID and Secret from "

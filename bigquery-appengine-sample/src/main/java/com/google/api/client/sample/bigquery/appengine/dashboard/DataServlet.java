@@ -22,6 +22,8 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class DataServlet extends HttpServlet {
 
+  private static final long serialVersionUID = 1L;
+  
   // It's important that the first column be a string and the second a number.
   // Also, it is expected that these are the same length.
   private final String[] labels = new String[]

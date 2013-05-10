@@ -43,6 +43,7 @@ import com.google.common.base.Joiner;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -288,8 +289,8 @@ public class DiscoverySample {
   /** Authorizes the installed application to access user's protected data. */
   private static Credential authorize(String methodId, List<String> scopes) throws Exception {
     // load client secrets
-    GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(
-        JSON_FACTORY, DiscoverySample.class.getResourceAsStream("/client_secrets.json"));
+    GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY,
+        new InputStreamReader(DiscoverySample.class.getResourceAsStream("/client_secrets.json")));
     if (clientSecrets.getDetails().getClientId().startsWith("Enter")
         || clientSecrets.getDetails().getClientSecret().startsWith("Enter ")) {
       System.out.println("Enter Client ID and Secret from https://code.google.com/apis/console/ "

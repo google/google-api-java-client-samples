@@ -34,6 +34,7 @@ import com.google.api.services.dfareporting.model.Report;
 import com.google.api.services.dfareporting.model.UserProfileList;
 import com.google.common.collect.ImmutableList;
 
+import java.io.InputStreamReader;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -69,7 +70,8 @@ public class DfaReportingSample {
   private static Credential authorize() throws Exception {
     // load client secrets
     GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(
-        JSON_FACTORY, DfaReportingSample.class.getResourceAsStream("/client_secrets.json"));
+        JSON_FACTORY, new InputStreamReader(
+            DfaReportingSample.class.getResourceAsStream("/client_secrets.json")));
     if (clientSecrets.getDetails().getClientId().startsWith("Enter")
         || clientSecrets.getDetails().getClientSecret().startsWith("Enter ")) {
       System.out.println(

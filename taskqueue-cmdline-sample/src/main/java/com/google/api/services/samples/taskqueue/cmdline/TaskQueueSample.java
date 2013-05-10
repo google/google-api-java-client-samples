@@ -33,6 +33,7 @@ import com.google.api.services.taskqueue.model.Tasks;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Collections;
 
 /**
@@ -63,8 +64,8 @@ public class TaskQueueSample {
   /** Authorizes the installed application to access user's protected data. */
   private static Credential authorize() throws Exception {
     // load client secrets
-    GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(
-        JSON_FACTORY, TaskQueueSample.class.getResourceAsStream("/client_secrets.json"));
+    GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY,
+        new InputStreamReader(TaskQueueSample.class.getResourceAsStream("/client_secrets.json")));
     if (clientSecrets.getDetails().getClientId().startsWith("Enter")
         || clientSecrets.getDetails().getClientSecret().startsWith("Enter ")) {
       System.out.println("Enter Client ID and Secret from "

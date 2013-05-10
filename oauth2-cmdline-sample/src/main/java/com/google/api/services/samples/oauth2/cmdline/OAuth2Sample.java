@@ -30,6 +30,7 @@ import com.google.api.services.oauth2.model.Userinfo;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.List;
 
@@ -65,8 +66,8 @@ public class OAuth2Sample {
   /** Authorizes the installed application to access user's protected data. */
   private static Credential authorize() throws Exception {
     // load client secrets
-    clientSecrets = GoogleClientSecrets.load(
-        JSON_FACTORY, OAuth2Sample.class.getResourceAsStream("/client_secrets.json"));
+    clientSecrets = GoogleClientSecrets.load(JSON_FACTORY,
+        new InputStreamReader(OAuth2Sample.class.getResourceAsStream("/client_secrets.json")));
     if (clientSecrets.getDetails().getClientId().startsWith("Enter")
         || clientSecrets.getDetails().getClientSecret().startsWith("Enter ")) {
       System.out.println("Enter Client ID and Secret from https://code.google.com/apis/console/ "
