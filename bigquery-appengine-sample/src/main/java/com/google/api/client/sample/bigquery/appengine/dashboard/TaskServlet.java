@@ -25,6 +25,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class TaskServlet extends HttpServlet {
 
+  private static final long serialVersionUID = 1L;
   private static final Logger log = Logger.getLogger(TaskServlet.class.getName());
 
   @Override

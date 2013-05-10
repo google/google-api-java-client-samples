@@ -35,6 +35,7 @@ import com.google.api.services.fusiontables.model.TableList;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
@@ -64,7 +65,8 @@ public class FusionTablesSample {
   private static Credential authorize() throws Exception {
     // load client secrets
     GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(
-        JSON_FACTORY, FusionTablesSample.class.getResourceAsStream("/client_secrets.json"));
+        JSON_FACTORY, new InputStreamReader(
+            FusionTablesSample.class.getResourceAsStream("/client_secrets.json")));
     if (clientSecrets.getDetails().getClientId().startsWith("Enter")
         || clientSecrets.getDetails().getClientSecret().startsWith("Enter ")) {
       System.out.println(

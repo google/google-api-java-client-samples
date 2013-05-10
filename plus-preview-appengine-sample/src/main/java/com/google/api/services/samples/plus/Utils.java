@@ -27,6 +27,7 @@ import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Collections;
 import java.util.Set;
 
@@ -43,8 +44,8 @@ class Utils {
 
   private static GoogleClientSecrets getClientSecrets() throws IOException {
     if (clientSecrets == null) {
-      clientSecrets = GoogleClientSecrets.load(
-          JSON_FACTORY, Utils.class.getResourceAsStream("/client_secrets.json"));
+      clientSecrets = GoogleClientSecrets.load(JSON_FACTORY,
+          new InputStreamReader(Utils.class.getResourceAsStream("/client_secrets.json")));
       Preconditions.checkArgument(!clientSecrets.getDetails().getClientId().startsWith("Enter ")
           && !clientSecrets.getDetails().getClientSecret().startsWith("Enter "),
           "Download client_secrets.json file from https://code.google.com/apis/console/?api=plus "

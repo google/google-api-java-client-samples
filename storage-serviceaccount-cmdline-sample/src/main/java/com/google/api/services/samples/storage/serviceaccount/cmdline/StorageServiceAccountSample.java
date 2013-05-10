@@ -31,6 +31,7 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.nio.charset.Charset;
+import java.util.Collections;
 
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Source;
@@ -79,7 +80,7 @@ public class StorageServiceAccountSample {
         GoogleCredential credential = new GoogleCredential.Builder().setTransport(HTTP_TRANSPORT)
             .setJsonFactory(JSON_FACTORY)
             .setServiceAccountId(SERVICE_ACCOUNT_EMAIL)
-            .setServiceAccountScopes(STORAGE_SCOPE)
+            .setServiceAccountScopes(Collections.singleton(STORAGE_SCOPE))
             .setServiceAccountPrivateKeyFromP12File(new File("key.p12"))
             .build();
 

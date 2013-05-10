@@ -45,6 +45,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -122,7 +123,8 @@ adb shell setprop log.tag.HttpTransport DEBUG
     listView = (ListView) findViewById(R.id.list);
     registerForContextMenu(listView);
     // Google Accounts
-    credential = GoogleAccountCredential.usingOAuth2(this, CalendarScopes.CALENDAR);
+    credential =
+        GoogleAccountCredential.usingOAuth2(this, Collections.singleton(CalendarScopes.CALENDAR));
     SharedPreferences settings = getPreferences(Context.MODE_PRIVATE);
     credential.setSelectedAccountName(settings.getString(PREF_ACCOUNT_NAME, null));
     // Calendar client

@@ -35,6 +35,7 @@ import com.google.api.services.drive.model.File;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.Collections;
 
@@ -75,8 +76,8 @@ public class DriveSample {
   /** Authorizes the installed application to access user's protected data. */
   private static Credential authorize() throws Exception {
     // load client secrets
-    GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(
-        JSON_FACTORY, DriveSample.class.getResourceAsStream("/client_secrets.json"));
+    GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY,
+        new InputStreamReader(DriveSample.class.getResourceAsStream("/client_secrets.json")));
     if (clientSecrets.getDetails().getClientId().startsWith("Enter")
         || clientSecrets.getDetails().getClientSecret().startsWith("Enter ")) {
       System.out.println(

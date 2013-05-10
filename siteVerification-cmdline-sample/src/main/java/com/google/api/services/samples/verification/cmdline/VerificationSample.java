@@ -66,7 +66,8 @@ public class VerificationSample {
   private static Credential authorize() throws Exception {
     // load client secrets
     GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(
-        JSON_FACTORY, VerificationSample.class.getResourceAsStream("/client_secrets.json"));
+        JSON_FACTORY, new InputStreamReader(
+            VerificationSample.class.getResourceAsStream("/client_secrets.json")));
     if (clientSecrets.getDetails().getClientId().startsWith("Enter")
         || clientSecrets.getDetails().getClientSecret().startsWith("Enter ")) {
       System.out.println("Enter Client ID and Secret from "

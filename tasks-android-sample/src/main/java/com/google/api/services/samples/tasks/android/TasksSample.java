@@ -35,6 +35,7 @@ import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -95,7 +96,8 @@ adb shell setprop log.tag.HttpTransport DEBUG
     setContentView(R.layout.calendarlist);
     listView = (ListView) findViewById(R.id.list);
     // Google Accounts
-    credential = GoogleAccountCredential.usingOAuth2(this, TasksScopes.TASKS);
+    credential =
+        GoogleAccountCredential.usingOAuth2(this, Collections.singleton(TasksScopes.TASKS));
     SharedPreferences settings = getPreferences(Context.MODE_PRIVATE);
     credential.setSelectedAccountName(settings.getString(PREF_ACCOUNT_NAME, null));
     // Tasks client

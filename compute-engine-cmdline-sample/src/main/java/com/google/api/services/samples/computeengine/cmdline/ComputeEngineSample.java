@@ -29,6 +29,7 @@ import com.google.api.services.compute.model.InstanceList;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.List;
 
@@ -94,8 +95,8 @@ public class ComputeEngineSample {
     // initialize client secrets object
     GoogleClientSecrets clientSecrets;
     // load client secrets
-    clientSecrets = GoogleClientSecrets.load(
-        JSON_FACTORY, ComputeEngineSample.class.getResourceAsStream("/client_secrets.json"));
+    clientSecrets = GoogleClientSecrets.load(JSON_FACTORY, new InputStreamReader(
+        ComputeEngineSample.class.getResourceAsStream("/client_secrets.json")));
     if (clientSecrets.getDetails().getClientId().startsWith("Enter")
         || clientSecrets.getDetails().getClientSecret().startsWith("Enter ")) {
       System.out.println("Enter Client ID and Secret from https://code.google.com/apis/console/ "
