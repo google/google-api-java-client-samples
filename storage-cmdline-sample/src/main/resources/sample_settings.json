@@ -1,0 +1,7 @@
+{
+  "project": "Enter Project",
+  "bucket": "Enter a bucket name to create",
+  "prefix": "Enter an object name prefix for objects created by the sample; can leave blank",
+  "email": "Enter an email that has a Google account; leave blank to skip",
+  "domain": "Enter a Google Apps domain; leave blank to skip"
+}
