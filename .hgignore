@@ -13,3 +13,5 @@ syntax: regexp
 syntax: regexp
 ^[^/]+/bin$
 
+syntax: regexp
+^[^/]+/war/WEB-INF/appengine-generated
