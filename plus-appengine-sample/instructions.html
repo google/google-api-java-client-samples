@@ -1,13 +1,13 @@
 <html>
-<title>plus-preview-appengine-sample</title>
+<title>plus-appengine-sample</title>
 <body>
-  <h2>Instructions for the Plus Preview App Engine Sample</h2>
+  <h2>Instructions for the Plus App Engine Sample</h2>
 
   <h3>Browse Source Code</h3>
 
   <ul>
     <li><a
-      href="http://code.google.com/p/google-api-java-client/source/browse/plus-preview-appengine-sample/?repo=samples">Browse
+      href="http://code.google.com/p/google-api-java-client/source/browse/plus-appengine-sample/?repo=samples">Browse
         Source</a>
   </ul>
 
@@ -56,15 +56,15 @@
   <pre>
 cd <i>[someDirectory]</i>
 hg clone https://code.google.com/p/google-api-java-client.samples/ google-api-java-client-samples
-cd google-api-java-client-samples/plus-preview-appengine-sample
+cd google-api-java-client-samples/plus-appengine-sample
 cp ~/Downloads/client_secrets.json src/main/resources/client_secrets.json
 mvn clean package
   </pre>
 
   <p>To enable logging of HTTP requests and responses (highly recommended
     when developing), please take a look at <a href="src/main/webapp/WEB-INF/logging.properties">logging.properties</a>.</p>
-
-<h3>Running and Deploying Your Application from the Command Line</h3>
+    
+  <h3>Running and Deploying Your Application from the Command Line</h3>
   
   <p>To run your application locally on a development server:</p>
   <pre>
@@ -90,8 +90,9 @@ mvn appengine:update
 </pre>
 
  <p>If this is the first time you have run "update" on the project, a browser window will open prompting you to log in.
-  Log in with the same Google account the app is registered with. 
+  Log in with the same Google account the app is registered with.
  </p>
+
 
   <h3>Setup Project in Eclipse</h3>
 
@@ -114,13 +115,13 @@ mvn appengine:update
         </li>
       </ul>
     </li>
-    <li>Import <code>plus-preview-appengine-sample</code> project
+    <li>Import <code>plus-appengine-sample</code> project
       <ul>
         <li>File &gt; Import...</li>
         <li>Select "General &gt; Existing Project into Workspace" and click
           "Next"</li>
         <li>Click "Browse" next to "Select root directory", find <code>
-            <i>[someDirectory]</i>/google-api-java-client-samples/plus-preview-appengine-sample
+            <i>[someDirectory]</i>/google-api-java-client-samples/plus-appengine-sample
           </code> and click "Next"
         </li>
         <li>Click "Finish"</li>
@@ -130,7 +131,7 @@ mvn appengine:update
     </li>
     <li>Run
       <ul>
-        <li>Right-click on project plus-preview-appengine-sample</li>
+        <li>Right-click on project plus-appengine-sample</li>
         <li>Run As &gt; Web Application</li>
         <li>Open <a href="http://localhost:8888">http://localhost:8888</a>
             in your browser.</li>

@@ -8,7 +8,7 @@
     <version>5</version>
   </parent>
   <groupId>com.google.apis-samples</groupId>
-  <artifactId>plus-preview-appengine-sample</artifactId>
+  <artifactId>plus-appengine-sample</artifactId>
   <version>1</version>
   <name>A "Getting Started" Example for the Google Plus Data API v1 using OAuth 2 on Google App Engine.</name>
   <packaging>war</packaging>
@@ -31,7 +31,6 @@
     <developerConnection>scm:hg:https://samples.google-api-java-client.googlecode.com/hg/</developerConnection>
     <url>http://code.google.com/p/google-api-java-client/source/browse/?repo=samples</url>
   </scm>
-
 
   <properties>
     <google-api-client.version>1.15.0-rc</google-api-client.version>
