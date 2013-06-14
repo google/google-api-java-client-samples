@@ -18,8 +18,6 @@ import com.google.api.services.dfareporting.Dfareporting;
 import com.google.api.services.dfareporting.model.File;
 import com.google.api.services.dfareporting.model.Report;
 
-import java.util.Random;
-
 /**
  * This example generates a report file from a report.
  *
@@ -29,33 +27,34 @@ import java.util.Random;
  */
 public class GenerateReportFile {
 
+  private static final Integer MAX_POLLING_ATTEMPTS = 4;
+  private static final Integer POLL_TIME_INCREMENT = 30000; // 30s
+
   /**
    * Requests the generation of a new report file from a given report.
    *
    * @param reporting Dfareporting service object on which to run the requests.
-   * @param userProfileId The ID number of the DFA user profile to run this
-   *     request as.
-   * @return the generated report file. Will return {@code null} if the report
-   *     fails to be generated successfully.
+   * @param userProfileId The ID number of the DFA user profile to run this request as.
+   * @return the generated report file. Will return {@code null} if the report fails to be generated
+   *         successfully.
    * @throws Exception
    */
-  public static File run(Dfareporting reporting, Long userProfileId, Report report)
+  public static File run(
+      Dfareporting reporting, Long userProfileId, Report report, Boolean isSynchronous)
       throws Exception {
     System.out.println("=================================================================");
     System.out.printf("Generating a report file for report with ID %s%n", report.getId());
     System.out.println("=================================================================");
 
-    // Run report synchronously.
-    File reportFile = reporting.reports().run(userProfileId, report.getId())
-        .setSynchronous(true)
-        .execute();
+    File reportFile = reporting.reports()
+        .run(userProfileId, report.getId()).setSynchronous(isSynchronous).execute();
     System.out.println("Report execution initiated. Checking for completion...");
 
     reportFile = waitForReportRunCompletion(reporting, userProfileId, reportFile);
 
     if (!reportFile.getStatus().equals("REPORT_AVAILABLE")) {
-      System.out.printf("Report file generation failed to finish. Final status is: %s%n",
-          reportFile.getStatus());
+      System.out.printf(
+          "Report file generation failed to finish. Final status is: %s%n", reportFile.getStatus());
       return null;
     }
 
@@ -68,25 +67,26 @@ public class GenerateReportFile {
    * Waits for a report file to generate with exponential back-off.
    *
    * @param reporting Dfareporting service object on which to run the requests.
-   * @param userProfileId The ID number of the DFA user profile to run this
-   *     request as.
+   * @param userProfileId The ID number of the DFA user profile to run this request as.
    * @param file The report file to poll the status of.
-   * @return the report file object, either once it is no longer processing or
-   *     once too much time has passed.
+   * @return the report file object, either once it is no longer processing or once too much time
+   *         has passed.
    * @throws Exception
    */
   private static File waitForReportRunCompletion(
       Dfareporting reporting, long userProfileId, File file) throws Exception {
-    Random random = new Random();
-    for (int i = 1; i <= 5; i++) {
+
+    Integer interval;
+    for (int i = 0; i <= MAX_POLLING_ATTEMPTS; i++) {
       if (!file.getStatus().equals("PROCESSING")) {
         break;
       }
-      long secondsToSleep = (long) (Math.pow(10, i) * random.nextInt(1000));
-      System.out.printf("Polling again in %s seconds.%n", secondsToSleep / 1000.0);
-      Thread.sleep(secondsToSleep);
-      file = reporting.reports().files().get(
-          userProfileId, file.getReportId(), file.getId()).execute();
+
+      interval = (int) (POLL_TIME_INCREMENT * (Math.pow(1.6, i)));
+      System.out.printf("Polling again in %s ms.%n", interval);
+      Thread.sleep(interval);
+      file = reporting.reports()
+          .files().get(userProfileId, file.getReportId(), file.getId()).execute();
     }
     return file;
   }

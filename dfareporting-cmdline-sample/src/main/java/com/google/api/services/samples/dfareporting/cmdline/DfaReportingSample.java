@@ -76,7 +76,7 @@ public class DfaReportingSample {
         || clientSecrets.getDetails().getClientSecret().startsWith("Enter ")) {
       System.out.println(
           "Enter Client ID and Secret from https://code.google.com/apis/console/?api=dfareporting "
-          + "into calendar-cmdline-sample/src/main/resources/client_secrets.json");
+          + "into dfareporting-cmdline-sample/src/main/resources/client_secrets.json");
       System.exit(1);
     }
     // set up file credential store
@@ -137,7 +137,7 @@ public class DfaReportingSample {
 
           Report standardReport = CreateStandardReport.insert(reporting, userProfileId,
               advertiser, startDate, endDate);
-          File file = GenerateReportFile.run(reporting, userProfileId, standardReport);
+          File file = GenerateReportFile.run(reporting, userProfileId, standardReport, true);
 
           if (file != null) {
             // If the report file generation did not fail, display results.
@@ -156,7 +156,9 @@ public class DfaReportingSample {
           Report floodlightReport =
               CreateFloodlightReport.insert(reporting, userProfileId, floodlightConfigId,
                   startDate, endDate);
-          File file = GenerateReportFile.run(reporting, userProfileId, floodlightReport);
+
+          // Run this report asynchronously, since it would never run synchronously.
+          File file = GenerateReportFile.run(reporting, userProfileId, floodlightReport, false);
 
           if (file != null) {
             // If the report file generation did not fail, display results.
