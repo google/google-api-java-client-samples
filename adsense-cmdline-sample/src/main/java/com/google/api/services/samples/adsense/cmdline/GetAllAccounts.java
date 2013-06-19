@@ -24,7 +24,7 @@ import com.google.api.services.adsense.model.Accounts;
  *
  * Tags: accounts.list
  *
- * @author sergio.gomes@google.com (Sérgio Gomes)
+ * @author sgomes@google.com (Sérgio Gomes)
  *
  */
 public class GetAllAccounts {
@@ -32,7 +32,7 @@ public class GetAllAccounts {
   /**
    * Runs this sample.
    *
-   * @param adsense Adsense service object on which to run the requests.
+   * @param adsense AdSense service object on which to run the requests.
    * @param maxPageSize the maximum page size to retrieve.
    * @return the last page of retrieved accounts.
    * @throws Exception
@@ -51,7 +51,7 @@ public class GetAllAccounts {
           .setPageToken(pageToken)
           .execute();
 
-      if ((accounts.getItems() != null) && !accounts.getItems().isEmpty()) {
+      if (accounts.getItems() != null && !accounts.getItems().isEmpty()) {
         for (Account account : accounts.getItems()) {
           System.out.printf("Account with ID \"%s\" and name \"%s\" was found.\n",
               account.getId(), account.getName());

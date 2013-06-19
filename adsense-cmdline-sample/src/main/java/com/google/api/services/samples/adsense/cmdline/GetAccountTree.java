@@ -26,7 +26,7 @@ import java.util.List;
 *
 * Tags: accounts.get
 *
-* @author sergio.gomes@google.com (Sérgio Gomes)
+* @author sgomes@google.com (Sérgio Gomes)
 *
 */
 public class GetAccountTree {
@@ -55,7 +55,7 @@ public class GetAccountTree {
   /**
    * Runs this sample.
    *
-   * @param adsense Adsense service object on which to run the requests.
+   * @param adsense AdSense service object on which to run the requests.
    * @param accountId the ID for the account to be used.
    * @throws Exception
    */

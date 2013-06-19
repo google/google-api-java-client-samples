@@ -24,7 +24,7 @@ import com.google.api.services.adsense.model.AdUnits;
 *
 * Tags: adunits.list
 *
-* @author sergio.gomes@google.com (Sérgio Gomes)
+* @author sgomes@google.com (Sérgio Gomes)
 *
 */
 public class GetAllAdUnits {
@@ -32,7 +32,7 @@ public class GetAllAdUnits {
   /**
    * Runs this sample.
    *
-   * @param adsense Adsense service object on which to run the requests.
+   * @param adsense AdSense service object on which to run the requests.
    * @param adClientId the ID for the ad client to be used.
    * @param maxPageSize the maximum page size to retrieve.
    * @return the last page of ad units.
@@ -52,7 +52,7 @@ public class GetAllAdUnits {
           .setPageToken(pageToken)
           .execute();
 
-      if ((adUnits.getItems() != null) && !adUnits.getItems().isEmpty()) {
+      if (adUnits.getItems() != null && !adUnits.getItems().isEmpty()) {
         for (AdUnit unit : adUnits.getItems()) {
           System.out.printf("Ad unit with code \"%s\", name \"%s\" and status \"%s\" was found.\n",
               unit.getCode(), unit.getName(), unit.getStatus());

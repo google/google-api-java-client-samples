@@ -32,7 +32,7 @@ public class GetAllSavedAdStyles {
   /**
    * Runs this sample.
    *
-   * @param adsense Adsense service object on which to run the requests.
+   * @param adsense AdSense service object on which to run the requests.
    * @param maxPageSize the maximum page size to retrieve.
    * @return the last page of ad styles.
    * @throws Exception
@@ -52,7 +52,7 @@ public class GetAllSavedAdStyles {
           .setPageToken(pageToken)
           .execute();
 
-      if ((savedAdStyles.getItems() != null) && !savedAdStyles.getItems().isEmpty()) {
+      if (savedAdStyles.getItems() != null && !savedAdStyles.getItems().isEmpty()) {
         for (SavedAdStyle savedAdStyle : savedAdStyles.getItems()) {
           System.out.printf("Saved ad style with name \"%s\" was found.\n", savedAdStyle.getName());
         }

@@ -32,7 +32,7 @@ public class GetAllSavedReports {
   /**
    * Runs this sample.
    *
-   * @param adsense Adsense service object on which to run the requests.
+   * @param adsense AdSense service object on which to run the requests.
    * @param maxPageSize the maximum page size to retrieve.
    * @return the last page of saved reports.
    * @throws Exception
@@ -53,7 +53,7 @@ public class GetAllSavedReports {
           .setPageToken(pageToken)
           .execute();
 
-      if ((savedReports.getItems() != null) && !savedReports.getItems().isEmpty()) {
+      if (savedReports.getItems() != null && !savedReports.getItems().isEmpty()) {
         for (SavedReport savedReport : savedReports.getItems()) {
           System.out.printf("Saved report with id \"%s\" and name \"%s\" was found.\n",
               savedReport.getId(), savedReport.getName());

@@ -39,7 +39,7 @@ public class GenerateSavedReport {
   /**
    * Runs this sample.
    *
-   * @param adsense Adsense service object on which to run the requests.
+   * @param adsense AdSense service object on which to run the requests.
    * @param savedReportId the saved report ID on which to run the report.
    * @throws Exception
    */
@@ -58,7 +58,7 @@ public class GenerateSavedReport {
     // Run saved report.
     AdsenseReportsGenerateResponse response = request.execute();
 
-    if ((response.getRows() != null) && !response.getRows().isEmpty()) {
+    if (response.getRows() != null && !response.getRows().isEmpty()) {
       // Display headers.
       for (AdsenseReportsGenerateResponse.Headers header : response.getHeaders()) {
         System.out.printf("%25s", header.getName());
@@ -82,7 +82,7 @@ public class GenerateSavedReport {
   }
 
   /**
-   * Escape special characters for a parameter being used in a filter.new
+   * Escape special characters for a parameter being used in a filter.new.
    *
    * @param parameter the parameter to be escaped.
    * @return the escaped parameter.

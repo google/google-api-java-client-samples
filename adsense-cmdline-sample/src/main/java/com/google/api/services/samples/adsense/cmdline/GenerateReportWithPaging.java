@@ -34,7 +34,7 @@ import java.util.List;
  *
  * Tags: reports.generate
  *
- * @author sergio.gomes@google.com (Sérgio Gomes)
+ * @author sgomes@google.com (Sérgio Gomes)
  *
  */
 public class GenerateReportWithPaging {
@@ -47,7 +47,7 @@ public class GenerateReportWithPaging {
   /**
    * Runs this sample.
    *
-   * @param adsense Adsense service object on which to run the requests.
+   * @param adsense AdSense service object on which to run the requests.
    * @param adClientId the ad client ID on which to run the report.
    * @param maxReportPageSize the maximum size page to retrieve.
    * @throws Exception

@@ -24,7 +24,7 @@ import com.google.api.services.adsense.model.CustomChannels;
 *
 * Tags: adunits.customchannels.list
 *
-* @author sergio.gomes@google.com (Sérgio Gomes)
+* @author sgomes@google.com (Sérgio Gomes)
 *
 */
 public class GetAllCustomChannelsForAdUnit {
@@ -32,7 +32,7 @@ public class GetAllCustomChannelsForAdUnit {
   /**
    * Runs this sample.
    *
-   * @param adsense Adsense service object on which to run the requests.
+   * @param adsense AdSense service object on which to run the requests.
    * @param adClientId the ID for the ad client to be used.
    * @param adUnitId the ID for the ad unit to be used.
    * @param maxPageSize the maximum page size to retrieve.
@@ -52,7 +52,7 @@ public class GetAllCustomChannelsForAdUnit {
           .setPageToken(pageToken)
           .execute();
 
-      if ((customChannels.getItems() != null) && !customChannels.getItems().isEmpty()) {
+      if (customChannels.getItems() != null && !customChannels.getItems().isEmpty()) {
         for (CustomChannel channel : customChannels.getItems()) {
           System.out.printf("Custom channel with code \"%s\" and name \"%s\" was found.\n",
               channel.getCode(), channel.getName());

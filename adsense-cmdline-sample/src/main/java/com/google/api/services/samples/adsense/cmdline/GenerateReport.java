@@ -30,7 +30,7 @@ import java.util.List;
  *
  * Tags: reports.generate
  *
- * @author sergio.gomes@google.com (Sérgio Gomes)
+ * @author sgomes@google.com (Sérgio Gomes)
  *
  */
 public class GenerateReport {
@@ -39,7 +39,7 @@ public class GenerateReport {
 
   /**
    * Runs this sample.
-   * @param adsense Adsense service object on which to run the requests.
+   * @param adsense AdSense service object on which to run the requests.
    * @param adClientId the ad client ID on which to run the report.
    * @throws Exception
    */
@@ -72,7 +72,7 @@ public class GenerateReport {
     // Run report.
     AdsenseReportsGenerateResponse response = request.execute();
 
-    if ((response.getRows() != null) && !response.getRows().isEmpty()) {
+    if (response.getRows() != null && !response.getRows().isEmpty()) {
       // Display headers.
       for (AdsenseReportsGenerateResponse.Headers header : response.getHeaders()) {
         System.out.printf("%25s", header.getName());

@@ -54,8 +54,11 @@ import java.util.Collections;
  * <li>Running a report for an ad client, for the past 7 days</li>
  * <li>Running a paginated report for an ad client, for the past 7 days</li>
  * <li>Listing all saved reports for the default account</li>
- * <li>Running a saved report for the default account</li> 
+ * <li>Running a saved report for the default account</li>
  * <li>Listing all saved ad styles for the default account</li>
+ * <li>Listing all dimensions for the default account</li>
+ * <li>Listing all metrics for the default account</li>
+ * <li>Listing all alerts for the default account</li>
  * </ul>
  */
 public class AdSenseSample {
@@ -65,16 +68,16 @@ public class AdSenseSample {
    * blank, the application will log a warning. Suggested format is "MyCompany-ProductName/1.0".
    */
   private static final String APPLICATION_NAME = "";
-  
-  /** Global instance of the HTTP transport. */
-  private static HttpTransport HTTP_TRANSPORT;
-  
+
   /** Global instance of the JSON factory. */
   private static final JsonFactory JSON_FACTORY = new JacksonFactory();
-  
+
   // Request parameters.
   private static final int MAX_LIST_PAGE_SIZE = 50;
   private static final int MAX_REPORT_PAGE_SIZE = 50;
+
+  /** Global instance of the HTTP transport. */
+  private static HttpTransport httpTransport;
 
   /** Authorizes the installed application to access user's protected data. */
   private static Credential authorize() throws Exception {
@@ -94,7 +97,7 @@ public class AdSenseSample {
         JSON_FACTORY);
     // set up authorization code flow
     GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
-        HTTP_TRANSPORT, JSON_FACTORY, clientSecrets,
+        httpTransport, JSON_FACTORY, clientSecrets,
         Collections.singleton(AdSenseScopes.ADSENSE_READONLY)).setCredentialStore(
         credentialStore).build();
     // authorize
@@ -125,7 +128,7 @@ public class AdSenseSample {
   public static void main(String[] args) {
     try {
       try {
-        HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
+        httpTransport = GoogleNetHttpTransport.newTrustedTransport();
         AdSense adsense = initializeAdsense();
 
         Accounts accounts = GetAllAccounts.run(adsense, MAX_LIST_PAGE_SIZE);
@@ -164,7 +167,7 @@ public class AdSenseSample {
         } else {
           System.out.println("No ad clients found, unable to run remaining methods.");
         }
-        
+
         SavedReports savedReports = GetAllSavedReports.run(adsense, MAX_REPORT_PAGE_SIZE);
         if ((savedReports.getItems() != null) && !savedReports.getItems().isEmpty()){
           // Get a saved report ID, so we can generate its report.
@@ -173,9 +176,14 @@ public class AdSenseSample {
         } else {
           System.out.println("No saved report found.");
         }
-        
+
         GetAllSavedAdStyles.run(adsense, MAX_LIST_PAGE_SIZE);
-        
+
+        GetAllDimensions.run(adsense);
+        GetAllMetrics.run(adsense);
+
+        GetAllAlerts.run(adsense);
+
       } catch (IOException e) {
         System.err.println(e.getMessage());
       }

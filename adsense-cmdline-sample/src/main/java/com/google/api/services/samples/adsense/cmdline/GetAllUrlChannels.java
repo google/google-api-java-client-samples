@@ -24,7 +24,7 @@ import com.google.api.services.adsense.model.UrlChannels;
 *
 * Tags: urlchannels.list
 *
-* @author sergio.gomes@google.com (Sérgio Gomes)
+* @author sgomes@google.com (Sérgio Gomes)
 *
 */
 public class GetAllUrlChannels {
@@ -32,7 +32,7 @@ public class GetAllUrlChannels {
   /**
    * Runs this sample.
    *
-   * @param adsense Adsense service object on which to run the requests.
+   * @param adsense AdSense service object on which to run the requests.
    * @param adClientId the ID for the ad client to be used.
    * @param maxPageSize the maximum page size to retrieve.
    * @throws Exception
@@ -50,7 +50,7 @@ public class GetAllUrlChannels {
           .setPageToken(pageToken)
           .execute();
 
-      if ((urlChannels.getItems() != null) && !urlChannels.getItems().isEmpty()) {
+      if (urlChannels.getItems() != null && !urlChannels.getItems().isEmpty()) {
         for (UrlChannel channel : urlChannels.getItems()) {
           System.out.printf("URL channel with URL pattern \"%s\" was found.\n",
               channel.getUrlPattern());

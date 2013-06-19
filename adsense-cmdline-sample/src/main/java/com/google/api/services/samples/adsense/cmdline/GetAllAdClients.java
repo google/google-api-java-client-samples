@@ -24,7 +24,7 @@ import com.google.api.services.adsense.model.AdClients;
 *
 * Tags: adclients.list
 *
-* @author sergio.gomes@google.com (Sérgio Gomes)
+* @author sgomes@google.com (Sérgio Gomes)
 *
 */
 public class GetAllAdClients {
@@ -32,7 +32,7 @@ public class GetAllAdClients {
   /**
    * Runs this sample.
    *
-   * @param adsense Adsense service object on which to run the requests.
+   * @param adsense AdSense service object on which to run the requests.
    * @param maxPageSize the maximum page size to retrieve.
    * @return the last page of retrieved ad clients.
    * @throws Exception
@@ -51,7 +51,7 @@ public class GetAllAdClients {
           .setPageToken(pageToken)
           .execute();
 
-      if ((adClients.getItems() != null) && !adClients.getItems().isEmpty()) {
+      if (adClients.getItems() != null && !adClients.getItems().isEmpty()) {
         for (AdClient adClient : adClients.getItems()) {
           System.out.printf("Ad client for product \"%s\" with ID \"%s\" was found.\n",
               adClient.getProductCode(), adClient.getId());
