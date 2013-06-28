@@ -92,12 +92,11 @@ public class CalendarSample {
     try {
       try {
 
+        // initialize the transport
         HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
 
         // authorization
-
         Credential credential = authorize();
-
 
         // set up global Calendar instance
         client = new com.google.api.services.calendar.Calendar.Builder(
