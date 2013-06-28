@@ -91,14 +91,19 @@ public class CalendarSample {
   public static void main(String[] args) {
     try {
       try {
+
         HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
+
         // authorization
+
         Credential credential = authorize();
+
 
         // set up global Calendar instance
         client = new com.google.api.services.calendar.Calendar.Builder(
             HTTP_TRANSPORT, JSON_FACTORY, credential).setApplicationName(
             APPLICATION_NAME).build();
+
         // run commands
         showCalendars();
         addCalendarsUsingBatch();
