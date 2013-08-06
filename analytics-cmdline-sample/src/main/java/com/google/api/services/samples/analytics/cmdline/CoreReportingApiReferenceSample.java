@@ -15,7 +15,6 @@ package com.google.api.services.samples.analytics.cmdline;
 
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
-import com.google.api.client.extensions.java6.auth.oauth2.FileCredentialStore;
 import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
@@ -24,6 +23,8 @@ import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.client.util.store.DataStoreFactory;
+import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.analytics.Analytics;
 import com.google.api.services.analytics.AnalyticsScopes;
 import com.google.api.services.analytics.model.GaData;
@@ -31,7 +32,6 @@ import com.google.api.services.analytics.model.GaData.ColumnHeaders;
 import com.google.api.services.analytics.model.GaData.ProfileInfo;
 import com.google.api.services.analytics.model.GaData.Query;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Collections;
@@ -39,14 +39,13 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * This application demonstrates how to use the Google Analytics Java client library to access
- * all the pieces of data returned by the Google Analytics Core Reporting API v3.
+ * This application demonstrates how to use the Google Analytics Java client library to access all
+ * the pieces of data returned by the Google Analytics Core Reporting API v3.
  *
+ * <p>
  * To run this, you must supply your Google Analytics TABLE ID. Read the Core Reporting API
  * developer guide to learn how to get this value.
- *
- * Note: This demo does not store OAuth 2.0 refresh Tokens. Each time the sample is run,
- * the user must explicitly grant access to their Analytics data.
+ * </p>
  *
  * @author api.nickm@gmail.com
  */
@@ -57,29 +56,40 @@ public class CoreReportingApiReferenceSample {
    * blank, the application will log a warning. Suggested format is "MyCompany-ProductName/1.0".
    */
   private static final String APPLICATION_NAME = "";
-  
+
   /**
-   * Used to identify from which reporting profile to retrieve data.
-   * Format is ga:xxx where xxx is your profile ID.
+   * Used to identify from which reporting profile to retrieve data. Format is ga:xxx where xxx is
+   * your profile ID.
    */
   private static final String TABLE_ID = "INSERT_YOUR_TABLE_ID";
 
+  /** Directory to store user credentials. */
+  private static final java.io.File DATA_STORE_DIR =
+      new java.io.File(System.getProperty("user.home"), ".store/analytics_sample");
+
+  /**
+   * Global instance of the {@link DataStoreFactory}. The best practice is to make it a single
+   * globally shared instance across your application.
+   */
+  private static FileDataStoreFactory DATA_STORE_FACTORY;
+
   /** Global instance of the HTTP transport. */
-  private static  HttpTransport HTTP_TRANSPORT;
+  private static HttpTransport HTTP_TRANSPORT;
 
   /** Global instance of the JSON factory. */
   private static final JsonFactory JSON_FACTORY = new JacksonFactory();
 
   /**
-   * Main demo. This first initializes an Analytics service object. It then queries for the top
-   * 25 organic search keywords and traffic sources by visits. Finally each important part of
-   * the response is printed to the screen.
+   * Main demo. This first initializes an Analytics service object. It then queries for the top 25
+   * organic search keywords and traffic sources by visits. Finally each important part of the
+   * response is printed to the screen.
    *
    * @param args command line args.
    */
   public static void main(String[] args) {
     try {
       HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
+      DATA_STORE_FACTORY = new FileDataStoreFactory(DATA_STORE_DIR);
       Analytics analytics = initializeAnalytics();
       GaData gaData = executeDataQuery(analytics, TABLE_ID);
 
@@ -92,8 +102,8 @@ public class CoreReportingApiReferenceSample {
       printDataTable(gaData);
 
     } catch (GoogleJsonResponseException e) {
-      System.err.println("There was a service error: " + e.getDetails().getCode() +
-            " : " + e.getDetails().getMessage());
+      System.err.println("There was a service error: " + e.getDetails().getCode() + " : "
+          + e.getDetails().getMessage());
     } catch (Throwable t) {
       t.printStackTrace();
     }
@@ -112,37 +122,34 @@ public class CoreReportingApiReferenceSample {
           + "into analytics-cmdline-sample/src/main/resources/client_secrets.json");
       System.exit(1);
     }
-    // set up file credential store
-    FileCredentialStore credentialStore = new FileCredentialStore(
-        new File(System.getProperty("user.home"), ".credentials/analytics.json"), JSON_FACTORY);
     // set up authorization code flow
     GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
         HTTP_TRANSPORT, JSON_FACTORY, clientSecrets,
-        Collections.singleton(AnalyticsScopes.ANALYTICS_READONLY)).setCredentialStore(
-        credentialStore).build();
+        Collections.singleton(AnalyticsScopes.ANALYTICS_READONLY)).setDataStoreFactory(
+        DATA_STORE_FACTORY).build();
     // authorize
     return new AuthorizationCodeInstalledApp(flow, new LocalServerReceiver()).authorize("user");
   }
 
   /**
    * Performs all necessary setup steps for running requests against the API.
+   *
    * @return an initialized Analytics service object.
    *
    * @throws Exception if an issue occurs with OAuth2Native authorize.
    */
-  private static Analytics initializeAnalytics() throws Exception  {
+  private static Analytics initializeAnalytics() throws Exception {
     // Authorization.
     Credential credential = authorize();
 
     // Set up and return Google Analytics API client.
-    return new Analytics.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential)
-        .setApplicationName(APPLICATION_NAME)
-        .build();
+    return new Analytics.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential).setApplicationName(
+        APPLICATION_NAME).build();
   }
 
   /**
-   * Returns the top 25 organic search keywords and traffic sources by visits. The
-   * Core Reporting API is used to retrieve this data.
+   * Returns the top 25 organic search keywords and traffic sources by visits. The Core Reporting
+   * API is used to retrieve this data.
    *
    * @param analytics the Analytics service object used to access the API.
    * @param tableId the table ID from which to retrieve data.
@@ -150,11 +157,10 @@ public class CoreReportingApiReferenceSample {
    * @throws IOException if an API error occured.
    */
   private static GaData executeDataQuery(Analytics analytics, String tableId) throws IOException {
-    return analytics.data().ga()
-        .get(tableId,                  // Table Id.
-            "2012-01-01",              // Start date.
-            "2012-01-14",              // End date.
-            "ga:visits")               // Metrics.
+    return analytics.data().ga().get(tableId, // Table Id.
+        "2012-01-01", // Start date.
+        "2012-01-14", // End date.
+        "ga:visits") // Metrics.
         .setDimensions("ga:source,ga:keyword")
         .setSort("-ga:visits,ga:source")
         .setFilters("ga:medium==organic")
@@ -191,7 +197,7 @@ public class CoreReportingApiReferenceSample {
     System.out.println("Profile ID: " + profileInfo.getProfileId());
     System.out.println("Profile Name: " + profileInfo.getProfileName());
     System.out.println("Table ID: " + profileInfo.getTableId());
-   }
+  }
 
   /**
    * Prints the values of all the parameters that were used to query the API.
@@ -241,9 +247,8 @@ public class CoreReportingApiReferenceSample {
   }
 
   /**
-   * Prints the information for each column.
-   * The reporting data from the API is returned as rows of data. The column
-   * headers describe the names and types of each column in rows.
+   * Prints the information for each column. The reporting data from the API is returned as rows of
+   * data. The column headers describe the names and types of each column in rows.
    *
    * @param gaData the data returned from the API.
    */

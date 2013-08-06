@@ -18,7 +18,6 @@ import static java.net.HttpURLConnection.HTTP_CONFLICT;
 
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
-import com.google.api.client.extensions.java6.auth.oauth2.FileCredentialStore;
 import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
@@ -38,6 +37,8 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.util.Key;
 import com.google.api.client.util.Lists;
+import com.google.api.client.util.store.DataStoreFactory;
+import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.storage.Storage;
 import com.google.api.services.storage.StorageScopes;
 import com.google.api.services.storage.model.Bucket;
@@ -48,7 +49,6 @@ import com.google.common.base.Stopwatch;
 import com.google.common.collect.ImmutableMap;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -70,13 +70,23 @@ public class StorageSample {
   private static final String APPLICATION_NAME = "";
 
   /**
-   * Whether or not we're running on AppEngine. Not set for this command-line sample, but
-   * is relevant if you copy this code for use there.
+   * Whether or not we're running on AppEngine. Not set for this command-line sample, but is
+   * relevant if you copy this code for use there.
    */
   private static final boolean IS_APP_ENGINE = false;
 
+  /** Directory to store user credentials. */
+  private static final java.io.File DATA_STORE_DIR =
+      new java.io.File(System.getProperty("user.home"), ".store/storage_sample");
+  
+  /**
+   * Global instance of the {@link DataStoreFactory}. The best practice is to make it a single
+   * globally shared instance across your application.
+   */
+  private static FileDataStoreFactory DATA_STORE_FACTORY;
+
   /** Global instance of the HTTP transport. */
-  private static HttpTransport httpTransport;
+  private static HttpTransport HTTP_TRANSPORT;
 
   /** Global instance of the JSON factory. */
   private static final JsonFactory JSON_FACTORY = new JacksonFactory();
@@ -90,7 +100,7 @@ public class StorageSample {
   /** Authorizes the installed application to access user's protected data. */
   private static Credential authorize() throws Exception {
     // load client secrets
-    GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY, 
+    GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY,
         new InputStreamReader(StorageSample.class.getResourceAsStream("/client_secrets.json")));
     if (clientSecrets.getDetails().getClientId().startsWith("Enter")
         || clientSecrets.getDetails().getClientSecret().startsWith("Enter ")) {
@@ -99,26 +109,21 @@ public class StorageSample {
           + "into storage-cmdline-sample/src/main/resources/client_secrets.json");
       System.exit(1);
     }
-    // set up file credential store
-    FileCredentialStore credentialStore = new FileCredentialStore(
-        new File(System.getProperty("user.home"), ".credentials/storage.json"), JSON_FACTORY);
     // set up authorization code flow
     GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
-        httpTransport, JSON_FACTORY, clientSecrets,
-        Collections.singleton(StorageScopes.DEVSTORAGE_FULL_CONTROL))
-            .setCredentialStore(credentialStore).build();
+        HTTP_TRANSPORT, JSON_FACTORY, clientSecrets,
+        Collections.singleton(StorageScopes.DEVSTORAGE_FULL_CONTROL)).setDataStoreFactory(
+        DATA_STORE_FACTORY).build();
     // authorize
     return new AuthorizationCodeInstalledApp(flow, new LocalServerReceiver()).authorize("user");
   }
 
   /** Loads sample-specific settings from a JSON file. */
   private static void readSettings() {
-    settings = SampleSettings.load(JSON_FACTORY,
-        StorageSample.class.getResourceAsStream("/sample_settings.json"));
-    if (settings.getProject().startsWith("Enter ") ||
-        settings.getBucket().startsWith("Enter ")) {
-      System.out.println(
-          "Enter sample settings into "
+    settings = SampleSettings.load(
+        JSON_FACTORY, StorageSample.class.getResourceAsStream("/sample_settings.json"));
+    if (settings.getProject().startsWith("Enter ") || settings.getBucket().startsWith("Enter ")) {
+      System.out.println("Enter sample settings into "
           + "storage-cmdline-sample/src/main/resources/sample_settings.json");
       System.exit(1);
     }
@@ -161,8 +166,7 @@ public class StorageSample {
       return domain;
     }
 
-    public static SampleSettings load(JsonFactory jsonFactory,
-        InputStream inputStream) {
+    public static SampleSettings load(JsonFactory jsonFactory, InputStream inputStream) {
       try {
         return jsonFactory.fromInputStream(inputStream, SampleSettings.class);
       } catch (IOException e) {
@@ -201,7 +205,7 @@ public class StorageSample {
       System.out.println("updated: " + object.getUpdated());
       System.out.println("owner: " + object.getOwner());
       // should only show up if projection is full.
-      //System.out.println("acl: " + object.getAcl());
+      // System.out.println("acl: " + object.getAcl());
     }
 
     static void separator() {
@@ -213,39 +217,37 @@ public class StorageSample {
 
   public static void main(String[] args) {
     try {
-      try {
-        httpTransport = GoogleNetHttpTransport.newTrustedTransport();
-        // settings
-        readSettings();
-        // authorization
-        Credential credential = authorize();
-        // set up global Storage instance
-        storage = new Storage.Builder(httpTransport, JSON_FACTORY, credential)
-            .setApplicationName(APPLICATION_NAME)
-            .build();
-        // run commands
-        tryCreateBucket();
-        getBucket();
-        listObjects();
-        getObjectMetadata();
-        uploadObject(true /* useCustomMetadata */);
-        getObjectData();
-        getPartialObjectData();
-        // success!
-        return;
-      } catch (GoogleJsonResponseException e) {
-        // An error came back from the API.
-        GoogleJsonError error = e.getDetails();
-        System.err.println(error.getMessage());
-        // More error information can be retrieved with error.getErrors().
-      } catch (HttpResponseException e) {
-        // No JSON body was returned by the API.
-        System.err.println(e.getHeaders());
-        System.err.println(e.getMessage());
-      } catch (IOException e) {
-        // Error formulating a HTTP request or reaching the HTTP service.
-        System.err.println(e.getMessage());
-      }
+      HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
+      DATA_STORE_FACTORY = new FileDataStoreFactory(DATA_STORE_DIR);
+      // settings
+      readSettings();
+      // authorization
+      Credential credential = authorize();
+      // set up global Storage instance
+      storage = new Storage.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential).setApplicationName(
+          APPLICATION_NAME).build();
+      // run commands
+      tryCreateBucket();
+      getBucket();
+      listObjects();
+      getObjectMetadata();
+      uploadObject(true /* useCustomMetadata */);
+      getObjectData();
+      getPartialObjectData();
+      // success!
+      return;
+    } catch (GoogleJsonResponseException e) {
+      // An error came back from the API.
+      GoogleJsonError error = e.getDetails();
+      System.err.println(error.getMessage());
+      // More error information can be retrieved with error.getErrors().
+    } catch (HttpResponseException e) {
+      // No JSON body was returned by the API.
+      System.err.println(e.getHeaders());
+      System.err.println(e.getMessage());
+    } catch (IOException e) {
+      // Error formulating a HTTP request or reaching the HTTP service.
+      System.err.println(e.getMessage());
     } catch (Throwable t) {
       t.printStackTrace();
     }
@@ -254,13 +256,10 @@ public class StorageSample {
 
   private static void tryCreateBucket() throws IOException {
     View.header1("Trying to create a new bucket " + settings.getBucket());
-    Storage.Buckets.Insert insertBucket = storage.buckets().insert(
-        settings.getProject(),
-        new Bucket()
-            .setName(settings.getBucket())
-            .setLocation("US")
-            //.setDefaultObjectAcl(ImmutableList.of(
-            //    new ObjectAccessControl().setEntity("allAuthenticatedUsers").setRole("READER")))
+    Storage.Buckets.Insert insertBucket = storage.buckets()
+        .insert(settings.getProject(), new Bucket().setName(settings.getBucket()).setLocation("US")
+        // .setDefaultObjectAcl(ImmutableList.of(
+        // new ObjectAccessControl().setEntity("allAuthenticatedUsers").setRole("READER")))
         );
     try {
       @SuppressWarnings("unused")
@@ -320,9 +319,9 @@ public class StorageSample {
   /**
    * Generates a random data block and repeats it to provide the stream.
    *
-   * Using a buffer instead of just filling from java.util.Random because the
-   * latter causes noticeable lag in stream reading, which detracts from upload
-   * speed. This class takes all that cost in the constructor.
+   *  Using a buffer instead of just filling from java.util.Random because the latter causes
+   * noticeable lag in stream reading, which detracts from upload speed. This class takes all that
+   * cost in the constructor.
    */
   private static class RandomDataBlockInputStream extends InputStream {
 
@@ -336,7 +335,9 @@ public class StorageSample {
       random.nextBytes(buffer);
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     *
      * @see java.io.InputStream#read()
      */
     @Override
@@ -344,7 +345,9 @@ public class StorageSample {
       throw new AssertionError("Not implemented; too slow.");
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     *
      * @see java.io.InputStream#read(byte [], int, int)
      */
     @Override
@@ -385,7 +388,7 @@ public class StorageSample {
           break;
         case MEDIA_IN_PROGRESS:
           // TODO(nherring): Progress works iff you have a content length specified.
-          //System.out.println(uploader.getProgress());
+          // System.out.println(uploader.getProgress());
           System.out.println(uploader.getNumBytesUploaded());
           break;
         case MEDIA_COMPLETE:
@@ -401,10 +404,10 @@ public class StorageSample {
   private static void uploadObject(boolean useCustomMetadata) throws IOException {
     View.header1("Uploading object.");
     final long objectSize = 100 * 1000 * 1000 /* 100 MB */;
-    InputStreamContent mediaContent = new InputStreamContent("application/octet-stream",
-        new RandomDataBlockInputStream(objectSize, 1024));
+    InputStreamContent mediaContent = new InputStreamContent(
+        "application/octet-stream", new RandomDataBlockInputStream(objectSize, 1024));
     // Not strictly necessary, but allows optimization in the cloud.
-    //mediaContent.setLength(OBJECT_SIZE);
+    // mediaContent.setLength(OBJECT_SIZE);
 
     StorageObject objectMetadata = null;
 
@@ -415,22 +418,20 @@ public class StorageSample {
       // parameters.
       List<ObjectAccessControl> acl = Lists.newArrayList();
       if (settings.getEmail() != null && !settings.getEmail().isEmpty()) {
-        acl.add(new ObjectAccessControl()
-            .setEntity("user-" + settings.getEmail()).setRole("OWNER"));
+        acl.add(
+            new ObjectAccessControl().setEntity("user-" + settings.getEmail()).setRole("OWNER"));
       }
       if (settings.getDomain() != null && !settings.getDomain().isEmpty()) {
-        acl.add(new ObjectAccessControl()
-            .setEntity("domain-" + settings.getDomain()).setRole("READER"));
+        acl.add(new ObjectAccessControl().setEntity("domain-" + settings.getDomain())
+            .setRole("READER"));
       }
-      objectMetadata = new StorageObject()
-          .setName(settings.getPrefix() + "myobject")
-          .setMetadata(ImmutableMap.of("key1", "value1", "key2", "value2"))
-          .setAcl(acl)
+      objectMetadata = new StorageObject().setName(settings.getPrefix() + "myobject")
+          .setMetadata(ImmutableMap.of("key1", "value1", "key2", "value2")).setAcl(acl)
           .setContentDisposition("attachment");
     }
 
-    Storage.Objects.Insert insertObject = storage.objects().insert(settings.getBucket(),
-        objectMetadata, mediaContent);
+    Storage.Objects.Insert insertObject =
+        storage.objects().insert(settings.getBucket(), objectMetadata, mediaContent);
 
     if (!useCustomMetadata) {
       // If you don't provide metadata, you will have specify the object
@@ -440,8 +441,8 @@ public class StorageSample {
       insertObject.setName(settings.getPrefix() + "myobject");
     }
 
-    insertObject.getMediaHttpUploader().setProgressListener(new CustomUploadProgressListener())
-        .setDisableGZipContent(true);
+    insertObject.getMediaHttpUploader()
+        .setProgressListener(new CustomUploadProgressListener()).setDisableGZipContent(true);
     // For small files, you may wish to call setDirectUploadEnabled(true), to
     // reduce the number of HTTP requests made to the server.
     if (mediaContent.getLength() > 0 && mediaContent.getLength() <= 2 * 1000 * 1000 /* 2MB */) {
@@ -450,8 +451,7 @@ public class StorageSample {
     insertObject.execute();
   }
 
-  private static class CustomDownloadProgressListener implements MediaHttpDownloaderProgressListener
-      {
+  private static class CustomDownloadProgressListener implements MediaHttpDownloaderProgressListener {
     private final Stopwatch stopwatch;
 
     public CustomDownloadProgressListener(final Stopwatch stopwatch) {
@@ -477,8 +477,8 @@ public class StorageSample {
   private static void getObjectData() throws IOException {
     View.header1("Getting object data uploaded object.");
     ByteArrayOutputStream out = new ByteArrayOutputStream();
-    Storage.Objects.Get getObject = storage.objects().get(settings.getBucket(),
-        settings.getPrefix() + "myobject");
+    Storage.Objects.Get getObject =
+        storage.objects().get(settings.getBucket(), settings.getPrefix() + "myobject");
 
     Stopwatch stopwatch = new Stopwatch();
     getObject.getMediaHttpDownloader().setDirectDownloadEnabled(!IS_APP_ENGINE)
@@ -494,10 +494,10 @@ public class StorageSample {
   private static void getPartialObjectData() throws IOException {
     View.header1("Getting part of object data uploaded object.");
     ByteArrayOutputStream out = new ByteArrayOutputStream();
-    Storage.Objects.Get getObject = storage.objects().get(settings.getBucket(),
-        settings.getPrefix() + "myobject");
-    getObject.setRequestHeaders(new HttpHeaders()
-        .setRange(String.format("bytes=%d-%d", 2 * 1000 * 1000, 3 * 1000 * 1000 - 1 /* 2-3MB */)));
+    Storage.Objects.Get getObject =
+        storage.objects().get(settings.getBucket(), settings.getPrefix() + "myobject");
+    getObject.setRequestHeaders(new HttpHeaders().setRange(
+        String.format("bytes=%d-%d", 2 * 1000 * 1000, 3 * 1000 * 1000 - 1))); // 2-3MB
 
     Stopwatch stopwatch = new Stopwatch();
     getObject.getMediaHttpDownloader().setDirectDownloadEnabled(!IS_APP_ENGINE)
@@ -512,5 +512,3 @@ public class StorageSample {
 
   // TODO(nherring): get a crc32 implementation, e.g., http://goo.gl/4oOlY
 }
-
-

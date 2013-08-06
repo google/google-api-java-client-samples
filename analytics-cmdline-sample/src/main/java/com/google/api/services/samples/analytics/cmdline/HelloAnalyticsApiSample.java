@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2012 Google Inc.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied. See the License for the specific language governing permissions and limitations under
@@ -16,7 +16,6 @@ package com.google.api.services.samples.analytics.cmdline;
 
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
-import com.google.api.client.extensions.java6.auth.oauth2.FileCredentialStore;
 import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
@@ -25,6 +24,8 @@ import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.client.util.store.DataStoreFactory;
+import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.analytics.Analytics;
 import com.google.api.services.analytics.AnalyticsScopes;
 import com.google.api.services.analytics.model.Accounts;
@@ -33,7 +34,6 @@ import com.google.api.services.analytics.model.GaData.ColumnHeaders;
 import com.google.api.services.analytics.model.Profiles;
 import com.google.api.services.analytics.model.Webproperties;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Collections;
@@ -46,10 +46,7 @@ import java.util.List;
  * traverse the Management API hierarchy by going through the authorized user's first account, first
  * web property, and finally the first profile and retrieve the first profile id. This ID is then
  * used with the Core Reporting API to retrieve the top 25 organic search terms.
- * 
- *  Note: This demo does not store OAuth 2.0 refresh tokens. Each time the sample is run, the user
- * must explicitly grant access to their analytics data.
- * 
+ *
  * @author api.nickm@gmail.com
  */
 public class HelloAnalyticsApiSample {
@@ -59,7 +56,17 @@ public class HelloAnalyticsApiSample {
    * blank, the application will log a warning. Suggested format is "MyCompany-ProductName/1.0".
    */
   private static final String APPLICATION_NAME = "";
+
+  /** Directory to store user credentials. */
+  private static final java.io.File DATA_STORE_DIR =
+      new java.io.File(System.getProperty("user.home"), ".store/analytics_sample");
   
+  /**
+   * Global instance of the {@link DataStoreFactory}. The best practice is to make it a single
+   * globally shared instance across your application.
+   */
+  private static FileDataStoreFactory DATA_STORE_FACTORY;
+
   /** Global instance of the HTTP transport. */
   private static HttpTransport HTTP_TRANSPORT;
 
@@ -71,12 +78,13 @@ public class HelloAnalyticsApiSample {
    * Analytics Management API to get the first profile ID for the authorized user. It then uses the
    * Core Reporting API to retrieve the top 25 organic search terms. Finally the results are printed
    * to the screen. If an API error occurs, it is printed here.
-   * 
+   *
    * @param args command line args.
    */
   public static void main(String[] args) {
     try {
       HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
+      DATA_STORE_FACTORY = new FileDataStoreFactory(DATA_STORE_DIR);
       Analytics analytics = initializeAnalytics();
       String profileId = getFirstProfileId(analytics);
       if (profileId == null) {
@@ -106,23 +114,20 @@ public class HelloAnalyticsApiSample {
           + "into analytics-cmdline-sample/src/main/resources/client_secrets.json");
       System.exit(1);
     }
-    // set up file credential store
-    FileCredentialStore credentialStore = new FileCredentialStore(
-        new File(System.getProperty("user.home"), ".credentials/analytics.json"), JSON_FACTORY);
     // set up authorization code flow
     GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
         HTTP_TRANSPORT, JSON_FACTORY, clientSecrets,
-        Collections.singleton(AnalyticsScopes.ANALYTICS_READONLY)).setCredentialStore(
-        credentialStore).build();
+        Collections.singleton(AnalyticsScopes.ANALYTICS_READONLY)).setDataStoreFactory(
+        DATA_STORE_FACTORY).build();
     // authorize
     return new AuthorizationCodeInstalledApp(flow, new LocalServerReceiver()).authorize("user");
   }
 
   /**
    * Performs all necessary setup steps for running requests against the API.
-   * 
+   *
    * @return An initialized Analytics service object.
-   * 
+   *
    * @throws Exception if an issue occurs with OAuth2Native authorize.
    */
   private static Analytics initializeAnalytics() throws Exception {
@@ -130,8 +135,8 @@ public class HelloAnalyticsApiSample {
     Credential credential = authorize();
 
     // Set up and return Google Analytics API client.
-    return new Analytics.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential)
-        .setApplicationName(APPLICATION_NAME).build();
+    return new Analytics.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential).setApplicationName(
+        APPLICATION_NAME).build();
   }
 
   /**
@@ -139,7 +144,7 @@ public class HelloAnalyticsApiSample {
    * queries, first to the accounts collection, then to the web properties collection, and finally
    * to the profiles collection. In each request the first ID of the first entity is retrieved and
    * used in the query for the next collection in the hierarchy.
-   * 
+   *
    * @param analytics the analytics service object used to access the API.
    * @return the profile ID of the user's first account, web property, and profile.
    * @throws IOException if the API encounters an error.
@@ -181,7 +186,7 @@ public class HelloAnalyticsApiSample {
   /**
    * Returns the top 25 organic search keywords and traffic source by visits. The Core Reporting API
    * is used to retrieve this data.
-   * 
+   *
    * @param analytics the analytics service object used to access the API.
    * @param profileId the profile ID from which to retrieve data.
    * @return the response from the API.
@@ -202,7 +207,7 @@ public class HelloAnalyticsApiSample {
   /**
    * Prints the output from the Core Reporting API. The profile name is printed along with each
    * column name and all the data in the rows.
-   * 
+   *
    * @param results data returned from the Core Reporting API.
    */
   private static void printGaData(GaData results) {

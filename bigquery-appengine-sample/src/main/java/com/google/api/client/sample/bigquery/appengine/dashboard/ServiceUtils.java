@@ -15,15 +15,16 @@
 package com.google.api.client.sample.bigquery.appengine.dashboard;
 
 import com.google.api.client.auth.oauth2.Credential;
-import com.google.api.client.extensions.appengine.auth.oauth2.AppEngineCredentialStore;
+import com.google.api.client.extensions.appengine.datastore.AppEngineDataStoreFactory;
 import com.google.api.client.extensions.appengine.http.UrlFetchTransport;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.jackson.JacksonFactory;
+import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.util.Preconditions;
+import com.google.api.client.util.store.DataStoreFactory;
 import com.google.api.services.bigquery.Bigquery;
 import com.google.api.services.bigquery.BigqueryScopes;
 
@@ -47,8 +48,12 @@ class ServiceUtils {
   /** Global instance of the JSON factory. */
   static final JsonFactory JSON_FACTORY = new JacksonFactory();
 
-  /** Global instance of the Credential store. */
-  static final AppEngineCredentialStore CREDENTIAL_STORE = new AppEngineCredentialStore();
+  /**
+   * Global instance of the {@link DataStoreFactory}. The best practice is to make it a single
+   * globally shared instance across your application.
+   */
+  private static final AppEngineDataStoreFactory DATA_STORE_FACTORY =
+      new AppEngineDataStoreFactory();
 
   private static GoogleClientSecrets clientSecrets = null;
 
@@ -71,16 +76,17 @@ class ServiceUtils {
   }
 
   static void deleteCredentials(String userId) throws IOException {
-    Credential credential = newFlow().loadCredential(userId);
+    GoogleAuthorizationCodeFlow flow = newFlow();
+    Credential credential = flow.loadCredential(userId);
     if (credential != null) {
-      CREDENTIAL_STORE.delete(userId, credential);
+      flow.getCredentialDataStore().delete(userId);
     }
   }
 
   static GoogleAuthorizationCodeFlow newFlow() throws IOException {
     return new GoogleAuthorizationCodeFlow.Builder(HTTP_TRANSPORT, JSON_FACTORY,
-        getClientCredential(), Collections.singleton(BigqueryScopes.BIGQUERY)).setCredentialStore(
-        CREDENTIAL_STORE).setAccessType("offline").build();
+        getClientCredential(), Collections.singleton(BigqueryScopes.BIGQUERY)).setDataStoreFactory(
+            DATA_STORE_FACTORY).setAccessType("offline").build();
   }
 
   static Bigquery loadBigqueryClient(String userId) throws IOException {

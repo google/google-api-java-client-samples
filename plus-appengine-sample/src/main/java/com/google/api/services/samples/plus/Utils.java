@@ -14,13 +14,14 @@
 
 package com.google.api.services.samples.plus;
 
-import com.google.api.client.extensions.appengine.auth.oauth2.AppEngineCredentialStore;
+import com.google.api.client.extensions.appengine.datastore.AppEngineDataStoreFactory;
 import com.google.api.client.extensions.appengine.http.UrlFetchTransport;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.util.Preconditions;
+import com.google.api.client.util.store.DataStoreFactory;
 import com.google.api.services.plus.PlusScopes;
 
 import java.io.IOException;
@@ -32,6 +33,13 @@ import javax.servlet.http.HttpServletRequest;
 
 class Utils {
 
+  /**
+   * Global instance of the {@link DataStoreFactory}. The best practice is to make it a single
+   * globally shared instance across your application.
+   */
+  private static final AppEngineDataStoreFactory DATA_STORE_FACTORY =
+      new AppEngineDataStoreFactory();
+  
   private static GoogleClientSecrets clientSecrets = null;
   private static final Set<String> SCOPES = Collections.singleton(PlusScopes.PLUS_ME);
   static final String MAIN_SERVLET_PATH = "/plussampleservlet";
@@ -53,8 +61,8 @@ class Utils {
 
   static GoogleAuthorizationCodeFlow initializeFlow() throws IOException {
     return new GoogleAuthorizationCodeFlow.Builder(
-        HTTP_TRANSPORT, JSON_FACTORY, getClientSecrets(), SCOPES).setCredentialStore(
-        new AppEngineCredentialStore()).setAccessType("offline").build();
+        HTTP_TRANSPORT, JSON_FACTORY, getClientSecrets(), SCOPES).setDataStoreFactory(
+        DATA_STORE_FACTORY).setAccessType("offline").build();
   }
 
   static String getRedirectUri(HttpServletRequest req) {

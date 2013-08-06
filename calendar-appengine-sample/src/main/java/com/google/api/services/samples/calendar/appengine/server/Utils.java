@@ -15,15 +15,16 @@
 package com.google.api.services.samples.calendar.appengine.server;
 
 import com.google.api.client.auth.oauth2.Credential;
-import com.google.api.client.extensions.appengine.auth.oauth2.AppEngineCredentialStore;
+import com.google.api.client.extensions.appengine.datastore.AppEngineDataStoreFactory;
 import com.google.api.client.extensions.appengine.http.UrlFetchTransport;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.jackson.JacksonFactory;
+import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.util.Preconditions;
+import com.google.api.client.util.store.DataStoreFactory;
 import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.CalendarScopes;
 import com.google.appengine.api.users.UserServiceFactory;
@@ -41,6 +42,13 @@ import javax.servlet.http.HttpServletRequest;
  */
 class Utils {
 
+  /**
+   * Global instance of the {@link DataStoreFactory}. The best practice is to make it a single
+   * globally shared instance across your application.
+   */
+  private static final AppEngineDataStoreFactory DATA_STORE_FACTORY =
+      new AppEngineDataStoreFactory();
+  
   /** Global instance of the HTTP transport. */
   static final HttpTransport HTTP_TRANSPORT = new UrlFetchTransport();
 
@@ -55,8 +63,8 @@ class Utils {
           new InputStreamReader(Utils.class.getResourceAsStream("/client_secrets.json")));
       Preconditions.checkArgument(!clientSecrets.getDetails().getClientId().startsWith("Enter ")
           && !clientSecrets.getDetails().getClientSecret().startsWith("Enter "),
-          "Download client_secrets.json file from https://code.google.com/apis/console/?api=calendar "
-          + "into calendar-appengine-sample/src/main/resources/client_secrets.json");
+          "Download client_secrets.json file from https://code.google.com/apis/console/"
+          + "?api=calendar into calendar-appengine-sample/src/main/resources/client_secrets.json");
     }
     return clientSecrets;
   }
@@ -69,8 +77,8 @@ class Utils {
 
   static GoogleAuthorizationCodeFlow newFlow() throws IOException {
     return new GoogleAuthorizationCodeFlow.Builder(HTTP_TRANSPORT, JSON_FACTORY,
-        getClientCredential(), Collections.singleton(CalendarScopes.CALENDAR)).setCredentialStore(
-        new AppEngineCredentialStore()).setAccessType("offline").build();
+        getClientCredential(), Collections.singleton(CalendarScopes.CALENDAR)).setDataStoreFactory(
+        DATA_STORE_FACTORY).setAccessType("offline").build();
   }
 
   static Calendar loadCalendarClient() throws IOException {

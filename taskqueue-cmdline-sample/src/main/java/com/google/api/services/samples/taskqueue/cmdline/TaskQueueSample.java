@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2010 Google Inc.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied. See the License for the specific language governing permissions and limitations under
@@ -16,7 +16,6 @@ package com.google.api.services.samples.taskqueue.cmdline;
 
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
-import com.google.api.client.extensions.java6.auth.oauth2.FileCredentialStore;
 import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
@@ -24,6 +23,8 @@ import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.client.util.store.DataStoreFactory;
+import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.taskqueue.Taskqueue;
 import com.google.api.services.taskqueue.TaskqueueRequest;
 import com.google.api.services.taskqueue.TaskqueueRequestInitializer;
@@ -31,7 +32,6 @@ import com.google.api.services.taskqueue.TaskqueueScopes;
 import com.google.api.services.taskqueue.model.Task;
 import com.google.api.services.taskqueue.model.Tasks;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Collections;
@@ -39,7 +39,7 @@ import java.util.Collections;
 /**
  * Sample which leases task from TaskQueueService, performs work on the payload of the task and then
  * deletes the task.
- * 
+ *
  * @author Vibhooti Verma
  */
 public class TaskQueueSample {
@@ -49,11 +49,21 @@ public class TaskQueueSample {
    * blank, the application will log a warning. Suggested format is "MyCompany-ProductName/1.0".
    */
   private static final String APPLICATION_NAME = "";
- 
+
   private static String projectName;
   private static String taskQueueName;
   private static int leaseSecs;
   private static int numTasks;
+
+  /** Directory to store user credentials. */
+  private static final java.io.File DATA_STORE_DIR =
+      new java.io.File(System.getProperty("user.home"), ".store/task_queue_sample");
+  
+  /**
+   * Global instance of the {@link DataStoreFactory}. The best practice is to make it a single
+   * globally shared instance across your application.
+   */
+  private static FileDataStoreFactory DATA_STORE_FACTORY;
 
   /** Global instance of the HTTP transport. */
   private static HttpTransport HTTP_TRANSPORT;
@@ -73,27 +83,31 @@ public class TaskQueueSample {
           + "taskqueue-cmdline-sample/src/main/resources/client_secrets.json");
       System.exit(1);
     }
-    // set up file credential store
-    FileCredentialStore credentialStore = new FileCredentialStore(
-        new File(System.getProperty("user.home"), ".credentials/taskqueue.json"),
-        JSON_FACTORY);
     // set up authorization code flow
     GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
         HTTP_TRANSPORT, JSON_FACTORY, clientSecrets,
-        Collections.singleton(TaskqueueScopes.TASKQUEUE)).setCredentialStore(credentialStore)
-        .build();
+        Collections.singleton(TaskqueueScopes.TASKQUEUE)).setDataStoreFactory(
+        DATA_STORE_FACTORY).build();
     // authorize
     return new AuthorizationCodeInstalledApp(flow, new LocalServerReceiver()).authorize("user");
   }
 
   /**
-   * You can perform following operations using TaskQueueService. 1. leasetasks 2. gettask 3. delete
-   * task 4. getqueue For illustration purpose, we are first getting the stats of the specified
-   * queue followed by leasing tasks and then deleting them. Users can change the flow according to
-   * their needs.
+   * You can perform following operations using TaskQueueService:
+   * <ul>
+   * <li>leasetasks</li>
+   * <li>gettask</li>
+   * <li>deletetask</li>
+   * <li>getqueue</li>
+   * </ul>
+   * <p>
+   * For illustration purpose, we are first getting the stats of the specified queue followed by
+   * leasing tasks and then deleting them. Users can change the flow according to their needs.
+   * </p>
    */
   private static void run() throws Exception {
     HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
+    DATA_STORE_FACTORY = new FileDataStoreFactory(DATA_STORE_DIR);
     // authorization
     Credential credential = authorize();
 
@@ -156,13 +170,11 @@ public class TaskQueueSample {
     }
 
     try {
-      try {
-        run();
-        // success!
-        return;
-      } catch (IOException e) {
-        System.err.println(e.getMessage());
-      }
+      run();
+      // success!
+      return;
+    } catch (IOException e) {
+      System.err.println(e.getMessage());
     } catch (Throwable t) {
       t.printStackTrace();
     }
@@ -171,7 +183,7 @@ public class TaskQueueSample {
 
   /**
    * Method that sends a get request to get the queue.
-   * 
+   *
    * @param taskQueue The task queue that should be used to get the queue from.
    * @return {@link com.google.api.services.taskqueue.model.TaskQueue}
    * @throws IOException if the request fails.
@@ -185,7 +197,7 @@ public class TaskQueueSample {
 
   /**
    * Method that sends a lease request to the specified task queue.
-   * 
+   *
    * @param taskQueue The task queue that should be used to lease tasks from.
    * @return {@link Tasks}
    * @throws IOException if the request fails.
@@ -199,7 +211,7 @@ public class TaskQueueSample {
   /**
    * This method actually performs the desired work on tasks. It can make use of payload of the
    * task. By default, we are just printing the payload of the leased task.
-   * 
+   *
    * @param task The task that should be executed.
    */
   private static void executeTask(Task task) {
@@ -209,7 +221,7 @@ public class TaskQueueSample {
 
   /**
    * Method that sends a delete request for the specified task object to the taskqueue service.
-   * 
+   *
    * @param taskQueue The task queue the specified task lies in.
    * @param task The task that should be deleted.
    * @throws IOException if the request fails

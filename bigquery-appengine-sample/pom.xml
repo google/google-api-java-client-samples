@@ -13,19 +13,11 @@
   <name>bigquery-appengine-sample</name>
   <packaging>war</packaging>
 
-  <pluginRepositories>
-    <pluginRepository>
-      <id>maven-gae-plugin-repo</id>
-      <name>Maven Google App Engine Repository</name>
-      <url>http://maven-gae-plugin.googlecode.com/svn/repository/</url>
-    </pluginRepository>
-  </pluginRepositories>
-
   <properties>
-    <bigquery.version>v2-rev86-1.15.0-rc</bigquery.version>
+    <bigquery.version>v2-rev103-1.16.0-rc</bigquery.version>
     <datanucleus.version>1.1.5</datanucleus.version>
-    <gae.version>1.7.0</gae.version>
-    <google-api-client.version>1.15.0-rc</google-api-client.version>
+    <google-api-client.version>1.16.0-rc</google-api-client.version>
+    <appengine-sdk.version>1.8.2</appengine-sdk.version>
     <webappDirectory>${project.build.directory}/${project.build.finalName}</webappDirectory>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
@@ -43,20 +35,16 @@
           <target>1.6</target>
         </configuration>
       </plugin>
-
+ 
       <plugin>
-        <groupId>net.kindleit</groupId>
-        <artifactId>maven-gae-plugin</artifactId>
-        <version>0.9.2</version>
-        <dependencies>
-          <dependency>
-            <groupId>net.kindleit</groupId>
-            <artifactId>gae-runtime</artifactId>
-            <version>${gae.version}</version>
-            <type>pom</type>
-          </dependency>
-        </dependencies>
+        <groupId>com.google.appengine</groupId>
+        <artifactId>appengine-maven-plugin</artifactId>
+        <version>${appengine-sdk.version}</version>
+        <configuration>
+          <port>8888</port>
+        </configuration>
       </plugin>
+
       <plugin>
         <groupId>org.datanucleus</groupId>
         <artifactId>maven-datanucleus-plugin</artifactId>
@@ -205,14 +193,18 @@
 
   <dependencies>
     <dependency>
-      <groupId>net.kindleit</groupId>
-      <artifactId>gae-runtime</artifactId>
-      <version>${gae.version}</version>
-      <type>pom</type>
+      <groupId>com.google.appengine</groupId>
+      <artifactId>appengine-api-1.0-sdk</artifactId>
+      <version>${appengine-sdk.version}</version>
     </dependency>
     <dependency>
       <groupId>com.google.api-client</groupId>
       <artifactId>google-api-client-appengine</artifactId>
+      <version>${google-api-client.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.google.api-client</groupId>
+      <artifactId>google-api-client-jackson2</artifactId>
       <version>${google-api-client.version}</version>
     </dependency>
     <dependency>

@@ -14,7 +14,6 @@ package com.google.api.services.samples.computeengine.cmdline;
 
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
-import com.google.api.client.extensions.java6.auth.oauth2.FileCredentialStore;
 import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
@@ -22,20 +21,21 @@ import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.client.util.store.DataStoreFactory;
+import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.compute.Compute;
 import com.google.api.services.compute.ComputeScopes;
 import com.google.api.services.compute.model.Instance;
 import com.google.api.services.compute.model.InstanceList;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.List;
 
 /**
- * Command-line sample to demo listing Google Compute Engine instances
- * using Java and the Google Compute Engine API
+ * Command-line sample to demo listing Google Compute Engine instances using Java and the Google
+ * Compute Engine API
  *
  * @author Jonathan Simon
  */
@@ -50,9 +50,19 @@ public class ComputeEngineSample {
   /** Set projectId to your Project ID from Overview pane in the APIs console */
   private static final String projectId = "YOUR_PROJECT_ID";
 
-  /** Set Compute Engine zone  */
+  /** Set Compute Engine zone */
   private static final String zoneName = "us-central1-a";
 
+  /** Directory to store user credentials. */
+  private static final java.io.File DATA_STORE_DIR =
+      new java.io.File(System.getProperty("user.home"), ".store/compute_engine_sample");
+
+  /**
+   * Global instance of the {@link DataStoreFactory}. The best practice is to make it a single
+   * globally shared instance across your application.
+   */
+  private static FileDataStoreFactory DATA_STORE_FACTORY;
+  
   /** Global instance of the HTTP transport. */
   private static HttpTransport HTTP_TRANSPORT;
 
@@ -63,27 +73,24 @@ public class ComputeEngineSample {
   private static final List<String> SCOPES = Arrays.asList(ComputeScopes.COMPUTE_READONLY);
 
   public static void main(String[] args) {
-
-    //Start Authorization process
+    // Start Authorization process
     try {
-      try {
-        HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
-        // Authorization
-        Credential credential = authorize();
+      HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
+      DATA_STORE_FACTORY = new FileDataStoreFactory(DATA_STORE_DIR);
+      // Authorization
+      Credential credential = authorize();
 
-        //Create compute engine object for listing instances
-        Compute compute = new Compute.Builder(HTTP_TRANSPORT, JSON_FACTORY, null)
-            .setApplicationName(APPLICATION_NAME)
-            .setHttpRequestInitializer(credential)
-            .build();
+      // Create compute engine object for listing instances
+      Compute compute = new Compute.Builder(
+          HTTP_TRANSPORT, JSON_FACTORY, null).setApplicationName(APPLICATION_NAME)
+          .setHttpRequestInitializer(credential).build();
 
-        //List out instances
-        printInstances(compute, projectId);
-        //Success!
-        return;
-      } catch (IOException e) {
-        System.err.println(e.getMessage());
-      }
+      // List out instances
+      printInstances(compute, projectId);
+      // Success!
+      return;
+    } catch (IOException e) {
+      System.err.println(e.getMessage());
     } catch (Throwable t) {
       t.printStackTrace();
     }
@@ -103,23 +110,20 @@ public class ComputeEngineSample {
           + "into compute-engine-cmdline-sample/src/main/resources/client_secrets.json");
       System.exit(1);
     }
-    // set up file credential store
-    FileCredentialStore credentialStore = new FileCredentialStore(
-        new File(System.getProperty("user.home"),
-            ".credentials/compute-engine.json"), JSON_FACTORY);
     // set up authorization code flow
     GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
-        HTTP_TRANSPORT, JSON_FACTORY, clientSecrets, SCOPES).setCredentialStore(credentialStore)
+        HTTP_TRANSPORT, JSON_FACTORY, clientSecrets, SCOPES).setDataStoreFactory(DATA_STORE_FACTORY)
         .build();
     // authorize
     return new AuthorizationCodeInstalledApp(flow, new LocalServerReceiver()).authorize("user");
   }
 
   /**
-  * Print available machine instances.
-  * @param compute The main API access point
-  * @param projectId The project ID.
-  */
+   * Print available machine instances.
+   *
+   * @param compute The main API access point
+   * @param projectId The project ID.
+   */
   public static void printInstances(Compute compute, String projectId) throws IOException {
     System.out.println("================== Listing Compute Engine Instances ==================");
     Compute.Instances.List instances = compute.instances().list(projectId, zoneName);
@@ -127,9 +131,7 @@ public class ComputeEngineSample {
     if (list.getItems() == null) {
       System.out.println("No instances found. Sign in to the Google APIs Console and create "
           + "an instance at: code.google.com/apis/console");
-    }
-    else
-    {
+    } else {
       for (Instance instance : list.getItems()) {
         System.out.println(instance.toPrettyString());
       }

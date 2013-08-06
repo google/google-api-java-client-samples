@@ -15,7 +15,6 @@ package com.google.api.services.samples.analytics.cmdline;
 
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
-import com.google.api.client.extensions.java6.auth.oauth2.FileCredentialStore;
 import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
@@ -24,6 +23,8 @@ import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.client.util.store.DataStoreFactory;
+import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.analytics.Analytics;
 import com.google.api.services.analytics.AnalyticsScopes;
 import com.google.api.services.analytics.model.Account;
@@ -43,7 +44,6 @@ import com.google.api.services.analytics.model.Segments;
 import com.google.api.services.analytics.model.Webproperties;
 import com.google.api.services.analytics.model.Webproperty;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Collections;
@@ -52,8 +52,6 @@ import java.util.Collections;
  * This sample application demonstrates how to traverse the Management API. At each level, all the
  * important information about each entity is printed to the screen.
  *
- * Note: This demo does not store OAuth 2.0 refresh tokens. Each time the sample is run,
- * the user must explicitly grant access to their Analytics data.
  * @author api.nickm@gmail.com
  */
 public class ManagementApiReferenceSample {
@@ -63,7 +61,17 @@ public class ManagementApiReferenceSample {
    * blank, the application will log a warning. Suggested format is "MyCompany-ProductName/1.0".
    */
   private static final String APPLICATION_NAME = "";
+
+  /** Directory to store user credentials. */
+  private static final java.io.File DATA_STORE_DIR =
+      new java.io.File(System.getProperty("user.home"), ".store/analytics_sample");
   
+  /**
+   * Global instance of the {@link DataStoreFactory}. The best practice is to make it a single
+   * globally shared instance across your application.
+   */
+  private static FileDataStoreFactory DATA_STORE_FACTORY;
+
   /** Global instance of the HTTP transport. */
   private static HttpTransport HTTP_TRANSPORT;
 
@@ -71,21 +79,21 @@ public class ManagementApiReferenceSample {
   private static final JsonFactory JSON_FACTORY = new JacksonFactory();
 
   /**
-   * Main demo. An Analytics service object is instantiated and then it is used to traverse
-   * and print all the Management API entities. If any exceptions occur, they are caught
-   * and printed.
+   * Main demo. An Analytics service object is instantiated and then it is used to traverse and
+   * print all the Management API entities. If any exceptions occur, they are caught and printed.
    *
    * @param args command line args.
    */
   public static void main(String args[]) {
     try {
       HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
+      DATA_STORE_FACTORY = new FileDataStoreFactory(DATA_STORE_DIR);
       Analytics analytics = initializeAnalytics();
       printManagementEntities(analytics);
 
     } catch (GoogleJsonResponseException e) {
-      System.err.println("There was a service error: " + e.getDetails().getCode() +
-          " : " + e.getDetails().getMessage());
+      System.err.println("There was a service error: " + e.getDetails().getCode() + " : "
+          + e.getDetails().getMessage());
     } catch (Throwable t) {
       t.printStackTrace();
     }
@@ -104,41 +112,36 @@ public class ManagementApiReferenceSample {
           + "into analytics-cmdline-sample/src/main/resources/client_secrets.json");
       System.exit(1);
     }
-    // set up file credential store
-    FileCredentialStore credentialStore = new FileCredentialStore(
-        new File(System.getProperty("user.home"), ".credentials/analytics.json"), JSON_FACTORY);
     // set up authorization code flow
     GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
         HTTP_TRANSPORT, JSON_FACTORY, clientSecrets,
-        Collections.singleton(AnalyticsScopes.ANALYTICS_READONLY)).setCredentialStore(
-        credentialStore).build();
+        Collections.singleton(AnalyticsScopes.ANALYTICS_READONLY)).setDataStoreFactory(
+        DATA_STORE_FACTORY).build();
     // authorize
     return new AuthorizationCodeInstalledApp(flow, new LocalServerReceiver()).authorize("user");
   }
 
   /**
    * Performs all necessary setup steps for running requests against the API.
+   *
    * @return An initialized Analytics service object.
    *
    * @throws Exception if an issue occurs with OAuth2Native authorize.
    */
-  private static Analytics initializeAnalytics() throws Exception  {
+  private static Analytics initializeAnalytics() throws Exception {
     // Authorization.
     Credential credential = authorize();
 
     // Set up and return Google Analytics API client.
-    return new Analytics.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential)
-        .setApplicationName(APPLICATION_NAME)
-        .setHttpRequestInitializer(credential)
-        .build();
+    return new Analytics.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential).setApplicationName(
+        APPLICATION_NAME).setHttpRequestInitializer(credential).build();
   }
 
   /**
-   * Traverses through the Management API hiearchy and prints each entity. This retrieves and
-   * prints the authorized user's accounts. It then retrieves and prints all the web
-   * properties for the first account, retrieves and prints all the profiles for the
-   * first web property, and retrieves and prints all the goals for the first profile. Finally
-   * all the user's segments are prtined.
+   * Traverses through the Management API hiearchy and prints each entity. This retrieves and prints
+   * the authorized user's accounts. It then retrieves and prints all the web properties for the
+   * first account, retrieves and prints all the profiles for the first web property, and retrieves
+   * and prints all the goals for the first profile. Finally all the user's segments are prtined.
    *
    * @param analytics an initialized Analytics service object.
    * @throws IOException if any network errors occured.
@@ -155,8 +158,8 @@ public class ManagementApiReferenceSample {
       String firstAccountId = accounts.getItems().get(0).getId();
 
       // Query webproperties collection.
-      Webproperties webproperties = analytics.management().webproperties()
-          .list(firstAccountId).execute();
+      Webproperties webproperties =
+          analytics.management().webproperties().list(firstAccountId).execute();
 
       if (webproperties.getItems().isEmpty()) {
         System.err.println("No webproperties found");
@@ -165,8 +168,8 @@ public class ManagementApiReferenceSample {
         String firstWebpropertyId = webproperties.getItems().get(0).getId();
 
         // Query profiles collection.
-        Profiles profiles = analytics.management().profiles()
-            .list(firstAccountId, firstWebpropertyId).execute();
+        Profiles profiles =
+            analytics.management().profiles().list(firstAccountId, firstWebpropertyId).execute();
 
         if (profiles.getItems().isEmpty()) {
           System.err.println("No profiles found");
@@ -175,8 +178,8 @@ public class ManagementApiReferenceSample {
           String firstProfileId = profiles.getItems().get(0).getId();
 
           // Query goals collection.
-          Goals goals = analytics.management().goals()
-              .list(firstAccountId, firstWebpropertyId, firstProfileId).execute();
+          Goals goals = analytics.management()
+              .goals().list(firstAccountId, firstWebpropertyId, firstProfileId).execute();
 
           if (goals.getItems() == null || goals.getItems().isEmpty()) {
             System.err.println("No goals found");
@@ -241,12 +244,12 @@ public class ManagementApiReferenceSample {
       System.out.println("Profile Name: " + profile.getName());
 
       System.out.println("Profile defaultPage: " + profile.getDefaultPage());
-      System.out.println("Profile Exclude Query Parameters: "
-          + profile.getExcludeQueryParameters());
-      System.out.println("Profile Site Search Query Parameters: "
-          + profile.getSiteSearchQueryParameters());
-      System.out.println("Profile Site Search Category Parameters: "
-          + profile.getSiteSearchCategoryParameters());
+      System.out.println(
+          "Profile Exclude Query Parameters: " + profile.getExcludeQueryParameters());
+      System.out.println(
+          "Profile Site Search Query Parameters: " + profile.getSiteSearchQueryParameters());
+      System.out.println(
+          "Profile Site Search Category Parameters: " + profile.getSiteSearchCategoryParameters());
 
       System.out.println("Profile Currency: " + profile.getCurrency());
       System.out.println("Profile Timezone: " + profile.getTimezone());
@@ -294,16 +297,16 @@ public class ManagementApiReferenceSample {
   }
 
   /**
-   * Prints details for URL_DESTINATION type goals. Each of these goals might have one or more
-   * goal steps configured. If any are present, they are printed.
+   * Prints details for URL_DESTINATION type goals. Each of these goals might have one or more goal
+   * steps configured. If any are present, they are printed.
    *
    * @param destinationDetails the details of a DESTINATION type goal.
    */
   private static void printUrlDestinationDetails(UrlDestinationDetails destinationDetails) {
     System.out.println("Goal Url: " + destinationDetails.getUrl());
-    System.out.println("Case Sensitive: " +  destinationDetails.getCaseSensitive());
-    System.out.println("Match Type: " +  destinationDetails.getMatchType());
-    System.out.println("First Step Required: " +  destinationDetails.getFirstStepRequired());
+    System.out.println("Case Sensitive: " + destinationDetails.getCaseSensitive());
+    System.out.println("Match Type: " + destinationDetails.getMatchType());
+    System.out.println("First Step Required: " + destinationDetails.getFirstStepRequired());
 
     if (destinationDetails.getSteps() != null) {
       System.out.println("Goal Steps: ");
@@ -322,14 +325,13 @@ public class ManagementApiReferenceSample {
    *
    * @param visitTimeOnSiteDetails the details of a VISIT_TIME_ON_SITE goal.
    */
-  private static void printVisitTimeOnSiteDetails(
-      VisitTimeOnSiteDetails visitTimeOnSiteDetails) {
+  private static void printVisitTimeOnSiteDetails(VisitTimeOnSiteDetails visitTimeOnSiteDetails) {
 
     System.out.println("Goal Type:  VISIT_TIME_ON_SITE");
-    System.out.println("VISIT_TIME_ON_SITE - Comparison Type: "
-        + visitTimeOnSiteDetails.getComparisonType());
-    System.out.println("VISIT_TIME_ON_SITE - Comparison Value: "
-        + visitTimeOnSiteDetails.getComparisonValue());
+    System.out.println(
+        "VISIT_TIME_ON_SITE - Comparison Type: " + visitTimeOnSiteDetails.getComparisonType());
+    System.out.println(
+        "VISIT_TIME_ON_SITE - Comparison Value: " + visitTimeOnSiteDetails.getComparisonValue());
   }
 
   /**
@@ -339,10 +341,10 @@ public class ManagementApiReferenceSample {
    */
   private static void printVisitNumPagesDetails(VisitNumPagesDetails visitNumPagesDetails) {
     System.out.println("Goal Type:  VISIT_NUM_PAGES");
-    System.out.println("VISIT_NUM_PAGES - Comparison Type: "
-        +  visitNumPagesDetails.getComparisonType());
-    System.out.println("VISIT_NUM_PAGES - Comparison Value: "
-        +  visitNumPagesDetails.getComparisonValue());
+    System.out.println(
+        "VISIT_NUM_PAGES - Comparison Type: " + visitNumPagesDetails.getComparisonType());
+    System.out.println(
+        "VISIT_NUM_PAGES - Comparison Value: " + visitNumPagesDetails.getComparisonValue());
   }
 
   /**
@@ -352,7 +354,7 @@ public class ManagementApiReferenceSample {
    */
   private static void printGoalEventDetails(EventDetails eventDetails) {
     System.out.println("Goal Type:  EVENT");
-    System.out.println("EVENT - Use Event Value: " +  eventDetails.getUseEventValue());
+    System.out.println("EVENT - Use Event Value: " + eventDetails.getUseEventValue());
 
     if (eventDetails.getEventConditions() != null) {
       System.out.println("Goal Conditions: ");

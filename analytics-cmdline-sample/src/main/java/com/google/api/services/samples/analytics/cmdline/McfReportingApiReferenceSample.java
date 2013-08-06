@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2012 Google Inc.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied. See the License for the specific language governing permissions and limitations under
@@ -15,7 +15,6 @@ package com.google.api.services.samples.analytics.cmdline;
 
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
-import com.google.api.client.extensions.java6.auth.oauth2.FileCredentialStore;
 import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
@@ -24,6 +23,8 @@ import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.client.util.store.DataStoreFactory;
+import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.analytics.Analytics;
 import com.google.api.services.analytics.AnalyticsScopes;
 import com.google.api.services.analytics.model.McfData;
@@ -31,7 +32,6 @@ import com.google.api.services.analytics.model.McfData.ColumnHeaders;
 import com.google.api.services.analytics.model.McfData.ProfileInfo;
 import com.google.api.services.analytics.model.McfData.Query;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Collections;
@@ -41,13 +41,10 @@ import java.util.Map;
 /**
  * This application demonstrates how to use the Google Analytics Java client library to access all
  * the pieces of data returned by the Google Analytics Multi-Channel Funnels API v3.
- * 
+ *
  *  To run this, you must supply your profile ID. Read the Core Reporting API developer guide to
  * learn how to get this value.
- * 
- *  Note: This demo does not store OAuth 2.0 refresh Tokens. Each time the sample is run, the user
- * must explicitly grant access to their Analytics data.
- * 
+ *
  * @author nafi@google.com
  * @author api.nickm@gmail.com
  */
@@ -58,7 +55,17 @@ public class McfReportingApiReferenceSample {
    * blank, the application will log a warning. Suggested format is "MyCompany-ProductName/1.0".
    */
   private static final String APPLICATION_NAME = "";
+
+  /** Directory to store user credentials. */
+  private static final java.io.File DATA_STORE_DIR =
+      new java.io.File(System.getProperty("user.home"), ".store/analytics_sample");
   
+  /**
+   * Global instance of the {@link DataStoreFactory}. The best practice is to make it a single
+   * globally shared instance across your application.
+   */
+  private static FileDataStoreFactory DATA_STORE_FACTORY;
+
   /** Global instance of the HTTP transport. */
   private static HttpTransport HTTP_TRANSPORT;
 
@@ -78,12 +85,13 @@ public class McfReportingApiReferenceSample {
    * retrieve the top 25 source paths with most total conversions. It will also retrieve the top 25
    * organic sources with most total conversions. Finally the results are printed to the screen. If
    * an API error occurs, it is printed here.
-   * 
+   *
    * @param args command line args.
    */
   public static void main(String[] args) {
     try {
       HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
+      DATA_STORE_FACTORY = new FileDataStoreFactory(DATA_STORE_DIR);
       Analytics analytics = initializeAnalytics();
 
       McfData mcfPathData = executePathQuery(analytics, TABLE_ID);
@@ -102,7 +110,7 @@ public class McfReportingApiReferenceSample {
 
   /**
    * Print all data returned from the API.
-   * 
+   *
    * @param mcfData the data returned from the API.
    */
   public static void printAllInfo(McfData mcfData) {
@@ -130,23 +138,20 @@ public class McfReportingApiReferenceSample {
           + "into analytics-cmdline-sample/src/main/resources/client_secrets.json");
       System.exit(1);
     }
-    // set up file credential store
-    FileCredentialStore credentialStore = new FileCredentialStore(
-        new File(System.getProperty("user.home"), ".credentials/analytics.json"), JSON_FACTORY);
     // set up authorization code flow
     GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
         HTTP_TRANSPORT, JSON_FACTORY, clientSecrets,
-        Collections.singleton(AnalyticsScopes.ANALYTICS_READONLY)).setCredentialStore(
-        credentialStore).build();
+        Collections.singleton(AnalyticsScopes.ANALYTICS_READONLY)).setDataStoreFactory(
+        DATA_STORE_FACTORY).build();
     // authorize
     return new AuthorizationCodeInstalledApp(flow, new LocalServerReceiver()).authorize("user");
   }
 
   /**
    * Performs all necessary setup steps for running requests against the API.
-   * 
+   *
    * @return an initialized Analytics service object.
-   * 
+   *
    * @throws Exception if an issue occurs with OAuth2Native authorize.
    */
   private static Analytics initializeAnalytics() throws Exception {
@@ -154,14 +159,14 @@ public class McfReportingApiReferenceSample {
     Credential credential = authorize();
 
     // Set up and return Google Analytics API client.
-    return new Analytics.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential)
-        .setApplicationName(APPLICATION_NAME).build();
+    return new Analytics.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential).setApplicationName(
+        APPLICATION_NAME).build();
   }
 
   /**
    * Returns the top 25 source paths with most total conversions. The MCF API is used to retrieve
    * this data.
-   * 
+   *
    * @param analytics The analytics service object used to access the API.
    * @param tableId The table ID from which to retrieve data.
    * @return The response from the API.
@@ -180,7 +185,7 @@ public class McfReportingApiReferenceSample {
   /**
    * Returns the top 25 organic sources with most total conversions. The MCF API is used to retrieve
    * this data.
-   * 
+   *
    * @param analytics The analytics service object used to access the API.
    * @param tableId The table ID from which to retrieve data.
    * @return The response from the API.
@@ -200,7 +205,7 @@ public class McfReportingApiReferenceSample {
 
   /**
    * Prints general information about this report.
-   * 
+   *
    * @param mcfData the data returned from the API.
    */
   private static void printReportInfo(McfData mcfData) {
@@ -215,7 +220,7 @@ public class McfReportingApiReferenceSample {
 
   /**
    * Prints general information about the profile from which this report was accessed.
-   * 
+   *
    * @param mcfData the data returned from the API.
    */
   private static void printProfileInfo(McfData mcfData) {
@@ -233,7 +238,7 @@ public class McfReportingApiReferenceSample {
 
   /**
    * Prints the values of all the parameters that were used to query the API.
-   * 
+   *
    * @param mcfData the data returned from the API.
    */
   private static void printQueryInfo(McfData mcfData) {
@@ -255,7 +260,7 @@ public class McfReportingApiReferenceSample {
 
   /**
    * Prints common pagination information.
-   * 
+   *
    * @param mcfData the data returned from the API.
    */
   private static void printPaginationInfo(McfData mcfData) {
@@ -269,7 +274,7 @@ public class McfReportingApiReferenceSample {
 
   /**
    * Prints the total metric value for all rows the query matched.
-   * 
+   *
    * @param mcfData the data returned from the API.
    */
   private static void printTotalsForAllResults(McfData mcfData) {
@@ -284,7 +289,7 @@ public class McfReportingApiReferenceSample {
   /**
    * Prints the information for each column. The reporting data from the API is returned as rows of
    * data. The column headers describe the names and types of each column in rows.
-   * 
+   *
    * @param mcfData the data returned from the API.
    */
   private static void printColumnHeaders(McfData mcfData) {
@@ -300,7 +305,7 @@ public class McfReportingApiReferenceSample {
 
   /**
    * Prints all the rows of data returned by the API.
-   * 
+   *
    * @param mcfData the data returned from the API.
    */
   private static void printDataTable(McfData mcfData) {
@@ -342,7 +347,7 @@ public class McfReportingApiReferenceSample {
   /**
    * Builds and gets a string to represent the path data contained in a list of
    * McfData.Rows.ConversionPathValue objects.
-   * 
+   *
    * @param path List of MCF path elements.
    * @param delimiter The string that will be used while joining all path elements.
    */

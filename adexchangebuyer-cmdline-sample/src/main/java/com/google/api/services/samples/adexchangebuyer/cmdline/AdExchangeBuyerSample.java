@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2012 Google Inc.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied. See the License for the specific language governing permissions and limitations under
@@ -16,7 +16,6 @@ package com.google.api.services.samples.adexchangebuyer.cmdline;
 
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
-import com.google.api.client.extensions.java6.auth.oauth2.FileCredentialStore;
 import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
@@ -24,10 +23,11 @@ import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.client.util.store.DataStoreFactory;
+import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.adexchangebuyer.Adexchangebuyer;
 import com.google.api.services.adexchangebuyer.AdexchangebuyerScopes;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -51,7 +51,17 @@ public class AdExchangeBuyerSample {
    * blank, the application will log a warning. Suggested format is "MyCompany-ProductName/1.0".
    */
   private static final String APPLICATION_NAME = "";
-  
+
+  /** Directory to store user credentials. */
+  private static final java.io.File DATA_STORE_DIR =
+      new java.io.File(System.getProperty("user.home"), ".store/ad_exchange_buyer_sample");
+
+  /**
+   * Global instance of the {@link DataStoreFactory}. The best practice is to make it a single
+   * globally shared instance across your application.
+   */
+  private static FileDataStoreFactory DATA_STORE_FACTORY;
+
   /** Global instance of the HTTP transport. */
   private static HttpTransport HTTP_TRANSPORT;
 
@@ -73,22 +83,18 @@ public class AdExchangeBuyerSample {
           + "adexchangebuyer-cmdline-sample/src/main/resources/client_secrets.json");
       System.exit(1);
     }
-    // set up file credential store
-    FileCredentialStore credentialStore = new FileCredentialStore(
-        new File(System.getProperty("user.home"), ".credentials/adexchangebuyer.json"),
-        JSON_FACTORY);
     // set up authorization code flow
     GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
         HTTP_TRANSPORT, JSON_FACTORY, clientSecrets,
-        Collections.singleton(AdexchangebuyerScopes.ADEXCHANGE_BUYER)).setCredentialStore(
-        credentialStore).build();
+        Collections.singleton(AdexchangebuyerScopes.ADEXCHANGE_BUYER)).setDataStoreFactory(
+        DATA_STORE_FACTORY).build();
     // authorize
     return new AuthorizationCodeInstalledApp(flow, new LocalServerReceiver()).authorize("user");
   }
 
   /**
    * Performs all necessary setup steps for running requests against the API.
-   * 
+   *
    * @return An initialized AdSense service object.
    * @throws Exception
    */
@@ -98,8 +104,7 @@ public class AdExchangeBuyerSample {
 
     // Set up API client.
     Adexchangebuyer client = new Adexchangebuyer.Builder(
-        HTTP_TRANSPORT, JSON_FACTORY, credential)
-        .setApplicationName(APPLICATION_NAME).build();
+        HTTP_TRANSPORT, JSON_FACTORY, credential).setApplicationName(APPLICATION_NAME).build();
 
     return client;
   }
@@ -118,12 +123,13 @@ public class AdExchangeBuyerSample {
 
   /**
    * Runs all the Ad Exchange Buyer API samples.
-   * 
+   *
    * @param args command-line arguments.
    * @throws Exception
    */
   public static void main(String[] args) throws Exception {
     HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
+    DATA_STORE_FACTORY = new FileDataStoreFactory(DATA_STORE_DIR);
     initSamples();
     Adexchangebuyer client = initClient();
     BaseSample sample = null;
@@ -141,7 +147,7 @@ public class AdExchangeBuyerSample {
 
   /**
    * Prints the list of available code samples and prompts the user to select one.
-   * 
+   *
    * @return The selected sample or null if the user selected to exit
    * @throws IOException
    */

@@ -61,6 +61,35 @@ mvn clean package
   <p>To enable logging of HTTP requests and responses (highly recommended
     when developing), please take a look at <a href="src/main/webapp/WEB-INF/logging.properties">logging.properties</a>.</p>
 
+ <h3>Running and Deploying Your Application from the Command Line</h3>
+  
+  <p>To run your application locally on a development server:</p>
+  <pre>
+mvn appengine:devserver
+  </pre>
+  
+  <p>To deploy your application to appspot.com:</p>
+  
+  <p>
+    If this is the first time you are deploying your application to appspot.com, you will to perform the 
+    following steps first.
+  </p>
+    
+  <ul>
+    <li>Go to <a href="https://appengine.google.com/">https://appengine.google.com</a> and create an application.</li>
+    <li>Edit src/main/webapp/WEB-INF/appengine-web.xml, and enter the unique application identifier (you chose it in the prior step)
+     between the &lt;application&gt; tags.</li>
+  </ul>
+
+  <p> If you've done the above, you can deploy at any time: </p> 
+<pre>
+mvn appengine:update
+</pre>
+
+ <p>If this is the first time you have run "update" on the project, a browser window will open prompting you to log in.
+  Log in with the same Google account the app is registered with.
+ </p>
+
   <h3>Setup Project in Eclipse</h3>
 
   <p>

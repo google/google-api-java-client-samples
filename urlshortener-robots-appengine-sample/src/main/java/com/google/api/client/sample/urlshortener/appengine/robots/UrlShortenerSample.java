@@ -17,7 +17,7 @@ package com.google.api.client.sample.urlshortener.appengine.robots;
 import com.google.api.client.extensions.appengine.http.UrlFetchTransport;
 import com.google.api.client.googleapis.extensions.appengine.auth.oauth2.AppIdentityCredential;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
-import com.google.api.client.json.jackson.JacksonFactory;
+import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.urlshortener.Urlshortener;
 import com.google.api.services.urlshortener.UrlshortenerScopes;
 import com.google.api.services.urlshortener.model.Url;

@@ -89,7 +89,7 @@
     </dependency>
   </dependencies>
   <properties>
-    <project.api.version>1.15.0-rc</project.api.version>
+    <project.api.version>1.16.0-rc</project.api.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 </project>

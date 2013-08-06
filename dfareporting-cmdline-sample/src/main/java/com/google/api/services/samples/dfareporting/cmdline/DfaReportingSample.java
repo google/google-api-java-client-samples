@@ -16,7 +16,6 @@ package com.google.api.services.samples.dfareporting.cmdline;
 
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
-import com.google.api.client.extensions.java6.auth.oauth2.FileCredentialStore;
 import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
@@ -26,6 +25,8 @@ import com.google.api.client.http.HttpResponseException;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.client.util.store.DataStoreFactory;
+import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.dfareporting.Dfareporting;
 import com.google.api.services.dfareporting.model.DimensionValue;
 import com.google.api.services.dfareporting.model.DimensionValueList;
@@ -56,6 +57,16 @@ import java.util.List;
  */
 public class DfaReportingSample {
 
+  /** Directory to store user credentials. */
+  private static final java.io.File DATA_STORE_DIR =
+      new java.io.File(System.getProperty("user.home"), ".store/dfareporting_sample");
+
+  /**
+   * Global instance of the {@link DataStoreFactory}. The best practice is to make it a single
+   * globally shared instance across your application.
+   */
+  private static FileDataStoreFactory DATA_STORE_FACTORY;
+  
   private static final List<String> SCOPES = ImmutableList.of(
       "https://www.googleapis.com/auth/dfareporting",
       "https://www.googleapis.com/auth/devstorage.read_only");
@@ -79,13 +90,10 @@ public class DfaReportingSample {
           + "into dfareporting-cmdline-sample/src/main/resources/client_secrets.json");
       System.exit(1);
     }
-    // set up file credential store
-    FileCredentialStore credentialStore = new FileCredentialStore(
-        new java.io.File(System.getProperty("user.home"), ".credentials/dfareporting.json"),
-        JSON_FACTORY);
     // set up authorization code flow
     GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
-        TRANSPORT, JSON_FACTORY, clientSecrets, SCOPES).setCredentialStore(credentialStore).build();
+        TRANSPORT, JSON_FACTORY, clientSecrets, SCOPES).setDataStoreFactory(
+        DATA_STORE_FACTORY).build();
     // authorize
     return new AuthorizationCodeInstalledApp(flow, new LocalServerReceiver()).authorize("user");
   }
@@ -120,60 +128,57 @@ public class DfaReportingSample {
     String endDate = DATE_FORMATTER.format(today);
 
     try {
-      try {
-        TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
-        Dfareporting reporting = initializeDfareporting();
+      TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
+      DATA_STORE_FACTORY = new FileDataStoreFactory(DATA_STORE_DIR);
+      Dfareporting reporting = initializeDfareporting();
 
-        UserProfileList userProfiles = GetAllUserProfiles.list(reporting);
-        // Get an example user profile ID, so we can run the following samples.
-        Long userProfileId = userProfiles.getItems().get(0).getProfileId();
+      UserProfileList userProfiles = GetAllUserProfiles.list(reporting);
+      // Get an example user profile ID, so we can run the following samples.
+      Long userProfileId = userProfiles.getItems().get(0).getProfileId();
 
-        DimensionValueList advertisers = GetDimensionValues.query(reporting, "dfa:advertiser",
-            userProfileId, startDate, endDate, MAX_LIST_PAGE_SIZE);
+      DimensionValueList advertisers = GetDimensionValues.query(reporting, "dfa:advertiser",
+          userProfileId, startDate, endDate, MAX_LIST_PAGE_SIZE);
 
-        if ((advertisers.getItems() != null) && !advertisers.getItems().isEmpty()) {
-          // Get an advertiser, so we can run the rest of the samples.
-          DimensionValue advertiser = advertisers.getItems().get(0);
+      if ((advertisers.getItems() != null) && !advertisers.getItems().isEmpty()) {
+        // Get an advertiser, so we can run the rest of the samples.
+        DimensionValue advertiser = advertisers.getItems().get(0);
 
-          Report standardReport = CreateStandardReport.insert(reporting, userProfileId,
-              advertiser, startDate, endDate);
-          File file = GenerateReportFile.run(reporting, userProfileId, standardReport, true);
+        Report standardReport = CreateStandardReport.insert(reporting, userProfileId,
+            advertiser, startDate, endDate);
+        File file = GenerateReportFile.run(reporting, userProfileId, standardReport, true);
 
-          if (file != null) {
-            // If the report file generation did not fail, display results.
-            DownloadReportFile.run(reporting, file);
-          }
+        if (file != null) {
+          // If the report file generation did not fail, display results.
+          DownloadReportFile.run(reporting, file);
         }
-
-        DimensionValueList floodlightConfigIds = GetDimensionValues.query(reporting,
-            "dfa:floodlightConfigId", userProfileId, startDate, endDate, MAX_LIST_PAGE_SIZE);
-
-        if ((floodlightConfigIds.getItems() != null) &&
-            !floodlightConfigIds.getItems().isEmpty()) {
-          // Get a Floodlight Config ID, so we can run the rest of the samples.
-          DimensionValue floodlightConfigId = floodlightConfigIds.getItems().get(0);
-
-          Report floodlightReport =
-              CreateFloodlightReport.insert(reporting, userProfileId, floodlightConfigId,
-                  startDate, endDate);
-
-          // Run this report asynchronously, since it would never run synchronously.
-          File file = GenerateReportFile.run(reporting, userProfileId, floodlightReport, false);
-
-          if (file != null) {
-            // If the report file generation did not fail, display results.
-            DownloadReportFile.run(reporting, file);
-          }
-        }
-
-        GetAllReports.list(reporting, userProfileId, MAX_REPORT_PAGE_SIZE);
-      } catch (GoogleJsonResponseException e) {
-        // Message already includes parsed response.
-        System.err.println(e.getMessage());
-      } catch (HttpResponseException e) {
-        // Message doesn't include parsed response.
-        System.err.println(e.getMessage());
       }
+
+      DimensionValueList floodlightConfigIds = GetDimensionValues.query(reporting,
+          "dfa:floodlightConfigId", userProfileId, startDate, endDate, MAX_LIST_PAGE_SIZE);
+
+      if ((floodlightConfigIds.getItems() != null) && !floodlightConfigIds.getItems().isEmpty()) {
+        // Get a Floodlight Config ID, so we can run the rest of the samples.
+        DimensionValue floodlightConfigId = floodlightConfigIds.getItems().get(0);
+
+        Report floodlightReport = CreateFloodlightReport.insert(
+            reporting, userProfileId, floodlightConfigId, startDate, endDate);
+
+        // Run this report asynchronously, since it would never run synchronously.
+        File file = GenerateReportFile.run(reporting, userProfileId, floodlightReport, false);
+
+        if (file != null) {
+          // If the report file generation did not fail, display results.
+          DownloadReportFile.run(reporting, file);
+        }
+      }
+
+      GetAllReports.list(reporting, userProfileId, MAX_REPORT_PAGE_SIZE);
+    } catch (GoogleJsonResponseException e) {
+      // Message already includes parsed response.
+      System.err.println(e.getMessage());
+    } catch (HttpResponseException e) {
+      // Message doesn't include parsed response.
+      System.err.println(e.getMessage());
     } catch (Throwable t) {
       t.printStackTrace();
     }
