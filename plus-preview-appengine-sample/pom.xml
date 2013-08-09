@@ -38,6 +38,7 @@
     <webappDirectory>${project.build.directory}/${project.build.finalName}
     </webappDirectory>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.appengine.version>1.8.3</project.appengine.version>
   </properties>
 
   <developers>
@@ -72,7 +73,7 @@
       <plugin>
         <groupId>com.google.appengine</groupId>
         <artifactId>appengine-maven-plugin</artifactId>
-        <version>1.8.0</version>
+        <version>${project.appengine.version}</version>
         <configuration>
           <port>8888</port>
         </configuration>
@@ -182,7 +183,7 @@
     <dependency>
       <groupId>com.google.appengine</groupId>
       <artifactId>appengine-api-1.0-sdk</artifactId>
-      <version>1.8.0</version>
+      <version>${project.appengine.version}</version>
     </dependency>
   </dependencies>
 </project>
