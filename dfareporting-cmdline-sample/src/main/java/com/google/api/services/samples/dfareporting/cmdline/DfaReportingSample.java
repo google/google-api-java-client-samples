@@ -66,10 +66,9 @@ public class DfaReportingSample {
    * globally shared instance across your application.
    */
   private static FileDataStoreFactory DATA_STORE_FACTORY;
-  
+
   private static final List<String> SCOPES = ImmutableList.of(
-      "https://www.googleapis.com/auth/dfareporting",
-      "https://www.googleapis.com/auth/devstorage.read_only");
+      "https://www.googleapis.com/auth/dfareporting");
 
   private static HttpTransport TRANSPORT;
   private static final JsonFactory JSON_FACTORY = new JacksonFactory();
@@ -145,6 +144,7 @@ public class DfaReportingSample {
 
         Report standardReport = CreateStandardReport.insert(reporting, userProfileId,
             advertiser, startDate, endDate);
+        GetCompatibleFields.run(reporting, userProfileId, standardReport);
         File file = GenerateReportFile.run(reporting, userProfileId, standardReport, true);
 
         if (file != null) {
