@@ -65,13 +65,13 @@ public class DfaReportingSample {
    * Global instance of the {@link DataStoreFactory}. The best practice is to make it a single
    * globally shared instance across your application.
    */
-  private static FileDataStoreFactory DATA_STORE_FACTORY;
+  private static FileDataStoreFactory dataStoreFactory;
 
   private static final List<String> SCOPES = ImmutableList.of(
       "https://www.googleapis.com/auth/dfareporting");
 
-  private static HttpTransport TRANSPORT;
-  private static final JsonFactory JSON_FACTORY = new JacksonFactory();
+  private static HttpTransport httpTransport;
+  private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
   private static final DateFormat DATE_FORMATTER = new SimpleDateFormat("yyyy-MM-dd");
   private static final int MAX_LIST_PAGE_SIZE = 50;
   private static final int MAX_REPORT_PAGE_SIZE = 10;
@@ -91,8 +91,8 @@ public class DfaReportingSample {
     }
     // set up authorization code flow
     GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
-        TRANSPORT, JSON_FACTORY, clientSecrets, SCOPES).setDataStoreFactory(
-        DATA_STORE_FACTORY).build();
+        httpTransport, JSON_FACTORY, clientSecrets, SCOPES).setDataStoreFactory(
+        dataStoreFactory).build();
     // authorize
     return new AuthorizationCodeInstalledApp(flow, new LocalServerReceiver()).authorize("user");
   }
@@ -107,7 +107,7 @@ public class DfaReportingSample {
     Credential credential = authorize();
 
     // Create DFA Reporting client.
-    return new Dfareporting(TRANSPORT, JSON_FACTORY, credential);
+    return new Dfareporting(httpTransport, JSON_FACTORY, credential);
   }
 
   /**
@@ -127,8 +127,8 @@ public class DfaReportingSample {
     String endDate = DATE_FORMATTER.format(today);
 
     try {
-      TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
-      DATA_STORE_FACTORY = new FileDataStoreFactory(DATA_STORE_DIR);
+      httpTransport = GoogleNetHttpTransport.newTrustedTransport();
+      dataStoreFactory = new FileDataStoreFactory(DATA_STORE_DIR);
       Dfareporting reporting = initializeDfareporting();
 
       UserProfileList userProfiles = GetAllUserProfiles.list(reporting);

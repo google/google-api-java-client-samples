@@ -134,7 +134,7 @@ public class BooksSample {
   }
 
   public static void main(String[] args) {
-    JsonFactory jsonFactory = new JacksonFactory();
+    JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
     try {
       // Verify command line parameters.
       if (args.length == 0) {

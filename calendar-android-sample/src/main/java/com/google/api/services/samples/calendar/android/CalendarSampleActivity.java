@@ -99,7 +99,7 @@ adb shell setprop log.tag.HttpTransport DEBUG
 
   final HttpTransport transport = AndroidHttp.newCompatibleTransport();
 
-  final JsonFactory jsonFactory = new GsonFactory();
+  final JsonFactory jsonFactory = GsonFactory.getDefaultInstance();
 
   GoogleAccountCredential credential;
 

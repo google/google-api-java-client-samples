@@ -47,13 +47,13 @@ class Utils {
    * globally shared instance across your application.
    */
   private static final AppEngineDataStoreFactory DATA_STORE_FACTORY =
-      new AppEngineDataStoreFactory();
+      AppEngineDataStoreFactory.getDefaultInstance();
   
   /** Global instance of the HTTP transport. */
   static final HttpTransport HTTP_TRANSPORT = new UrlFetchTransport();
 
   /** Global instance of the JSON factory. */
-  static final JsonFactory JSON_FACTORY = new JacksonFactory();
+  static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
 
   private static GoogleClientSecrets clientSecrets = null;
 

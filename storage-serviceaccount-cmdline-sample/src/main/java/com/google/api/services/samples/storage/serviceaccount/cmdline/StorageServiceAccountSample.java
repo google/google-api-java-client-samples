@@ -56,15 +56,15 @@ public class StorageServiceAccountSample {
       "https://www.googleapis.com/auth/devstorage.read_write";
 
   /** Global instance of the HTTP transport. */
-  private static HttpTransport HTTP_TRANSPORT;
+  private static HttpTransport httpTransport;
 
   /** Global instance of the JSON factory. */
-  private static final JsonFactory JSON_FACTORY = new JacksonFactory();
+  private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
 
   public static void main(String[] args) {
     try {
       try {
-        HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
+        httpTransport = GoogleNetHttpTransport.newTrustedTransport();
         // check for valid setup
         Preconditions.checkArgument(!SERVICE_ACCOUNT_EMAIL.startsWith("[["),
             "Please enter your service account e-mail from the Google APIs "
@@ -77,7 +77,7 @@ public class StorageServiceAccountSample {
         Preconditions.checkArgument(!p12Content.startsWith("Please"), p12Content);
 
         // Build service account credential.
-        GoogleCredential credential = new GoogleCredential.Builder().setTransport(HTTP_TRANSPORT)
+        GoogleCredential credential = new GoogleCredential.Builder().setTransport(httpTransport)
             .setJsonFactory(JSON_FACTORY)
             .setServiceAccountId(SERVICE_ACCOUNT_EMAIL)
             .setServiceAccountScopes(Collections.singleton(STORAGE_SCOPE))
@@ -86,7 +86,7 @@ public class StorageServiceAccountSample {
 
         // Set up and execute Google Cloud Storage request.
         String URI = "https://storage.googleapis.com/" + BUCKET_NAME;
-        HttpRequestFactory requestFactory = HTTP_TRANSPORT.createRequestFactory(credential);
+        HttpRequestFactory requestFactory = httpTransport.createRequestFactory(credential);
         GenericUrl url = new GenericUrl(URI);
         HttpRequest request = requestFactory.buildGetRequest(url);
         HttpResponse response = request.execute();

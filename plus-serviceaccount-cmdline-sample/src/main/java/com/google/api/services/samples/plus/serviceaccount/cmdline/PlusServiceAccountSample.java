@@ -46,17 +46,17 @@ public class PlusServiceAccountSample {
       + PlusServiceAccountSample.class;
 
   /** Global instance of the HTTP transport. */
-  private static HttpTransport HTTP_TRANSPORT;
+  private static HttpTransport httpTransport;
 
   /** Global instance of the JSON factory. */
-  private static final JsonFactory JSON_FACTORY = new JacksonFactory();
+  private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
 
   private static Plus plus;
 
   public static void main(String[] args) {
     try {
       try {
-        HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
+        httpTransport = GoogleNetHttpTransport.newTrustedTransport();
         // check for valid setup
         if (SERVICE_ACCOUNT_EMAIL.startsWith("Enter ")) {
           System.err.println(SERVICE_ACCOUNT_EMAIL);
@@ -68,7 +68,7 @@ public class PlusServiceAccountSample {
           System.exit(1);
         }
         // service account credential (uncomment setServiceAccountUser for domain-wide delegation)
-        GoogleCredential credential = new GoogleCredential.Builder().setTransport(HTTP_TRANSPORT)
+        GoogleCredential credential = new GoogleCredential.Builder().setTransport(httpTransport)
             .setJsonFactory(JSON_FACTORY)
             .setServiceAccountId(SERVICE_ACCOUNT_EMAIL)
             .setServiceAccountScopes(Collections.singleton(PlusScopes.PLUS_ME))
@@ -76,7 +76,7 @@ public class PlusServiceAccountSample {
             // .setServiceAccountUser("user@example.com")
             .build();
         // set up global Plus instance
-        plus = new Plus.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential)
+        plus = new Plus.Builder(httpTransport, JSON_FACTORY, credential)
             .setApplicationName(APPLICATION_NAME).build();
         // run commands
         getActivity();

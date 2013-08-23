@@ -38,14 +38,14 @@ class Utils {
    * globally shared instance across your application.
    */
   private static final AppEngineDataStoreFactory DATA_STORE_FACTORY =
-      new AppEngineDataStoreFactory();
+      AppEngineDataStoreFactory.getDefaultInstance();
   
   private static GoogleClientSecrets clientSecrets = null;
   private static final Set<String> SCOPES = Collections.singleton(PlusScopes.PLUS_ME);
   static final String MAIN_SERVLET_PATH = "/plussampleservlet";
   static final String AUTH_CALLBACK_SERVLET_PATH = "/oauth2callback";
   static final UrlFetchTransport HTTP_TRANSPORT = new UrlFetchTransport();
-  static final JacksonFactory JSON_FACTORY = new JacksonFactory();
+  static final JacksonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
 
   private static GoogleClientSecrets getClientSecrets() throws IOException {
     if (clientSecrets == null) {

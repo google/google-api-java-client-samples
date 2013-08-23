@@ -68,13 +68,13 @@ public class DiscoverySample {
    * Global instance of the {@link DataStoreFactory}. The best practice is to make it a single
    * globally shared instance across your application.
    */
-  private static FileDataStoreFactory DATA_STORE_FACTORY;
+  private static FileDataStoreFactory dataStoreFactory;
   
   /** Global instance of the HTTP transport. */
-  private static HttpTransport HTTP_TRANSPORT;
+  private static HttpTransport httpTransport;
 
   /** Global instance of the JSON factory. */
-  private static final JsonFactory JSON_FACTORY = new JacksonFactory();
+  private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
 
   static Discovery DISCOVERY;
 
@@ -167,8 +167,8 @@ public class DiscoverySample {
   }
 
   private static void call(String[] args) throws Exception {
-    HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
-    DISCOVERY = new Discovery(HTTP_TRANSPORT, JSON_FACTORY, null);
+    httpTransport = GoogleNetHttpTransport.newTrustedTransport();
+    DISCOVERY = new Discovery(httpTransport, JSON_FACTORY, null);
 
     // load discovery document
     if (args.length == 1) {
@@ -280,9 +280,9 @@ public class DiscoverySample {
           scopes.add((String) s);
         }
         Credential credential = authorize(method.getId(), scopes);
-        requestFactory = HTTP_TRANSPORT.createRequestFactory(credential);
+        requestFactory = httpTransport.createRequestFactory(credential);
       } else {
-        requestFactory = HTTP_TRANSPORT.createRequestFactory();
+        requestFactory = httpTransport.createRequestFactory();
       }
       HttpRequest request = requestFactory.buildRequest(method.getHttpMethod(), url, content);
       String response = request.execute().parseAsString();
@@ -309,7 +309,7 @@ public class DiscoverySample {
     }
     // set up authorization code flow
     GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
-        HTTP_TRANSPORT, JSON_FACTORY, clientSecrets, scopes).setDataStoreFactory(DATA_STORE_FACTORY)
+        httpTransport, JSON_FACTORY, clientSecrets, scopes).setDataStoreFactory(dataStoreFactory)
         .build();
     // authorize
     return new AuthorizationCodeInstalledApp(flow, new LocalServerReceiver()).authorize("user");
@@ -384,9 +384,9 @@ public class DiscoverySample {
   }
 
   private static void discover(String[] args) throws Exception {
-    HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
-    DATA_STORE_FACTORY = new FileDataStoreFactory(DATA_STORE_DIR);
-    DISCOVERY = new Discovery(HTTP_TRANSPORT, JSON_FACTORY, null);
+    httpTransport = GoogleNetHttpTransport.newTrustedTransport();
+    dataStoreFactory = new FileDataStoreFactory(DATA_STORE_DIR);
+    DISCOVERY = new Discovery(httpTransport, JSON_FACTORY, null);
     System.out.println(APP_NAME);
     if (args.length == 1) {
       DirectoryList directoryList = DISCOVERY.apis().list().execute();

@@ -63,13 +63,13 @@ public class CalendarSample {
    * Global instance of the {@link DataStoreFactory}. The best practice is to make it a single
    * globally shared instance across your application.
    */
-  private static FileDataStoreFactory DATA_STORE_FACTORY;
+  private static FileDataStoreFactory dataStoreFactory;
   
   /** Global instance of the HTTP transport. */
-  private static HttpTransport HTTP_TRANSPORT;
+  private static HttpTransport httpTransport;
 
   /** Global instance of the JSON factory. */
-  private static final JsonFactory JSON_FACTORY = new JacksonFactory();
+  private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
 
   private static com.google.api.services.calendar.Calendar client;
 
@@ -89,8 +89,8 @@ public class CalendarSample {
     }
     // set up authorization code flow
     GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
-        HTTP_TRANSPORT, JSON_FACTORY, clientSecrets,
-        Collections.singleton(CalendarScopes.CALENDAR)).setDataStoreFactory(DATA_STORE_FACTORY)
+        httpTransport, JSON_FACTORY, clientSecrets,
+        Collections.singleton(CalendarScopes.CALENDAR)).setDataStoreFactory(dataStoreFactory)
         .build();
     // authorize
     return new AuthorizationCodeInstalledApp(flow, new LocalServerReceiver()).authorize("user");
@@ -99,17 +99,17 @@ public class CalendarSample {
   public static void main(String[] args) {
     try {
       // initialize the transport
-      HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
+      httpTransport = GoogleNetHttpTransport.newTrustedTransport();
 
       // initialize the data store factory
-      DATA_STORE_FACTORY = new FileDataStoreFactory(DATA_STORE_DIR);
+      dataStoreFactory = new FileDataStoreFactory(DATA_STORE_DIR);
 
       // authorization
       Credential credential = authorize();
 
       // set up global Calendar instance
       client = new com.google.api.services.calendar.Calendar.Builder(
-          HTTP_TRANSPORT, JSON_FACTORY, credential).setApplicationName(APPLICATION_NAME).build();
+          httpTransport, JSON_FACTORY, credential).setApplicationName(APPLICATION_NAME).build();
 
       // run commands
       showCalendars();

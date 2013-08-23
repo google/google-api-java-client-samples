@@ -46,14 +46,14 @@ class ServiceUtils {
   static final HttpTransport HTTP_TRANSPORT = new UrlFetchTransport();
 
   /** Global instance of the JSON factory. */
-  static final JsonFactory JSON_FACTORY = new JacksonFactory();
+  static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
 
   /**
    * Global instance of the {@link DataStoreFactory}. The best practice is to make it a single
    * globally shared instance across your application.
    */
   private static final AppEngineDataStoreFactory DATA_STORE_FACTORY =
-      new AppEngineDataStoreFactory();
+      AppEngineDataStoreFactory.getDefaultInstance();
 
   private static GoogleClientSecrets clientSecrets = null;
 
@@ -86,7 +86,7 @@ class ServiceUtils {
   static GoogleAuthorizationCodeFlow newFlow() throws IOException {
     return new GoogleAuthorizationCodeFlow.Builder(HTTP_TRANSPORT, JSON_FACTORY,
         getClientCredential(), Collections.singleton(BigqueryScopes.BIGQUERY)).setDataStoreFactory(
-            DATA_STORE_FACTORY).setAccessType("offline").build();
+        DATA_STORE_FACTORY).setAccessType("offline").build();
   }
 
   static Bigquery loadBigqueryClient(String userId) throws IOException {

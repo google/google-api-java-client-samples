@@ -59,13 +59,13 @@ public class PicasaSample {
    * Global instance of the {@link DataStoreFactory}. The best practice is to make it a single
    * globally shared instance across your application.
    */
-  private static FileDataStoreFactory DATA_STORE_FACTORY;
+  private static FileDataStoreFactory dataStoreFactory;
   
   /** Global instance of the HTTP transport. */
-  private static HttpTransport HTTP_TRANSPORT;
+  private static HttpTransport httpTransport;
 
   /** Global instance of the JSON factory. */
-  private static final JsonFactory JSON_FACTORY = new JacksonFactory();
+  private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
 
   /** Authorizes the installed application to access user's protected data. */
   private static Credential authorize() throws Exception {
@@ -80,19 +80,19 @@ public class PicasaSample {
     }
     // set up authorization code flow
     GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
-        HTTP_TRANSPORT, JSON_FACTORY, clientSecrets,
+        httpTransport, JSON_FACTORY, clientSecrets,
         Collections.singleton(PicasaUrl.ROOT_URL)).setDataStoreFactory(
-        DATA_STORE_FACTORY).build();
+        dataStoreFactory).build();
     // authorize
     return new AuthorizationCodeInstalledApp(flow, new LocalServerReceiver()).authorize("user");
   }
 
   public static void main(String[] args) {
     try {
-      HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
-      DATA_STORE_FACTORY = new FileDataStoreFactory(DATA_STORE_DIR);
+      httpTransport = GoogleNetHttpTransport.newTrustedTransport();
+      dataStoreFactory = new FileDataStoreFactory(DATA_STORE_DIR);
       Credential credential = authorize();
-      PicasaClient client = new PicasaClient(HTTP_TRANSPORT.createRequestFactory(credential));
+      PicasaClient client = new PicasaClient(httpTransport.createRequestFactory(credential));
       client.setApplicationName(APPLICATION_NAME);
       try {
         run(client);
@@ -103,7 +103,7 @@ public class PicasaSample {
     } catch (Throwable t) {
       t.printStackTrace();
       try {
-        HTTP_TRANSPORT.shutdown();
+        httpTransport.shutdown();
       } catch (IOException e) {
         e.printStackTrace();
       }
