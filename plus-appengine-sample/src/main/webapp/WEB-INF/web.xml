@@ -23,14 +23,14 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
   </servlet-mapping>
   
   <servlet>
-    <servlet-name>PlusSampleAuthCallbackServlet</servlet-name>
-    <servlet-class>com.google.api.services.samples.plus.PlusSampleAuthCallbackServlet</servlet-class>
+    <servlet-name>PlusSampleServlet2</servlet-name>
+    <servlet-class>com.google.api.services.samples.plus.PlusSampleServlet2</servlet-class>
   </servlet>
   <servlet-mapping>
-    <servlet-name>PlusSampleAuthCallbackServlet</servlet-name>
-    <url-pattern>/oauth2callback</url-pattern>
+    <servlet-name>PlusSampleServlet2</servlet-name>
+    <url-pattern>/plussampleservlet2</url-pattern>
   </servlet-mapping>
-  
+
   <welcome-file-list>
     <welcome-file>index.html</welcome-file>
   </welcome-file-list>

@@ -14,9 +14,10 @@
 
 package com.google.api.services.samples.plus;
 
+import com.google.api.client.auth.oauth2.AuthorizationCodeFlow;
+import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.extensions.appengine.auth.oauth2.AbstractAppEngineAuthServlet;
 import com.google.api.client.googleapis.extensions.appengine.auth.oauth2.GoogleAppEngineOAuthApplicationContext;
-import com.google.api.client.googleapis.extensions.appengine.utils.ServiceFactory;
 import com.google.api.services.plus.Plus;
 import com.google.api.services.plus.PlusScopes;
 import com.google.api.services.plus.model.Person;
@@ -35,9 +36,9 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Nick Miceli
  */
-public class PlusSampleServlet extends AbstractAppEngineAuthServlet {
+public class PlusSampleServlet2 extends AbstractAppEngineAuthServlet {
 
-  public PlusSampleServlet() {
+  public PlusSampleServlet2() {
     super(new GoogleAppEngineOAuthApplicationContext("/plussampleservlet", "/client_secrets.json",
         Collections.singleton(PlusScopes.PLUS_ME), ""));
   }
@@ -47,14 +48,22 @@ public class PlusSampleServlet extends AbstractAppEngineAuthServlet {
   @Override
   public void doGet(HttpServletRequest req, HttpServletResponse resp)
       throws IOException, ServletException {
-    Plus plus = ServiceFactory.createService(Plus.class, getOAuthApplicationContext());
-    // Make the API call
+    // TODO(NOW): Update this using the createService method.
+    // Currently not doing so for comparison purposes. See PlusSampleServlet.java
+    AuthorizationCodeFlow authFlow = getOAuthApplicationContext().getFlow();
+    Credential credential = authFlow.loadCredential(getUserId(req));
+    Plus plus = new Plus.Builder(
+        authFlow.getTransport(), authFlow.getJsonFactory(), credential).setApplicationName("")
+        .build();
     Person profile = plus.people().get("me").execute();
-    // Send the results as the response
     PrintWriter respWriter = resp.getWriter();
     resp.setStatus(200);
     resp.setContentType("text/html");
     respWriter.println("<img src='" + profile.getImage().getUrl() + "'>");
     respWriter.println("<a href='" + profile.getUrl() + "'>" + profile.getDisplayName() + "</a>");
+    respWriter.println("<p> Birthday: " + profile.getBirthday() + "</p>");
+    respWriter.println("<p> Gender: " + profile.getGender() + "</p>");
+    respWriter.println("<p> Current Location: " + profile.getCurrentLocation() + "</p>");
   }
+
 }
