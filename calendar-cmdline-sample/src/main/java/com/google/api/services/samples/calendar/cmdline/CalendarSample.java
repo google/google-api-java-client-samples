@@ -15,22 +15,16 @@
 package com.google.api.services.samples.calendar.cmdline;
 
 import com.google.api.client.auth.oauth2.Credential;
+import com.google.api.client.auth.oauth2.OAuthApplicationContext;
 import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
 import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
-import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
-import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
 import com.google.api.client.googleapis.batch.BatchRequest;
 import com.google.api.client.googleapis.batch.json.JsonBatchCallback;
-import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
+import com.google.api.client.googleapis.extensions.jackson2.auth.oauth2.GoogleOAuthInstalledAppContext;
 import com.google.api.client.googleapis.json.GoogleJsonError;
 import com.google.api.client.http.HttpHeaders;
-import com.google.api.client.http.HttpTransport;
-import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.util.DateTime;
 import com.google.api.client.util.Lists;
-import com.google.api.client.util.store.DataStoreFactory;
-import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.calendar.CalendarScopes;
 import com.google.api.services.calendar.model.Calendar;
 import com.google.api.services.calendar.model.CalendarList;
@@ -39,7 +33,6 @@ import com.google.api.services.calendar.model.EventDateTime;
 import com.google.api.services.calendar.model.Events;
 
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.Collections;
 import java.util.Date;
 import java.util.TimeZone;
@@ -53,63 +46,30 @@ public class CalendarSample {
    * Be sure to specify the name of your application. If the application name is {@code null} or
    * blank, the application will log a warning. Suggested format is "MyCompany-ProductName/1.0".
    */
-  private static final String APPLICATION_NAME = "";
-
-  /** Directory to store user credentials. */
-  private static final java.io.File DATA_STORE_DIR =
-      new java.io.File(System.getProperty("user.home"), ".store/calendar_sample");
-
-  /**
-   * Global instance of the {@link DataStoreFactory}. The best practice is to make it a single
-   * globally shared instance across your application.
-   */
-  private static FileDataStoreFactory DATA_STORE_FACTORY;
-  
-  /** Global instance of the HTTP transport. */
-  private static HttpTransport HTTP_TRANSPORT;
-
-  /** Global instance of the JSON factory. */
-  private static final JsonFactory JSON_FACTORY = new JacksonFactory();
+  private static final String APPLICATION_NAME = "calendar_sample";
 
   private static com.google.api.services.calendar.Calendar client;
 
   static final java.util.List<Calendar> addedCalendarsUsingBatch = Lists.newArrayList();
 
+  static OAuthApplicationContext context = new GoogleOAuthInstalledAppContext(
+      "/client_secrets.json", Collections.singleton(CalendarScopes.CALENDAR), APPLICATION_NAME);
+
   /** Authorizes the installed application to access user's protected data. */
   private static Credential authorize() throws Exception {
-    // load client secrets
-    GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY,
-        new InputStreamReader(CalendarSample.class.getResourceAsStream("/client_secrets.json")));
-    if (clientSecrets.getDetails().getClientId().startsWith("Enter")
-        || clientSecrets.getDetails().getClientSecret().startsWith("Enter ")) {
-      System.out.println(
-          "Enter Client ID and Secret from https://code.google.com/apis/console/?api=calendar "
-          + "into calendar-cmdline-sample/src/main/resources/client_secrets.json");
-      System.exit(1);
-    }
-    // set up authorization code flow
-    GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
-        HTTP_TRANSPORT, JSON_FACTORY, clientSecrets,
-        Collections.singleton(CalendarScopes.CALENDAR)).setDataStoreFactory(DATA_STORE_FACTORY)
-        .build();
-    // authorize
-    return new AuthorizationCodeInstalledApp(flow, new LocalServerReceiver()).authorize("user");
+    return new AuthorizationCodeInstalledApp(context.getFlow(), new LocalServerReceiver())
+        .authorize("user");
   }
 
   public static void main(String[] args) {
     try {
-      // initialize the transport
-      HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
-
-      // initialize the data store factory
-      DATA_STORE_FACTORY = new FileDataStoreFactory(DATA_STORE_DIR);
-
       // authorization
       Credential credential = authorize();
 
       // set up global Calendar instance
       client = new com.google.api.services.calendar.Calendar.Builder(
-          HTTP_TRANSPORT, JSON_FACTORY, credential).setApplicationName(APPLICATION_NAME).build();
+          context.getTransport(), context.getJsonFactory(), credential).setApplicationName(
+          APPLICATION_NAME).build();
 
       // run commands
       showCalendars();
@@ -142,13 +102,13 @@ public class CalendarSample {
     // Create the callback.
     JsonBatchCallback<Calendar> callback = new JsonBatchCallback<Calendar>() {
 
-      @Override
+        @Override
       public void onSuccess(Calendar calendar, HttpHeaders responseHeaders) {
         View.display(calendar);
         addedCalendarsUsingBatch.add(calendar);
       }
 
-      @Override
+        @Override
       public void onFailure(GoogleJsonError e, HttpHeaders responseHeaders) {
         System.out.println("Error Message: " + e.getMessage());
       }
@@ -214,12 +174,12 @@ public class CalendarSample {
     for (Calendar calendar : addedCalendarsUsingBatch) {
       client.calendars().delete(calendar.getId()).queue(batch, new JsonBatchCallback<Void>() {
 
-        @Override
+          @Override
         public void onSuccess(Void content, HttpHeaders responseHeaders) {
           System.out.println("Delete is successful!");
         }
 
-        @Override
+          @Override
         public void onFailure(GoogleJsonError e, HttpHeaders responseHeaders) {
           System.out.println("Error Message: " + e.getMessage());
         }

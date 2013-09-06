@@ -117,8 +117,8 @@
       <version>v3-rev53-1.16.0-rc</version>
     </dependency>
     <dependency>
-      <groupId>com.google.http-client</groupId>
-      <artifactId>google-http-client-jackson2</artifactId>
+      <groupId>com.google.api-client</groupId>
+      <artifactId>google-api-client-jackson2</artifactId>
       <version>${project.http.version}</version>
     </dependency>
     <dependency>
@@ -126,10 +126,15 @@
       <artifactId>google-oauth-client-jetty</artifactId>
       <version>${project.oauth.version}</version>
     </dependency>
+    <dependency>
+      <groupId>com.google.oauth-client</groupId>
+      <artifactId>google-oauth-client</artifactId>
+      <version>${project.oauth.version}</version>
+    </dependency>
   </dependencies>
   <properties>
-    <project.http.version>1.16.0-rc</project.http.version>
-    <project.oauth.version>1.16.0-rc</project.oauth.version>
+    <project.http.version>1.17.0-rc-SNAPSHOT</project.http.version>
+    <project.oauth.version>1.17.0-rc-SNAPSHOT</project.oauth.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 </project>

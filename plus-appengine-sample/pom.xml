@@ -161,11 +161,16 @@
     <dependency>
       <groupId>com.google.apis</groupId>
       <artifactId>google-api-services-plus</artifactId>
-      <version>v1-rev20130708-1.17.0-rc-SNAPSHOT</version>
+      <version>v1-rev88-1.16.0-rc</version>
     </dependency>
     <dependency>
       <groupId>com.google.api-client</groupId>
       <artifactId>google-api-client-appengine</artifactId>
+      <version>${google-api-client.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.google.oauth-client</groupId>
+      <artifactId>google-oauth-client</artifactId>
       <version>${google-api-client.version}</version>
     </dependency>
     <dependency>

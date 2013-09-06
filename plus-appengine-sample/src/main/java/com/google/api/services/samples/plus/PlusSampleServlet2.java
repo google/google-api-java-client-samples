@@ -51,7 +51,7 @@ public class PlusSampleServlet2 extends AbstractAppEngineAuthServlet {
     // TODO(NOW): Update this using the createService method.
     // Currently not doing so for comparison purposes. See PlusSampleServlet.java
     AuthorizationCodeFlow authFlow = getOAuthApplicationContext().getFlow();
-    Credential credential = authFlow.loadCredential(getUserId(req));
+    Credential credential = authFlow.loadCredential(getOAuthApplicationContext().getUserId(req));
     Plus plus = new Plus.Builder(
         authFlow.getTransport(), authFlow.getJsonFactory(), credential).setApplicationName("")
         .build();
