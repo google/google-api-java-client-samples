@@ -61,13 +61,13 @@ public class ComputeEngineSample {
    * Global instance of the {@link DataStoreFactory}. The best practice is to make it a single
    * globally shared instance across your application.
    */
-  private static FileDataStoreFactory DATA_STORE_FACTORY;
+  private static FileDataStoreFactory dataStoreFactory;
   
   /** Global instance of the HTTP transport. */
-  private static HttpTransport HTTP_TRANSPORT;
+  private static HttpTransport httpTransport;
 
   /** Global instance of the JSON factory. */
-  private static final JsonFactory JSON_FACTORY = new JacksonFactory();
+  private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
 
   /** OAuth 2.0 scopes */
   private static final List<String> SCOPES = Arrays.asList(ComputeScopes.COMPUTE_READONLY);
@@ -75,14 +75,14 @@ public class ComputeEngineSample {
   public static void main(String[] args) {
     // Start Authorization process
     try {
-      HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
-      DATA_STORE_FACTORY = new FileDataStoreFactory(DATA_STORE_DIR);
+      httpTransport = GoogleNetHttpTransport.newTrustedTransport();
+      dataStoreFactory = new FileDataStoreFactory(DATA_STORE_DIR);
       // Authorization
       Credential credential = authorize();
 
       // Create compute engine object for listing instances
       Compute compute = new Compute.Builder(
-          HTTP_TRANSPORT, JSON_FACTORY, null).setApplicationName(APPLICATION_NAME)
+          httpTransport, JSON_FACTORY, null).setApplicationName(APPLICATION_NAME)
           .setHttpRequestInitializer(credential).build();
 
       // List out instances
@@ -112,7 +112,7 @@ public class ComputeEngineSample {
     }
     // set up authorization code flow
     GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
-        HTTP_TRANSPORT, JSON_FACTORY, clientSecrets, SCOPES).setDataStoreFactory(DATA_STORE_FACTORY)
+        httpTransport, JSON_FACTORY, clientSecrets, SCOPES).setDataStoreFactory(dataStoreFactory)
         .build();
     // authorize
     return new AuthorizationCodeInstalledApp(flow, new LocalServerReceiver()).authorize("user");

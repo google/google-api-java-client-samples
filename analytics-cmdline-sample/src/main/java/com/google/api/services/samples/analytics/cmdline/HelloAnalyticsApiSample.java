@@ -65,13 +65,13 @@ public class HelloAnalyticsApiSample {
    * Global instance of the {@link DataStoreFactory}. The best practice is to make it a single
    * globally shared instance across your application.
    */
-  private static FileDataStoreFactory DATA_STORE_FACTORY;
+  private static FileDataStoreFactory dataStoreFactory;
 
   /** Global instance of the HTTP transport. */
-  private static HttpTransport HTTP_TRANSPORT;
+  private static HttpTransport httpTransport;
 
   /** Global instance of the JSON factory. */
-  private static final JsonFactory JSON_FACTORY = new JacksonFactory();
+  private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
 
   /**
    * Main demo. This first initializes an analytics service object. It then uses the Google
@@ -83,8 +83,8 @@ public class HelloAnalyticsApiSample {
    */
   public static void main(String[] args) {
     try {
-      HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
-      DATA_STORE_FACTORY = new FileDataStoreFactory(DATA_STORE_DIR);
+      httpTransport = GoogleNetHttpTransport.newTrustedTransport();
+      dataStoreFactory = new FileDataStoreFactory(DATA_STORE_DIR);
       Analytics analytics = initializeAnalytics();
       String profileId = getFirstProfileId(analytics);
       if (profileId == null) {
@@ -116,9 +116,9 @@ public class HelloAnalyticsApiSample {
     }
     // set up authorization code flow
     GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
-        HTTP_TRANSPORT, JSON_FACTORY, clientSecrets,
+        httpTransport, JSON_FACTORY, clientSecrets,
         Collections.singleton(AnalyticsScopes.ANALYTICS_READONLY)).setDataStoreFactory(
-        DATA_STORE_FACTORY).build();
+        dataStoreFactory).build();
     // authorize
     return new AuthorizationCodeInstalledApp(flow, new LocalServerReceiver()).authorize("user");
   }
@@ -135,7 +135,7 @@ public class HelloAnalyticsApiSample {
     Credential credential = authorize();
 
     // Set up and return Google Analytics API client.
-    return new Analytics.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential).setApplicationName(
+    return new Analytics.Builder(httpTransport, JSON_FACTORY, credential).setApplicationName(
         APPLICATION_NAME).build();
   }
 

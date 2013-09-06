@@ -71,9 +71,9 @@ adb shell setprop log.tag.HttpTransport DEBUG
 
   static final int REQUEST_ACCOUNT_PICKER = 2;
 
-  final HttpTransport transport = AndroidHttp.newCompatibleTransport();
+  final HttpTransport httpTransport = AndroidHttp.newCompatibleTransport();
 
-  final JsonFactory jsonFactory = new GsonFactory();
+  final JsonFactory jsonFactory = GsonFactory.getDefaultInstance();
 
   GoogleAccountCredential credential;
 
@@ -102,7 +102,7 @@ adb shell setprop log.tag.HttpTransport DEBUG
     credential.setSelectedAccountName(settings.getString(PREF_ACCOUNT_NAME, null));
     // Tasks client
     service =
-        new com.google.api.services.tasks.Tasks.Builder(transport, jsonFactory, credential)
+        new com.google.api.services.tasks.Tasks.Builder(httpTransport, jsonFactory, credential)
             .setApplicationName("Google-TasksAndroidSample/1.0").build();
   }
 

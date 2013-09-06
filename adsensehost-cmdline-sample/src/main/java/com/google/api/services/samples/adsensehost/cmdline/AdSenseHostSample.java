@@ -85,10 +85,10 @@ public class AdSenseHostSample {
   private static FileDataStoreFactory DATA_STORE_FACTORY;
 
   // Global instance of the HTTP transport.
-  private static HttpTransport HTTP_TRANSPORT;
+  private static HttpTransport httpTransport;
 
   // Global instance of the JSON factory.
-  private static final JsonFactory JSON_FACTORY = new JacksonFactory();
+  private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
 
   // Maximum page size for list calls.
   private static final long MAX_LIST_PAGE_SIZE = 50;
@@ -110,7 +110,7 @@ public class AdSenseHostSample {
     }
     // set up authorization code flow
     GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
-        HTTP_TRANSPORT, JSON_FACTORY, clientSecrets,
+        httpTransport, JSON_FACTORY, clientSecrets,
         Collections.singleton(AdSenseHostScopes.ADSENSEHOST)).setDataStoreFactory(
         DATA_STORE_FACTORY).build();
     // authorize
@@ -149,7 +149,7 @@ public class AdSenseHostSample {
    */
   public static void main(String[] args) {
     try {
-      HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
+      httpTransport = GoogleNetHttpTransport.newTrustedTransport();
       DATA_STORE_FACTORY = new FileDataStoreFactory(DATA_STORE_DIR);
       AdSenseHost service = initializeAdsensehost();
 

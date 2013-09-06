@@ -77,10 +77,10 @@ public class AdSenseSample {
    * Global instance of the {@link DataStoreFactory}. The best practice is to make it a single
    * globally shared instance across your application.
    */
-  private static FileDataStoreFactory DATA_STORE_FACTORY;
+  private static FileDataStoreFactory dataStoreFactory;
   
   /** Global instance of the JSON factory. */
-  private static final JsonFactory JSON_FACTORY = new JacksonFactory();
+  private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
 
   // Request parameters.
   private static final int MAX_LIST_PAGE_SIZE = 50;
@@ -105,7 +105,7 @@ public class AdSenseSample {
     GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
         httpTransport, JSON_FACTORY, clientSecrets,
         Collections.singleton(AdSenseScopes.ADSENSE_READONLY)).setDataStoreFactory(
-        DATA_STORE_FACTORY).build();
+        dataStoreFactory).build();
     // authorize
     return new AuthorizationCodeInstalledApp(flow, new LocalServerReceiver()).authorize("user");
   }
@@ -136,7 +136,7 @@ public class AdSenseSample {
   public static void main(String[] args) {
     try {
       httpTransport = GoogleNetHttpTransport.newTrustedTransport();
-      DATA_STORE_FACTORY = new FileDataStoreFactory(DATA_STORE_DIR);
+      dataStoreFactory = new FileDataStoreFactory(DATA_STORE_DIR);
       AdSense adsense = initializeAdsense();
 
       Accounts accounts = GetAllAccounts.run(adsense, MAX_LIST_PAGE_SIZE);
