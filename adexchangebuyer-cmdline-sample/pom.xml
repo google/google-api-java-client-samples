@@ -9,7 +9,7 @@
   <groupId>com.google.apis-samples</groupId>
   <artifactId>adexchangebuyer-cmdline-sample</artifactId>
   <version>1</version>
-  <name>Example for the Ad Exchange Buyer API v1.2 using JSON.</name>
+  <name>Example for the Ad Exchange Buyer API v1.3 using JSON.</name>
 
   <url>http://code.google.com/p/google-api-java-client/</url>
 
@@ -114,7 +114,7 @@
     <dependency>
       <groupId>com.google.apis</groupId>
       <artifactId>google-api-services-adexchangebuyer</artifactId>
-      <version>v1.2-rev11-1.16.0-rc</version>
+      <version>v1.3-rev3-1.16.0-rc</version>
     </dependency>
     <dependency>
       <groupId>com.google.http-client</groupId>
