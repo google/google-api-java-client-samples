@@ -52,11 +52,12 @@ public class CalendarSample {
 
   static final java.util.List<Calendar> addedCalendarsUsingBatch = Lists.newArrayList();
 
-  static OAuthApplicationContext context = new GoogleOAuthInstalledAppContext(
-      "/client_secrets.json", Collections.singleton(CalendarScopes.CALENDAR), APPLICATION_NAME);
+  static OAuthApplicationContext context;
 
   /** Authorizes the installed application to access user's protected data. */
   private static Credential authorize() throws Exception {
+    context = new GoogleOAuthInstalledAppContext(
+        "/client_secrets.json", Collections.singleton(CalendarScopes.CALENDAR), APPLICATION_NAME);
     return new AuthorizationCodeInstalledApp(context.getFlow(), new LocalServerReceiver())
         .authorize("user");
   }
@@ -67,9 +68,7 @@ public class CalendarSample {
       Credential credential = authorize();
 
       // set up global Calendar instance
-      client = new com.google.api.services.calendar.Calendar.Builder(
-          context.getTransport(), context.getJsonFactory(), credential).setApplicationName(
-          APPLICATION_NAME).build();
+      client = new com.google.api.services.calendar.Calendar.Builder(context, credential).build();
 
       // run commands
       showCalendars();

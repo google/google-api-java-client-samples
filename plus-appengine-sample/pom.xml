@@ -161,7 +161,7 @@
     <dependency>
       <groupId>com.google.apis</groupId>
       <artifactId>google-api-services-plus</artifactId>
-      <version>v1-rev88-1.16.0-rc</version>
+      <version>v1-rev20130828-1.18.0-rc-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>com.google.api-client</groupId>

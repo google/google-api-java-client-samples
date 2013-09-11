@@ -14,9 +14,9 @@
 
 package com.google.api.services.samples.plus;
 
+import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.extensions.appengine.auth.oauth2.AbstractAppEngineAuthServlet;
 import com.google.api.client.googleapis.extensions.appengine.auth.oauth2.GoogleAppEngineOAuthApplicationContext;
-import com.google.api.client.googleapis.extensions.appengine.utils.ServiceFactory;
 import com.google.api.services.plus.Plus;
 import com.google.api.services.plus.PlusScopes;
 import com.google.api.services.plus.model.Person;
@@ -39,7 +39,7 @@ public class PlusSampleServlet extends AbstractAppEngineAuthServlet {
 
   public PlusSampleServlet() {
     super(new GoogleAppEngineOAuthApplicationContext("/plussampleservlet", "/client_secrets.json",
-        Collections.singleton(PlusScopes.PLUS_ME), ""));
+        Collections.singleton(PlusScopes.PLUS_ME), "PUT_APPLICATION_NAME_HERE"));
   }
 
   private static final long serialVersionUID = 1L;
@@ -47,7 +47,10 @@ public class PlusSampleServlet extends AbstractAppEngineAuthServlet {
   @Override
   public void doGet(HttpServletRequest req, HttpServletResponse resp)
       throws IOException, ServletException {
-    Plus plus = ServiceFactory.createService(Plus.class, getOAuthApplicationContext());
+    Credential credential = getOAuthApplicationContext().getFlow()
+        .loadCredential(getOAuthApplicationContext().getUserId(req));
+    //Plus plus = ServiceFactory.createService(Plus.class, getOAuthApplicationContext());
+    Plus plus = new Plus.Builder(getOAuthApplicationContext(), credential).build();
     // Make the API call
     Person profile = plus.people().get("me").execute();
     // Send the results as the response
