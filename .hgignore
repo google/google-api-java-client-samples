@@ -8,10 +8,25 @@ syntax: regexp
 ^[^/]+/gen$
 
 syntax: regexp
+.gradle$
+
+syntax: regexp
+(^[^/]+/)?.*\.iml$
+
+syntax: regexp
+(^[^/]+/)?.idea$
+
+syntax: regexp
 ^[^/]+/.gwt$
+
+syntax: regexp
+^[^/]+/build$
 
 syntax: regexp
 ^[^/]+/bin$
 
 syntax: regexp
 ^[^/]+/war/WEB-INF/appengine-generated
+
+syntax: regexp
+local.properties$
