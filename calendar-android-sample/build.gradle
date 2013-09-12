@@ -1,0 +1,39 @@
+apply plugin: 'android'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile 'com.google.apis:google-api-services-calendar:v3-rev59-1.17.0-rc'
+    compile 'com.google.api-client:google-api-client-android:1.17.0-rc'
+    compile 'com.google.http-client:google-http-client-gson:1.17.0-rc'
+    compile 'com.google.android.gms:play-services:3.1.36'
+}
+
+android {
+    compileSdkVersion 8
+    buildToolsVersion "18.0.1"
+
+    defaultConfig {
+        minSdkVersion 8
+        targetSdkVersion 8
+    }
+
+    sourceSets {
+        main {
+            manifest.srcFile 'AndroidManifest.xml'
+            res.srcDirs = ['res']
+        }
+    }
+
+    buildTypes {
+        release {
+            runProguard true
+            proguardFile 'proguard-google-api-client.txt'
+            proguardFile getDefaultProguardFile('proguard-android.txt')
+        }
+    }
+
+}
+
