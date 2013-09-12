@@ -98,7 +98,7 @@
     <dependency>
       <groupId>com.google.apis</groupId>
       <artifactId>google-api-services-storage</artifactId>
-      <version>v1beta2-rev16-1.16.0-rc</version>
+      <version>v1beta2-rev23-1.17.0-rc</version>
     </dependency>
     <dependency>
       <groupId>com.google.http-client</groupId>
@@ -109,9 +109,9 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <project.http.version>1.16.0-rc</project.http.version>
-    <project.oauth.version>1.16.0-rc</project.oauth.version>
-    <project.api.version>1.16.0-rc</project.api.version>
+    <project.http.version>1.17.0-rc</project.http.version>
+    <project.oauth.version>1.17.0-rc</project.oauth.version>
+    <project.api.version>1.17.0-rc</project.api.version>
   </properties>
 
 </project>

@@ -15,22 +15,18 @@
   <h3>Register Your Application</h3>
 
   <ul>
-    <li>Visit the <a href="https://code.google.com/apis/console/?api=adsense">Google
-        apis console</a>
+    <li>Visit the <a href="https://cloud.google.com/console/start/api?id=adsense">Google Cloud
+        console</a>. 
     </li>
-    <li>If this is your first time, click "Create project..."</li>
-    <li>Otherwise, click on the drop down under the "Google apis" logo at
-      the top left, and click "Create..." under "Other projects"</li>
-    <li>Click on "API Access", and then on "Create an OAuth 2.0 Client
-      ID...".</li>
-    <li>Enter a product name and click "Next".</li>
-    <li>Select "Installed application" and click "Create client ID".</li>
-    <li>In the newly created "Client ID for installed applications", click
-      "Download JSON" on the right side. Later on after you check out the sample
-      project, you will copy this downloaded file (e.g. <code>~/Downloads/client_secrets.json</code>)
-      to <a href="src/main/resources/client_secrets.json">src/main/resources/client_secrets.json</a>.
-      If you skip this step, when trying to run the sample you will get a <code>400
-      INVALID_CLIENT</code> error in the browser.
+    <li>If necessary, sign in to your Google Account, select or create a project,
+        and agree to the terms of service.  Click Continue.</li>
+    <li>Select the "Native" platform, and click Register.</li>
+    <li>Within "OAuth 2.0 Client ID", click on "Download JSON". Later on, after you check
+        out the sample project, you will copy this downloaded file (e.g. 
+        <code>~/Downloads/client_secrets.json</code>) to
+        <a href="src/main/resources/client_secrets.json">src/main/resources/client_secrets.json</a>.
+        If you skip this step, when trying to run the sample you will get a <code>400 
+        INVALID_CLIENT</code> error in the browser.
     </li>
   </ul>
 
