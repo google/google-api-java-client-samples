@@ -14,7 +14,7 @@
 
 package com.google.api.services.samples.adexchangebuyer.cmdline;
 
-import com.google.api.services.adexchangebuyer.Adexchangebuyer;
+import com.google.api.services.adexchangebuyer.AdExchangeBuyer;
 import com.google.api.services.adexchangebuyer.model.Account;
 import com.google.api.services.adexchangebuyer.model.Account.BidderLocation;
 
@@ -55,10 +55,10 @@ public class GetAllAccounts extends BaseSample {
    *
    * @see
    * com.google.api.services.samples.adexchangebuyer.cmdline.BaseSample#execute(com.google.api.
-   * services.adexchangebuyer.Adexchangebuyer)
+   * services.adexchangebuyer.AdExchangeBuyer)
    */
   @Override
-  public void execute(Adexchangebuyer client) throws IOException {
+  public void execute(AdExchangeBuyer client) throws IOException {
     List<Account> allAccounts = client.accounts().list().execute().getItems();
 
     if (allAccounts != null && allAccounts.size() > 0) {
