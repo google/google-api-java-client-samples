@@ -14,7 +14,7 @@
 
 package com.google.api.services.samples.adexchangebuyer.cmdline;
 
-import com.google.api.services.adexchangebuyer.Adexchangebuyer;
+import com.google.api.services.adexchangebuyer.AdExchangeBuyer;
 import com.google.api.services.adexchangebuyer.model.Account;
 import com.google.api.services.adexchangebuyer.model.Account.BidderLocation;
 
@@ -54,10 +54,10 @@ public class UpdateAccount extends BaseSample {
    * (non-Javadoc)
    *
    * @see com.google.api.services.samples.adexchangebuyer.cmdline.BaseSample#execute(com.google.api.
-   * services.adexchangebuyer.Adexchangebuyer)
+   * services.adexchangebuyer.AdExchangeBuyer)
    */
   @Override
-  public void execute(Adexchangebuyer client) throws IOException {
+  public void execute(AdExchangeBuyer client) throws IOException {
     int accountId = getIntInput("AccountId", "Enter the account id");
     String cookieMatchingUrl =
         getStringInput("CookieMatchingUrl", "Enter new cookie matching URL for the account");
