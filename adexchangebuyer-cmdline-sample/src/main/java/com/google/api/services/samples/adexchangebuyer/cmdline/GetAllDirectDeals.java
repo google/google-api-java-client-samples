@@ -14,7 +14,7 @@
 
 package com.google.api.services.samples.adexchangebuyer.cmdline;
 
-import com.google.api.services.adexchangebuyer.Adexchangebuyer;
+import com.google.api.services.adexchangebuyer.AdExchangeBuyer;
 import com.google.api.services.adexchangebuyer.model.DirectDeal;
 
 import java.io.IOException;
@@ -37,7 +37,7 @@ public class GetAllDirectDeals extends BaseSample {
    * @see com.google.api.services.samples.adexchangebuyer.cmdline.BaseSample#execute()
    */
   @Override
-  public void execute(Adexchangebuyer client) throws IOException {
+  public void execute(AdExchangeBuyer client) throws IOException {
     List<DirectDeal> allDirectDeals = client.directDeals().list().execute().getDirectDeals();
 
     if (allDirectDeals != null && allDirectDeals.size() > 0) {
