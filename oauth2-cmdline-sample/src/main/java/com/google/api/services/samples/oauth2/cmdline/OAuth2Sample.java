@@ -27,7 +27,7 @@ import com.google.api.client.util.store.DataStoreFactory;
 import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.oauth2.Oauth2;
 import com.google.api.services.oauth2.model.Tokeninfo;
-import com.google.api.services.oauth2.model.Userinfo;
+import com.google.api.services.oauth2.model.Userinfoplus;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -125,7 +125,7 @@ public class OAuth2Sample {
 
   private static void userInfo() throws IOException {
     header("Obtaining User Profile Information");
-    Userinfo userinfo = oauth2.userinfo().get().execute();
+    Userinfoplus userinfo= oauth2.userinfo().get().execute();
     System.out.println(userinfo.toPrettyString());
   }
 
