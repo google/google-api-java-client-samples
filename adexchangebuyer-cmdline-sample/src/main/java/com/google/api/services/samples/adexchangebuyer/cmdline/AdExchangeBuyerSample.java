@@ -25,8 +25,8 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.util.store.DataStoreFactory;
 import com.google.api.client.util.store.FileDataStoreFactory;
-import com.google.api.services.adexchangebuyer.Adexchangebuyer;
-import com.google.api.services.adexchangebuyer.AdexchangebuyerScopes;
+import com.google.api.services.adexchangebuyer.AdExchangeBuyer;
+import com.google.api.services.adexchangebuyer.AdExchangeBuyerScopes;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -86,7 +86,7 @@ public class AdExchangeBuyerSample {
     // set up authorization code flow
     GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
         httpTransport, JSON_FACTORY, clientSecrets,
-        Collections.singleton(AdexchangebuyerScopes.ADEXCHANGE_BUYER)).setDataStoreFactory(
+        Collections.singleton(AdExchangeBuyerScopes.ADEXCHANGE_BUYER)).setDataStoreFactory(
         dataStoreFactory).build();
     // authorize
     return new AuthorizationCodeInstalledApp(flow, new LocalServerReceiver()).authorize("user");
@@ -98,12 +98,12 @@ public class AdExchangeBuyerSample {
    * @return An initialized AdSense service object.
    * @throws Exception
    */
-  private static Adexchangebuyer initClient() throws Exception {
+  private static AdExchangeBuyer initClient() throws Exception {
     // Authorization.
     Credential credential = authorize();
 
     // Set up API client.
-    Adexchangebuyer client = new Adexchangebuyer.Builder(
+    AdExchangeBuyer client = new AdExchangeBuyer.Builder(
         httpTransport, JSON_FACTORY, credential).setApplicationName(APPLICATION_NAME).build();
 
     return client;
@@ -131,7 +131,7 @@ public class AdExchangeBuyerSample {
     httpTransport = GoogleNetHttpTransport.newTrustedTransport();
     dataStoreFactory = new FileDataStoreFactory(DATA_STORE_DIR);
     initSamples();
-    Adexchangebuyer client = initClient();
+    AdExchangeBuyer client = initClient();
     BaseSample sample = null;
 
     while ((sample = selectSample()) != null) {
