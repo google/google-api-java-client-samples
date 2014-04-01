@@ -15,7 +15,7 @@
 package com.google.api.services.samples.adexchangebuyer.cmdline;
 
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
-import com.google.api.services.adexchangebuyer.Adexchangebuyer;
+import com.google.api.services.adexchangebuyer.AdExchangeBuyer;
 import com.google.api.services.adexchangebuyer.model.Creative;
 import com.google.api.services.adexchangebuyer.model.Creative.DisapprovalReasons;
 
@@ -30,7 +30,7 @@ import java.io.IOException;
  */
 public class GetCreative extends BaseSample {
   @Override
-  public void execute(Adexchangebuyer client) throws IOException {
+  public void execute(AdExchangeBuyer client) throws IOException {
     int accountId = getIntInput("AccountId", "Enter the creative account id");
     String buyerCreativeId = getStringInput("BuyerCreativeId", "Enter the buyer creative id");
 
