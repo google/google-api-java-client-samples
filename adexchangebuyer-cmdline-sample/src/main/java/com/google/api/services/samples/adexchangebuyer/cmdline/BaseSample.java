@@ -14,7 +14,7 @@
 
 package com.google.api.services.samples.adexchangebuyer.cmdline;
 
-import com.google.api.services.adexchangebuyer.Adexchangebuyer;
+import com.google.api.services.adexchangebuyer.AdExchangeBuyer;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -51,7 +51,7 @@ public abstract class BaseSample {
    * @param client The Ad Exchange Buyer API client class
    * @throws IOException In case an error has occurred
    */
-  public abstract void execute(Adexchangebuyer client) throws IOException;
+  public abstract void execute(AdExchangeBuyer client) throws IOException;
 
   /**
    * Prompts the user to enter a numeric value.
