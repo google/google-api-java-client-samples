@@ -1,16 +1,14 @@
 apply plugin: 'android'
 
 repositories {
-    mavenLocal()
-    maven {
-      url "https://google-api-client-libraries.appspot.com/mavenrepo"
-    }
+    mavenCentral()
+    mavenLocal()  // For google-play-services is not on Maven Central.
 }
 
 dependencies {
-    compile 'com.google.apis:google-api-services-calendar:v3-rev75-1.18.0-rc-SNAPSHOT' exclude module: 'httpclient'
-    compile 'com.google.api-client:google-api-client-android:1.18.0-rc-SNAPSHOT' exclude module: 'httpclient'
-    compile 'com.google.http-client:google-http-client-gson:1.18.0-rc-SNAPSHOT' exclude module: 'httpclient'
+    compile 'com.google.apis:google-api-services-calendar:v3-rev77-1.18.0-rc' exclude module: 'httpclient'
+    compile 'com.google.api-client:google-api-client-android:1.18.0-rc' exclude module: 'httpclient'
+    compile 'com.google.http-client:google-http-client-gson:1.18.0-rc' exclude module: 'httpclient'
     compile 'com.google.android.google-play-services:google-play-services:1'
 }
 

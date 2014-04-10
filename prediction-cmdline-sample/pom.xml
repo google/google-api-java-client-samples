@@ -45,14 +45,6 @@
     </developer>
   </developers>
 
-  <!--For testing purposes, before libraries are on Maven Central. Will be removed before committing.-->
-  <repositories>
-    <repository>
-      <id>googleapis</id>
-      <url>https://google-api-client-libraries.appspot.com/mavenrepo</url>
-    </repository>
-  </repositories>
-
   <build>
     <plugins>
       <plugin>
@@ -122,7 +114,7 @@
     <dependency>
       <groupId>com.google.apis</groupId>
       <artifactId>google-api-services-prediction</artifactId>
-      <version>v1.5-rev48-1.18.0-rc-SNAPSHOT</version>
+      <version>v1.5-rev49-1.18.0-rc</version>
     </dependency>
     <dependency>
       <groupId>com.google.http-client</groupId>
@@ -136,8 +128,8 @@
     </dependency>
   </dependencies>
   <properties>
-    <project.http.version>1.18.0-rc-SNAPSHOT</project.http.version>
-    <project.oauth.version>1.18.0-rc-SNAPSHOT</project.oauth.version>
+    <project.http.version>1.18.0-rc</project.http.version>
+    <project.oauth.version>1.18.0-rc</project.oauth.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 </project>

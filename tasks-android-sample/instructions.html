@@ -29,6 +29,27 @@
         ANDROID_HOME to the Android SDK installation directory, which for Android Studio is in the
         "sdk" subdirectory.
     </li>
+    <li>Install google-play-services.jar
+      </br>The first time you run this sample, you will need to install the google-play-services.jar. You can either do it through Eclipse, or by running the "mvn install" command.
+      <ul>
+        <li>Eclipse
+          <ul>
+            <li>Launch Eclipse and select Window > Android SDK Manager or run android at the command line.</li>
+            <li>Scroll to the bottom of the package list and select Extras > Google Play services.</li>
+          </ul>
+        </li>
+        <li>Command line
+          <pre>
+  mvn install:install-file \
+       -Dfile=$ANDROID_HOME/extras/google/google_play_services/libproject/google-play-services_lib/libs/google-play-services.jar \
+       -DgroupId=com.google.android.google-play-services \
+       -DartifactId=google-play-services \
+       -Dversion=1 \
+       -Dpackaging=jar
+          </pre>
+        </li>
+      </ul>
+    </li>
 </ul>
 
 <h3>Register Your Application</h3>

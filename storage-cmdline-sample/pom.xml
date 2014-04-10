@@ -13,14 +13,6 @@
 
   <inceptionYear>2012</inceptionYear>
 
-  <!--For testing purposes, before libraries are on Maven Central. Will be removed before committing.-->
-  <repositories>
-    <repository>
-      <id>googleapis</id>
-      <url>https://google-api-client-libraries.appspot.com/mavenrepo</url>
-    </repository>
-  </repositories>
-
   <build>
     <plugins>
       <plugin>
@@ -106,7 +98,7 @@
     <dependency>
       <groupId>com.google.apis</groupId>
       <artifactId>google-api-services-storage</artifactId>
-      <version>v1beta2-rev40-1.18.0-rc-SNAPSHOT</version>
+      <version>v1beta2-rev42-1.18.0-rc</version>
     </dependency>
     <dependency>
       <groupId>com.google.http-client</groupId>
@@ -117,9 +109,9 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <project.http.version>1.18.0-rc-SNAPSHOT</project.http.version>
-    <project.oauth.version>1.18.0-rc-SNAPSHOT</project.oauth.version>
-    <project.api.version>1.18.0-rc-SNAPSHOT</project.api.version>
+    <project.http.version>1.18.0-rc</project.http.version>
+    <project.oauth.version>1.18.0-rc</project.oauth.version>
+    <project.api.version>1.18.0-rc</project.api.version>
   </properties>
 
 </project>
