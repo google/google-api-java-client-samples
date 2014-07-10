@@ -125,7 +125,7 @@ public class OAuth2Sample {
 
   private static void userInfo() throws IOException {
     header("Obtaining User Profile Information");
-    Userinfoplus userinfo= oauth2.userinfo().get().execute();
+    Userinfoplus userinfo = oauth2.userinfo().get().execute();
     System.out.println(userinfo.toPrettyString());
   }
 
