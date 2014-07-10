@@ -38,8 +38,8 @@ public class GetAllCustomChannels {
    * @return the last page of custom channels.
    * @throws Exception
    */
-  public static CustomChannels run(AdExchangeSeller adExchangeSeller, String adClientId, long maxPageSize)
-      throws Exception {
+  public static CustomChannels run(AdExchangeSeller adExchangeSeller, String adClientId,
+      long maxPageSize) throws Exception {
     System.out.println("=================================================================");
     System.out.printf("Listing all custom channels for ad client %s\n", adClientId);
     System.out.println("=================================================================");

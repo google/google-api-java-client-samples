@@ -28,11 +28,11 @@ import java.util.List;
 /**
  * This example retrieves a report for the specified ad client.
  *
- * Please only use pagination if your application requires it due to memory or storage constraints.
- * If you need to retrieve more than 5000 rows, please check GenerateReport.java, as due to current
- * limitations you will not be able to use paging for large reports.
+ * <p>Please only use pagination if your application requires it due to memory or storage
+ * constraints. If you need to retrieve more than 5000 rows, please check GenerateReport.java, as
+ * due to current limitations you will not be able to use paging for large reports.
  *
- * Tags: reports.generate
+ * <p>Tags: reports.generate
  *
  * @author sgomes@google.com (Sérgio Gomes)
  *
@@ -52,8 +52,8 @@ public class GenerateReportWithPaging {
    * @param maxReportPageSize the maximum size page to retrieve.
    * @throws Exception
    */
-  public static void run(AdExchangeSeller adExchangeSeller, String adClientId, long maxReportPageSize)
-      throws Exception {
+  public static void run(AdExchangeSeller adExchangeSeller, String adClientId,
+      long maxReportPageSize) throws Exception {
     System.out.println("=================================================================");
     System.out.printf("Running report for ad client %s\n", adClientId);
     System.out.println("=================================================================");

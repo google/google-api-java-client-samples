@@ -22,7 +22,7 @@ import com.google.api.services.adexchangeseller.model.SavedReports;
  *
  * This example gets all saved reports for the logged in user's account.
  *
- * Tags: reports.saved.list
+ * <p>Tags: reports.saved.list
  *
  * @author sgomes@google.com (Sérgio Gomes)
  *
@@ -37,7 +37,8 @@ public class GetAllSavedReports {
    * @return the last page of saved reports.
    * @throws Exception
    */
-  public static SavedReports run(AdExchangeSeller adExchangeSeller, int maxPageSize) throws Exception {
+  public static SavedReports run(AdExchangeSeller adExchangeSeller, int maxPageSize)
+      throws Exception {
     System.out.println("=================================================================");
     System.out.printf("Listing all saved reports for account\n");
     System.out.println("=================================================================");

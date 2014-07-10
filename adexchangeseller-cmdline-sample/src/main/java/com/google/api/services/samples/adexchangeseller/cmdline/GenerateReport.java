@@ -28,7 +28,7 @@ import java.util.List;
 /**
  * This example retrieves a report, using a filter for a specified ad client.
  *
- * Tags: reports.generate
+ * <p>Tags: reports.generate
  *
  * @author sgomes@google.com (Sérgio Gomes)
  *
@@ -39,6 +39,7 @@ public class GenerateReport {
 
   /**
    * Runs this sample.
+   * 
    * @param adExchangeSeller AdExchangeSeller service object on which to run the requests.
    * @param adClientId the ad client ID on which to run the report.
    * @throws Exception

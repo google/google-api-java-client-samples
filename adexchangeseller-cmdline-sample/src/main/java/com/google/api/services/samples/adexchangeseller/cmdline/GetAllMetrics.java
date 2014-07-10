@@ -22,7 +22,7 @@ import com.google.api.services.adexchangeseller.model.ReportingMetadataEntry;
 *
 * Gets all metrics available for the logged in user's account.
 *
-* Tags: metadata.metrics.list
+* <p>Tags: metadata.metrics.list
 *
 * @author sgomes@google.com (Sérgio Gomes)
 *

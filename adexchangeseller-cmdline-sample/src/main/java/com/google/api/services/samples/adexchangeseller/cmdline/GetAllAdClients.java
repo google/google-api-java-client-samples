@@ -22,7 +22,7 @@ import com.google.api.services.adexchangeseller.model.AdClients;
 *
 * This example gets all ad clients for the logged in user's account.
 *
-* Tags: adclients.list
+* <p>Tags: adclients.list
 *
 * @author sgomes@google.com (Sérgio Gomes)
 *
@@ -37,7 +37,8 @@ public class GetAllAdClients {
    * @return the last page of retrieved ad clients.
    * @throws Exception
    */
-  public static AdClients run(AdExchangeSeller adExchangeSeller, long maxPageSize) throws Exception {
+  public static AdClients run(AdExchangeSeller adExchangeSeller, long maxPageSize)
+      throws Exception {
     System.out.println("=================================================================");
     System.out.println("Listing all ad clients for account");
     System.out.println("=================================================================");

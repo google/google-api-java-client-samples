@@ -47,7 +47,8 @@ public class GetAllCustomChannelsForAdUnit {
     // Retrieve custom channel list in pages and display the data as we receive it.
     String pageToken = null;
     do {
-      CustomChannels customChannels = adExchangeSeller.adunits().customchannels().list(adClientId, adUnitId)
+      CustomChannels customChannels = adExchangeSeller.adunits().customchannels()
+          .list(adClientId, adUnitId)
           .setMaxResults(maxPageSize)
           .setPageToken(pageToken)
           .execute();

@@ -22,7 +22,7 @@ import com.google.api.services.adexchangeseller.model.ReportingMetadataEntry;
 *
 * Gets all dimensions available for the logged in user's account.
 *
-* Tags: metadata.dimensions.list
+* <p>Tags: metadata.dimensions.list
 *
 * @author sgomes@google.com (Sérgio Gomes)
 *

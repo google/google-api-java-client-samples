@@ -27,7 +27,7 @@ import java.util.List;
 /**
  * This example retrieves a saved report for the default account.
  *
- * Tags: reports.saved.generate
+ * <p>Tags: reports.saved.generate
  *
  * @author sgomes@google.com (Sérgio Gomes)
  *

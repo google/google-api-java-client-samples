@@ -22,7 +22,7 @@ import com.google.api.services.adexchangeseller.model.AdUnits;
 *
 * This example gets all ad units in an ad client.
 *
-* Tags: adunits.list
+* <p>Tags: adunits.list
 *
 * @author sgomes@google.com (Sérgio Gomes)
 *
@@ -38,7 +38,8 @@ public class GetAllAdUnits {
    * @return the last page of ad units.
    * @throws Exception
    */
-  public static AdUnits run(AdExchangeSeller adExchangeSeller, String adClientId, long maxPageSize) throws Exception {
+  public static AdUnits run(AdExchangeSeller adExchangeSeller, String adClientId, long maxPageSize)
+      throws Exception {
     System.out.println("=================================================================");
     System.out.printf("Listing all ad units for ad client %s\n", adClientId);
     System.out.println("=================================================================");

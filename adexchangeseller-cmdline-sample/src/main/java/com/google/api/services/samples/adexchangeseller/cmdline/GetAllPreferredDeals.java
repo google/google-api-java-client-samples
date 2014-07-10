@@ -22,7 +22,7 @@ import com.google.api.services.adexchangeseller.model.PreferredDeals;
 *
 * Gets all preferred deals available on the logged in user's account.
 *
-* Tags: preferreddeals.list
+* <p>Tags: preferreddeals.list
 *
 * @author sgomes@google.com (Sérgio Gomes)
 *

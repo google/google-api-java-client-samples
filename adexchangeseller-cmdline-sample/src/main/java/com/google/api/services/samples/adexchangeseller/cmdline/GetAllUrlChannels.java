@@ -22,7 +22,7 @@ import com.google.api.services.adexchangeseller.model.UrlChannels;
 *
 * This example gets all URL channels in an ad client.
 *
-* Tags: urlchannels.list
+* <p>Tags: urlchannels.list
 *
 * @author sgomes@google.com (Sérgio Gomes)
 *
@@ -37,7 +37,8 @@ public class GetAllUrlChannels {
    * @param maxPageSize the maximum page size to retrieve.
    * @throws Exception
    */
-  public static void run(AdExchangeSeller adExchangeSeller, String adClientId, long maxPageSize) throws Exception {
+  public static void run(AdExchangeSeller adExchangeSeller, String adClientId, long maxPageSize)
+      throws Exception {
     System.out.println("=================================================================");
     System.out.printf("Listing all URL channels for ad client %s\n", adClientId);
     System.out.println("=================================================================");

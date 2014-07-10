@@ -88,7 +88,8 @@ public class AdExchangeSellerSample {
   private static Credential authorize() throws Exception {
     // load client secrets
     GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY,
-        new InputStreamReader(AdExchangeSellerSample.class.getResourceAsStream("/client_secrets.json")));
+        new InputStreamReader(
+            AdExchangeSellerSample.class.getResourceAsStream("/client_secrets.json")));
     if (clientSecrets.getDetails().getClientId().startsWith("Enter")
         || clientSecrets.getDetails().getClientSecret().startsWith("Enter ")) {
       System.out.println("Enter Client ID and Secret from "
@@ -99,8 +100,8 @@ public class AdExchangeSellerSample {
     // set up authorization code flow
     GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
         httpTransport, JSON_FACTORY, clientSecrets,
-        Collections.singleton(AdExchangeSellerScopes.ADEXCHANGE_SELLER_READONLY)).setDataStoreFactory(
-        dataStoreFactory).build();
+        Collections.singleton(AdExchangeSellerScopes.ADEXCHANGE_SELLER_READONLY))
+        .setDataStoreFactory(dataStoreFactory).build();
     // authorize
     return new AuthorizationCodeInstalledApp(flow, new LocalServerReceiver()).authorize("user");
   }

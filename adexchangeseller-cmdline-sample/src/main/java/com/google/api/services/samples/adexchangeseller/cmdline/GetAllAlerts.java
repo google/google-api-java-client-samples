@@ -22,7 +22,7 @@ import com.google.api.services.adexchangeseller.model.Alerts;
 *
 * Gets all alerts available for the logged in user's account.
 *
-* Tags: alerts.list
+* <p>Tags: alerts.list
 *
 * @author sgomes@google.com (Sérgio Gomes)
 *
