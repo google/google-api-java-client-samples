@@ -21,3 +21,14 @@
 # Needed by google-play-services when linking against an older platform version
 
 -dontwarn com.google.android.gms.**
+-dontnote com.google.android.gms.**
+
+# com.google.client.util.IOUtils references java.nio.file.Files when on Java 7+
+-dontnote java.nio.file.Files, java.nio.file.Path
+
+# Suppress notes on LicensingServices
+-dontnote **.ILicensingService
+
+# Suppress warnings on sun.misc.Unsafe
+-dontnote sun.misc.Unsafe
+-dontwarn sun.misc.Unsafe
