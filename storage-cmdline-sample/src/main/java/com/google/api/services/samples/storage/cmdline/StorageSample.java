@@ -33,11 +33,15 @@ import com.google.api.services.storage.Storage;
 import com.google.api.services.storage.model.Bucket;
 import com.google.api.services.storage.model.StorageObject;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.hash.Hashing;
+import com.google.common.hash.HashingOutputStream;
 import com.google.common.io.BaseEncoding;
+import com.google.common.primitives.Ints;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.ByteBuffer;
 import java.security.DigestOutputStream;
 import java.security.MessageDigest;
 
@@ -92,6 +96,8 @@ public class StorageSample {
       object = ObjectsUploadExample.uploadWithMetadata(storage, object, data);
       View.show(object);
       System.out.println("md5Hash: " + object.getMd5Hash());
+      System.out.println("crc32c: " + object.getCrc32c() + ", decoded to " + 
+          ByteBuffer.wrap(BaseEncoding.base64().decode(object.getCrc32c())).getInt());
 
       View.header1("Getting object data of uploaded object, calculate hashes/crcs.");
       OutputStream nullOutputStream = new OutputStream() {
@@ -101,10 +107,18 @@ public class StorageSample {
       };
       DigestOutputStream md5DigestOutputStream = new DigestOutputStream(
           nullOutputStream, MessageDigest.getInstance("MD5"));
+      HashingOutputStream crc32cHashingOutputStream = new HashingOutputStream(Hashing.crc32c(), md5DigestOutputStream);
       ObjectsDownloadExample.downloadToOutputStream(
-          storage, settings.getBucket(), settings.getPrefix() + "myobject", md5DigestOutputStream);
+          storage, settings.getBucket(), settings.getPrefix() + "myobject", crc32cHashingOutputStream);
       String calculatedMD5 = BaseEncoding.base64().encode(md5DigestOutputStream.getMessageDigest().digest());
       System.out.println("md5Hash: " + calculatedMD5 + " " + (object.getMd5Hash().equals(calculatedMD5)
+          ? "(MATCHES)" : "(MISMATCHES; data altered in transit)"));
+      int calculatedCrc32c = crc32cHashingOutputStream.hash().asInt();
+      String calculatedEncodedCrc32c = BaseEncoding.base64().encode(Ints.toByteArray(calculatedCrc32c));
+      // NOTE: Don't compare HashCode.asBytes() directly, as that encodes the crc32c in little-endien.
+      // You would have to reverseBytes first.
+      System.out.println("crc32c: " + calculatedEncodedCrc32c + ", decoded to "
+          + crc32cHashingOutputStream.hash().asInt() + " " + (object.getCrc32c().equals(calculatedEncodedCrc32c)
           ? "(MATCHES)" : "(MISMATCHES; data altered in transit)"));
       
       // success!
