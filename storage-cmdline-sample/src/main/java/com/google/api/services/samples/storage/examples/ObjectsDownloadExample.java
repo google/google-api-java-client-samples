@@ -27,6 +27,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+
+/** Example of downloading a GCS object. */
 public class ObjectsDownloadExample {
 
   private static final boolean IS_APP_ENGINE = false;
@@ -41,8 +43,8 @@ public class ObjectsDownloadExample {
     return getObject.executeMediaAsInputStream(); 
   }
 
-  public static void downloadToOutputStream(Storage storage, String bucketName, String objectName, OutputStream data)
-      throws IOException {
+  public static void downloadToOutputStream(Storage storage, String bucketName, String objectName,
+      OutputStream data) throws IOException {
     Storage.Objects.Get getObject = storage.objects().get(bucketName, objectName);
     getObject.getMediaHttpDownloader().setDirectDownloadEnabled(!IS_APP_ENGINE);
     getObject.executeMediaAndDownloadTo(data); 
@@ -53,8 +55,9 @@ public class ObjectsDownloadExample {
    * resuming after a download fails, but can also be used to download in
    * parallel.
    */
-  public static void downloadRangeToOutputStream(Storage storage, String bucketName, String objectName,
-      long firstBytePos, long lastBytePos, OutputStream data) throws IOException {
+  public static void downloadRangeToOutputStream(Storage storage, String bucketName,
+      String objectName, long firstBytePos, long lastBytePos, OutputStream data)
+      throws IOException {
     Storage.Objects.Get getObject = storage.objects().get(bucketName, objectName);
     // Remove cast after https://github.com/google/google-api-java-client/issues/937 is addressed.
     getObject.getMediaHttpDownloader().setDirectDownloadEnabled(!IS_APP_ENGINE)

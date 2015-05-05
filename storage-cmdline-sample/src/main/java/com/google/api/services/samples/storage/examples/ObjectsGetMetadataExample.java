@@ -32,7 +32,8 @@ public class ObjectsGetMetadataExample {
   private static final String BUCKET_NAME = "*** bucket name ***";
   private static final String OBJECT_NAME = "*** object name ***";
 
-  public static StorageObject get(Storage storage, String bucketName, String objectName) throws IOException {
+  public static StorageObject get(Storage storage, String bucketName, String objectName)
+      throws IOException {
     Storage.Objects.Get getObject = storage.objects().get(bucketName, objectName);
     return getObject.execute(); 
   }
@@ -42,7 +43,7 @@ public class ObjectsGetMetadataExample {
     JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
     Credential credential = CredentialsProvider.authorize(httpTransport, jsonFactory);
     Storage storage = new Storage.Builder(httpTransport, jsonFactory, credential)
-        .setApplicationName("Google-ObjectsGetExample/1.0").build();
+        .setApplicationName("Google-ObjectsGetMetadataExample/1.0").build();
     StorageObject object = get(storage, BUCKET_NAME, OBJECT_NAME);
     System.out.println(object.getName() + " (size: " + object.getSize() + ")");
   }

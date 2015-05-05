@@ -29,11 +29,14 @@ import com.google.common.collect.Lists;
 import java.io.IOException;
 import java.util.List;
 
+
+/** Example of listing objects in a GCS bucket. */
 public class ObjectsListExample {
 
   private static final String BUCKET_NAME = "*** bucket name ***";
   
-  public static Iterable<StorageObject> list(Storage storage, String bucketName) throws IOException {
+  public static Iterable<StorageObject> list(Storage storage, String bucketName)
+      throws IOException {
     List<List<StorageObject>> pagedList = Lists.newArrayList();
     Storage.Objects.List listObjects = storage.objects().list(bucketName);
     Objects objects;

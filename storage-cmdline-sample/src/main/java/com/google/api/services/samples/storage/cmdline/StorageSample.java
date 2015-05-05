@@ -46,6 +46,9 @@ import java.security.DigestOutputStream;
 import java.security.MessageDigest;
 
 
+/**
+ * Sample for Google Cloud Storage JSON API client.
+ */
 public class StorageSample {
 
   /**
@@ -107,18 +110,23 @@ public class StorageSample {
       };
       DigestOutputStream md5DigestOutputStream = new DigestOutputStream(
           nullOutputStream, MessageDigest.getInstance("MD5"));
-      HashingOutputStream crc32cHashingOutputStream = new HashingOutputStream(Hashing.crc32c(), md5DigestOutputStream);
-      ObjectsDownloadExample.downloadToOutputStream(
-          storage, settings.getBucket(), settings.getPrefix() + "myobject", crc32cHashingOutputStream);
-      String calculatedMD5 = BaseEncoding.base64().encode(md5DigestOutputStream.getMessageDigest().digest());
-      System.out.println("md5Hash: " + calculatedMD5 + " " + (object.getMd5Hash().equals(calculatedMD5)
+      HashingOutputStream crc32cHashingOutputStream = new HashingOutputStream(Hashing.crc32c(),
+          md5DigestOutputStream);
+      ObjectsDownloadExample.downloadToOutputStream(storage, settings.getBucket(),
+          settings.getPrefix() + "myobject", crc32cHashingOutputStream);
+      String calculatedMD5 = BaseEncoding.base64().encode(
+          md5DigestOutputStream.getMessageDigest().digest());
+      System.out.println("md5Hash: " + calculatedMD5 + " "
+          + (object.getMd5Hash().equals(calculatedMD5)
           ? "(MATCHES)" : "(MISMATCHES; data altered in transit)"));
       int calculatedCrc32c = crc32cHashingOutputStream.hash().asInt();
-      String calculatedEncodedCrc32c = BaseEncoding.base64().encode(Ints.toByteArray(calculatedCrc32c));
-      // NOTE: Don't compare HashCode.asBytes() directly, as that encodes the crc32c in little-endien.
-      // You would have to reverseBytes first.
+      String calculatedEncodedCrc32c = BaseEncoding.base64().encode(
+          Ints.toByteArray(calculatedCrc32c));
+      // NOTE: Don't compare HashCode.asBytes() directly, as that encodes the crc32c in
+      // little-endien. One would have to reverse the bytes first.
       System.out.println("crc32c: " + calculatedEncodedCrc32c + ", decoded to "
-          + crc32cHashingOutputStream.hash().asInt() + " " + (object.getCrc32c().equals(calculatedEncodedCrc32c)
+          + crc32cHashingOutputStream.hash().asInt() + " "
+          + (object.getCrc32c().equals(calculatedEncodedCrc32c)
           ? "(MATCHES)" : "(MISMATCHES; data altered in transit)"));
       
       // success!

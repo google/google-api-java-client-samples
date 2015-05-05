@@ -17,6 +17,10 @@ package com.google.api.services.samples.storage.cmdline;
 import java.io.InputStream;
 import java.util.Random;
 
+
+/**
+ * Support classes for the command-line sample.
+ */
 public class Helpers {
 
   /**

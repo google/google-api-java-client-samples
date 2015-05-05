@@ -41,7 +41,8 @@ public class BucketsInsertExample {
     return createInProject(storage, bucket.getProjectNumber().toString(), bucket);
   }
   
-  public static Bucket createInProject(Storage storage, String project, Bucket bucket) throws IOException {
+  public static Bucket createInProject(Storage storage, String project, Bucket bucket)
+      throws IOException {
     try {
       Storage.Buckets.Insert insertBucket = storage.buckets().insert(project, bucket);
       return insertBucket.execute();
@@ -63,7 +64,8 @@ public class BucketsInsertExample {
     Credential credential = CredentialsProvider.authorize(httpTransport, jsonFactory);
     Storage storage = new Storage.Builder(httpTransport, jsonFactory, credential)
         .setApplicationName("Google-BucketsInsertExample/1.0").build();
-    createInProject(storage, PROJECT_NAME, new Bucket().setName(BUCKET_NAME).setLocation(BUCKET_LOCATION));
+    createInProject(storage, PROJECT_NAME, new Bucket().setName(BUCKET_NAME)
+        .setLocation(BUCKET_LOCATION));
   }
 
 }

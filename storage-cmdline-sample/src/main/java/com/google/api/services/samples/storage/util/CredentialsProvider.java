@@ -63,8 +63,8 @@ public class CredentialsProvider {
     if (clientSecrets.getDetails().getClientId().startsWith("Enter")
         || clientSecrets.getDetails().getClientSecret().startsWith("Enter ")) {
       System.out.println(
-          "Enter Client ID and Secret from https://console.developers.google.com/project/_/apiui/credential "
-          + "into storage-cmdline-sample/src/main/resources/client_secrets.json");
+          "Enter Client ID and Secret from https://console.developers.google.com/project/_/apiui/"
+          + "credential into storage-cmdline-sample/src/main/resources/client_secrets.json");
       System.exit(1);
     }
     // set up authorization code flow
