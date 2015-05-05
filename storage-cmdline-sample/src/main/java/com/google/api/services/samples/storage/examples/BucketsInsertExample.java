@@ -37,17 +37,17 @@ public class BucketsInsertExample {
   private static final String BUCKET_NAME = "*** bucket name ***";
   private static final String BUCKET_LOCATION = "*** bucket location ***";
 
-  public static Bucket insert(Storage storage, Bucket bucket) throws IOException {
-    return insertInNamedProject(storage, bucket.getProjectNumber().toString(), bucket);
+  public static Bucket create(Storage storage, Bucket bucket) throws IOException {
+    return createInProject(storage, bucket.getProjectNumber().toString(), bucket);
   }
   
-  public static Bucket insertInNamedProject(Storage storage, String project, Bucket bucket) throws IOException {
+  public static Bucket createInProject(Storage storage, String project, Bucket bucket) throws IOException {
     try {
       Storage.Buckets.Insert insertBucket = storage.buckets().insert(project, bucket);
       return insertBucket.execute();
     } catch (GoogleJsonResponseException e) {
       GoogleJsonError error = e.getDetails();
-      if (error.getCode() == HTTP_CONFLICT
+      if (error != null && error.getCode() == HTTP_CONFLICT
           && error.getMessage().contains("You already own this bucket.")) {
         System.out.println("already exists");
         return bucket;
@@ -63,7 +63,7 @@ public class BucketsInsertExample {
     Credential credential = CredentialsProvider.authorize(httpTransport, jsonFactory);
     Storage storage = new Storage.Builder(httpTransport, jsonFactory, credential)
         .setApplicationName("Google-BucketsInsertExample/1.0").build();
-    insertInNamedProject(storage, PROJECT_NAME, new Bucket().setName(BUCKET_NAME).setLocation(BUCKET_LOCATION));
+    createInProject(storage, PROJECT_NAME, new Bucket().setName(BUCKET_NAME).setLocation(BUCKET_LOCATION));
   }
 
 }

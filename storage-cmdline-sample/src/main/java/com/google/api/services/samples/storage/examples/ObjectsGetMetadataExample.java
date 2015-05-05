@@ -27,7 +27,7 @@ import java.io.IOException;
 
 
 /** Example of getting GCS object metadata. */
-public class ObjectsGetExample {
+public class ObjectsGetMetadataExample {
 
   private static final String BUCKET_NAME = "*** bucket name ***";
   private static final String OBJECT_NAME = "*** object name ***";

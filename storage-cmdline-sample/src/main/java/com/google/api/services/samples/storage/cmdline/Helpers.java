@@ -22,7 +22,7 @@ public class Helpers {
   /**
    * Generates a random data block and repeats it to provide the stream.
    *
-   *  Using a buffer instead of just filling from java.util.Random because the latter causes
+   * <p>Using a buffer instead of just filling from java.util.Random because the latter causes
    * noticeable lag in stream reading, which detracts from upload speed. This class takes all that
    * cost in the constructor.
    */

@@ -25,7 +25,7 @@ import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.samples.storage.examples.BucketsGetExample;
 import com.google.api.services.samples.storage.examples.BucketsInsertExample;
 import com.google.api.services.samples.storage.examples.ObjectsDownloadExample;
-import com.google.api.services.samples.storage.examples.ObjectsGetExample;
+import com.google.api.services.samples.storage.examples.ObjectsGetMetadataExample;
 import com.google.api.services.samples.storage.examples.ObjectsListExample;
 import com.google.api.services.samples.storage.examples.ObjectsUploadExample;
 import com.google.api.services.samples.storage.util.CredentialsProvider;
@@ -54,17 +54,17 @@ public class StorageSample {
     try {
       // initialize network, sample settings, credentials, and the storage client.
       HttpTransport httpTransport = GoogleNetHttpTransport.newTrustedTransport();
-      JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
-      SampleSettings settings = SampleSettings.load(JSON_FACTORY);
-      Credential credential = CredentialsProvider.authorize(httpTransport, JSON_FACTORY);
-      Storage storage = new Storage.Builder(httpTransport, JSON_FACTORY, credential)
+      JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
+      SampleSettings settings = SampleSettings.load(jsonFactory);
+      Credential credential = CredentialsProvider.authorize(httpTransport, jsonFactory);
+      Storage storage = new Storage.Builder(httpTransport, jsonFactory, credential)
           .setApplicationName(APPLICATION_NAME).build();
 
       //
       // run commands
       //
       View.header1("Trying to create a new bucket " + settings.getBucket());
-      BucketsInsertExample.insertInNamedProject(storage, settings.getProject(),
+      BucketsInsertExample.createInProject(storage, settings.getProject(),
           new Bucket().setName(settings.getBucket()).setLocation("US"));
 
       View.header1("Getting bucket " + settings.getBucket() + " metadata");
@@ -77,7 +77,7 @@ public class StorageSample {
       }
 
       View.header1("Getting object metadata from gs://pub/SomeOfTheTeam.jpg");
-      StorageObject object = ObjectsGetExample.get(storage, "pub", "SomeOfTheTeam.jpg");
+      StorageObject object = ObjectsGetMetadataExample.get(storage, "pub", "SomeOfTheTeam.jpg");
       View.show(object);
 
       View.header1("Uploading object.");

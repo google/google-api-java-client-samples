@@ -48,6 +48,11 @@ public class ObjectsDownloadExample {
     getObject.executeMediaAndDownloadTo(data); 
   }
   
+  /**
+   * This shows how to download a portion of an object. Especially useful for
+   * resuming after a download fails, but can also be used to download in
+   * parallel.
+   */
   public static void downloadRangeToOutputStream(Storage storage, String bucketName, String objectName,
       long firstBytePos, long lastBytePos, OutputStream data) throws IOException {
     Storage.Objects.Get getObject = storage.objects().get(bucketName, objectName);

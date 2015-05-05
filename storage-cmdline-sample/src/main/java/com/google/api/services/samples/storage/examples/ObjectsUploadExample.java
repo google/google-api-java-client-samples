@@ -53,6 +53,9 @@ public class ObjectsUploadExample {
                                            String contentType) throws IOException {
     InputStreamContent mediaContent = new InputStreamContent(contentType, data);
     Storage.Objects.Insert insertObject = storage.objects().insert(bucketName, null, mediaContent).setName(objectName);
+    // The media uploader gzips content by default, and alters the Content-Encoding accordingly.
+    // GCS dutifully stores content as-uploaded. This line disables the media uploader behavior,
+    // so the service stores exactly what is in the InputStream, without transformation.
     insertObject.getMediaHttpUploader().setDisableGZipContent(true);
     return insertObject.execute();
   }
