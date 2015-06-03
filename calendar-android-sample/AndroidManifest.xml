@@ -29,6 +29,11 @@
         </activity>
         <activity android:name=".AddOrEditCalendarActivity" >
         </activity>
+        <!-- The following is necessary if you're not using AndroidStudio.
+             See http://developer.android.com/google/play-services/setup.html -->
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
     </application>
 
 </manifest>

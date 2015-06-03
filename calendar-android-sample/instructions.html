@@ -15,9 +15,9 @@ This sample is for illustrative purposes. Please consider using the native
 
 <ul>
     <li><a
-            href="http://code.google.com/p/google-api-java-client/source/browse?repo=samples#hg/calendar-android-sample">Browse
+            href="https://github.com/google/google-api-java-client-samples/tree/master/calendar-android-sample">Browse
         Source</a>, or main file <a
-            href="http://code.google.com/p/google-api-java-client/source/browse/calendar-android-sample/src/main/java/com/google/api/services/samples/calendar/android/CalendarSampleActivity.java?repo=samples">CalendarSampleActivity.java</a>
+            href="https://github.com/google/google-api-java-client-samples/tree/master/calendar-android-sample/src/main/java/com/google/api/services/samples/calendar/android/CalendarSampleActivity.java">CalendarSampleActivity.java</a>
     </li>
 </ul>
 
@@ -25,9 +25,11 @@ This sample is for illustrative purposes. Please consider using the native
 
 <ul>
     <li>Install <a href="http://java.com">Java</a> (requires 6 or higher)</li>
-    <li>Install <a href="http://mercurial.selenic.com/">Mercurial</a> (requires 1.6 or higher).</li>
-    <li>Unzip <a href="http://services.gradle.org/distributions/gradle-1.6-bin.zip">Gradle
-        1.6</a></li>
+    <li>Install <a href="http://git-scm.com/downloads">Git</a> (suggested 1.7.10 or higher)
+        or <a href="http://github.com">GitHub</a> client (<a href="http://mac.github.com/">Mac</a>)
+        (<a href="http://windows.github.com/">Windows</a>)</li>
+    <li>Unzip <a href="http://services.gradle.org/distributions/gradle-2.2.1-bin.zip">Gradle
+        2.2.1</a></li>
     <li>Install either <a
             href="http://developer.android.com/sdk/installing/studio.html">Android
         Studio</a> (which bundles the Android SDK) or just <a
@@ -88,7 +90,7 @@ keytool -exportcert -alias androiddebugkey -keystore ~/.android/debug.keystore |
 
   <pre>
 cd <i>[someDirectory]</i>
-hg clone https://code.google.com/p/google-api-java-client.samples/ google-api-java-client-samples
+git clone https://github.com/google/google-api-java-client-samples.git
 cd google-api-java-client-samples/calendar-android-sample
   </pre>
 
@@ -101,8 +103,8 @@ cd google-api-java-client-samples/calendar-android-sample
             <li>Run this command in a terminal:
                 <pre>$ANDROID_HOME/tools/android sdk</pre>
             </li>
-            <li>Under "Tools", check on "Android SDK Build-tools" revision 18.0.1.</li>
-            <li>Under "Android 2.2 (API 8)", check on "SDK Platform" and "Google APIs".</li>
+            <li>Under "Tools", check on "Android SDK Build-tools" revision 22.0.1.</li>
+            <li>Under "Android 5.1.1 (API 22)", check on "SDK Platform" and "Google APIs".</li>
             <li>Under "Extras", check on "Android Support Repository", "Android Support Library",
                 and "Google Repository".
             </li>
@@ -126,11 +128,12 @@ cd google-api-java-client-samples/calendar-android-sample
                 </ul>
             </li>
             <li>Select "Use local gradle distribution" with "Gradle home" of
-                <code><i>[someDirectory]</i>/gradle-1.6</code> and click OK.
+                <code><i>[someDirectory]</i>/gradle-2.2.1</code> and click OK.
             </li>
         </ul>
     </li>
-    <li>Open AndroidManifest.xml and change the package to match the name you registered in the
+    <li>Open AndroidManifest.xml and change the package attribute of the manifest, initially
+        "com.google.api.services.samples.calendar.android", to match the name you registered in the
         Google Cloud Console, e.g. "org.example.calendar.janedoe20130911".
     </li>
     <li>Rename the Java package: right-click on src/main/java, click New, click Package, and then

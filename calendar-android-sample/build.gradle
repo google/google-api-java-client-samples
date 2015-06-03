@@ -9,16 +9,16 @@ dependencies {
     compile 'com.google.apis:google-api-services-calendar:v3-rev87-1.19.0' exclude module: 'httpclient'
     compile 'com.google.api-client:google-api-client-android:1.19.0' exclude module: 'httpclient'
     compile 'com.google.http-client:google-http-client-gson:1.19.0' exclude module: 'httpclient'
-    compile 'com.google.android.google-play-services:google-play-services:1'
+    compile 'com.google.android.gms:play-services-identity:7.3.0'
 }
 
 android {
-    compileSdkVersion 8
-    buildToolsVersion "18.0.1"
+    compileSdkVersion 22
+    buildToolsVersion "22.0.1"
 
     defaultConfig {
-        minSdkVersion 8
-        targetSdkVersion 8
+        minSdkVersion 11
+        targetSdkVersion 22
     }
 
     sourceSets {
@@ -30,7 +30,7 @@ android {
 
     buildTypes {
         release {
-            runProguard true
+            minifyEnabled true
             proguardFile 'proguard-google-api-client.txt'
             proguardFile getDefaultProguardFile('proguard-android.txt')
         }
