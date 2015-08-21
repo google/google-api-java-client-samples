@@ -42,7 +42,10 @@ public class ObjectsListExample {
     Objects objects;
     do {
       objects = listObjects.execute();
-      pagedList.add(objects.getItems());
+      List<StorageObject> items = objects.getItems();
+      if (items != null) {
+        pagedList.add(objects.getItems());
+      }
       listObjects.setPageToken(objects.getNextPageToken());
     } while (objects.getNextPageToken() != null);
     return Iterables.concat(pagedList);
