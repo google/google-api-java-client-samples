@@ -88,7 +88,7 @@ public class StorageSample {
       View.show(object);
 
       View.header1("Uploading object.");
-      final long objectSize = 100 * 1000 * 1000 /* 100 MB */;
+      final long objectSize = 100 * 1024 * 1024 /* 100 MB */;
       InputStream data = new Helpers.RandomDataBlockInputStream(objectSize, 1024);
       object = new StorageObject()
           .setBucket(settings.getBucket())
