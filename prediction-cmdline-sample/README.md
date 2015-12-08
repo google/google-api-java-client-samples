@@ -1,6 +1,6 @@
 # prediction-cmdline-sample
 
-## Instructions for the Prediction V1.5 Command-Line Sample
+## Instructions for the Prediction V1.6 Command-Line Sample
 
 ### Browse online
 
