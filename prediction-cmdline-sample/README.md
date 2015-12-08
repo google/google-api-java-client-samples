@@ -1,114 +1,40 @@
-<html>
-<title>prediction-cmdline-sample</title>
-<body>
-  <h2>Instructions for the Prediction V1.5 Command-Line Sample</h2>
+# prediction-cmdline-sample
 
-  <h3>Browse Online</h3>
+## Instructions for the Prediction V1.5 Command-Line Sample
 
-  <ul>
-    <li><a
-      href="http://code.google.com/p/google-api-java-client/source/browse?repo=samples#hg/prediction-cmdline-sample">Browse
-        Source</a>, or main file <a
-      href="http://code.google.com/p/google-api-java-client/source/browse/prediction-cmdline-sample/src/main/java/com/google/api/services/samples/prediction/cmdline/PredictionSample.java?repo=samples">PredictionSample.java</a></li>
-  </ul>
+### Browse online
 
-  <h3>Register Your Application</h3>
+- [Browse Source](https://github.com/google/google-api-java-client-samples/tree/master/prediction-cmdline-sample),
+  or [main file](https://github.com/google/google-api-java-client-samples/blob/master/prediction-cmdline-sample/src/main/java/com/google/api/services/samples/prediction/cmdline/PredictionSample.java).
 
-  <ul>
-    <li>Visit the <a href="https://cloud.google.com/console/start/api?id=prediction">Google Cloud
-        console</a>. 
-    </li>
-    <li>If necessary, sign in to your Google Account, select or create a project,
-        and agree to the terms of service.  Click Continue.</li>
-    <li>Select "Installed application" and choose type "Other" under the Installed Application type.</li>
-    <li>Within "OAuth 2.0 Client ID", click on "Download JSON". Later on, after you check
-        out the sample project, you will copy this downloaded file (e.g. 
-        <code>~/Downloads/client_secrets.json</code>) to
-        <a href="src/main/resources/client_secrets.json">src/main/resources/client_secrets.json</a>.
-        If you skip this step, when trying to run the sample you will get a <code>400
-        INVALID_CLIENT</code> error in the browser.
-    </li>
-  </ul>
+### Register your application
 
-  <p>
-    You will also need to <a
-      href='http://code.google.com/apis/storage/docs/signup.html#'>Activate
-      Google Storage</a>, upload the <a
-      href="http://code.google.com/apis/predict/docs/language_id.txt">training
-      data</a> required by the sample to Google Storage. And then edit
-    <code>OBJECT_PATH</code>
-    in
-    <code>PredictionSample.java</code>
-    to point to the training data. Otherwise, you will get a 400 error "Training
-    data file not found".
-  </p>
+- Enable the Prediction API in the [Google Developers Console](https://console.developers.google.com/projectselector/apis/api/prediction/overview).
+- Create a service account from the [Permissions](https://console.developers.google.com/permissions/serviceaccounts)
+  page. Download the service account's private key in P12 format. Later on,
+  after you check out the sample project, you will copy this downloaded file
+  (e.g. `MyProject-123456.p12`) to the `src/main/resources/` directory, and then
+  edit `PROJECT_ID`, `SERVICE_ACCT_EMAIL`, and `SERVICE_ACCT_KEYFILE` in
+  `PredictionSample.java`.
+- [Activate Google Storage](http://code.google.com/apis/storage/docs/signup.html),
+  upload the [training data](http://code.google.com/apis/predict/docs/language_id.txt)
+  required by the sample to Google Storage, and then edit `OBJECT_PATH` in
+  `PredictionSample.java` to point to the training data. Otherwise, you will get
+  a 400 error "Training data file not found".
 
-  <h3>Checkout Instructions</h3>
+### Check out and run the sample
 
-  <p>
-    <b>Prerequisites:</b> install <a href="http://java.com">Java 6</a>, <a
-      href="http://mercurial.selenic.com/">Mercurial</a>, and <a
-      href="http://maven.apache.org/download.html">Maven</a>. You may need to
-    set your
-    <code>JAVA_HOME</code>
-    .
-  </p>
+**Prerequisites:** install [Java](http://java.com), [Git](https://git-scm.com/),
+and [Maven](http://maven.apache.org/download.html). You might need to set your
+`JAVA_HOME`.
 
-  <pre>
-cd <i>[someDirectory]</i>
-hg clone https://code.google.com/p/google-api-java-client.samples/ google-api-java-client-samples
-cd google-api-java-client-samples/prediction-cmdline-sample
-cp ~/Downloads/client_secrets.json src/main/resources/client_secrets.json
-<i>[editor]</i> src/main/java/com/google/api/services/samples/prediction/cmdline/PredictionSample.java
-mvn compile
-mvn -q exec:java
-  </pre>
+    cd [someDirectory]
+    git clone https://github.com/google/google-api-java-client-samples.git
+    cd google-api-java-client-samples/prediction-cmdline-sample
+    cp ~/Downloads/MyProject-12345abcd.p12 src/main/resources/
+    [editor] src/main/java/com/google/api/services/samples/prediction/cmdline/PredictionSample.java
+    mvn compile
+    mvn -q exec:java
 
-  <p>To enable logging of HTTP requests and responses (highly recommended
-    when developing), please take a look at <a href="logging.properties">logging.properties</a>.</p>
-
-  <h3>Setup Project in Eclipse</h3>
-
-  <p>
-    <b>Prerequisites:</b> install <a href="http://www.eclipse.org/downloads/">Eclipse</a>,
-    the <a href="http://javaforge.com/project/HGE">Mercurial plugin</a>, and the
-    <a href="http://m2eclipse.sonatype.org/installing-m2eclipse.html">Maven
-      plugin</a>.
-  </p>
-
-  <ul>
-    <li>Setup Eclipse Preferences
-      <ul>
-        <li>Window &gt; Preferences... (or on Mac, Eclipse &gt;
-          Preferences...)</li>
-        <li>Select Maven
-          <ul>
-            <li>check on "Download Artifact Sources"</li>
-            <li>check on "Download Artifact JavaDoc"</li>
-          </ul>
-        </li>
-      </ul>
-    </li>
-    <li>Import <code>prediction-cmdline-sample</code> project
-      <ul>
-        <li>File &gt; Import...</li>
-        <li>Select "General &gt; Existing Project into Workspace" and click
-          "Next"</li>
-        <li>Click "Browse" next to "Select root directory", find <code>
-            <i>[someDirectory]</i>/google-api-java-client-samples/prediction-cmdline-sample
-          </code> and click "Next"
-        </li>
-        <li>Click "Finish"</li>
-      </ul>
-    </li>
-    <li>Run
-      <ul>
-        <li>Right-click on project prediction-cmdline-sample</li>
-        <li>Run As &gt; Java Application</li>
-        <li>If asked, type "PredictionSample" and click OK</li>
-      </ul>
-    </li>
-  </ul>
-
-</body>
-</html>
+To enable logging of HTTP requests and responses (highly recommended when
+developing), take a look at [`logging.properties`](logging.properties).
