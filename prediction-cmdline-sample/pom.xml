@@ -9,13 +9,13 @@
   <groupId>com.google.apis-samples</groupId>
   <artifactId>prediction-cmdline-sample</artifactId>
   <version>1.0.0</version>
-  <name>Example for the Google Prediction API v1.4 using JSON and OAuth 2.</name>
+  <name>Example for the Google Prediction API v1.6</name>
 
-  <url>http://code.google.com/p/google-api-java-client/</url>
+  <url>https://github.com/google/google-api-java-client</url>
 
   <issueManagement>
-    <system>code.google.com</system>
-    <url>http://code.google.com/p/google-api-java-client/issues/list</url>
+    <system>GitHub</system>
+    <url>https://github.com/google/google-api-java-client/issues</url>
   </issueManagement>
 
   <inceptionYear>2011</inceptionYear>
@@ -25,9 +25,9 @@
   </prerequisites>
 
   <scm>
-    <connection>scm:hg:https://samples.google-api-java-client.googlecode.com/hg/</connection>
-    <developerConnection>scm:hg:https://samples.google-api-java-client.googlecode.com/hg/</developerConnection>
-    <url>http://code.google.com/p/google-api-java-client/source/browse/?repo=samples</url>
+    <connection>scm:git:https://github.com/google/google-api-java-client-samples.git</connection>
+    <developerConnection>scm:git:https://github.com/google/google-api-java-client-samples.git</developerConnection>
+    <url>https://github.com/google/google-api-java-client-samples/tree/master/prediction-cmdline-sample</url>
   </scm>
 
   <developers>
@@ -114,7 +114,12 @@
     <dependency>
       <groupId>com.google.apis</groupId>
       <artifactId>google-api-services-prediction</artifactId>
-      <version>v1.5-rev55-1.19.0</version>
+      <version>v1.6-rev54-1.21.0</version>
+    </dependency>
+    <dependency>
+      <groupId>com.google.apis</groupId>
+      <artifactId>google-api-services-storage</artifactId>
+      <version>v1-rev54-1.21.0</version>
     </dependency>
     <dependency>
       <groupId>com.google.http-client</groupId>
@@ -128,8 +133,8 @@
     </dependency>
   </dependencies>
   <properties>
-    <project.http.version>1.19.0</project.http.version>
-    <project.oauth.version>1.19.0</project.oauth.version>
+    <project.http.version>1.21.0</project.http.version>
+    <project.oauth.version>1.21.0</project.oauth.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 </project>

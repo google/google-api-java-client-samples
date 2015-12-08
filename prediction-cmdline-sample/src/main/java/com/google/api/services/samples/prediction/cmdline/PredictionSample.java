@@ -14,28 +14,25 @@
 
 package com.google.api.services.samples.prediction.cmdline;
 
-import com.google.api.client.auth.oauth2.Credential;
-import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
-import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
-import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
-import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
+import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpResponseException;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
-import com.google.api.client.util.store.DataStoreFactory;
-import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.prediction.Prediction;
 import com.google.api.services.prediction.PredictionScopes;
 import com.google.api.services.prediction.model.Input;
 import com.google.api.services.prediction.model.Input.InputInput;
+import com.google.api.services.prediction.model.Insert;
+import com.google.api.services.prediction.model.Insert2;
 import com.google.api.services.prediction.model.Output;
-import com.google.api.services.prediction.model.Training;
+import com.google.api.services.storage.StorageScopes;
 
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.File;
+import java.util.Arrays;
 import java.util.Collections;
 
 /**
@@ -47,20 +44,19 @@ public class PredictionSample {
    * Be sure to specify the name of your application. If the application name is {@code null} or
    * blank, the application will log a warning. Suggested format is "MyCompany-ProductName/1.0".
    */
-  private static final String APPLICATION_NAME = "";
+  private static final String APPLICATION_NAME = "HelloPrediction";
 
-  static final String MODEL_ID = "mymodel";
-  static final String STORAGE_DATA_LOCATION = "enter_bucket/language_id.txt";
-
-  /** Directory to store user credentials. */
-  private static final java.io.File DATA_STORE_DIR =
-      new java.io.File(System.getProperty("user.home"), ".store/prediction_sample");
+  /** Specify the Cloud Storage location of the training data. */
+  static final String STORAGE_DATA_LOCATION = "your_bucket/language_id.txt";
+  static final String MODEL_ID = "languageidentifier";
 
   /**
-   * Global instance of the {@link DataStoreFactory}. The best practice is to make it a single
-   * globally shared instance across your application.
+   * Specify your Google Developers Console project ID, your service account's email address, and
+   * the name of the P12 file you copied to src/main/resources/.
    */
-  private static FileDataStoreFactory dataStoreFactory;
+  static final String PROJECT_ID = "your-project-1234";
+  static final String SERVICE_ACCT_EMAIL = "account123@your-project-1234.iam.gserviceaccount.com";
+  static final String SERVICE_ACCT_KEYFILE = "YourProject-123456789abc.p12";
 
   /** Global instance of the HTTP transport. */
   private static HttpTransport httpTransport;
@@ -69,31 +65,22 @@ public class PredictionSample {
   private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
 
   /** Authorizes the installed application to access user's protected data. */
-  private static Credential authorize() throws Exception {
-    // load client secrets
-    GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY,
-        new InputStreamReader(PredictionSample.class.getResourceAsStream("/client_secrets.json")));
-    if (clientSecrets.getDetails().getClientId().startsWith("Enter")
-        || clientSecrets.getDetails().getClientSecret().startsWith("Enter ")) {
-      System.out.println(
-          "Enter Client ID and Secret from https://code.google.com/apis/console/?api=prediction "
-          + "into prediction-cmdline-sample/src/main/resources/client_secrets.json");
-      System.exit(1);
-    }
-    // set up authorization code flow
-    GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
-        httpTransport, JSON_FACTORY, clientSecrets,
-        Collections.singleton(PredictionScopes.PREDICTION)).setDataStoreFactory(
-        dataStoreFactory).build();
-    // authorize
-    return new AuthorizationCodeInstalledApp(flow, new LocalServerReceiver()).authorize("user");
+  private static GoogleCredential authorize() throws Exception {
+    return new GoogleCredential.Builder()
+        .setTransport(httpTransport)
+        .setJsonFactory(JSON_FACTORY)
+        .setServiceAccountId(SERVICE_ACCT_EMAIL)
+        .setServiceAccountPrivateKeyFromP12File(new File(
+            PredictionSample.class.getResource("/"+SERVICE_ACCT_KEYFILE).getFile()))
+        .setServiceAccountScopes(Arrays.asList(PredictionScopes.PREDICTION,
+                                               StorageScopes.DEVSTORAGE_READ_ONLY))
+        .build();
   }
 
   private static void run() throws Exception {
     httpTransport = GoogleNetHttpTransport.newTrustedTransport();
-    dataStoreFactory = new FileDataStoreFactory(DATA_STORE_DIR);
     // authorization
-    Credential credential = authorize();
+    GoogleCredential credential = authorize();
     Prediction prediction = new Prediction.Builder(
         httpTransport, JSON_FACTORY, credential).setApplicationName(APPLICATION_NAME).build();
     train(prediction);
@@ -103,26 +90,27 @@ public class PredictionSample {
   }
 
   private static void train(Prediction prediction) throws IOException {
-    Training training = new Training();
-    training.setId(MODEL_ID);
-    training.setStorageDataLocation(STORAGE_DATA_LOCATION);
-    prediction.trainedmodels().insert(training).execute();
+    Insert trainingData = new Insert();
+    trainingData.setId(MODEL_ID);
+    trainingData.setStorageDataLocation(STORAGE_DATA_LOCATION);
+    prediction.trainedmodels().insert(PROJECT_ID, trainingData).execute();
     System.out.println("Training started.");
     System.out.print("Waiting for training to complete");
     System.out.flush();
 
     int triesCounter = 0;
+    Insert2 trainingModel;
     while (triesCounter < 100) {
       // NOTE: if model not found, it will throw an HttpResponseException with a 404 error
       try {
-        HttpResponse response = prediction.trainedmodels().get(MODEL_ID).executeUnparsed();
+        HttpResponse response = prediction.trainedmodels().get(PROJECT_ID, MODEL_ID).executeUnparsed();
         if (response.getStatusCode() == 200) {
-          training = response.parseAs(Training.class);
-          String trainingStatus = training.getTrainingStatus();
+          trainingModel = response.parseAs(Insert2.class);
+          String trainingStatus = trainingModel.getTrainingStatus();
           if (trainingStatus.equals("DONE")) {
             System.out.println();
             System.out.println("Training completed.");
-            System.out.println(training.getModelInfo());
+            System.out.println(trainingModel.getModelInfo());
             return;
           }
         }
@@ -154,7 +142,7 @@ public class PredictionSample {
     InputInput inputInput = new InputInput();
     inputInput.setCsvInstance(Collections.<Object>singletonList(text));
     input.setInput(inputInput);
-    Output output = prediction.trainedmodels().predict(MODEL_ID, input).execute();
+    Output output = prediction.trainedmodels().predict(PROJECT_ID, MODEL_ID, input).execute();
     System.out.println("Text: " + text);
     System.out.println("Predicted language: " + output.getOutputLabel());
   }
