@@ -4,23 +4,29 @@
 
 ### Browse online
 
-- [Browse Source](https://github.com/google/google-api-java-client-samples/tree/master/prediction-cmdline-sample),
-  or [main file](https://github.com/google/google-api-java-client-samples/blob/master/prediction-cmdline-sample/src/main/java/com/google/api/services/samples/prediction/cmdline/PredictionSample.java).
+-   [Browse Source]
+    (https://github.com/google/google-api-java-client-samples/tree/master/prediction-cmdline-sample),
+    or [main file]
+    (https://github.com/google/google-api-java-client-samples/blob/master/prediction-cmdline-sample/src/main/java/com/google/api/services/samples/prediction/cmdline/PredictionSample.java).
 
 ### Register your application
 
-- Enable the Prediction API in the [Google Developers Console](https://console.developers.google.com/projectselector/apis/api/prediction/overview).
-- Create a service account from the [Permissions](https://console.developers.google.com/permissions/serviceaccounts)
-  page. Download the service account's private key in P12 format. Later on,
-  after you check out the sample project, you will copy this downloaded file
-  (e.g. `MyProject-123456.p12`) to the `src/main/resources/` directory, and then
-  edit `PROJECT_ID`, `SERVICE_ACCT_EMAIL`, and `SERVICE_ACCT_KEYFILE` in
-  `PredictionSample.java`.
-- [Activate Google Storage](http://code.google.com/apis/storage/docs/signup.html),
-  upload the [training data](http://code.google.com/apis/predict/docs/language_id.txt)
-  required by the sample to Google Storage, and then edit `OBJECT_PATH` in
-  `PredictionSample.java` to point to the training data. Otherwise, you will get
-  a 400 error "Training data file not found".
+-   Enable the Prediction API in the [Google Developers Console]
+    (https://console.developers.google.com/projectselector/apis/api/prediction/overview).
+-   Create a service account from the [Permissions]
+    (https://console.developers.google.com/permissions/serviceaccounts) page.
+    When you create the service account, select **Furnish a new private key**
+    and download the service account's private key in P12 format. Later on, after
+    you check out the sample project, you will copy this downloaded file (e.g.
+    `MyProject-123456.p12`) to the `src/main/resources/` directory, and then
+    edit `PROJECT_ID`, `SERVICE_ACCT_EMAIL`, and `SERVICE_ACCT_KEYFILE` in
+    `PredictionSample.java`.
+-   [Activate Google Storage]
+    (http://code.google.com/apis/storage/docs/signup.html), upload the [training
+    data](http://code.google.com/apis/predict/docs/language_id.txt) required by
+    the sample to Google Storage, and then edit `OBJECT_PATH` in
+    `PredictionSample.java` to point to the training data. Otherwise, you will
+    get a 400 error "Training data file not found".
 
 ### Check out and run the sample
 
