@@ -34,7 +34,7 @@ public class OAuth2Callback extends AbstractAppEngineAuthorizationCodeCallbackSe
       HttpServletRequest req, HttpServletResponse resp, AuthorizationCodeResponseUrl errorResponse)
       throws IOException {
     String nickname = UserServiceFactory.getUserService().getCurrentUser().getNickname();
-    resp.getWriter().print("<h3>" + nickname + ", why don't you want to play with me?</h1>");
+    resp.getWriter().print("<h3>" + nickname + ", why don't you want to play with me?</h3>");
     resp.setStatus(200);
     resp.addHeader("Content-Type", "text/html");
   }
