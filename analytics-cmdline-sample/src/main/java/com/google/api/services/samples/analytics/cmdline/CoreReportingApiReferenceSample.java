@@ -27,6 +27,8 @@ import com.google.api.client.util.store.DataStoreFactory;
 import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.analytics.v4.Analytics;
 import com.google.api.services.analytics.v4.AnalyticsScopes;
+import com.google.api.services.analytics.v4.model.Cohort;
+import com.google.api.services.analytics.v4.model.CohortGroup;
 import com.google.api.services.analytics.v4.model.ColumnHeader;
 import com.google.api.services.analytics.v4.model.DateRange;
 import com.google.api.services.analytics.v4.model.DateRangeValues;
@@ -81,19 +83,17 @@ public class CoreReportingApiReferenceSample {
    * Be sure to specify the name of your application. If the application name is {@code null} or
    * blank, the application will log a warning. Suggested format is "MyCompany-ProductName/1.0".
    */
-  private static final String APPLICATION_NAME = "";
+  private static final String APPLICATION_NAME = "Core Reporting API V4 Demo (Java)";
 
   /**
    * Replace this constant with your account user id
    */
-  private static final String USER_ID =
-      "<INSERT YOUR USER ID>";
+  private static final String USER_ID = "<INSERT YOUR USER ID>";
 
   /**
    * Used to identify from which reporting profile to retrieve data. Format is ga:xxx where xxx is
    * your profile ID.
    */
-  //  private static final String TABLE_ID = "INSERT_YOUR_TABLE_ID";
   private static final String TABLE_ID = "<INSERT YOUR TABLE ID>";
 
   /**
@@ -118,7 +118,30 @@ public class CoreReportingApiReferenceSample {
   private static final JsonFactory JSON_FACTORY = new JacksonFactory();
 
   /**
-   * Main demo. This first initializes an Analytics service object.
+   * The global dimension definitions below will be used to construct queries to the Reporting API
+   */
+  private static final Dimension SOURCE_DIMENSION = new Dimension().setName("ga:source");
+  private static final Dimension KEYWORD_DIMENSION = new Dimension().setName("ga:keyword");
+
+  /**
+   * This dimension definition groups the values of ga:sessionCount into four distinct
+   * buckets: <10, [10-100), [100, 200), >= 200 sec
+   */
+  private static final Dimension BUCKETED_SESSION_COUNT_DIMENSION =
+      new Dimension()
+          .setName("ga:sessionCount")
+          .setHistogramBuckets(Arrays.asList(10L, 100L, 200L));
+
+  /**
+   * ga:segment is a special dimension that holds the information about the row's segment.
+   * Should only be present for queries using segments.
+   * */
+  private static final Dimension SEGMENT_DIMENSION = new Dimension().setName("ga:segment");
+
+  /**
+   * Main demo. Returns the top 25 organic
+   * search keywords and traffic sources by visits. The Core Reporting
+   * API is used to retrieve this data.
    *
    * @param args command line args.
    */
@@ -128,23 +151,64 @@ public class CoreReportingApiReferenceSample {
       DATA_STORE_FACTORY = new FileDataStoreFactory(DATA_STORE_DIR);
       Analytics analytics = initializeAnalytics();
 
-      // Build and execute the query
-      GetReportsResponse response = executeDataQuery(analytics, TABLE_ID);
+      // Build and execute the queries
 
-      // Process the response. Since there can be multiple reports corresponding to each portion of
-      // the batched query, we are processing all reports from a response object.
-      for (Report report : response.getReports()) {
-        printReportInfo(report);
-        printColumnHeaders(report);
-        printTotalsForAllResults(report);
-        printRows(report);
-      }
+      System.out.println("Executing a simple request using a single date range:");
+      runDemo(analytics, buildSimpleRequest(TABLE_ID));
+
+      System.out.println("Executing a request using metrics/dimension filters:");
+      runDemo(analytics, buildRequestWithFilters(TABLE_ID));
+
+      System.out.println("Executing a request using both original and comparison date ranges:");
+      runDemo(analytics, buildRequestWithComparisonDateRange(TABLE_ID));
+
+      System.out.println("Executing a request using pivots feature:");
+      runDemo(analytics, buildRequestWithPivots(TABLE_ID));
+
+      System.out.println("Executing a request using segments feature:");
+      runDemo(analytics, buildRequestWithSegments(TABLE_ID));
+
+      System.out.println("Executing a request using cohorts feature:");
+      runDemo(analytics, buildRequestWithCohorts(TABLE_ID));
+      
     } catch (GoogleJsonResponseException e) {
       System.err.println("There was a service error: " + e.getDetails().getCode() + " : "
           + e.getDetails().getMessage());
     } catch (Throwable t) {
       t.printStackTrace();
     }
+  }
+
+  /**
+   * @param analytics
+   * @param request
+   * @throws IOException
+   */
+  private static void runDemo(Analytics analytics, ReportRequest request) throws IOException {
+    GetReportsResponse response = executeDataQuery(analytics, request);
+    printResponse(response);
+  }
+
+  /**
+   * Process the response and output to the console.
+   *
+   * @param response
+   */
+  private static void printResponse(GetReportsResponse response) {
+    System.out.println("*** RESPONSE ***");
+    System.out.println("Query cost = " + response.getQueryCost());
+
+    // Since there can be multiple reports corresponding to each portion of
+    // the batched query, we are processing all reports from a response object.
+    for (Report report : response.getReports()) {
+      printReportInfo(report);
+      printColumnHeaders(report);
+      printTotalsForAllResults(report);
+      printRows(report);
+    }
+
+    System.out.println("*** END OF RESPONSE ***");
+    System.out.println();
   }
 
   /** Authorizes the installed application to access user's protected data. */
@@ -161,6 +225,7 @@ public class CoreReportingApiReferenceSample {
           + "into analytics-cmdline-sample/src/main/resources/client_secrets.json");
       System.exit(1);
     }
+
     // set up authorization code flow
     GoogleAuthorizationCodeFlow flow =
         new GoogleAuthorizationCodeFlow
@@ -168,6 +233,7 @@ public class CoreReportingApiReferenceSample {
                 Collections.singleton(AnalyticsScopes.ANALYTICS_READONLY))
             .setDataStoreFactory(DATA_STORE_FACTORY)
             .build();
+
     // authorize
     return new AuthorizationCodeInstalledApp(
                flow, new LocalServerReceiver.Builder().setPort(REDIRECT_HTTP_PORT).build())
@@ -191,35 +257,115 @@ public class CoreReportingApiReferenceSample {
         .build();
   }
 
-  /**
-   * Returns the top 25 organic search keywords and traffic sources by visits. The Core Reporting
-   * API is used to retrieve this data.
-   *
-   * @param analytics the Analytics service object used to access the API.
-   * @param viewId the table ID from which to retrieve data.
-   * @return the response from the API.
-   * @throws IOException if an API error occurred.
-   */
-  private static GetReportsResponse executeDataQuery(Analytics analytics, String viewId)
-      throws IOException {
-    ReportRequest request =
-        new ReportRequest()
-            // The table ID of the profile you wish to access.
-            .setViewId(viewId)
-            // Optional limit on the maximum page size.
-            .setPageSize(25)
-            // Optional indication of the desired sampling level
-            .setSamplingLevel("LARGE");
+  private static ReportRequest buildReportRequest(String viewId) {
+    return new ReportRequest()
+        // The table ID of the profile you wish to access.
+        .setViewId(viewId)
+        // Optional limit on the maximum page size.
+        .setPageSize(25)
+        // Optional indication of the desired sampling level
+        .setSamplingLevel("LARGE");
+  }
+
+  private static ReportRequest buildSimpleRequest(String viewId) {
+    ReportRequest request = buildReportRequest(viewId);
 
     applyOrderBy(request);
-    applyDateRanges(request);
-    applyDimensionFilter(request);
-    applyMetricFilter(request);
-    applySegments(request);
-    applyPivots(request);
+    applySingleDateRange(request);
     applyMetrics(request);
     applyDimensions(request);
 
+    return request;
+  }
+
+  private static ReportRequest buildRequestWithFilters(String viewId) {
+    ReportRequest request = buildReportRequest(viewId);
+
+    applyOrderBy(request);
+    applyMetrics(request);
+    applyDimensions(request);
+
+    applySingleDateRange(request);
+    applyDimensionFilter(request);
+    applyMetricFilter(request);
+
+    return request;
+  }
+
+  private static ReportRequest buildRequestWithComparisonDateRange(String viewId) {
+    ReportRequest request = buildReportRequest(viewId);
+
+    applyOrderBy(request);
+    applyMetrics(request);
+    applyDimensions(request);
+
+    applyTwoDateRanges(request);
+
+    return request;
+  }
+
+  private static ReportRequest buildRequestWithSegments(String viewId) {
+    ReportRequest request = buildReportRequest(viewId);
+
+    applyOrderBy(request);
+    applySingleDateRange(request);
+    applyMetrics(request);
+    applyDimensionsWithSegment(request);
+
+    applySegments(request);
+
+    return request;
+  }
+
+  private static ReportRequest buildRequestWithPivots(String viewId) {
+    ReportRequest request = buildReportRequest(viewId);
+
+    applyOrderBy(request);
+    applySingleDateRange(request);
+    applyMetrics(request);
+    applyDimensions(request);
+
+    applyPivots(request);
+
+    return request;
+  }
+
+  private static ReportRequest buildRequestWithCohorts(String viewId) {
+    ReportRequest request = buildReportRequest(viewId);
+
+    request.setDimensions(Arrays.asList(
+        new Dimension().setName("ga:cohort"), new Dimension().setName("ga:cohortNthWeek")));
+    request.setMetrics(Arrays.asList(
+        new Metric().setExpression("ga:cohortTotalUsersWithLifetimeCriteria"),
+        new Metric().setExpression("ga:cohortRevenuePerUser")));
+
+    Cohort cohort1 =
+        new Cohort()
+            .setName("cohort_1")
+            .setType("FIRST_VISIT_DATE")
+            .setDateRange(new DateRange().setStartDate("2015-08-01").setEndDate("2015-09-01"));
+    Cohort cohort2 =
+        new Cohort()
+            .setName("cohort21")
+            .setType("FIRST_VISIT_DATE")
+            .setDateRange(new DateRange().setStartDate("2015-07-01").setEndDate("2015-08-01"));
+    CohortGroup cohortGroup = new CohortGroup();
+    cohortGroup.setCohorts(Arrays.asList(cohort1, cohort2));
+    cohortGroup.setLifetimeValue(true);
+    request.setCohortGroup(cohortGroup);
+    return request;
+  }
+
+  /**
+   *
+   *
+   * @param analytics the Analytics service object used to access the API.
+   * @param request Report request object that describes the query to Google Analytics Reporting API
+   * @return the response from the API.
+   * @throws IOException if an API error occurred.
+   */
+  private static GetReportsResponse executeDataQuery(Analytics analytics, ReportRequest request)
+      throws IOException {
     // Building the batch report request
     GetReportsRequest batchRequest =
         new GetReportsRequest().setReportRequests(Arrays.asList(request));
@@ -228,21 +374,14 @@ public class CoreReportingApiReferenceSample {
     return analytics.reports().batchGet(batchRequest).execute();
   }
 
+
   /**
    * @param request
    */
   private static void applyDimensions(ReportRequest request) {
     // Dimensions definition
     List<Dimension> dimensions =
-        Arrays.asList(new Dimension().setName("ga:source"), new Dimension().setName("ga:keyword"),
-            // This dimension definition groups the values of ga:sessionCount into four distinct
-            // buckets: <10, [10-100), [100, 200), >= 200 sec
-            new Dimension()
-                .setName("ga:sessionCount")
-                .setHistogramBuckets(Arrays.asList(10L, 100L, 200L)),
-            // ga:segment is a special dimension that holds the information about the row's segment.
-            // Remove it if you are not using segments in the query.
-            new Dimension().setName("ga:segment"));
+        Arrays.asList(SOURCE_DIMENSION, KEYWORD_DIMENSION, BUCKETED_SESSION_COUNT_DIMENSION);
 
     request.setDimensions(dimensions);
   }
@@ -250,13 +389,25 @@ public class CoreReportingApiReferenceSample {
   /**
    * @param request
    */
+  private static void applyDimensionsWithSegment(ReportRequest request) {
+    // Dimensions definition including Segment dimension
+    List<Dimension> dimensions = Arrays.asList(
+        SOURCE_DIMENSION, KEYWORD_DIMENSION, BUCKETED_SESSION_COUNT_DIMENSION, SEGMENT_DIMENSION);
+
+    request.setDimensions(dimensions);
+  }
+
+  /**
+   *  Metrics definition
+   *
+   * @param request
+   */
   private static void applyMetrics(ReportRequest request) {
-    // Metrics definition
     List<Metric> metrics = Arrays.asList(
         new Metric().setExpression("ga:sessions"),
         new Metric().setExpression("ga:sessionDuration"),
 
-        // Add a calculated metric
+        // Here we are using a calculated metric that is using a custom expression
         new Metric()
             .setExpression("ga:goal1Completions/ga:goal1Starts")
             .setFormattingType("FLOAT")
@@ -266,13 +417,13 @@ public class CoreReportingApiReferenceSample {
   }
 
   /**
+   * Creating a segment for users who are NOT from New York by applying a dimension
+   * filter on ga:city and inverting the match using 'matchComplement'
+   * property.
+   *
    * @param request
    */
   private static void applySegments(ReportRequest request) {
-    // Creating a segment for users who are NOT from New York by applying a dimension
-    // filter on ga:city and inverting the match using 'matchComplement'
-    // property.
-
     SegmentDimensionFilter segmentDimensionFilter =
         new SegmentDimensionFilter().setDimensionName("ga:city").setExpressions(
             Arrays.asList("New York"));
@@ -303,11 +454,11 @@ public class CoreReportingApiReferenceSample {
   }
 
   /**
+   * Pivot definition.
+   *
    * @param request
    */
   private static void applyPivots(ReportRequest request) {
-    // Pivot definition.
-
     Metric sessionsMetric = new Metric().setExpression("ga:sessions");
     Dimension browserDimension = new Dimension().setName("ga:browser");
 
@@ -330,11 +481,25 @@ public class CoreReportingApiReferenceSample {
   }
 
   /**
+   * Date range definition for a simple request.
+   *
    * @param request
    */
-  private static void applyDateRanges(ReportRequest request) {
-    // Date ranges definition. If two date ranges are specified, the second range will be used to
-    // compare data against the first range.
+  private static void applySingleDateRange(ReportRequest request) {
+    DateRange originalDateRange = new DateRange();
+    originalDateRange.setStartDate("2015-01-01");
+    originalDateRange.setEndDate("2015-12-31");
+
+    request.setDateRanges(Arrays.asList(originalDateRange));
+  }
+
+  /**
+   * Date ranges definition. When two date ranges are specified, the second range will be used to
+   * compare data against the first range.
+   *
+   * @param request
+   */
+  private static void applyTwoDateRanges(ReportRequest request) {
     DateRange originalDateRange = new DateRange();
     originalDateRange.setStartDate("2015-01-01");
     originalDateRange.setEndDate("2015-12-31");
@@ -347,10 +512,11 @@ public class CoreReportingApiReferenceSample {
   }
 
   /**
+   * Dimension filters definition. Include only data from organic search results.
+   *
    * @param request
    */
   private static void applyDimensionFilter(ReportRequest request) {
-    // Dimension filters definition. Include only data from organic search results.
     DimensionFilter dimensionFilter =
         new DimensionFilter()
             .setDimensionName("ga:medium")
@@ -364,11 +530,11 @@ public class CoreReportingApiReferenceSample {
   }
 
   /**
+   * Metric filters definition.
+   *
    * @param request
    */
   private static void applyMetricFilter(ReportRequest request) {
-    // Metric filters definition.
-
     MetricFilter sessionsMetricFilter =
         new MetricFilter()
             .setMetricName("ga:sessions")
@@ -390,17 +556,19 @@ public class CoreReportingApiReferenceSample {
   }
 
   /**
+   * Order report by sessions count, descending.
+   *
    * @param request
    */
   private static void applyOrderBy(ReportRequest request) {
-    // Order report by sessions count, descending.
     OrderBy orderBy = new OrderBy().setFieldName("ga:sessions desc").setOrderType("VALUE");
     request.setOrderBys(Arrays.asList(orderBy));
   }
 
 
+
   /**
-   * Prints the information for each column. The reporting data from the API is returned as rows of
+   * Print the information for each column. The reporting data from the API is returned as rows of
    * data. The column headers describe the names and types of each column in rows.
    *
    * @param report the data returned from the API.
@@ -421,11 +589,12 @@ public class CoreReportingApiReferenceSample {
   }
 
   /**
+   * Print metric name.
+   *
    * @param metricHeader
    */
   private static void printMetricHeader(MetricHeader metricHeader) {
     for (MetricHeaderEntry metricHeaderEntry : metricHeader.getMetricHeaderEntries()) {
-      // Print metric name.
       System.out.println("\tMetric name = " + metricHeaderEntry.getName());
       System.out.println("\tMetric type = " + metricHeaderEntry.getType());
       System.out.println();
@@ -506,8 +675,8 @@ public class CoreReportingApiReferenceSample {
 
       DateRangeValues dateRangeValues = dateRanges.get(i);
 
-      printMetrics(columnHeader, dateRangeValues);
-      printPivotValues(columnHeader, dateRangeValues);
+      printMetrics(dateRangeValues, columnHeader);
+      printPivotValues(dateRangeValues, columnHeader);
     }
   }
 
@@ -515,7 +684,7 @@ public class CoreReportingApiReferenceSample {
    * @param columnHeader
    * @param dateRangeValues
    */
-  private static void printMetrics(ColumnHeader columnHeader, DateRangeValues dateRangeValues) {
+  private static void printMetrics(DateRangeValues dateRangeValues, ColumnHeader columnHeader) {
     List<String> values = dateRangeValues.getValues();
 
     for (int metricIndex = 0; metricIndex < values.size(); metricIndex++) {
@@ -531,10 +700,12 @@ public class CoreReportingApiReferenceSample {
   }
 
   /**
+   * Print pivot values, along with the corresponding metric name
+   *
    * @param columnHeader
    * @param dateRangeValues
    */
-  private static void printPivotValues(ColumnHeader columnHeader, DateRangeValues dateRangeValues) {
+  private static void printPivotValues(DateRangeValues dateRangeValues, ColumnHeader columnHeader) {
     List<PivotValue> pivotValues = dateRangeValues.getPivotValues();
     if (pivotValues != null) {
       // Iterate through every pivot region
@@ -576,7 +747,6 @@ public class CoreReportingApiReferenceSample {
 
   private static void printReportInfo(Report report) {
     System.out.println("Report Infos:");
-    //    System.out.format("Query cost = %d\n", report.getQueryCost());
     System.out.println("Next page token = " + report.getNextPageToken());
     System.out.println();
   }
@@ -595,7 +765,7 @@ public class CoreReportingApiReferenceSample {
   }
 
   /**
-   * Prints all the rows of data returned by the API.
+   * Print all the rows of data returned by the API.
    *
    * @param report the data returned from the API.
    */
