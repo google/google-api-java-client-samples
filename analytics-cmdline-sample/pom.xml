@@ -32,9 +32,9 @@
 
   <developers>
     <developer>
-      <id>api.nickm</id>
-      <name>Nick Mihailovski</name>
-      <email>api.nickm@gmail.com</email>
+      <id>ikuleshov</id>
+      <name>Ilya Kuleshov</name>
+      <email>ikuleshov@google.com</email>
       <organization>Google</organization>
       <organizationUrl>http://www.google.com</organizationUrl>
       <roles>
@@ -111,6 +111,11 @@
     <finalName>${project.artifactId}-${project.version}</finalName>
   </build>
   <dependencies>
+    <dependency>
+      <groupId>com.google.apis</groupId>
+      <artifactId>google-api-services-analytics-reporting</artifactId>
+      <version>v4</version>
+    </dependency>
     <dependency>
       <groupId>com.google.apis</groupId>
       <artifactId>google-api-services-analytics</artifactId>
