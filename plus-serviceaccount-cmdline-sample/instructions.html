@@ -1,0 +1,103 @@
+<html>
+<title>plus-serviceaccount-cmdline-sample</title>
+<body>
+  <h2>Instructions for the Google+ V1 Service Accounts Command-Line Sample</h2>
+
+  <h3>Browse Online</h3>
+
+  <ul>
+    <li><a
+      href="http://code.google.com/p/google-api-java-client/source/browse?repo=samples#hg/plus-serviceaccount-cmdline-sample">Browse
+        Source</a>, or main file <a
+      href="http://code.google.com/p/google-api-java-client/source/browse/plus-serviceaccount-cmdline-sample/src/main/java/com/google/api/services/samples/plus/serviceaccount/cmdline/PlusServiceAccountSample.java?repo=samples">PlusServiceAccountSample.java</a>
+    </li>
+  </ul>
+
+  <h3>Register Your Application</h3>
+
+  <ul>
+    <li>Visit the <a href="https://code.google.com/apis/console/?api=plus">Google
+        apis console</a>
+    </li>
+    <li>If this is your first time, click "Create project..."</li>
+    <li>Otherwise, click on the drop down under the "Google apis" logo at
+      the top left, and click "Create..." under "Other projects"</li>
+    <li>Click on "API Access", and then on "Create an OAuth 2.0 Client
+      ID...".</li>
+    <li>Enter a product name and click "Next".</li>
+    <li>Select "Service Account" and click "Create client ID".</li>
+    <li>Click "Download private key" and close the window.</li>
+    <li>Entry the "Email address" shown under "Service account" into <a
+      href="src/main/java/com/google/api/services/samples/plus/serviceaccount/cmdline/PlusServiceAccountSample.java">src/main/java/com/google/api/services/samples/plus/serviceaccount/cmdline/PlusServiceAccountSample.java</a>.
+    </li>
+  </ul>
+
+  <h3>Checkout Instructions</h3>
+
+  <p>
+    <b>Prerequisites:</b> install <a href="http://java.com">Java 6</a>, <a
+      href="http://mercurial.selenic.com/">Mercurial</a>, and <a
+      href="http://maven.apache.org/download.html">Maven</a>. You may need to
+    set your
+    <code>JAVA_HOME</code>
+    .
+  </p>
+
+  <pre>
+cd <i>[someDirectory]</i>
+hg clone https://code.google.com/p/google-api-java-client.samples/ google-api-java-client-samples
+cd google-api-java-client-samples/plus-serviceaccount-cmdline-sample
+<i>update key.p12 file</i>
+<i>[editor]</i> src/main/java/com/google/api/services/samples/plus/serviceaccount/cmdline/PlusServiceAccountSample.java
+mvn compile
+mvn -q exec:java
+  </pre>
+
+  <p>To enable logging of HTTP requests and responses (highly recommended
+    when developing), please take a look at <a href="logging.properties">logging.properties</a>.</p>
+
+  <h3>Setup Project in Eclipse</h3>
+
+  <p>
+    <b>Prerequisites:</b> install <a href="http://www.eclipse.org/downloads/">Eclipse</a>,
+    the <a href="http://javaforge.com/project/HGE">Mercurial plugin</a>, and the
+    <a href="http://m2eclipse.sonatype.org/installing-m2eclipse.html">Maven
+      plugin</a>.
+  </p>
+
+  <ul>
+    <li>Setup Eclipse Preferences
+      <ul>
+        <li>Window &gt; Preferences... (or on Mac, Eclipse &gt;
+          Preferences...)</li>
+        <li>Select Maven
+          <ul>
+            <li>check on "Download Artifact Sources"</li>
+            <li>check on "Download Artifact JavaDoc"</li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li>Import <code>plus-serviceaccount-cmdline-sample</code> project
+      <ul>
+        <li>File &gt; Import...</li>
+        <li>Select "General &gt; Existing Project into Workspace" and click
+          "Next"</li>
+        <li>Click "Browse" next to "Select root directory", find <code>
+            <i>[someDirectory]</i>/google-api-java-client-samples/plus-serviceaccount-cmdline-sample
+          </code> and click "Next"
+        </li>
+        <li>Click "Finish"</li>
+      </ul>
+    </li>
+    <li>Run
+      <ul>
+        <li>Right-click on project plus-serviceaccount-cmdline-sample</li>
+        <li>Run As &gt; Java Application</li>
+        <li>If asked, type "PlusServiceAccountSample" and click OK</li>
+      </ul>
+    </li>
+  </ul>
+
+</body>
+</html>

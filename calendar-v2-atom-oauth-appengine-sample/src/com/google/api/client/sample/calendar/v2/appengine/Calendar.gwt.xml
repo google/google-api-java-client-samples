@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<module rename-to='calendar'>
-  <inherits name='com.google.gwt.user.User' />
-  <inherits name='com.google.gwt.user.theme.standard.Standard' />
-  <entry-point
-    class='com.google.api.client.sample.calendar.v2.appengine.client.CalendarGwtSample' />
-  <source path='client' />
-  <source path='shared' />
-</module>

@@ -1,17 +1,32 @@
 syntax: regexp
-^([^/]+/)?target$
+^([^/]+/)+target$
+
+syntax: regexp
+^[^/]+/proguard$
 
 syntax: regexp
 ^[^/]+/gen$
 
 syntax: regexp
-^discovery-appengine-sample/war/discover$
+.gradle$
 
 syntax: regexp
-^calendar-v2-atom-oauth-appengine-sample/war/calendar$
+(^[^/]+/)?.*\.iml$
 
 syntax: regexp
-^[^/]+/war/WEB-INF/classes$
+(^[^/]+/)?.idea$
 
 syntax: regexp
-^[^/]+/war/WEB-INF/appengine-generated$
+^[^/]+/.gwt$
+
+syntax: regexp
+^[^/]+/build$
+
+syntax: regexp
+^[^/]+/bin$
+
+syntax: regexp
+^[^/]+/war/WEB-INF/appengine-generated
+
+syntax: regexp
+local.properties$

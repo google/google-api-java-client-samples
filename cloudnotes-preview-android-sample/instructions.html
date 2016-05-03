@@ -1,0 +1,158 @@
+<html>
+<title>cloudnotes-preview-android-sample</title>
+<body>
+    <h2>Instructions for the CloudNotes Endpoints Android Sample</h2>
+
+    <h3>Browse Online</h3>
+
+    <ul>
+        <li>Browse <a
+            href="http://code.google.com/p/google-api-java-client/source/browse?repo=samples#hg/cloudnotes-preview-android-sample">cloudnotes-preview-android-sample</a> or
+            <a
+            href="http://code.google.com/p/google-api-java-client/source/browse?repo=samples#hg/cloudnotes-preview-android-sample-AppEngine">cloudnotes-preview-android-sample-AppEngine</a>.
+        </li>
+    </ul>
+
+    <h3>Checkout Instructions</h3>
+
+    <p>
+        <b>Prerequisites:</b> install <a href="http://java.com">Java
+            6</a>, <a href="http://mercurial.selenic.com/">Mercurial</a>
+        (requires 1.6 or higher). You may need to set your
+        <code>JAVA_HOME</code>
+        and
+        <code>ANDROID_HOME</code>
+        .
+    </p>
+    <p>
+        <b>WARNING:</b>Google Play services is required to compile and
+        run this sample. It will launch soon. Please check on
+        https://developers.google.com/android/google-play-services for
+        more details. For now, we have provided a dummy
+        google-play-services.jar that only compiles the sample but will
+        not run correctly.
+    </p>
+
+    <p>Android application registration: You first need to register
+        your Android application and sign up for access to the Google
+        Calendar API in the Google APIs Console. First, you need the
+        "Signing certificate fingerprint (SHA1)" for the debug and
+        release builds:
+    <pre>
+    <code>
+keytool -exportcert -alias androiddebugkey -keystore ~/.android/debug.keystore | openssl sha1
+Enter keystore password: android
+
+keytool -exportcert -alias androiddebugkey -keystore my-release-key.keystore | openssl sha1
+
+</code>
+	</pre>
+
+    Next, register on the Google APIs Console:
+
+    <pre>
+    <code>
+
+Go to https://code.google.com/apis/console/
+
+click on the "API Access" tab
+
+click on "Create an OAuth 2.0 client ID"
+
+Product name: My CloudNotes Sample (or whatever you want to call it)
+
+click "Next"
+
+select "Installed application"
+
+select "Android"
+
+Package name: com.google.api.services.samples.calendar.android
+
+Signing certificate fingerprint (SHA1):  (paste SHA1 fingerprint from above)
+
+click "Create client ID"
+</code>
+  </pre>
+
+    To enable logging of HTTP requests and responses (highly recommended
+    when developing):
+
+    <pre>
+    <code>
+adb shell setprop log.tag.HttpTransport DEBUG
+</code>
+  </pre>
+
+    <pre>
+			<code>
+cd /tmp
+hg clone https://code.google.com/p/google-api-java-client.samples/ samples
+</code>
+		</pre>
+
+    <h3>Setup Project in Eclipse 3.7 (Indigo)</h3>
+
+    <p>
+        <b>Prerequisites:</b> install <a
+            href="http://www.eclipse.org/downloads/">Eclipse</a>, the <a
+            href="http://javaforge.com/project/HGE">Mercurial plugin</a>
+        (optional), and the <a
+            href="http://developer.android.com/sdk/eclipse-adt.html#installing">Android
+            plugin</a>.
+    </p>
+
+    <ul>
+        <li>Preferences:
+            <ul>
+                <li>Android: setup SDK location</li>
+            </ul>
+        </li>
+        <li>Window &gt; Android SDK and AVD Manager
+            <ul>
+                <li>Follow instructions to install Package "Google
+                    API's by Google Inc., Android API 15"</li>
+                <li>Follow instructions to create a new Android
+                    Virtual Device based on target "Google API's (Google
+                    Inc.) - API Level 15"</li>
+                <li>Click "Start..." (wait a while...)</li>
+            </ul>
+        </li>
+        <li>Import <code>cloudnotes-preview-android-sample</code>
+            and <code>cloudnotes-preview-android-sample-AppEngine</code>
+            projects
+            <ul>
+                <li>File &gt; Import...</li>
+                <li>Select "General &gt; Existing Project into
+                    Workspace" and click "Next"</li>
+                <li>Click "Browse" next to "Select root directory",
+                    find <code>
+                        <i>/tmp/samples/endpoints</i>
+                    </code> and click "Next"
+                </li>
+                <li>Click "Finish"</li>
+            </ul></li>
+        <li>Clean Project (if compile error about missing gen
+            directory)
+            <ul>
+                <li>Select <code>cloudnotes-preview-android-sample</code>
+                    project
+                </li>
+                <li>Project &gt; Clean...</li>
+                <li>Select "Clean projects selected below"</li>
+                <li>Click on "OK"</li>
+            </ul>
+        </li>
+        <li>Run
+            <ul>
+                <li>Right-click on project
+                    cloudnotes-preview-android-sample</li>
+                <li>Debug As &gt; Android Application</li>
+                <li>Right-click on project
+                    cloudnotes-preview-android-sample-AppEngine</li>
+                <li>Debug As &gt; Web Application</li>
+            </ul>
+        </li>
+    </ul>
+</body>
+</html>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee"
+  xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+  xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+  version="2.5">
+
+  <servlet>
+    <servlet-name>oauth2Callback</servlet-name>
+    <servlet-class>com.google.api.services.samples.calendar.appengine.server.OAuth2Callback</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>oauth2Callback</servlet-name>
+    <url-pattern>/oauth2callback/*</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>calendarServiceServlet</servlet-name>
+    <servlet-class>com.google.api.services.samples.calendar.appengine.server.CalendarGwtRpcSample</servlet-class>
+  </servlet>
+
+  <servlet>
+    <servlet-name>sample</servlet-name>
+    <servlet-class>com.google.api.services.samples.calendar.appengine.server.CalendarAppEngineSample</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>calendarServiceServlet</servlet-name>
+    <url-pattern>/calendar/calendarService</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>sample</servlet-name>
+    <url-pattern>/</url-pattern>
+  </servlet-mapping>
+
+  <security-constraint>
+    <web-resource-collection>
+      <web-resource-name>any</web-resource-name>
+      <url-pattern>/*</url-pattern>
+    </web-resource-collection>
+    <auth-constraint>
+      <role-name>*</role-name>
+    </auth-constraint>
+  </security-constraint>
+
+</web-app>
