@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+              http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+         version="2.5"
+         xmlns="http://java.sun.com/xml/ns/javaee">
+
+  <!-- Servlets -->
+  <servlet>
+    <servlet-name>oauth2Callback</servlet-name>
+    <servlet-class>com.google.api.client.sample.bigquery.appengine.dashboard.OAuth2Callback</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>oauth2Callback</servlet-name>
+    <url-pattern>/oauth2callback/*</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>taskServlet</servlet-name>
+    <servlet-class>com.google.api.client.sample.bigquery.appengine.dashboard.TaskServlet</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>taskServlet</servlet-name>
+    <url-pattern>/task</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>dataServlet</servlet-name>
+    <servlet-class>com.google.api.client.sample.bigquery.appengine.dashboard.DataServlet</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>dataServlet</servlet-name>
+    <url-pattern>/data</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>mainServlet</servlet-name>
+    <servlet-class>com.google.api.client.sample.bigquery.appengine.dashboard.MainServlet</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>mainServlet</servlet-name>
+    <url-pattern>/</url-pattern>
+  </servlet-mapping>
+
+  <security-constraint>
+    <web-resource-collection>
+      <web-resource-name>any</web-resource-name>
+      <url-pattern>/*</url-pattern>
+    </web-resource-collection>
+    <auth-constraint>
+      <role-name>*</role-name>
+    </auth-constraint>
+  </security-constraint>
+
+  <security-constraint>
+    <web-resource-collection>
+      <web-resource-name>any</web-resource-name>
+      <url-pattern>/task</url-pattern>
+    </web-resource-collection>
+    <auth-constraint>
+      <role-name>admin</role-name>
+    </auth-constraint>
+  </security-constraint>
+
+</web-app>

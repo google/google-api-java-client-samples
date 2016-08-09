@@ -1,0 +1,16 @@
+*/target
+*/proguard
+*/gen
+.gradle/**
+gradle/**
+gradlew*
+*.iml
+*/*.iml
+.idea
+*/.idea
+*/.gwt
+build
+*/build
+*/bin
+*/war/WEB-INF/appengine-generated
+**/local.properties

@@ -1,0 +1,5 @@
+{
+  "project": "Enter Project",
+  "bucket": "Enter a bucket name to create",
+  "prefix": "Enter an object name prefix for objects created by the sample; can leave blank"
+}

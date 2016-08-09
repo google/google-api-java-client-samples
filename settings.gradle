@@ -1,0 +1,2 @@
+include ':tasks-android-sample', ":calendar-android-sample"
+

@@ -1,0 +1,193 @@
+<html>
+<title>tasks-android-sample</title>
+
+<body>
+<h2>Instructions for the Tasks V1 Android Sample</h2>
+
+<h3>Browse Online</h3>
+
+<ul>
+    <li><a
+            href="https://github.com/google/google-api-java-client-samples/tree/master/tasks-android-sample">Browse
+        Source</a>, or main file <a
+            href="https://github.com/google/google-api-java-client-samples/tree/master/tasks-android-sample/src/main/java/com/google/api/services/samples/tasks/android/TasksSample.java">TasksSample.java</a>
+    </li>
+</ul>
+
+<h3>Prerequisites</h3>
+
+<ul>
+    <li>Install <a href="http://java.com">Java</a> (requires 6 or higher)</li>
+    <li>Install <a href="http://git-scm.com/downloads">Git</a> (suggested 1.7.10 or higher)
+        or <a href="http://github.com">GitHub</a> client (<a href="http://mac.github.com/">Mac</a>)
+        (<a href="http://windows.github.com/">Windows</a>)</li>
+    <li>Unzip <a href="http://services.gradle.org/distributions/gradle-2.2.1-bin.zip">Gradle
+        2.2.1</a></li>
+    <li>Install either <a
+            href="http://developer.android.com/sdk/installing/studio.html">Android
+        Studio</a> (which bundles the Android SDK) or just <a
+            href="http://developer.android.com/sdk/index.html">Android SDK</a> if you don't want to
+        use Android Studio. Set your
+        ANDROID_HOME to the Android SDK installation directory, which for Android Studio is in the
+        "sdk" subdirectory.
+    </li>
+    <!-- No longer necessary with latest Android SDK?
+    <li>Install google-play-services.jar
+      </br>The first time you run this sample, you will need to install the google-play-services.jar. You can either do it through Eclipse, or by running the "mvn install" command.
+      <ul>
+        <li>Eclipse
+          <ul>
+            <li>Launch Eclipse and select Window > Android SDK Manager or run android at the command line.</li>
+            <li>Scroll to the bottom of the package list and select Extras > Google Play services.</li>
+          </ul>
+        </li>
+        <li>Command line
+          <pre>
+  mvn install:install-file \
+       -Dfile=$ANDROID_HOME/extras/google/google_play_services/libproject/google-play-services_lib/libs/google-play-services.jar \
+       -DgroupId=com.google.android.google-play-services \
+       -DartifactId=google-play-services \
+       -Dversion=1 \
+       -Dpackaging=jar
+          </pre>
+        </li>
+      </ul>
+    </li>-->
+</ul>
+
+<h3>Register Your Application</h3>
+
+<ul>
+    <li>Visit the <a
+            href="https://cloud.google.com/console/start/api?id=tasks">Google Cloud
+        console flow for the Google Tasks API</a>.
+    </li>
+    <li>If necessary, sign in to your Google Account, select or create a
+        project, and agree to the terms of service. Click Continue.
+    </li>
+    <li>For Platform select "Android".
+        <ul>
+            <li>For "Package name" you should make up a unique name that has never been used before
+                by anyone, e.g. using your name and date like "org.example.tasks.janedoe20130911".
+
+                <ul>
+                    <li><b>Note:</b> Make
+                        sure to pick a legal Java package name since we will be using it in the
+                        Android
+                        project source code. The full package name must have at least two parts, so
+                        for example "janedoe20130911" will not work.
+                    </li>
+                    <li><b>Note:</b> If you try
+                        to register a package name that has already been registered, you may get an
+                        error reading "An
+                        unexpected error has occurred." In particular,
+                        "com.google.api.services.samples.tasks.android" has already been
+                        registered, so you must change the package name.
+                    </li>
+                </ul>
+            </li>
+            <li>For "SHA1 fingerprint", use the value that is output when running this command in a
+                Terminal:
+              <pre>
+keytool -exportcert -alias androiddebugkey -keystore ~/.android/debug.keystore | openssl sha1
+</pre>
+                When asked, use "android" (without the quotes) as the keystore password.
+            </li>
+            <li>Click Register.</li>
+        </ul>
+    </li>
+    <li>Click on "APIs" under "APIs & auth" in the left sidebar and make sure "Tasks API" is
+        enabled.
+    </li>
+</ul>
+
+<h3>Checkout Instructions</h3>
+
+  <pre>
+cd <i>[someDirectory]</i>
+git clone https://github.com/google/google-api-java-client-samples.git
+cd google-api-java-client-samples/tasks-android-sample
+  </pre>
+
+<h3>Set Up Project in Android Studio</h3>
+
+<ul>
+    <li>Run the <a href="http://developer.android.com/tools/help/sdk-manager.html">Android SDK
+        Manager</a>:
+        <ul>
+            <li>Run this command in a terminal:
+                <pre>$ANDROID_HOME/tools/android sdk</pre>
+            </li>
+            <li>Under "Tools", check on "Android SDK Build-tools" revision 22.0.1.</li>
+            <li>Under "Android 5.1.1 (API 22)", check on "SDK Platform" and "Google APIs".</li>
+            <li>Under "Extras", check on "Android Support Repository", "Android Support Library",
+                and "Google Repository".
+            </li>
+            <li>Click on "Install X packages..."</li>
+        </ul>
+    </li>
+    <li>Start Android Studio by running this command in a terminal:
+        <pre>android-studio/bin/studio.sh</pre>
+    </li>
+    <li>Import <code>tasks-android-sample</code> project
+        <ul>
+            <li>Select "Import Project..." or File &gt; Import Project...</li>
+            <li>Select <code>
+                <i>[someDirectory]</i>/google-api-java-client-samples/build.gradle
+            </code> and click OK.
+                <ul>
+                    <li><b>Note:</b> it will not work if you try to import <code>
+                        <i>[someDirectory]</i>/google-api-java-client-samples/tasks-android-sample/build.gradle
+                    </code>.
+                    </li>
+                </ul>
+            </li>
+            <li>Select "Use local gradle distribution" with "Gradle home" of
+                <code><i>[someDirectory]</i>/gradle-2.2.1</code> and click OK.
+            </li>
+        </ul>
+    </li>
+    <li>Open AndroidManifest.xml and change the package attribute of the manifest, initially
+        "com.google.api.services.samples.tasks.android", to match the name you registered in the
+        Google Cloud Console, e.g. "org.example.tasks.janedoe20130911".
+    </li>
+    <li>Rename the Java package: right-click on src/main/java, click New, click Package, and then
+        enter the name you registered in the
+        Google Cloud Console, e.g. "org.example.tasks.janedoe20130911". Next, select the Java
+        classes in
+        the package "com.google.api.services.samples.tasks.android", drag them into the new package
+        you just created, and then click Refactor.
+        <ul>
+            <li><b>Note:</b> If you get a compile error for "R", try right-clicking on the Java
+                package and then clicking "Optimize Imports" to remove unused imports containing the
+                "R". Another possibility is that the
+                "package" in the AndroidManifest.xml file doesn't match the Java package name.
+            </li>
+        </ul>
+
+    </li>
+    <li>Run &gt; Run 'tasks-android-sample'
+        <ul>
+            <li><b>Note:</b> you must use a physical device for developing and testing
+                because Google Play services cannot be installed on an emulator.
+                <a href="http://developer.android.com/training/basics/firstapp/running-app.html#RealDevice">
+                    Read this page</a> for more information on how to set up a device.
+            </li>
+            <li>To enable logging of HTTP requests and responses (highly recommended
+                when developing):
+  <pre>
+$ANDROID_HOME/platform-tools/adb shell setprop log.tag.HttpTransport DEBUG
+</pre>
+                and then change <code>TasksSample.LOGGING_LEVEL</code> to <code>Level.CONFIG</code>.
+            </li>
+            <li><b>Note:</b> If get "[Error] Access Not Configured" it usually means the Android app
+                registration didn't work or doesn't match your app's package name and SHA1
+                fingerprint. It may also be because "Tasks API" isn't enabled for your project
+                in the Google Cloud Console (see instructions above).
+            </li>
+        </ul>
+    </li>
+</ul>
+
+</body>
+</html>

@@ -1,0 +1,158 @@
+{
+ "kind": "discovery#rpcDescription",
+ "discoveryVersion": "v1",
+ "id": "noteendpoint:v1",
+ "name": "noteendpoint",
+ "version": "v1",
+ "description": "",
+ "icons": {
+  "x16": "http://www.google.com/images/icons/product/search-16.gif",
+  "x32": "http://www.google.com/images/icons/product/search-32.gif"
+ },
+ "protocol": "rpc",
+ "rootUrl": "https://myapp.appspot.com/_ah/api/",
+ "rpcUrl": "https://myapp.appspot.com/_ah/api/rpc",
+ "rpcPath": "/_ah/api/rpc",
+ "parameters": {
+  "alt": {
+   "type": "string",
+   "description": "Data format for the response.",
+   "default": "json",
+   "enum": [
+    "json"
+   ],
+   "enumDescriptions": [
+    "Responses with Content-Type of application/json"
+   ],
+   "location": "query"
+  },
+  "fields": {
+   "type": "string",
+   "description": "Selector specifying which fields to include in a partial response.",
+   "location": "query"
+  },
+  "key": {
+   "type": "string",
+   "description": "API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.",
+   "location": "query"
+  },
+  "oauth_token": {
+   "type": "string",
+   "description": "OAuth 2.0 token for the current user.",
+   "location": "query"
+  },
+  "prettyPrint": {
+   "type": "boolean",
+   "description": "Returns response with indentations and line breaks.",
+   "default": "true",
+   "location": "query"
+  },
+  "quotaUser": {
+   "type": "string",
+   "description": "Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters. Overrides userIp if both are provided.",
+   "location": "query"
+  },
+  "userIp": {
+   "type": "string",
+   "description": "IP address of the site where the request originates. Use this if you want to enforce per-user limits.",
+   "location": "query"
+  }
+ },
+ "schemas": {
+  "Note": {
+   "id": "Note",
+   "type": "object",
+   "properties": {
+    "description": {
+     "type": "string"
+    },
+    "emailAddress": {
+     "type": "string"
+    },
+    "id": {
+     "type": "string"
+    }
+   }
+  },
+  "Notes": {
+   "id": "Notes",
+   "type": "object",
+   "properties": {
+    "items": {
+     "type": "array",
+     "items": {
+      "$ref": "Note"
+     }
+    }
+   }
+  }
+ },
+ "methods": {
+  "noteendpoint.getNote": {
+   "id": "noteendpoint.getNote",
+   "allowGet": true,
+   "parameters": {
+    "id": {
+     "type": "string",
+     "required": true
+    }
+   },
+   "parameterOrder": [
+    "id"
+   ],
+   "returns": {
+    "$ref": "Note"
+   }
+  },
+  "noteendpoint.insertNote": {
+   "id": "noteendpoint.insertNote",
+   "parameters": {
+    "resource": {
+     "$ref": "Note"
+    }
+   },
+   "parameterOrder": [
+    "resource"
+   ],
+   "returns": {
+    "$ref": "Note"
+   }
+  },
+  "noteendpoint.listNote": {
+   "id": "noteendpoint.listNote",
+   "allowGet": true,
+   "returns": {
+    "$ref": "Notes"
+   }
+  },
+  "noteendpoint.removeNote": {
+   "id": "noteendpoint.removeNote",
+   "parameters": {
+    "id": {
+     "type": "string",
+     "required": true
+    }
+   },
+   "parameterOrder": [
+    "id"
+   ],
+   "returns": {
+    "$ref": "Note"
+   }
+  },
+  "noteendpoint.updateNote": {
+   "id": "noteendpoint.updateNote",
+   "parameters": {
+    "resource": {
+     "$ref": "Note"
+    }
+   },
+   "parameterOrder": [
+    "resource"
+   ],
+   "returns": {
+    "$ref": "Note"
+   }
+  }
+ }
+}

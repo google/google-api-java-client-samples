@@ -1,0 +1,203 @@
+{
+  "extends" : "thirdParty.api",
+  "abstract" : false,
+  "root" : "https://myapp.appspot.com/_ah/api",
+  "name" : "noteendpoint",
+  "version" : "v1",
+  "description" : "",
+  "defaultVersion" : false,
+  "adapter" : {
+    "bns" : "http://myapp.appspot.com/_ah/spi",
+    "deadline" : 10.0,
+    "type" : "lily"
+  },
+  "auth" : {
+    "allowCookieAuth" : false
+  },
+  "frontendLimits" : {
+    "unregisteredUserQps" : -1,
+    "unregisteredQps" : -1,
+    "unregisteredDaily" : -1,
+    "rules" : [ ]
+  },
+  "cacheControl" : {
+    "type" : "no-cache",
+    "maxAge" : 0
+  },
+  "methods" : {
+    "noteendpoint.listNote" : {
+      "path" : "note",
+      "httpMethod" : "GET",
+      "rosyMethod" : "NoteEndpoint.listNote",
+      "request" : {
+        "parameters" : {
+        },
+        "body" : "autoTemplate(backendRequest)",
+        "bodyName" : "resource"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      },
+      "audiences" : [ "cloudnotes2012.appspot.com" ],
+      "clientIds" : [ "[[ENTER CLIENT ID]]" ]
+    },
+    "noteendpoint.getNote" : {
+      "path" : "note/{id}",
+      "httpMethod" : "GET",
+      "rosyMethod" : "NoteEndpoint.getNote",
+      "request" : {
+        "parameters" : {
+          "id" : {
+            "required" : true,
+            "type" : "string"
+          }
+        },
+        "body" : "autoTemplate(backendRequest)",
+        "bodyName" : "resource"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      },
+      "audiences" : [ "cloudnotes2012.appspot.com" ],
+      "clientIds" : [ "[[ENTER CLIENT ID]]" ]
+    },
+    "noteendpoint.insertNote" : {
+      "path" : "note",
+      "httpMethod" : "POST",
+      "rosyMethod" : "NoteEndpoint.insertNote",
+      "request" : {
+        "parameters" : {
+        },
+        "body" : "autoTemplate(backendRequest)",
+        "bodyName" : "resource"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      },
+      "audiences" : [ "cloudnotes2012.appspot.com" ],
+      "clientIds" : [ "[[ENTER CLIENT ID]]" ]
+    },
+    "noteendpoint.updateNote" : {
+      "path" : "note",
+      "httpMethod" : "PUT",
+      "rosyMethod" : "NoteEndpoint.updateNote",
+      "request" : {
+        "parameters" : {
+        },
+        "body" : "autoTemplate(backendRequest)",
+        "bodyName" : "resource"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      },
+      "audiences" : [ "cloudnotes2012.appspot.com" ],
+      "clientIds" : [ "[[ENTER CLIENT ID]]" ]
+    },
+    "noteendpoint.removeNote" : {
+      "path" : "note/{id}",
+      "httpMethod" : "DELETE",
+      "rosyMethod" : "NoteEndpoint.removeNote",
+      "request" : {
+        "parameters" : {
+          "id" : {
+            "required" : true,
+            "type" : "string"
+          }
+        },
+        "body" : "autoTemplate(backendRequest)",
+        "bodyName" : "resource"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      },
+      "audiences" : [ "cloudnotes2012.appspot.com" ],
+      "clientIds" : [ "[[ENTER CLIENT ID]]" ]
+    }
+  },
+  "descriptor" : {
+    "schemas" : {
+      "User" : {
+        "id" : "User",
+        "type" : "object",
+        "properties" : {
+          "authDomain" : {
+            "type" : "string"
+          },
+          "email" : {
+            "type" : "string"
+          },
+          "federatedIdentity" : {
+            "type" : "string"
+          },
+          "nickname" : {
+            "type" : "string"
+          },
+          "userId" : {
+            "type" : "string"
+          }
+        }
+      },
+      "Note" : {
+        "id" : "Note",
+        "type" : "object",
+        "properties" : {
+          "description" : {
+            "type" : "string"
+          },
+          "emailAddress" : {
+            "type" : "string"
+          },
+          "id" : {
+            "type" : "string"
+          }
+        }
+      },
+      "Notes" : {
+        "id" : "Notes",
+        "type" : "object",
+        "properties" : {
+          "items" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "Note"
+            }
+          }
+        }
+      }
+    },
+    "methods" : {
+      "NoteEndpoint.listNote" : {
+        "response" : {
+          "type" : "object",
+          "$ref" : "Notes"
+        }
+      },
+      "NoteEndpoint.getNote" : {
+        "response" : {
+          "$ref" : "Note"
+        }
+      },
+      "NoteEndpoint.insertNote" : {
+        "request" : {
+          "$ref" : "Note"
+        },
+        "response" : {
+          "$ref" : "Note"
+        }
+      },
+      "NoteEndpoint.updateNote" : {
+        "request" : {
+          "$ref" : "Note"
+        },
+        "response" : {
+          "$ref" : "Note"
+        }
+      },
+      "NoteEndpoint.removeNote" : {
+        "response" : {
+          "$ref" : "Note"
+        }
+      }
+    }
+  }
+}
