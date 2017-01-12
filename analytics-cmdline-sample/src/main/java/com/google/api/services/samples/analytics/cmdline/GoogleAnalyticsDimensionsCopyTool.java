@@ -28,16 +28,18 @@ import com.google.api.client.util.store.DataStoreFactory;
 import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.analytics.Analytics;
 import com.google.api.services.analytics.AnalyticsScopes;
+import com.google.api.services.analytics.model.Account;
 import com.google.api.services.analytics.model.Accounts;
-import com.google.api.services.analytics.model.GaData;
-import com.google.api.services.analytics.model.GaData.ColumnHeaders;
-import com.google.api.services.analytics.model.Profiles;
+import com.google.api.services.analytics.model.CustomDimensions;
 import com.google.api.services.analytics.model.Webproperties;
+import com.google.api.services.analytics.model.Webproperty;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Scanner;
 
 
 /**
@@ -49,13 +51,13 @@ import java.util.List;
  *
  * @author api.nickm@gmail.com
  */
-public class HelloAnalyticsApiSample {
+public class GoogleAnalyticsDimensionsCopyTool {
 
   /**
    * Be sure to specify the name of your application. If the application name is {@code null} or
    * blank, the application will log a warning. Suggested format is "MyCompany-ProductName/1.0".
    */
-  private static final String APPLICATION_NAME = "Google Analytics API Demo";
+  private static final String APPLICATION_NAME = "Google Analytics Dimension Copy Tool";
 
   /** Directory to store user credentials. */
   private static final java.io.File DATA_STORE_DIR =
@@ -72,7 +74,9 @@ public class HelloAnalyticsApiSample {
 
   /** Global instance of the JSON factory. */
   private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
-
+  
+  /** Global instance of the Google Analytics service object */
+  private static Analytics analytics;
   /**
    * Main demo. This first initializes an analytics service object. It then uses the Google
    * Analytics Management API to get the first profile ID for the authorized user. It then uses the
@@ -85,14 +89,24 @@ public class HelloAnalyticsApiSample {
     try {
       httpTransport = GoogleNetHttpTransport.newTrustedTransport();
       dataStoreFactory = new FileDataStoreFactory(DATA_STORE_DIR);
-      Analytics analytics = initializeAnalytics();
-      String profileId = getFirstProfileId(analytics);
-      if (profileId == null) {
-        System.err.println("No profiles found.");
-      } else {
-        GaData gaData = executeDataQuery(analytics, profileId);
-        printGaData(gaData);
-      }
+      analytics = initializeAnalytics();
+      
+//      Scanner reader = new Scanner(System.in);  // Reading from System.in
+//      System.out.println("Enter source GA Account Id: ");
+//      String sourceGAAccountId = reader.nextLine(); // Scans the next token of the input as an int.
+//      System.out.println("Enter source GA Property Id: ");
+//      String sourceGAPropertyId = reader.nextLine();
+//      System.out.println("Enter destination GA Account Id: ");
+//      String destinationGAAccountId = reader.nextLine(); // Scans the next token of the input as an int.
+//      System.out.println("Enter destination GA Property Id: ");
+//      String destinationGAPropertyId = reader.nextLine();
+      String sourceGAAccountId = "88634604"; //CE Magnolia Sites Account
+      String sourceGAPropertyId = "UA-48148083-48"; //Invesco PT Portugal Property
+      String destinationGAAccountId = "89271070"; //Google Analytics API Demo Account
+      CustomDimensions sourceCustomDimensions = getCustomDimensions(sourceGAAccountId, sourceGAPropertyId);
+      copyExistingPropertyIntoNewProperty(getPropertyByPropertyIdAccountId(sourceGAPropertyId, sourceGAAccountId), destinationGAAccountId);
+      
+      
     } catch (GoogleJsonResponseException e) {
       System.err.println("There was a service error: " + e.getDetails().getCode() + " : "
           + e.getDetails().getMessage());
@@ -106,7 +120,7 @@ public class HelloAnalyticsApiSample {
     // load client secrets
     GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(
         JSON_FACTORY, new InputStreamReader(
-            HelloAnalyticsApiSample.class.getResourceAsStream("/client_secrets.json")));
+            GoogleAnalyticsDimensionsCopyTool.class.getResourceAsStream("/client_secrets.json")));
     if (clientSecrets.getDetails().getClientId().startsWith("Enter")
         || clientSecrets.getDetails().getClientSecret().startsWith("Enter ")) {
       System.out.println(
@@ -117,7 +131,7 @@ public class HelloAnalyticsApiSample {
     // set up authorization code flow
     GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
         httpTransport, JSON_FACTORY, clientSecrets,
-        Collections.singleton(AnalyticsScopes.ANALYTICS_READONLY)).setDataStoreFactory(
+        Collections.singleton(AnalyticsScopes.ANALYTICS_EDIT)).setDataStoreFactory(
         dataStoreFactory).build();
     // authorize
     return new AuthorizationCodeInstalledApp(flow, new LocalServerReceiver()).authorize("user");
@@ -138,101 +152,79 @@ public class HelloAnalyticsApiSample {
     return new Analytics.Builder(httpTransport, JSON_FACTORY, credential).setApplicationName(
         APPLICATION_NAME).build();
   }
-
+  
   /**
-   * Returns the first profile id by traversing the Google Analytics Management API. This makes 3
-   * queries, first to the accounts collection, then to the web properties collection, and finally
-   * to the profiles collection. In each request the first ID of the first entity is retrieved and
-   * used in the query for the next collection in the hierarchy.
-   *
-   * @param analytics the analytics service object used to access the API.
-   * @return the profile ID of the user's first account, web property, and profile.
-   * @throws IOException if the API encounters an error.
+   * 
+   * @param accountId
+   * @param propertyId
+   * @param analytics
+   * @return
+   * @throws IOException
    */
-  private static String getFirstProfileId(Analytics analytics) throws IOException {
-    String profileId = null;
+  private static CustomDimensions getCustomDimensions(String accountId, String propertyId) throws IOException {
+    // Query CustomDimensions collection.
+    CustomDimensions customDimensions = analytics.management().customDimensions().list(accountId, propertyId).execute();
 
-    // Query accounts collection.
-    Accounts accounts = analytics.management().accounts().list().execute();
-
-    if (accounts.getItems().isEmpty()) {
-      System.err.println("No accounts found");
-    } else {
-      String firstAccountId = accounts.getItems().get(0).getId();
-
-      // Query webproperties collection.
-      Webproperties webproperties =
-          analytics.management().webproperties().list(firstAccountId).execute();
-
-      if (webproperties.getItems().isEmpty()) {
-        System.err.println("No Webproperties found");
-      } else {
-        String firstWebpropertyId = webproperties.getItems().get(0).getId();
-
-        // Query profiles collection.
-        Profiles profiles =
-            analytics.management().profiles().list(firstAccountId, firstWebpropertyId).execute();
-
-        if (profiles.getItems().isEmpty()) {
-          System.err.println("No profiles found");
-        } else {
-          profileId = profiles.getItems().get(0).getId();
-        }
+    if (customDimensions.getItems().isEmpty()) {
+      System.err.println("No Custom Dimensions found for account: " + accountId + " and property: " + propertyId);
+    }
+    
+    return customDimensions;
+  }
+  
+  /**
+   * 
+   * @param accountId
+   * @return
+   * @throws IOException
+   */
+  private static Account getAccountByAccountId(String accountId) throws IOException{
+    List<Account> accountList = analytics.management().accounts().list().execute().getItems();
+    Account accountGA = null;
+    for (Iterator<Account> iterator = accountList.iterator(); iterator.hasNext();) {
+      Account account = iterator.next();
+      if(account.getId().equals(accountId)){
+        accountGA = account;
       }
     }
-    return profileId;
+    
+    return accountGA;
   }
-
+  
   /**
-   * Returns the top 25 organic search keywords and traffic source by visits. The Core Reporting API
-   * is used to retrieve this data.
-   *
-   * @param analytics the analytics service object used to access the API.
-   * @param profileId the profile ID from which to retrieve data.
-   * @return the response from the API.
-   * @throws IOException tf an API error occured.
+   * 
+   * @param accountId
+   * @return
+   * @throws IOException
    */
-  private static GaData executeDataQuery(Analytics analytics, String profileId) throws IOException {
-    return analytics.data().ga().get("ga:" + profileId, // Table Id. ga: + profile id.
-        "2012-01-01", // Start date.
-        "2012-01-14", // End date.
-        "ga:visits") // Metrics.
-        .setDimensions("ga:source,ga:keyword")
-        .setSort("-ga:visits,ga:source")
-        .setFilters("ga:medium==organic")
-        .setMaxResults(25)
-        .execute();
+  private static Webproperty getPropertyByPropertyIdAccountId(String propertyId, String accountId) throws IOException{
+    List<Webproperty> propertyList = analytics.management().webproperties().list(accountId).execute().getItems();
+    Webproperty webPropertyGA = null;
+    
+    for (Iterator<Webproperty> iterator = propertyList.iterator(); iterator.hasNext();) {
+      Webproperty webproperty = iterator.next();
+      if(webproperty.getId().equals(propertyId)){
+        webPropertyGA = webproperty;
+      }
+    }
+    
+    return webPropertyGA;
   }
+  
+  private static void copyExistingPropertyIntoNewProperty(Webproperty sourceProperty, String destinationAccountId) throws IOException {
+    // Query CustomDimensions collection.
+    //CustomDimensions customDimensions = sourceProperty.get
+ // Construct the body of the request.
+    Webproperty body = new Webproperty();
+    body.setWebsiteUrl(sourceProperty.getWebsiteUrl());
+    body.setName(sourceProperty.getName());
 
-  /**
-   * Prints the output from the Core Reporting API. The profile name is printed along with each
-   * column name and all the data in the rows.
-   *
-   * @param results data returned from the Core Reporting API.
-   */
-  private static void printGaData(GaData results) {
-    System.out.println(
-        "printing results for profile: " + results.getProfileInfo().getProfileName());
-
-    if (results.getRows() == null || results.getRows().isEmpty()) {
-      System.out.println("No results Found.");
-    } else {
-
-      // Print column headers.
-      for (ColumnHeaders header : results.getColumnHeaders()) {
-        System.out.printf("%30s", header.getName());
-      }
-      System.out.println();
-
-      // Print actual data.
-      for (List<String> row : results.getRows()) {
-        for (String column : row) {
-          System.out.printf("%30s", column);
-        }
-        System.out.println();
-      }
-
-      System.out.println();
+    try {
+      analytics.management().webproperties().insert(destinationAccountId, body).execute();
+    } catch (GoogleJsonResponseException e) {
+      System.err.println("There was a service error: "
+          + e.getDetails().getCode() + " : "
+          + e.getDetails().getMessage());
     }
   }
 }
