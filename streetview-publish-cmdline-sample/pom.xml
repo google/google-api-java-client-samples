@@ -125,6 +125,11 @@
         <artifactId>google-api-services-oauth2</artifactId>
         <version>v2-rev127-1.22.0</version>
     </dependency>
+    <dependency>
+        <groupId>com.google.api</groupId>
+        <artifactId>gax</artifactId>
+        <version>1.5.0</version>
+    </dependency>
   </dependencies>
   <properties>
     <project.http.version>1.19.0</project.http.version>
