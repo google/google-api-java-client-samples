@@ -6,9 +6,9 @@ repositories {
 }
 
 dependencies {
-    compile 'com.google.apis:google-api-services-tasks:v1-rev35-1.19.0' exclude module: 'httpclient'
-    compile 'com.google.api-client:google-api-client-android:1.19.0' exclude module: 'httpclient'
-    compile 'com.google.http-client:google-http-client-gson:1.19.0' exclude module: 'httpclient'
+    compile 'com.google.apis:google-api-services-tasks:v1-rev48-1.23.0' exclude module: 'httpclient'
+    compile 'com.google.api-client:google-api-client-android:1.23.0' exclude module: 'httpclient'
+    compile 'com.google.http-client:google-http-client-gson:1.23.0' exclude module: 'httpclient'
     compile 'com.google.android.gms:play-services-identity:7.3.0'
 }
 

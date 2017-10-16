@@ -267,7 +267,7 @@
     <dependency>
       <groupId>com.google.apis</groupId>
       <artifactId>google-api-services-calendar</artifactId>
-      <version>v3-rev87-1.19.0</version>
+      <version>v3-rev260-1.23.0</version>
     </dependency>
     <dependency>
       <groupId>com.google.api-client</groupId>

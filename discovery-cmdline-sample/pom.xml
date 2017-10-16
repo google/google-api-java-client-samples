@@ -137,7 +137,7 @@
     <dependency>
       <groupId>com.google.apis</groupId>
       <artifactId>google-api-services-discovery</artifactId>
-      <version>v1-rev45-1.19.0</version>
+      <version>v1-rev61-1.23.0</version>
     </dependency>
     <dependency>
       <groupId>com.google.http-client</groupId>
@@ -156,8 +156,8 @@
     </dependency>
   </dependencies>
   <properties>
-    <project.http.version>1.19.0</project.http.version>
-    <project.oauth.version>1.19.0</project.oauth.version>
+    <project.http.version>1.23.0</project.http.version>
+    <project.oauth.version>1.23.0</project.oauth.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 </project>

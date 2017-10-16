@@ -124,12 +124,12 @@
     <dependency>
       <groupId>com.google.apis</groupId>
       <artifactId>google-api-services-compute</artifactId>
-      <version>v1-rev27-1.19.0</version>
+      <version>v1-rev158-1.23.0</version>
     </dependency>
   </dependencies>
   <properties>
-    <project.http.version>1.19.0</project.http.version>
-    <project.oauth.version>1.19.0</project.oauth.version>
+    <project.http.version>1.23.0</project.http.version>
+    <project.oauth.version>1.23.0</project.oauth.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 </project>
