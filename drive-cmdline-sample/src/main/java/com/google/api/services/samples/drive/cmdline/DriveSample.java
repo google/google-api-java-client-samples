@@ -23,7 +23,6 @@ import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.googleapis.media.MediaHttpDownloader;
 import com.google.api.client.googleapis.media.MediaHttpUploader;
 import com.google.api.client.http.FileContent;
-import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
@@ -149,11 +148,11 @@ public class DriveSample {
   /** Uploads a file using either resumable or direct media upload. */
   private static File uploadFile(boolean useDirectUpload) throws IOException {
     File fileMetadata = new File();
-    fileMetadata.setTitle(UPLOAD_FILE.getName());
+    fileMetadata.setName(UPLOAD_FILE.getName());
 
     FileContent mediaContent = new FileContent("image/jpeg", UPLOAD_FILE);
 
-    Drive.Files.Insert insert = drive.files().insert(fileMetadata, mediaContent);
+    Drive.Files.Create insert = drive.files().create(fileMetadata, mediaContent);
     MediaHttpUploader uploader = insert.getMediaHttpUploader();
     uploader.setDirectUploadEnabled(useDirectUpload);
     uploader.setProgressListener(new FileUploadProgressListener());
@@ -163,7 +162,7 @@ public class DriveSample {
   /** Updates the name of the uploaded file to have a "drivetest-" prefix. */
   private static File updateFileWithTestSuffix(String id) throws IOException {
     File fileMetadata = new File();
-    fileMetadata.setTitle("drivetest-" + UPLOAD_FILE.getName());
+    fileMetadata.setName("drivetest-" + UPLOAD_FILE.getName());
 
     Drive.Files.Update update = drive.files().update(id, fileMetadata);
     return update.execute();
@@ -177,12 +176,13 @@ public class DriveSample {
     if (!parentDir.exists() && !parentDir.mkdirs()) {
       throw new IOException("Unable to create parent directory");
     }
-    OutputStream out = new FileOutputStream(new java.io.File(parentDir, uploadedFile.getTitle()));
+    OutputStream out = new FileOutputStream(new java.io.File(parentDir, uploadedFile.getName()));
 
-    MediaHttpDownloader downloader =
-        new MediaHttpDownloader(httpTransport, drive.getRequestFactory().getInitializer());
+    Drive.Files.Get get = drive.files().get(uploadedFile.getId());
+    MediaHttpDownloader downloader = get.getMediaHttpDownloader();
     downloader.setDirectDownloadEnabled(useDirectDownload);
     downloader.setProgressListener(new FileDownloadProgressListener());
-    downloader.download(new GenericUrl(uploadedFile.getDownloadUrl()), out);
+
+    get.executeMediaAndDownloadTo(out);
   }
 }
